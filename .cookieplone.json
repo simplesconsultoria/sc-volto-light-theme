@@ -1,0 +1,16 @@
+{
+    "title": "Simples Consultoria VLT",
+    "description": "Opnionated enhancements for @kitconcept/volto-light-theme",
+    "project_slug": "sc-volto-light-theme",
+    "author": "Simples Consultoria",
+    "email": "contato@simplesconsultoria.com.br",
+    "use_prerelease_versions": false,
+    "plone_version": "6.2.1",
+    "volto_version": "19.1.5",
+    "python_package_name": "sc.voltolighttheme",
+    "npm_package_name": "@simplesconsultoria/volto-light-theme",
+    "github_organization": "simplesconsultoria",
+    "container_registry": "github",
+    "initialize_documentation": false,
+    "__template__": "monorepo_addon"
+}

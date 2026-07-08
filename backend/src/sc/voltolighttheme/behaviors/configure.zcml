@@ -1,0 +1,14 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="sc.voltolightthem"
+    >
+
+  <adapter
+      factory=".settings.SchemaCleanupPlugin"
+      name="sc.voltolighttheme.schema_cleanup"
+      />
+
+</configure>

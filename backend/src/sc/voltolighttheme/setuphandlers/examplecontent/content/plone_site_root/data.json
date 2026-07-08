@@ -1,0 +1,141 @@
+{
+  "@id": "/Plone",
+  "@type": "Plone Site",
+  "UID": "plone_site_root",
+  "accent_color": null,
+  "accent_foreground_color": null,
+  "allow_discussion": null,
+  "blocks": {
+    "1c64bcb3-4e44-4d95-9e52-b3da07fd60f8": {
+      "@type": "slate",
+      "plaintext": "Hello World!",
+      "styles": {},
+      "theme": "default",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Hello World!"
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "5f31e9e4-173f-4ec1-ab48-64e9e2789b76": {
+      "@type": "title"
+    },
+    "68357972-bd25-47e2-a098-c7932a923182": {
+      "@type": "image",
+      "align": "center",
+      "credit": {},
+      "description": "",
+      "href": [
+        {
+          "@id": "https://plone.org/foundation",
+          "title": "plone.org/foundation"
+        }
+      ],
+      "image_field": "image",
+      "size": "l",
+      "styles": {
+        "blockWidth:noprefix": {
+          "--block-width": "var(--narrow-container-width)"
+        }
+      },
+      "theme": "grey",
+      "url": "resolveuid/6f64faaec60345bcb2caf4051f5533b9"
+    }
+  },
+  "blocks_layout": {
+    "items": [
+      "5f31e9e4-173f-4ec1-ab48-64e9e2789b76",
+      "1c64bcb3-4e44-4d95-9e52-b3da07fd60f8",
+      "68357972-bd25-47e2-a098-c7932a923182"
+    ]
+  },
+  "complementary_logo": null,
+  "contributors": [],
+  "creators": [
+    "admin"
+  ],
+  "description": "",
+  "effective": null,
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "facebook_app_id": "",
+  "facebook_username": "",
+  "footer_colophon_text": [
+    {
+      "children": [
+        {
+          "text": "Powered by Plone and Volto Light Theme\nThe Plone\u00ae Open Source CMS/WCM is \u00a9 2000-2026 by the "
+        },
+        {
+          "children": [
+            {
+              "text": "Plone Foundation"
+            }
+          ],
+          "data": {
+            "url": "http://plone.org"
+          },
+          "type": "link"
+        },
+        {
+          "text": " and friends.\nDistributed under the "
+        },
+        {
+          "children": [
+            {
+              "text": "GNU GPL v2 license"
+            }
+          ],
+          "data": {
+            "url": "https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html"
+          },
+          "type": "link"
+        },
+        {
+          "text": "."
+        }
+      ],
+      "type": "p"
+    }
+  ],
+  "footer_links": [],
+  "footer_logos": [],
+  "footer_logos_container_width": "default",
+  "footer_logos_size": "s",
+  "has_fat_menu": true,
+  "has_intranet_header": false,
+  "header_actions": [],
+  "header_foreground": null,
+  "id": "Plone",
+  "intranet_flag": null,
+  "is_folderish": true,
+  "items_total": 1,
+  "language": "##DEFAULT##",
+  "layout": "document_view",
+  "lock": {
+    "locked": false,
+    "stealable": true
+  },
+  "logo": null,
+  "preview_caption_link": null,
+  "review_state": null,
+  "rights": "",
+  "secondary_color": null,
+  "secondary_foreground_color": null,
+  "share_social_data": true,
+  "social_links": [],
+  "subjects": [],
+  "title": "Volto Light Theme",
+  "type_title": "Plone Site",
+  "workflow_history": {},
+  "working_copy": null,
+  "working_copy_of": null,
+  "x_username": ""
+}
