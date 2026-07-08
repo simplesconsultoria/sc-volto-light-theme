@@ -3,7 +3,7 @@ name = "sc-volto-light-theme"
 changelog = "CHANGELOG.md"
 version = "version.txt"
 version_format = "semver"
-container_images_prefix = "ghcr.io/simplesconsultoria/sc-volto-light-theme-"
+container_images_prefix = "ghcr.io/simplesconsultoria/sc-volto-light-theme"
 compose = ["docker-compose.yml"]
 
 [repository.towncrier]
