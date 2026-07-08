@@ -1,6 +1,6 @@
 # sc.voltolighttheme
 
-Opnionated enhancements for @kitconcept/volto-light-theme
+Opinionated enhancements for @kitconcept/volto-light-theme
 
 ## Features
 

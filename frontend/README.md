@@ -1,6 +1,6 @@
 # Simples Consultoria VLT (@simplesconsultoria/volto-light-theme)
 
-Opnionated enhancements for @kitconcept/volto-light-theme
+Opinionated enhancements for @kitconcept/volto-light-theme
 
 [![npm](https://img.shields.io/npm/v/@simplesconsultoria/volto-light-theme)](https://www.npmjs.com/package/@simplesconsultoria/volto-light-theme)
 [![](https://img.shields.io/badge/-Storybook-ff4785?logo=Storybook&logoColor=white&style=flat-square)](https://simplesconsultoria.github.io/volto-light-theme/)

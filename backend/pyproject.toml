@@ -1,7 +1,7 @@
 [project]
 name = "sc.voltolighttheme"
 dynamic = ["version"]
-description = "Opnionated enhancements for @kitconcept/volto-light-theme"
+description = "Opinionated enhancements for @kitconcept/volto-light-theme"
 readme = "README.md"
 license = "GPL-2.0-only"
 requires-python = ">=3.12"

@@ -4,7 +4,7 @@
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![CI](https://github.com/simplesconsultoria/sc-volto-light-theme/actions/workflows/main.yml/badge.svg)](https://github.com/simplesconsultoria/sc-volto-light-theme/actions/workflows/main.yml)
 
-Opnionated enhancements for @kitconcept/volto-light-theme
+Opinionated enhancements for @kitconcept/volto-light-theme
 
 ## Quick Start 🏁
 

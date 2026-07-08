@@ -1,7 +1,7 @@
 {
   "name": "@simplesconsultoria/volto-light-theme",
   "version": "1.0.0-alpha.0",
-  "description": "Opnionated enhancements for @kitconcept/volto-light-theme",
+  "description": "Opinionated enhancements for @kitconcept/volto-light-theme",
   "main": "src/index.ts",
   "license": "MIT",
   "keywords": [

@@ -7,7 +7,7 @@
   <genericsetup:registerProfile
       name="default"
       title="Simples Consultoria VLT: Install"
-      description="Opnionated enhancements for @kitconcept/volto-light-theme"
+      description="Opinionated enhancements for @kitconcept/volto-light-theme"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       directory="profiles/default"
       />
