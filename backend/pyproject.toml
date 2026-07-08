@@ -4,7 +4,7 @@ dynamic = ["version"]
 description = "Opnionated enhancements for @kitconcept/volto-light-theme"
 readme = "README.md"
 license = "GPL-2.0-only"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 authors = [
     { name = "Simples Consultoria", email = "contato@simplesconsultoria.com.br" },
 ]
