@@ -1,0 +1,92 @@
+.block.carousel {
+  --carousel-dots-selected-bg: var(--theme-foreground-color, #000);
+  --carousel-dots-bg: color-mix(
+    in srgb,
+    var(--theme-foreground-color, #000) 30%,
+    transparent
+  );
+
+  .block.teaser .card .card-inner .image-wrapper img {
+    object-fit: contain !important;
+  }
+
+  .carousel-dot {
+    &:focus,
+    &:focus-visible {
+      @include focus-ring(
+        var(--theme-high-contrast-foreground-color, currentColor),
+        2px,
+        2px
+      );
+    }
+  }
+
+  .carousel-button {
+    &:focus,
+    &:focus-visible {
+      @include focus-ring(
+        var(--theme-high-contrast-foreground-color, currentColor)
+      );
+    }
+  }
+}
+
+.block.gridBlock {
+  .block.carousel {
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    container-type: inline-size;
+
+    .carousel-wrapper {
+      max-width: 100%;
+      height: 100%;
+      .carousel-viewport {
+        height: 100%;
+        .carousel-container {
+          height: 100%;
+
+          margin-left: 0;
+          gap: $spacing-small;
+
+          .block.teaser {
+            padding-left: 0;
+          }
+        }
+      }
+    }
+
+    .carousel-button-prev,
+    .carousel-button-next {
+      display: none;
+    }
+
+    @container (max-width: 479px) {
+      .carousel-container .block.teaser {
+        flex: 0 0 100% !important;
+      }
+    }
+
+    @container (min-width: 480px) {
+      .carousel-container .block.teaser {
+        flex: 0 0 calc(50% - #{$spacing-small} / 2) !important;
+      }
+    }
+
+    .carousel-dots {
+      padding: $spacing-small 0;
+    }
+
+    .block.teaser a {
+      color: inherit;
+      text-decoration: none;
+
+      &:focus,
+      &:focus-visible {
+        @include focus-ring(
+          var(--theme-high-contrast-foreground-color, currentColor)
+        );
+      }
+    }
+  }
+}

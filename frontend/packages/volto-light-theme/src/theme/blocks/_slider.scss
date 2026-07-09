@@ -1,0 +1,195 @@
+.block.gridBlock {
+  .block.slider {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    flex-direction: column;
+    border: solid var(--theme-border-color);
+    border-width: var(--theme-border-width);
+
+    .slider-wrapper {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+    }
+
+    .slider-viewport {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      margin-bottom: 0;
+    }
+
+    .slider-container {
+      display: flex;
+      flex: 1 1 auto;
+      align-items: stretch;
+    }
+
+    .slider-slide {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .grid-teaser-item {
+      display: flex;
+      width: 100%;
+      align-items: stretch;
+    }
+
+    .teaser-item.top {
+      position: relative;
+      display: flex;
+      width: 100%;
+      flex: 1 1 auto;
+      flex-direction: column;
+
+      a {
+        display: flex;
+        width: 100%;
+        flex: 1 1 auto;
+        flex-direction: column;
+        color: inherit;
+        text-decoration: none;
+        &:focus,
+        &:focus-visible {
+          @include focus-ring(
+            var(--theme-top-high-contrast-foreground-color, currentColor)
+          );
+        }
+      }
+
+      .highlight-image-wrapper {
+        position: relative;
+        width: 100%;
+        flex-shrink: 0;
+
+        &.gradient::after {
+          display: none;
+        }
+
+        img {
+          width: 100%;
+          height: auto;
+          object-fit: cover;
+        }
+      }
+
+      .teaser-item-title {
+        position: static !important;
+        display: flex;
+        width: 100% !important;
+        min-height: auto !important;
+        flex: 1 1 auto;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: $spacing-small !important;
+        background: var(
+          --theme-high-contrast-color,
+          var(--accent-color)
+        ) !important;
+        color: var(
+          --theme-top-foreground-color,
+          var(--accent-foreground-color)
+        ) !important;
+        gap: $spacing-small;
+        transform: none !important;
+
+        .title h2 {
+          margin: 0 !important;
+          color: var(
+            --theme-top-foreground-color,
+            var(--accent-foreground-color)
+          ) !important;
+          @include text-heading-h3();
+        }
+
+        p {
+          display: -webkit-box;
+          overflow: hidden;
+          margin: 0;
+          -webkit-box-orient: vertical;
+          color: var(
+            --theme-top-low-contrast-foreground-color,
+            var(--accent-foreground-color)
+          ) !important;
+          -webkit-line-clamp: 3;
+          line-clamp: 3;
+          text-overflow: ellipsis;
+          @include body-text();
+        }
+
+        button {
+          color: var(--theme-top-foreground-color);
+        }
+      }
+    }
+
+    .slider-dots {
+      padding: $spacing-small 0;
+    }
+
+    .slider-button {
+      z-index: 2;
+      background: color-mix(
+        in srgb,
+        var(--theme-high-contrast-color, #000) 65%,
+        transparent
+      );
+      color: var(--theme-top-foreground-color, #fff);
+      transition: background 200ms ease;
+
+      &:hover {
+        background: color-mix(
+          in srgb,
+          var(--theme-high-contrast-color, #000) 85%,
+          transparent
+        );
+      }
+
+      &:focus,
+      &:focus-visible {
+        @include focus-ring(
+          var(--theme-top-high-contrast-foreground-color, currentColor)
+        );
+      }
+
+      svg.icon {
+        color: inherit;
+      }
+    }
+
+    .slider-dot {
+      &:focus,
+      &:focus-visible {
+        @include focus-ring(
+          var(--theme-top-high-contrast-foreground-color, currentColor),
+          2px,
+          2px
+        );
+      }
+
+      &::after {
+        background: color-mix(
+          in srgb,
+          var(--theme-foreground-color, currentColor) 30%,
+          transparent
+        );
+      }
+
+      &.slider-dot--selected::after {
+        background: var(
+          --theme-foreground-color,
+          var(--carousel-dots-selected-bg, #000)
+        );
+      }
+    }
+  }
+}
+
+.slider-dot::after {
+  height: 8px;
+  border: 1px solid var(--theme-border-color);
+}

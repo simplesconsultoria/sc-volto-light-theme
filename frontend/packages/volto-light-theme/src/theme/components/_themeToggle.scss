@@ -1,0 +1,74 @@
+.theme-toggle {
+  --spaceing: 0.25rem;
+
+  &-segmented {
+    position: relative;
+    display: grid;
+    padding: 0.25rem;
+    border: 2px solid var(--primary-foreground-color);
+    border-radius: 999px;
+    background: var(--primary-color);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    &__indicator {
+      position: absolute;
+      z-index: 0;
+      top: var(--spaceing);
+      bottom: var(--spaceing);
+      left: var(--spaceing);
+      width: calc((100% - var(--spaceing) * 2) / 3);
+      border-radius: 999px;
+      background-color: var(--primary-foreground-color);
+      transition:
+        transform 220ms ease,
+        background-color 220ms ease,
+        box-shadow 220ms ease;
+      will-change: transform;
+    }
+
+    &__option {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem 1rem;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--primary-foreground-color);
+      transition:
+        color 180ms ease,
+        transform 120ms ease,
+        background-color 180ms ease;
+
+      svg {
+        width: 1.15rem;
+        height: 1.15rem;
+        color: var(--primary-foreground-color);
+      }
+
+      &:hover,
+      &:focus-visible {
+        background: color-mix(
+          in srgb,
+          var(--primary-foreground-color) 20%,
+          transparent
+        );
+        cursor: pointer;
+      }
+
+      &:active {
+        transform: scale(0.96);
+      }
+
+      &.is-active {
+        font-weight: 700;
+
+        svg {
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+}

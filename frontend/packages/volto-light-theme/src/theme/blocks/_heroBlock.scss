@@ -1,0 +1,457 @@
+// =============================================================================
+// Hero Block (Bloco de Destaque)
+// Two variations: Flex/Decorativa and Card Colado
+// =============================================================================
+
+$hero-decorative-size: 80px;
+$hero-decorative-offset: -20px;
+$hero-card-overlap: 60px;
+
+// -----------------------------------------------------------------------------
+// Shared styles
+// -----------------------------------------------------------------------------
+.block.heroBlock {
+  background-color: var(--theme-color, transparent);
+  color: var(--theme-foreground-color, inherit);
+}
+
+.hero-block {
+  --hero-image-fit: cover;
+
+  &.image-fit-contain {
+    --hero-image-fit: contain;
+  }
+  &.image-fit-cover {
+    --hero-image-fit: cover;
+  }
+
+  // Default fallback if no block-width is selected
+  @include layout-container-width();
+  @include adjustMarginsToContainer($layout-container-width);
+
+  // overrides for block widths
+  .block.heroBlock.has--block-width--var\(--narrow-container-width\) & {
+    @include narrow-container-width();
+    @include adjustMarginsToContainer($narrow-container-width);
+  }
+  .block.heroBlock.has--block-width--var\(--default-container-width\) & {
+    @include default-container-width();
+    @include adjustMarginsToContainer($default-container-width);
+  }
+  .block.heroBlock.has--block-width--var\(--layout-container-width\) & {
+    @include layout-container-width();
+    @include adjustMarginsToContainer($layout-container-width);
+  }
+  .block.heroBlock.has--block-width--unset & {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+
+  .hero-header-text {
+    display: block;
+    width: fit-content;
+    color: var(--theme-foreground-accent-color);
+    @include body-text-bold();
+    @include add(size, 2xs);
+
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    margin: 0 0;
+    color: var(--theme-foreground-color);
+    font-size: clamp(
+      map-get($font-sizes, xl),
+      1rem + 2vw,
+      map-get($font-sizes, 3xl)
+    );
+    hyphens: none;
+    line-height: clamp(
+      map-get($line-heights, xl),
+      1rem + 2vw,
+      map-get($line-heights, 3xl)
+    );
+    word-break: keep-all;
+
+    // Default styles (h2 fallback)
+    @include text-heading-h2();
+
+    &.is-h1 {
+      @include page-title();
+      font-size: clamp(
+        map-get($font-sizes, 4xl),
+        1rem + 3vw,
+        map-get($font-sizes, 6xl)
+      );
+      line-height: clamp(
+        map-get($line-heights, 4xl),
+        1rem + 3vw,
+        map-get($line-heights, 6xl)
+      );
+    }
+    &.is-h2 {
+      @include text-heading-h2();
+      font-size: clamp(
+        map-get($font-sizes, xl),
+        1rem + 2vw,
+        map-get($font-sizes, 3xl)
+      );
+      line-height: clamp(
+        map-get($line-heights, xl),
+        1rem + 2vw,
+        map-get($line-heights, 3xl)
+      );
+    }
+    &.is-h3 {
+      @include text-heading-h3();
+      font-size: clamp(
+        map-get($font-sizes, l),
+        1rem + 1.5vw,
+        map-get($font-sizes, 2xl)
+      );
+      line-height: clamp(
+        map-get($line-heights, l),
+        1rem + 1.5vw,
+        map-get($line-heights, 2xl)
+      );
+    }
+    &.is-p {
+      @include body-text();
+      font-size: clamp(
+        map-get($font-sizes, m),
+        0.875rem + 1vw,
+        map-get($font-sizes, xl)
+      );
+      line-height: clamp(
+        map-get($line-heights, m),
+        1rem + 1vw,
+        map-get($line-heights, xl)
+      );
+    }
+  }
+
+  .hero-description {
+    margin: 0;
+    color: var(--theme-foreground-color);
+    hyphens: none;
+    word-break: keep-all;
+    @include body-text();
+  }
+
+  .hero-footer-text {
+    display: block;
+    width: fit-content;
+    color: var(--theme-foreground-accent-color);
+    @include body-text-bold();
+    @include add(size, 2xs);
+  }
+
+  .hero-cta {
+    display: inline-block;
+    width: fit-content;
+    padding: 0.625rem 1.75rem;
+    border: 2px transparent solid;
+    background: var(--theme-high-contrast-color);
+    color: var(--theme-top-foreground-color);
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease,
+      border 200ms ease;
+    @include body-text-bold();
+    @include add(size, xs);
+
+    .hero-button.item {
+      color: var(--theme-top-foreground-color);
+      @include body-text-bold();
+      @include add(size, xs);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    &:hover,
+    &:focus-visible {
+      border: 2px solid var(--theme-high-contrast-color);
+      background-color: var(--theme-top-foreground-color);
+      color: var(--theme-high-contrast-color);
+      .hero-button.item {
+        color: var(--theme-high-contrast-color);
+      }
+    }
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .hero-tag {
+      padding: 0.25rem 0.75rem;
+      border: 2px solid var(--theme-high-contrast-color);
+      border-radius: 2px;
+      @include body-text-bold();
+      @include add(size, xs);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+  }
+
+  .hero-file-type {
+    display: inline-block;
+    margin-bottom: $spacing-small;
+    color: var(--theme-low-contrast-foreground);
+    @include body-text-bold();
+    @include add(size, 2xs);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .hero-image {
+    line-height: 0;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: var(--hero-image-fit) !important;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Variation 1: Flex / Decorativa
+// -----------------------------------------------------------------------------
+.hero-flex {
+  .hero-flex-inner {
+    display: flex;
+    width: 100%; // Garante que ocupa todo o bloco pai sem transbordar
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $spacing-large;
+
+    @media only screen and (max-width: $computer-breakpoint) {
+      flex-direction: column;
+    }
+  }
+
+  .hero-flex-content {
+    display: flex;
+    min-width: min-content;
+    flex: 1 1 calc(100% - var(--hero-image-size, 50%) - $spacing-large);
+    flex-direction: column;
+    justify-content: center;
+    padding: $spacing-large 0;
+    gap: $spacing-small;
+
+    @media only screen and (max-width: $largest-mobile-screen) {
+      padding: $spacing-medium;
+    }
+  }
+
+  &.has-image .hero-flex-inner {
+    .hero-flex-content {
+      min-width: min-content;
+      flex: 1 1 calc(100% - var(--hero-image-size, 50%) - $spacing-large);
+    }
+
+    .hero-flex-image-wrapper {
+      min-width: 250px;
+      flex: 1 1 var(--hero-image-size, 50%);
+    }
+  }
+
+  &.text-right {
+    .hero-flex-inner {
+      flex-direction: row-reverse;
+
+      @media only screen and (max-width: $largest-mobile-screen) {
+        flex-direction: column;
+      }
+    }
+  }
+
+  // Decorative square element
+  .hero-flex-image-wrapper {
+    position: relative;
+    z-index: 0;
+
+    .hero-decorative-square {
+      position: absolute;
+      z-index: -1;
+      top: $hero-decorative-offset;
+      left: $hero-decorative-offset;
+      width: $hero-decorative-size;
+      height: $hero-decorative-size;
+      background-color: var(--theme-high-contrast-color, var(--brand-cyan));
+    }
+
+    .hero-image {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  // 1. Caso NÃO tenha imagem e full-width esteja DESLIGADO
+  &:not(.has-image):not(.full) {
+    &.text-right .hero-flex-inner {
+      justify-content: flex-end;
+    }
+  }
+
+  // 2. Caso NÃO tenha imagem e full-width esteja LIGADO
+  // Agora controlado pela variável --hero-image-size = 0% se o usuário quiser 100% texto
+}
+
+// -----------------------------------------------------------------------------
+// Variation 2: Card Colado
+// -----------------------------------------------------------------------------
+.hero-card {
+  .hero-card-inner {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+
+    @media only screen and (max-width: $computer-breakpoint) {
+      flex-direction: column;
+    }
+  }
+
+  .hero-card-image-wrapper {
+    display: flex;
+    min-width: 250px;
+    flex: 1 1 var(--hero-image-size, 50%);
+    flex-direction: column;
+    background-color: var(--theme-high-contrast-color);
+    line-height: 0;
+
+    @media only screen and (max-width: $largest-mobile-screen) {
+      width: 100%;
+      max-width: 100%;
+      flex: 1 1 100%;
+    }
+
+    .hero-image {
+      display: flex;
+      flex: 1 1 auto;
+
+      img {
+        width: 100%;
+        height: 100%;
+        min-height: 300px;
+        object-fit: var(--hero-image-fit) !important;
+      }
+    }
+  }
+
+  .hero-card-info {
+    display: flex;
+    min-width: min-content;
+    flex: 1 1 calc(100% - var(--hero-image-size, 50%));
+    flex-direction: column;
+    justify-content: center;
+    padding: $spacing-large;
+    background-color: var(--theme-high-contrast-color);
+    color: var(--theme-top-foreground-color);
+    gap: $spacing-small;
+
+    @media only screen and (max-width: $largest-mobile-screen) {
+      width: 100%;
+      max-width: 100%;
+      flex: 1 1 100%;
+    }
+
+    .hero-header-text,
+    .hero-footer-text {
+      color: var(--theme-top-accent-color);
+    }
+    .hero-title {
+      color: var(--theme-top-foreground-color);
+    }
+
+    .hero-description {
+      color: var(--theme-top-foreground-color);
+    }
+
+    .hero-cta {
+      background-color: var(--theme-color);
+      color: var(--theme-foreground-color);
+
+      .hero-button.item {
+        color: var(--theme-foreground-color);
+      }
+      &:hover,
+      &:focus-visible {
+        border: 2px solid var(--theme-color);
+        background-color: var(--theme-foreground-color);
+        color: var(--theme-color);
+        .hero-button.item {
+          color: var(--theme-color);
+        }
+      }
+    }
+
+    .hero-tag.hero-tag {
+      border: 2px solid var(--theme-top-foreground-color);
+    }
+  }
+
+  // Card overlaps the image
+  &.text-left {
+    .hero-card-inner {
+      flex-direction: row-reverse;
+
+      @media only screen and (max-width: $largest-mobile-screen) {
+        flex-direction: column;
+      }
+    }
+  }
+
+  &:not(.has-image):not(.full) {
+    &.text-right .hero-card-inner {
+      justify-content: flex-end;
+    }
+  }
+
+  // Agora controlado pela variável --hero-image-size
+}
+
+// -----------------------------------------------------------------------------
+// Edit mode adjustments
+// -----------------------------------------------------------------------------
+#page-edit,
+#page-add {
+  .block-editor-heroBlock {
+    .block.heroBlock {
+      &.has--block-width--var\(--narrow-container-width\) .hero-block {
+        max-width: var(--narrow-container-width) !important;
+        margin-right: auto !important;
+        margin-left: auto !important;
+      }
+      &.has--block-width--var\(--default-container-width\) .hero-block {
+        max-width: var(--default-container-width) !important;
+        margin-right: auto !important;
+        margin-left: auto !important;
+      }
+      &.has--block-width--var\(--layout-container-width\) .hero-block {
+        max-width: var(--layout-container-width) !important;
+        margin-right: auto !important;
+        margin-left: auto !important;
+      }
+      &.has--block-width--unset {
+        @include adjustEditContainerFullWidth();
+        .hero-block {
+          max-width: 100% !important;
+          margin-right: auto !important;
+          margin-left: auto !important;
+        }
+      }
+    }
+  }
+}

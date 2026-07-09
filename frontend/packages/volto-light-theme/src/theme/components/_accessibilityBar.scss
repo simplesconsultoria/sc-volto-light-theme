@@ -1,0 +1,86 @@
+.header-accessibility-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+
+  &__group {
+    @include flex-center(row, true);
+    overflow: visible;
+    gap: 0.35rem;
+  }
+
+  &__button {
+    @include control-inline-button(
+      0.375rem 0.625rem,
+      var(--primary-foreground-color),
+      6px,
+      var(--primary-color),
+      var(--primary-foreground-color),
+      color-mix(in srgb, var(--primary-foreground-color) 20%, transparent),
+      color-mix(
+        in srgb,
+        var(--primary-color) 50%,
+        var(--primary-foreground-color)
+      )
+    );
+    @include headtitle1();
+    font-weight: 600;
+  }
+
+  &__hover-button {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__hover-options {
+    display: inline-flex;
+    overflow: hidden;
+    max-width: 0;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-0.45rem) scale(0.98);
+    transform-origin: left center;
+    transition:
+      max-width 260ms ease,
+      opacity 220ms ease,
+      transform 260ms ease;
+
+    &.is-open {
+      max-width: 420px;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0) scale(1);
+    }
+  }
+
+  &__range {
+    @include control-range-label(var(--secondary-foreground-color));
+    @include headtitle2();
+    font-weight: 400;
+
+    input[type='range'] {
+      width: 96px;
+      accent-color: var(--secondary-foreground-color);
+    }
+  }
+
+  &__icon {
+    @include control-icon();
+    fill: var(--secondary-color);
+  }
+
+  &__font-scale {
+    @include headtitle2();
+    min-width: 2.5em;
+    font-weight: 400;
+    text-align: center;
+  }
+
+  @media only screen and (max-width: $largest-mobile-screen) {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

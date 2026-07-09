@@ -1,0 +1,5 @@
+.block.__button {
+  .external.button::after {
+    display: none !important;
+  }
+}
