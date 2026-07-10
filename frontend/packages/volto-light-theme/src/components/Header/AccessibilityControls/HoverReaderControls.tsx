@@ -3,6 +3,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 
 import speedSVG from '../../../icons/speed.svg';
+import earSVG from '../../../icons/ear.svg';
 import {
   isSpeechSupported,
   ensureVoicesLoaded,
@@ -187,8 +188,11 @@ const HoverReaderControls: React.FC = () => {
         onClick={onToggleHoverReader}
         disabled={!speechSupported}
         aria-pressed={hoverReaderEnabled}
+        aria-label={intl.formatMessage(messages.hoverReaderLabel)}
+        data-tooltip={intl.formatMessage(messages.hoverReaderLabel)}
+        data-position="bottom center"
       >
-        {intl.formatMessage(messages.hoverReaderLabel)}
+        <Icon name={earSVG} size="24px" />
       </button>
 
       <div

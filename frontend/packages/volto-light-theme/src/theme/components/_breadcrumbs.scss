@@ -3,7 +3,7 @@
     @include layout-container-width();
     @include adjustMarginsToContainer($layout-container-width);
     .section.active {
-      display: block; // Needed for text-overflow
+      display: block;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

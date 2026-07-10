@@ -1,15 +1,18 @@
-// =============================================================================
-// Hero Block (Bloco de Destaque)
-// Two variations: Flex/Decorativa and Card Colado
-// =============================================================================
-
+// Hero Block
+// Variations: Flex and Card
 $hero-decorative-size: 80px;
 $hero-decorative-offset: -20px;
 $hero-card-overlap: 60px;
 
-// -----------------------------------------------------------------------------
-// Shared styles
-// -----------------------------------------------------------------------------
+#page-document
+  .blocks-group-wrapper
+  > .block:has(.heroBlock.has--block-width--unset),
+#page-document
+  .blocks-group-wrapper
+  > .block.heroBlock.has--block-width--unset {
+  max-width: none;
+}
+
 .block.heroBlock {
   background-color: var(--theme-color, transparent);
   color: var(--theme-foreground-color, inherit);
@@ -29,7 +32,7 @@ $hero-card-overlap: 60px;
   @include layout-container-width();
   @include adjustMarginsToContainer($layout-container-width);
 
-  // overrides for block widths
+  // Block widths overrides
   .block.heroBlock.has--block-width--var\(--narrow-container-width\) & {
     @include narrow-container-width();
     @include adjustMarginsToContainer($narrow-container-width);
@@ -224,13 +227,11 @@ $hero-card-overlap: 60px;
   }
 }
 
-// -----------------------------------------------------------------------------
 // Variation 1: Flex / Decorativa
-// -----------------------------------------------------------------------------
 .hero-flex {
   .hero-flex-inner {
     display: flex;
-    width: 100%; // Garante que ocupa todo o bloco pai sem transbordar
+    width: 100%;
     flex-wrap: wrap;
     align-items: center;
     gap: $spacing-large;
@@ -246,7 +247,6 @@ $hero-card-overlap: 60px;
     flex: 1 1 calc(100% - var(--hero-image-size, 50%) - $spacing-large);
     flex-direction: column;
     justify-content: center;
-    padding: $spacing-large 0;
     gap: $spacing-small;
 
     @media only screen and (max-width: $largest-mobile-screen) {
@@ -269,6 +269,12 @@ $hero-card-overlap: 60px;
   &.text-right {
     .hero-flex-inner {
       flex-direction: row-reverse;
+      .hero-flex-content,
+      .hero-flex-content .hero-header {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+      }
 
       @media only screen and (max-width: $largest-mobile-screen) {
         flex-direction: column;
@@ -297,20 +303,14 @@ $hero-card-overlap: 60px;
     }
   }
 
-  // 1. Caso NÃO tenha imagem e full-width esteja DESLIGADO
   &:not(.has-image):not(.full) {
     &.text-right .hero-flex-inner {
       justify-content: flex-end;
     }
   }
-
-  // 2. Caso NÃO tenha imagem e full-width esteja LIGADO
-  // Agora controlado pela variável --hero-image-size = 0% se o usuário quiser 100% texto
 }
 
-// -----------------------------------------------------------------------------
 // Variation 2: Card Colado
-// -----------------------------------------------------------------------------
 .hero-card {
   .hero-card-inner {
     position: relative;
@@ -418,13 +418,9 @@ $hero-card-overlap: 60px;
       justify-content: flex-end;
     }
   }
-
-  // Agora controlado pela variável --hero-image-size
 }
 
-// -----------------------------------------------------------------------------
 // Edit mode adjustments
-// -----------------------------------------------------------------------------
 #page-edit,
 #page-add {
   .block-editor-heroBlock {

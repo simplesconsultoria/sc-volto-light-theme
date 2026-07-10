@@ -7,6 +7,7 @@ import HeroBlockInfo from '../components/Blocks/HeroBlock';
 import QuoteBlockInfo from '../components/Blocks/QuoteBlock';
 import CarouselTemplate from '../components/Blocks/Listing/CarouselTemplate';
 import MediaCarouselTemplate from '../components/Blocks/Listing/MediaCarouselTemplate';
+import GridTemplate from '../components/Blocks/Listing/GridTemplate';
 import {
   carouselSchemaEnhancer,
   mediaCarouselSchemaEnhancer,
@@ -55,7 +56,8 @@ const customThemes = [
         'var(--block-theme-brand-high-contrast)',
       '--theme-low-contrast-foreground-color':
         'var(--block-theme-brand-low-contrast)',
-      '--theme-foreground-accent-color': 'var(--block-theme-brand-accent-color)',
+      '--theme-foreground-accent-color':
+        'var(--block-theme-brand-accent-color)',
 
       '--theme-high-contrast-color': 'var(--block-theme-brand-high-bg)',
       '--theme-top-foreground-color': 'var(--block-theme-brand-top-text)',
@@ -122,9 +124,24 @@ export default function install(config: ConfigType) {
   installThemes(config);
   installGridBlock(config);
 
-  // Listing: add a media carousel variation
+  // Listing: add a media carousel variation and override GridTemplate
   if ((config.blocks.blocksConfig as any).listing?.variations) {
     let variations = (config.blocks.blocksConfig as any).listing.variations;
+
+    // Override 'grid' variation
+    const gridIndex = variations.findIndex((v: any) => v.id === 'grid');
+    if (gridIndex > -1) {
+      variations[gridIndex].template = GridTemplate;
+    }
+
+    // Override 'imageGallery' variation (often the default name for grid)
+    const galleryIndex = variations.findIndex(
+      (v: any) => v.id === 'imageGallery',
+    );
+    if (galleryIndex > -1) {
+      variations[galleryIndex].template = GridTemplate;
+    }
+
     const hasCarousel = variations.some((v: any) => v.id === 'carousel');
     if (!hasCarousel) {
       variations = [

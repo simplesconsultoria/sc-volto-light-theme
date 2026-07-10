@@ -231,7 +231,7 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
         [3, '3 Colunas'],
         [4, '4 Colunas'],
       ],
-      default: 4,
+      default: 2,
     },
   };
 

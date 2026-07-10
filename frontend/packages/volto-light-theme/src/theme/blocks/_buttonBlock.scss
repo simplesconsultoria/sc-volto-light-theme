@@ -1,5 +1,14 @@
-.block.__button {
+body .block.__button {
   .external.button::after {
     display: none !important;
+  }
+
+  > .button.container button:hover {
+    // background-color: var(--theme-high-contrast-color);
+    // color: var(--theme-top-foreground-color);
+    // &:hover {
+    //   color: var(--theme-high-contrast-color) ;
+    //   background-color: var(--theme-top-foreground-color);
+    // }
   }
 }

@@ -143,7 +143,9 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
       {
         id: 'image',
         title: intl.formatMessage(messages.imageFieldset),
-        fields: formData.overwrite ? ['url', 'imageFit'] : ['imageFit'],
+        fields: formData.overwrite
+          ? ['preview_image', 'imageFit']
+          : ['imageFit'],
       },
       {
         id: 'cta',
@@ -202,12 +204,12 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
         type: 'string',
         description: 'Ex: PDF, Relatório, Artigo',
       },
-      url: {
+      preview_image: {
         title: intl.formatMessage(messages.image),
         widget: 'object_browser',
         mode: 'image',
         allowExternals: true,
-        selectedItemAttrs: ['image_field', 'image_scales', '@type'],
+        selectedItemAttrs: ['image_field', 'image_scales'],
       },
       imageFit: {
         title: 'Ajuste da Imagem',

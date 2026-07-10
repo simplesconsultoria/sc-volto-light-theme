@@ -43,7 +43,7 @@ const sampleData = {
   url: 'https://picsum.photos/seed/hero/800/600',
   date: '2026-06-17T16:33:00-03:00',
   showDate: true,
-  tags: ['Brasil', 'Projeto'],
+  tags: ['Brasil', 'Diracom'],
   fileType: 'Artigo',
 };
 

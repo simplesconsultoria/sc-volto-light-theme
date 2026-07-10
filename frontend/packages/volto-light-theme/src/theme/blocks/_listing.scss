@@ -1,7 +1,6 @@
 body .block.listing,
 #page-edit .block-editor-listing .block.listing,
 .block.search {
-  // Customizations for Headline Button and Grid Columns
   .listing-headline-wrapper {
     display: flex;
     align-items: flex-end;
@@ -103,16 +102,11 @@ body .block.listing,
   &.carousel,
   &.mediaCarousel {
     display: flex;
-    width: 100%;
-    max-width: #{$default-container-width} !important;
-
     height: 100%;
     flex-direction: column;
-    margin: 0 auto;
 
     > div {
       display: flex;
-      min-width: 0;
       height: 100%;
       flex-direction: column;
 
@@ -120,10 +114,7 @@ body .block.listing,
     }
 
     .listing-carousel {
-      @include adjustMarginsToContainer($default-container-width);
       display: grid;
-      min-width: 0;
-      max-width: 100%;
       height: 100%;
       container-type: inline-size;
       grid-template-rows: 1fr auto;
@@ -528,63 +519,81 @@ body .block.listing,
     }
   }
 
-  // Classes for GridTemplate
   &.grid,
   &.imageGallery {
+    width: 100% !important;
+    container-type: inline-size;
+
     ul.items {
-      &.grid-cols-1,
-      &.grid-cols-2,
-      &.grid-cols-3,
-      &.grid-cols-4 {
-        display: grid;
-        padding: 0;
-        margin: 0;
-        gap: 1rem;
-        list-style: none;
+      display: grid !important;
+      flex-wrap: unset !important;
+      padding: 0 !important;
+      gap: 1rem !important;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+      list-style: none !important;
 
-        &::after,
-        &::before {
-          display: none;
-        }
+      &::after,
+      &::before {
+        display: none !important;
+      }
 
-        .listing-item {
+      .listing-item {
+        &,
+        &:nth-child(n) {
           width: 100% !important;
           padding: 0 !important;
           margin: 0 !important;
         }
+        display: flex !important;
+        height: 100% !important;
+        flex-direction: column !important;
+        align-self: stretch !important;
+
+        > * {
+          display: flex !important;
+          height: 100% !important;
+          flex-direction: column !important;
+          flex-grow: 1 !important;
+
+          > * {
+            display: flex !important;
+            flex-direction: column !important;
+            flex-grow: 1 !important;
+          }
+        }
       }
 
       &.grid-cols-1 {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
       }
 
       &.grid-cols-2 {
-        grid-template-columns: repeat(2, 1fr);
-        @media (max-width: 768px) {
-          grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr) !important;
+        @container (max-width: 250px) {
+          grid-template-columns: 1fr !important;
         }
       }
 
       &.grid-cols-3 {
-        grid-template-columns: repeat(3, 1fr);
-        @media (max-width: 992px) {
-          grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr) !important;
+        @container (max-width: 500px) {
+          grid-template-columns: repeat(2, 1fr) !important;
         }
-        @media (max-width: 768px) {
-          grid-template-columns: 1fr;
+        @container (max-width: 250px) {
+          grid-template-columns: 1fr !important;
         }
       }
 
       &.grid-cols-4 {
-        grid-template-columns: repeat(4, 1fr);
-        @media (max-width: 1200px) {
-          grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr) !important;
+        @container (max-width: 650px) {
+          grid-template-columns: repeat(3, 1fr) !important;
         }
-        @media (max-width: 992px) {
-          grid-template-columns: repeat(2, 1fr);
+        @container (max-width: 450px) {
+          grid-template-columns: repeat(2, 1fr) !important;
         }
-        @media (max-width: 768px) {
-          grid-template-columns: 1fr;
+        @container (max-width: 250px) {
+          grid-template-columns: 1fr !important;
         }
       }
     }
@@ -606,4 +615,17 @@ body .block.listing,
       }
     }
   }
+}
+
+:not(.blocks-group-wrapper)
+  > .block:not(.category-separator).previous--has--different--backgroundColor,
+:not(.blocks-group-wrapper)
+  > .block:not(.category-separator).next--has--different--backgroundColor {
+  padding: $spacing-medium 0;
+}
+
+#page-document .blocks-group-wrapper > .block.listing.carousel,
+#page-document .blocks-group-wrapper > .block.listing.mediaCarousel {
+  @include default-container-width();
+  @include adjustMarginsToContainer($default-container-width);
 }

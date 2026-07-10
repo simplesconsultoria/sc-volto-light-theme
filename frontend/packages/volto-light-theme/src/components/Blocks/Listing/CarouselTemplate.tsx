@@ -24,20 +24,29 @@ interface CarouselTemplateProps {
   carouselAutoPlayInterval?: number;
 }
 
-const formatDate = (dateString?: string): string => {
-  if (!dateString) return '';
+const isValidDate = (dateString?: string): boolean => {
+  if (!dateString || dateString === 'None') return false;
   try {
     const date = new Date(dateString);
-    return date.getTime() === 0
-      ? ''
-      : date.toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-        });
+    const year = date.getFullYear();
+    // Plone's empty effective date defaults to 1969 or 1970
+    if (isNaN(date.getTime()) || year === 1969 || year === 1970) {
+      return false;
+    }
+    return true;
   } catch {
-    return '';
+    return false;
   }
+};
+
+const formatDate = (dateString?: string): string => {
+  if (!isValidDate(dateString)) return '';
+  const date = new Date(dateString as string);
+  return date.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 };
 
 const getLikelyVideoUrl = (item: ListingItem): string | null => {
@@ -186,9 +195,12 @@ const CarouselTemplate: React.FC<
               item?.summary ||
               ''
             ).toString();
-            const date = formatDate(
-              item?.Date || item?.effective || item?.created,
-            );
+            const dateString = [
+              item?.Date,
+              item?.effective,
+              item?.created,
+            ].find(isValidDate);
+            const date = formatDate(dateString);
 
             const videoUrl = getLikelyVideoUrl(item);
             const playableEmbedUrl =

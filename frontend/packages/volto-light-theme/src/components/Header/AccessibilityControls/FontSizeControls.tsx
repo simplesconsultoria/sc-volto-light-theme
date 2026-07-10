@@ -106,6 +106,13 @@ const FontSizeControls: React.FC = () => {
         >
           A-
         </button>
+        <span
+          className="header-accessibility-controls__font-scale"
+          aria-hidden="true"
+        >
+          {/* O mounted garante que o texto 100% seja renderizado no servidor, e no cliente ele atualize para o valor real */}
+          {mounted ? `${Math.round(fontScale * 100)}%` : '100%'}
+        </span>
         <button
           type="button"
           className="header-accessibility-controls__button"
@@ -115,14 +122,6 @@ const FontSizeControls: React.FC = () => {
         >
           A+
         </button>
-
-        <span
-          className="header-accessibility-controls__font-scale"
-          aria-hidden="true"
-        >
-          {/* O mounted garante que o texto 100% seja renderizado no servidor, e no cliente ele atualize para o valor real */}
-          {mounted ? `${Math.round(fontScale * 100)}%` : '100%'}
-        </span>
       </div>
     </>
   );
