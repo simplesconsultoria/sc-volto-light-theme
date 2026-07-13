@@ -17,7 +17,7 @@ const HeroBlockInfo: BlockConfigBase = {
   blockSchema: HeroBlockSchema as any,
   restricted: false,
   mostUsed: false,
-  sidebarTab: 0,
+  sidebarTab: 1,
   blockHasOwnFocusManagement: false,
   dataAdapter: HeroBlockDataAdapter,
   variations: [

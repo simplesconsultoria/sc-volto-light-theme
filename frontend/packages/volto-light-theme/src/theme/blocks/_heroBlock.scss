@@ -30,20 +30,16 @@ $hero-card-overlap: 60px;
 
   // Default fallback if no block-width is selected
   @include layout-container-width();
-  @include adjustMarginsToContainer($layout-container-width);
 
   // Block widths overrides
   .block.heroBlock.has--block-width--var\(--narrow-container-width\) & {
     @include narrow-container-width();
-    @include adjustMarginsToContainer($narrow-container-width);
   }
   .block.heroBlock.has--block-width--var\(--default-container-width\) & {
     @include default-container-width();
-    @include adjustMarginsToContainer($default-container-width);
   }
   .block.heroBlock.has--block-width--var\(--layout-container-width\) & {
     @include layout-container-width();
-    @include adjustMarginsToContainer($layout-container-width);
   }
   .block.heroBlock.has--block-width--unset & {
     width: 100% !important;
@@ -238,6 +234,12 @@ $hero-card-overlap: 60px;
 
     @media only screen and (max-width: $computer-breakpoint) {
       flex-direction: column;
+      .hero-flex-content,
+      .hero-flex-content .hero-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
     }
   }
 
