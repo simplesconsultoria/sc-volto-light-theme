@@ -1,9 +1,13 @@
 // This theme extends the volto-light-theme
+@import 'variables';
 @import 'root';
 @import 'accessibility';
 @import 'typography';
+@import 'globals';
 @import 'components/tags';
+@import 'components/navigation';
 @import 'components/header';
+@import 'components/headerSearch';
 @import 'components/accessibilityBar';
 @import 'components/themeToggle';
 @import 'components/breadcrumbs';

@@ -11,28 +11,28 @@ h6 {
 h1.documentFirstHeading {
   border: none;
   margin-bottom: 1.5rem;
-  font-size: 48px;
+  font-size: map-get($font-sizes, 5xl);
   font-weight: 400;
-  line-height: 56px;
+  line-height: map-get($line-heights, 5xl);
   @media only screen and (max-width: $largest-mobile-screen) {
     margin-bottom: 1rem;
-    font-size: 36px;
+    font-size: map-get($font-sizes, 3xl);
     font-weight: 400;
-    line-height: 40px;
+    line-height: map-get($line-heights, 3xl);
   }
 }
 
 @mixin h2_base() {
   h2 {
     padding-top: 2rem;
-    margin-bottom: 10px !important;
-    font-size: 24px !important;
-    font-weight: 700 !important;
-    line-height: 30px !important;
+    margin-bottom: 0.625rem;
+    font-size: map-get($font-sizes, l);
+    font-weight: 700;
+    line-height: map-get($line-heights, l);
     @media only screen and (max-width: $largest-mobile-screen) {
-      margin-right: 2rem !important;
-      margin-left: 2rem !important;
-      text-align: center !important;
+      margin-right: 2rem;
+      margin-left: 2rem;
+      text-align: center;
     }
   }
 }
@@ -45,15 +45,15 @@ h1.documentFirstHeading {
 
 @mixin h2_headline() {
   h2.headline {
-    margin-top: 40px;
-    margin-bottom: 20px;
-    font-size: 30px !important;
-    font-weight: 400 !important;
-    line-height: 36px !important;
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    font-size: map-get($font-sizes, xl);
+    font-weight: 400;
+    line-height: map-get($line-heights, 2xl);
     @media only screen and (max-width: $largest-mobile-screen) {
-      margin-right: 2rem !important;
-      margin-left: 2rem !important;
-      text-align: center !important;
+      margin-right: 2rem;
+      margin-left: 2rem;
+      text-align: center;
     }
   }
 }

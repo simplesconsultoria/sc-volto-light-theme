@@ -1,0 +1,62 @@
+// =============================================================================
+// Global Styles
+// Non-token styles applied to body, containers, and Volto overrides.
+// =============================================================================
+
+body {
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+.ui.basic.segment.content-area {
+  padding-bottom: $spacing-medium;
+  background-color: var(--primary-color);
+}
+
+#footer > :first-child:not(:empty) {
+  padding-top: $spacing-small;
+}
+
+#page-document .blocks-group-wrapper > .block.schemaForm {
+  @include default-container-width();
+  @include adjustMarginsToContainer($default-container-width);
+}
+
+#page-document .blocks-group-wrapper > p {
+  @include adjustMarginsToContainer($default-container-width);
+}
+
+.color-swatch-widget.field-wrapper-theme {
+  .react-aria-RadioGroup {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+#page-edit [class*='block-editor-'] .block button.delete-button {
+  color: var(--primary-foreground-color) !important;
+}
+
+body .block.search .search-wrapper {
+  .search-input {
+    .ui.fluid.input {
+      input {
+        color: var(--theme-top-foreground-color);
+      }
+    }
+    .search-input-live-icon-button {
+      fill: var(--theme-top-foreground-color);
+      &:hover {
+        fill: color-mix(
+          in srgb,
+          var(--theme-top-foreground-color) 70%,
+          transparent 30%
+        ) !important;
+      }
+      svg,
+      path {
+        fill: inherit !important;
+      }
+    }
+  }
+}

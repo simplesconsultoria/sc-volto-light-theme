@@ -10,6 +10,12 @@ import {
   configurePortugueseUtterance,
 } from '../../../utils/speechSynthesis';
 
+import {
+  getStoredNumber,
+  getStoredBoolean,
+  savePreference,
+} from '../../../utils/storage';
+
 const STORAGE_KEYS = {
   hoverReaderEnabled: 'accessibility:hover-reader-enabled',
   hoverReaderRate: 'accessibility:hover-reader-rate',
@@ -20,38 +26,6 @@ const RATE_MAX = 1.4;
 const DEFAULT_RATE = 1;
 const TEXT_TARGET_SELECTOR =
   'h1, h2, h3, h4, h5, h6, p, span, a, button, label, li, td, th, figcaption, blockquote, div';
-
-const getStoredNumber = (key: string, fallback: number): number => {
-  if (typeof window === 'undefined') return fallback;
-
-  try {
-    const value = Number(window.localStorage.getItem(key));
-    return Number.isFinite(value) ? value : fallback;
-  } catch {
-    return fallback;
-  }
-};
-
-const getStoredBoolean = (key: string, fallback: boolean): boolean => {
-  if (typeof window === 'undefined') return fallback;
-
-  try {
-    const value = window.localStorage.getItem(key);
-    if (value === null) return fallback;
-    return value === 'true';
-  } catch {
-    return fallback;
-  }
-};
-
-const savePreference = (key: string, value: string) => {
-  try {
-    window.localStorage.setItem(key, value);
-  } catch {
-    // Ignore storage failures and keep runtime behavior.
-  }
-};
-
 const messages = defineMessages({
   hoverReaderLabel: {
     id: 'accessibilityHoverReaderLabel',

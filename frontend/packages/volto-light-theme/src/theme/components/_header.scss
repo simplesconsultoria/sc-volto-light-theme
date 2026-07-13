@@ -1,4 +1,7 @@
+// =============================================================================
 // Header wrapper
+// =============================================================================
+
 body header.header-wrapper {
   position: sticky;
   z-index: 60;
@@ -6,6 +9,7 @@ body header.header-wrapper {
   padding: 0;
   background-color: var(--header-background);
   color: var(--header-foreground);
+
   .header {
     // Seção principal do Header
     .header-main {
@@ -44,238 +48,9 @@ body header.header-wrapper {
           align-items: center;
           gap: 1rem;
         }
-
-        .mobile-accessibility-dropdown {
-          position: relative;
-          display: none;
-
-          @media only screen and (max-width: $largest-mobile-screen) {
-            display: block;
-          }
-
-          .mobile-accessibility-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            border: none;
-            background: none;
-            color: var(--header-foreground);
-            cursor: pointer;
-
-            svg {
-              width: 30px;
-              height: 30px;
-              fill: currentColor;
-            }
-          }
-
-          .mobile-accessibility-menu {
-            position: absolute;
-            z-index: 100;
-            top: 100%;
-            right: 0;
-            min-width: 200px;
-            padding: 1rem;
-            border-radius: 4px;
-            margin-top: 1rem;
-            background-color: var(--secondary-color);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            color: var(--secondary-foreground-color);
-
-            .mobile-accessibility-menu-inner {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              gap: 1rem;
-
-              .header-accessibility-controls {
-                justify-content: center;
-              }
-
-              a {
-                color: var(--secondary-foreground-color);
-              }
-
-              .language-selector,
-              .tools,
-              .tools .anontools {
-                display: flex;
-                align-items: center;
-              }
-            }
-          }
-        }
-      }
-
-      // Wrapper de Busca
-      .search-wrapper {
-        position: static;
-        display: flex;
-        overflow: visible;
-        flex: 0 0 auto;
-        align-items: center;
-
-        &.navigation-desktop {
-          @media only screen and (max-width: 991px) {
-            display: none;
-          }
-        }
-
-        .search-button {
-          display: flex;
-          align-items: center;
-
-          button {
-            width: $spacing-medium;
-            height: $spacing-medium;
-            border: 1px solid transparent;
-            border-radius: 999px;
-            background-color: transparent;
-            color: var(--header-foreground) !important;
-            line-height: 0;
-            transition:
-              background-color 200ms ease-in-out,
-              border-color 200ms ease-in-out,
-              color 300ms ease-in-out,
-              transform 100ms ease-in-out;
-
-            svg {
-              height: $spacing-small !important;
-              transition: transform 300ms ease-in-out;
-            }
-
-            &:hover,
-            &:focus-visible {
-              border-color: rgba(0, 0, 0, 0.12);
-              background-color: var(--accent-color) !important;
-              color: var(--accent-foreground-color) !important;
-              cursor: pointer;
-
-              svg {
-                transform: scale(0.75);
-              }
-            }
-
-            &:active {
-              transform: scale(0.92);
-              transition-duration: 100ms;
-            }
-          }
-        }
-
-        .search-bar {
-          position: absolute;
-          z-index: 260;
-          top: 0;
-          right: 0;
-          left: 0;
-          display: flex;
-          width: 100%;
-          height: 100%;
-          min-height: 100%;
-          align-items: center;
-          padding: 1rem 1.25rem;
-          border: 0;
-          border-radius: 0;
-          background: var(--primary-color);
-          box-shadow: 0 16px 24px rgba(0, 0, 0, 0.14);
-          opacity: 0;
-          pointer-events: none;
-          transform: translateY(-0.6rem);
-          transition:
-            opacity 200ms ease,
-            transform 200ms ease,
-            box-shadow 200ms ease;
-
-          &.active {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(0);
-
-            @media only screen and (max-width: $largest-mobile-screen) {
-              width: 100%;
-            }
-          }
-
-          .ui.container {
-            display: flex;
-            width: 100%;
-            height: auto;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-          }
-
-          form {
-            width: 100%;
-          }
-
-          .searchbox {
-            display: flex;
-            width: 100%;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 0;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--primary-foreground-color) !important;
-            border-left: none;
-            margin-left: 0 !important;
-            gap: 0.75rem;
-
-            @media only screen and (max-width: $tablet-breakpoint) {
-              padding-top: 0.5rem;
-            }
-
-            input {
-              width: 100%;
-              min-width: 0;
-              padding-left: 0;
-              border: none;
-              background: transparent;
-              color: var(--primary-foreground-color);
-              @include text-heading-h4();
-              font-weight: 400;
-
-              &:focus {
-                outline: none;
-              }
-
-              &::placeholder {
-                color: var(--gray-50, #757575);
-                opacity: 1;
-              }
-            }
-
-            button {
-              flex: 0 0 auto;
-              padding: 0.5rem;
-              border: 0;
-              border-radius: 100%;
-              background: var(--primary-color) !important;
-              line-height: 0;
-
-              svg {
-                width: auto;
-                height: 2rem !important;
-
-                path {
-                  fill: var(--primary-foreground-color) !important;
-                }
-              }
-
-              &:hover {
-                background-color: var(--primary-foreground-color) !important;
-
-                path {
-                  fill: var(--primary-color) !important;
-                }
-              }
-            }
-          }
-        }
       }
     }
+
     .hamburger-wrapper .hamburger-inner::before,
     .hamburger-wrapper .hamburger-inner::after,
     .hamburger-wrapper .hamburger::before,
@@ -286,10 +61,10 @@ body header.header-wrapper {
 
   // Layout principal
   .q.container.layout {
-    position: static !important;
+    position: static;
 
     @media only screen and (max-width: 1021px) {
-      position: relative !important;
+      position: relative;
     }
 
     .header {
@@ -298,90 +73,6 @@ body header.header-wrapper {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-    }
-  }
-
-  // Barra de acessibilidade
-  .header-accessibility-bar {
-    @media only screen and (max-width: $largest-mobile-screen) {
-      display: none !important;
-    }
-
-    position: relative;
-    z-index: 15;
-    background-color: var(--secondary-color);
-    color: var(--secondary-foreground-color);
-
-    .header-accessibility {
-      @include adjustMarginsToContainer($layout-container-width);
-      @include layout-container-width();
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 0.5rem 0;
-
-      &__actions {
-        display: flex;
-        width: 100%;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 0.75rem;
-
-        @media only screen and (max-width: $tablet-breakpoint) {
-          justify-content: center;
-
-          .header-accessibility-controls {
-            align-items: center;
-            justify-content: center;
-
-            .header-accessibility-controls__range {
-              position: absolute;
-              overflow: hidden;
-              width: 1px;
-              height: 1px;
-              padding: 0;
-              border: 0;
-              margin: -1px;
-              clip: rect(0, 0, 0, 0);
-              white-space: nowrap;
-            }
-          }
-
-          .header-accessibility-controls__range {
-            position: absolute;
-            overflow: hidden;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            border: 0;
-            margin: -1px;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-          }
-        }
-      }
-
-      &__tools {
-        display: flex;
-        align-items: center;
-
-        a {
-          color: var(--secondary-foreground-color);
-        }
-      }
-    }
-
-    // Agrupando seletores com estilos compartilhados
-    .language-selector,
-    .tools,
-    .tools .anontools {
-      display: flex;
-      align-items: center;
-
-      a {
-        color: var(--accent-foreground-color);
-      }
     }
   }
 }

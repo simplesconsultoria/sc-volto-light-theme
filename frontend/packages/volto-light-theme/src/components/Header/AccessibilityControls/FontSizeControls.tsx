@@ -2,30 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import Helmet from '@plone/volto/helpers/Helmet/Helmet';
 
+import { getStoredNumber, savePreference } from '../../../utils/storage';
+
 const STORAGE_KEY = 'accessibility:font-scale';
 const FONT_SCALE_MIN = 0.8;
 const FONT_SCALE_MAX = 1.3;
 const FONT_SCALE_STEP = 0.1;
-
-const getStoredNumber = (key: string, fallback: number): number => {
-  if (typeof window === 'undefined') return fallback;
-
-  try {
-    const value = Number(window.localStorage.getItem(key));
-    return Number.isFinite(value) ? value : fallback;
-  } catch {
-    return fallback;
-  }
-};
-
-const savePreference = (key: string, value: string) => {
-  try {
-    window.localStorage.setItem(key, value);
-  } catch {
-    // Ignora falhas de storage e mantém o comportamento em tempo de execução
-  }
-};
-
 const messages = defineMessages({
   increaseFontSize: {
     id: 'accessibilityIncreaseFontSize',
