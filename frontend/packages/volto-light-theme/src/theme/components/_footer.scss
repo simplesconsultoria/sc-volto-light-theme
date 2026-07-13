@@ -264,11 +264,14 @@
         }
         margin: 0;
         a {
-          color: color-mix(in srgb, var(--secondary-foreground-color) 70%, transparent);
+          color: color-mix(
+            in srgb,
+            var(--secondary-foreground-color) 70%,
+            transparent
+          );
           &:hover {
             color: var(--secondary-foreground-color);
           }
-        
         }
       }
     }

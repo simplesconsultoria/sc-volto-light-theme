@@ -13,7 +13,6 @@ const PostFooter = ({
   content: Content;
   location?: any;
 }) => {
-
   const footer_column_left_header = useLiveData<any>(
     content,
     'kitconcept.footer',
