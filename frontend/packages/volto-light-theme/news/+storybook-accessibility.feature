@@ -1,0 +1,1 @@
+Added Storybook coverage for the accessibility controls, including `ThemeToggle`, `FontSizeControls` and `HoverReaderControls`. @humanaice
