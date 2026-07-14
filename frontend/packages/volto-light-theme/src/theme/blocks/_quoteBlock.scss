@@ -1,0 +1,88 @@
+// =============================================================================
+// Quote Block (Bloco de Citação)
+// A blockquote with a solid left border and optional filled background
+// =============================================================================
+
+$quote-border-width: 8px;
+$quote-padding-left: $spacing-medium;
+$quote-padding-vertical: $spacing-medium;
+
+.block.quoteBlock {
+  background-color: var(--theme-color);
+  color: var(--theme-foreground-color, var(--primary-foreground-color));
+  @include narrow-container-width();
+  @include adjustMarginsToContainer($narrow-container-width);
+}
+
+.quote-block {
+  position: relative;
+  width: 100%;
+  padding: $quote-padding-vertical $spacing-small $quote-padding-vertical
+    $quote-padding-left;
+  border: none;
+  border-left: $quote-border-width solid
+    var(--theme-high-contrast-color, var(--accent-color));
+  margin: 0;
+
+  // Transparent background (default)
+  &.bg-transparent {
+    background-color: transparent;
+  }
+
+  // Filled background — mixes the border color with the base background
+  &.bg-filled {
+    background-color: color-mix(
+      in srgb,
+      var(--theme-high-contrast-color, var(--accent-color)) 70%,
+      var(--theme-color, var(--primary-color))
+    );
+  }
+
+  .quote-text {
+    p,
+    [data-slate-node='element'] > span {
+      color: inherit;
+      font-family: var(--font-sans);
+      font-size: map-get($font-sizes, m);
+      font-style: italic;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+  }
+
+  .quote-author {
+    margin-top: $spacing-small;
+
+    cite {
+      color: var(--theme-foreground-color);
+      font-family: var(--font-sans);
+      font-size: map-get($font-sizes, xs);
+      font-style: normal;
+      font-weight: 600;
+
+      &::before {
+        content: '— ';
+      }
+    }
+  }
+}
+
+// Edit mode adjustments
+#page-edit,
+#page-add {
+  .block-editor-quoteBlock {
+    // .block.quoteBlock {
+    //   max-width: var(--default-container-width, 940px);
+    // }
+
+    // Ensure slate editor inherits the italic style
+    .quote-text {
+      .text-slate-editor-inner {
+        [data-slate-node='element'] > span {
+          color: inherit;
+          font-style: italic;
+        }
+      }
+    }
+  }
+}

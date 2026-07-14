@@ -1,0 +1,151 @@
+:root {
+  // Layout
+  --narrow-container-width: 940px !important;
+  --default-container-width: 940px !important;
+  --layout-container-width: 1440px !important;
+
+  // Base colors
+  --pure-white: #fff;
+  --pure-black: #000;
+  --gray-02: #f8f8f8;
+  --gray-cool-05: #edeff0;
+  --gray-10: #e6e6e6;
+  --gray-50: #757575;
+  --gray-80: #333;
+
+  // Brand colors
+  --brand-color: #f4822c;
+  --brand-color-dark: #b55e1c;
+
+  // Semantic colors
+  --primary-color: light-dark(var(--pure-white), var(--pure-black));
+  --primary-foreground-color: light-dark(var(--pure-black), var(--pure-white));
+  --primary-low-foreground-color: light-dark(var(--gray-80), var(--gray-02));
+  --primary-accent-color: light-dark(
+    var(--brand-color-dark),
+    var(--brand-color)
+  );
+
+  --secondary-color: var(--pure-black);
+  --secondary-foreground-color: var(--pure-white);
+  --secondary-low-foreground-color: var(--gray-10);
+  --secondary-accent-color: var(--brand-color);
+
+  --accent-color: var(--brand-color);
+  --accent-foreground-color: var(--pure-black);
+  --accent-low-foreground-color: var(--gray-80);
+  --accent-accent-color: var(--pure-black);
+
+  --neutral-color: var(--gray-cool-05);
+  --neutral-foreground-color: var(--pure-black);
+  --neutral-low-foreground-color: var(--gray-80);
+  --neutral-accent-color: var(--brand-color);
+
+  --link-foreground-color: var(--brand-color);
+
+  // Layout mappings
+  --header-background: var(--primary-color);
+  --header-foreground: var(--primary-foreground-color);
+  --footer-background: var(--secondary-color);
+  --footer-foreground: var(--secondary-foreground-color);
+  --fatmenu-background: var(--primary-color);
+  --fatmenu-foreground: var(--primary-foreground-color);
+  --breadcrumbs-background: var(--primary-color);
+  --breadcrumbs-foreground: var(--primary-foreground-color);
+  --search-background: var(--primary-color);
+  --search-foreground: var(--primary-foreground-color);
+
+  // Type
+  --font-sans: system-ui, sans-serif;
+  --custom-font: system-ui, sans-serif;
+  --custom-main-font: system-ui, sans-serif;
+  --font-body: system-ui, sans-serif;
+
+  // Block theme: Default
+  --block-theme-default-bg: var(--primary-color);
+  --block-theme-default-text: var(--primary-foreground-color);
+  --block-theme-default-low-contrast: var(--primary-low-foreground-color);
+  --block-theme-default-accent-color: var(--primary-accent-color);
+  --block-theme-default-high-bg: var(--neutral-color);
+  --block-theme-default-top-text: var(--neutral-foreground-color);
+  --block-theme-default-top-low-contrast: var(--neutral-low-foreground-color);
+  --block-theme-default-top-accent-color: var(--neutral-accent-color);
+  --block-theme-default-border: var(--accent-color);
+  --block-theme-default-border-width: 4px 0 0;
+
+  // Block theme: Brand
+  --block-theme-brand-bg: var(--accent-color);
+  --block-theme-brand-text: var(--accent-foreground-color);
+  --block-theme-brand-low-contrast: var(--accent-low-foreground-color);
+  --block-theme-brand-accent-color: var(--accent-accent-color);
+  --block-theme-brand-high-bg: var(--primary-color);
+  --block-theme-brand-top-text: var(--primary-foreground-color);
+  --block-theme-brand-top-low-contrast: var(--primary-low-foreground-color);
+  --block-theme-brand-top-accent-color: var(--primary-accent-color);
+  --block-theme-brand-border: unset;
+
+  // Links
+  --link-color: var(--brand-color);
+  --link-color-hover: var(--brand-color-dark);
+  --color-link: var(--brand-color);
+  --color-link-hover: var(--brand-color-dark);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+}
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+[data-theme='high-contrast'] {
+  color-scheme: dark;
+
+  --text-high-contrast: #fff;
+  --bg-high-contrast: #000;
+  --border-high-contrast: #fff;
+  --link-high-contrast: #fff333;
+  --accent-high-contrast: #fff;
+
+  --primary-color: var(--bg-high-contrast);
+  --primary-foreground-color: var(--text-high-contrast);
+  --primary-low-foreground-color: var(--text-high-contrast);
+  --primary-accent-color: var(--accent-high-contrast);
+  --secondary-color: var(--bg-high-contrast);
+  --secondary-foreground-color: var(--text-high-contrast);
+  --secondary-low-foreground-color: var(--text-high-contrast);
+  --secondary-accent-color: var(--accent-high-contrast);
+  --accent-color: var(--bg-high-contrast);
+  --accent-foreground-color: var(--text-high-contrast);
+  --accent-low-foreground-color: var(--text-high-contrast);
+  --accent-accent-color: var(--accent-high-contrast);
+  --neutral-color: var(--bg-high-contrast);
+  --neutral-foreground-color: var(--text-high-contrast);
+  --neutral-low-foreground-color: var(--text-high-contrast);
+  --neutral-accent-color: var(--accent-high-contrast);
+
+  --link-foreground-color: var(--link-high-contrast);
+
+  --block-theme-default-border: var(--border-high-contrast);
+  --block-theme-default-border-width: 3px;
+  --block-theme-brand-border: var(--border-high-contrast);
+  --block-theme-brand-border-width: 3px;
+
+  a {
+    color: var(--link-foreground-color) !important;
+    text-decoration: underline !important;
+
+    h2,
+    h3,
+    p {
+      color: inherit !important;
+      text-decoration: underline !important;
+    }
+  }
+
+  .card-summary {
+    .title {
+      color: var(--link-foreground-color) !important;
+      text-decoration: underline !important;
+    }
+  }
+}

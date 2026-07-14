@@ -1,0 +1,9 @@
+.page-not-found {
+  #main {
+    background-color: var(--primary-color);
+    .ui.basic.segment.content-area {
+      background-color: var(--primary-color);
+      color: var(--primary-foreground-color);
+    }
+  }
+}

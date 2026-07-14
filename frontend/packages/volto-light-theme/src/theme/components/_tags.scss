@@ -1,0 +1,16 @@
+.q.container.tags {
+  max-width: var(--default-container-width) !important;
+  margin-right: auto;
+  margin-left: auto;
+  > a.ui.label {
+    border: 2px solid var(--primary-foreground-color);
+    border-radius: 0;
+    background-color: var(--primary-color);
+    color: var(--primary-foreground-color);
+    @include body-text-bold();
+    &:hover {
+      background-color: var(--accent-color);
+      color: var(--accent-foreground-color);
+    }
+  }
+}

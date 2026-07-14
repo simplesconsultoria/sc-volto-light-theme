@@ -1,0 +1,27 @@
+.block.schemaForm {
+  .ui.segment {
+    background-color: var(--theme-color);
+    label {
+      color: var(--theme-foreground-color);
+    }
+    input,
+    textarea {
+      background-color: var(--theme-color);
+      color: var(--theme-foreground-color);
+    }
+  }
+  .ui.clearing.segment.actions {
+    background-color: var(--theme-color);
+    button {
+      background-color: var(--theme-high-contrast-color);
+      color: var(--theme-top-foreground-color);
+      &:hover {
+        background-color: var(--theme-top-foreground-color);
+        color: var(--theme-high-contrast-color);
+      }
+      &:focus {
+        outline: 2px solid var(--theme-top-foreground-color);
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+// Headers
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: inherit;
+}
+
+h1.documentFirstHeading {
+  border: none;
+  margin-bottom: 1.5rem;
+  font-size: map-get($font-sizes, 5xl);
+  font-weight: 400;
+  line-height: map-get($line-heights, 5xl);
+  @media only screen and (max-width: $largest-mobile-screen) {
+    margin-bottom: 1rem;
+    font-size: map-get($font-sizes, 3xl);
+    font-weight: 400;
+    line-height: map-get($line-heights, 3xl);
+  }
+}
+
+@mixin h2_base() {
+  h2 {
+    padding-top: 2rem;
+    margin-bottom: 0.625rem;
+    font-size: map-get($font-sizes, l);
+    font-weight: 700;
+    line-height: map-get($line-heights, l);
+    @media only screen and (max-width: $largest-mobile-screen) {
+      margin-right: 2rem;
+      margin-left: 2rem;
+      text-align: center;
+    }
+  }
+}
+
+@mixin h2_block() {
+  .content {
+    @include h2_base();
+  }
+}
+
+@mixin h2_headline() {
+  h2.headline {
+    margin-top: 2.5rem;
+    margin-bottom: 1.25rem;
+    font-size: map-get($font-sizes, xl);
+    font-weight: 400;
+    line-height: map-get($line-heights, 2xl);
+    @media only screen and (max-width: $largest-mobile-screen) {
+      margin-right: 2rem;
+      margin-left: 2rem;
+      text-align: center;
+    }
+  }
+}

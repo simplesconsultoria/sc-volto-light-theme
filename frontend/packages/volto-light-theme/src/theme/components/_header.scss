@@ -1,0 +1,78 @@
+// =============================================================================
+// Header wrapper
+// =============================================================================
+
+body header.header-wrapper {
+  position: sticky;
+  z-index: 60;
+  top: 0;
+  padding: 0;
+  background-color: var(--header-background);
+  color: var(--header-foreground);
+
+  .header {
+    // Seção principal do Header
+    .header-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+
+      // Wrapper do Logo e Navegação
+      .logo-nav-wrapper {
+        display: flex;
+        min-width: 0;
+        flex: 1 1 auto;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 0;
+        gap: 1.5rem;
+
+        .logo {
+          flex: 0 0 auto;
+
+          a {
+            display: flex;
+          }
+
+          img {
+            width: auto;
+            max-width: 100%;
+            height: auto;
+            max-height: 60px;
+          }
+        }
+
+        .mobile-nav-actions {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+      }
+    }
+
+    .hamburger-wrapper .hamburger-inner::before,
+    .hamburger-wrapper .hamburger-inner::after,
+    .hamburger-wrapper .hamburger::before,
+    .hamburger-wrapper .hamburger::after {
+      background-color: var(--header-foreground);
+    }
+  }
+
+  // Layout principal
+  .q.container.layout {
+    position: static;
+
+    @media only screen and (max-width: 1021px) {
+      position: relative;
+    }
+
+    .header {
+      @include adjustMarginsToContainer($layout-container-width);
+      @include layout-container-width();
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+}
