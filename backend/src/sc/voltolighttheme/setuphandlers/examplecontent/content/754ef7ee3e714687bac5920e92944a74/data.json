@@ -1,0 +1,135 @@
+{
+  "@id": "/news/berlin",
+  "@type": "News Item",
+  "UID": "754ef7ee3e714687bac5920e92944a74",
+  "allow_discussion": null,
+  "blocks": {
+    "0cb0aae6-f35f-4280-bea0-46a2c0c0c054": {
+      "@type": "slate",
+      "plaintext": "",
+      "styles": {},
+      "theme": "default",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "\n"
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "267c2d2f-b69b-42c7-b6ec-bc039c4e0c0c": {
+      "@type": "mainImageBlock",
+      "align": "center",
+      "description": "\u00c9rico Andrei",
+      "size": "l",
+      "styles": {
+        "blockWidth:noprefix": {
+          "--block-width": "var(--default-container-width)"
+        }
+      },
+      "theme": "default",
+      "title": "Konzerthaus, Berlin"
+    },
+    "4cc6595b-f56a-4b94-88b9-9999d4ab4482": {
+      "@type": "title"
+    },
+    "892b098e-448c-4ab5-b5d5-0d2de35132f3": {
+      "@type": "slate",
+      "plaintext": "Vestibulum gravida semper sem, a bibendum sapien vehicula quis. Duis rutrum elit at tempus ultrices. Proin rutrum vehicula ante, vitae gravida tortor cursus vitae. Curabitur quis leo eleifend, vulputate ligula et, molestie arcu. Nunc eu mauris id metus rutrum egestas nec sit amet nisl. Etiam aliquam vulputate nisl, ac pharetra arcu aliquam id. Phasellus dignissim ligula eget tincidunt ornare. Curabitur sed nibh quis odio maximus mattis at sit amet purus. Sed at lorem at eros venenatis feugiat in quis nisl. Suspendisse ultrices consectetur faucibus. Phasellus non justo id lacus dapibus scelerisque. Vestibulum vehicula porta commodo. Aenean ullamcorper nisi vitae neque pretium, at finibus mi ornare.",
+      "styles": {},
+      "theme": "default",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Vestibulum gravida semper sem, a bibendum sapien vehicula quis. Duis rutrum elit at tempus ultrices. Proin rutrum vehicula ante, vitae gravida tortor cursus vitae. Curabitur quis leo eleifend, vulputate ligula et, molestie arcu. Nunc eu mauris id metus rutrum egestas nec sit amet nisl. Etiam aliquam vulputate nisl, ac pharetra arcu aliquam id. Phasellus dignissim ligula eget tincidunt ornare. Curabitur sed nibh quis odio maximus mattis at sit amet purus. Sed at lorem at eros venenatis feugiat in quis nisl. Suspendisse ultrices consectetur faucibus. Phasellus non justo id lacus dapibus scelerisque. Vestibulum vehicula porta commodo. Aenean ullamcorper nisi vitae neque pretium, at finibus mi ornare."
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "bf7dd869-f01c-4d1d-bd71-ceeb382faef4": {
+      "@type": "slate",
+      "plaintext": "Nullam ut mauris ultrices nisi consequat commodo et vitae nibh. Nullam tincidunt elit quis condimentum ornare. Nunc pellentesque ipsum nisi, a ultricies magna accumsan sollicitudin. Pellentesque elementum commodo elit a aliquam. Phasellus at eros ac sapien congue feugiat. Maecenas eu laoreet libero. Duis aliquet lacus et suscipit tempor.",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Nullam ut mauris ultrices nisi consequat commodo et vitae nibh. Nullam tincidunt elit quis condimentum ornare. Nunc pellentesque ipsum nisi, a ultricies magna accumsan sollicitudin. Pellentesque elementum commodo elit a aliquam. Phasellus at eros ac sapien congue feugiat. Maecenas eu laoreet libero. Duis aliquet lacus et suscipit tempor."
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "de126dda-2093-4d69-87cc-04076d9b63fc": {
+      "@type": "description"
+    }
+  },
+  "blocks_layout": {
+    "items": [
+      "4cc6595b-f56a-4b94-88b9-9999d4ab4482",
+      "de126dda-2093-4d69-87cc-04076d9b63fc",
+      "267c2d2f-b69b-42c7-b6ec-bc039c4e0c0c",
+      "892b098e-448c-4ab5-b5d5-0d2de35132f3",
+      "bf7dd869-f01c-4d1d-bd71-ceeb382faef4",
+      "0cb0aae6-f35f-4280-bea0-46a2c0c0c054"
+    ]
+  },
+  "changeNote": "",
+  "contributors": [],
+  "created": "2026-07-14T15:11:00+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "A strange news item from Berlin",
+  "effective": "2026-07-14T14:00:00+00:00",
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "id": "berlin",
+  "is_folderish": true,
+  "language": "##DEFAULT##",
+  "layout": "newsitem_view",
+  "lock": {
+    "locked": false,
+    "stealable": true
+  },
+  "modified": "2026-07-14T20:34:12+00:00",
+  "nav_title": null,
+  "preview_caption_link": null,
+  "review_state": "published",
+  "rights": "",
+  "subjects": [
+    "Berlin"
+  ],
+  "title": "News item Berlin",
+  "type_title": "News Item",
+  "version": "current",
+  "versioning_enabled": true,
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "admin",
+        "comments": "",
+        "review_state": "private",
+        "time": "2026-07-14T15:11:09+00:00"
+      },
+      {
+        "action": "publish",
+        "actor": "admin",
+        "comments": "",
+        "review_state": "published",
+        "time": "2026-07-14T15:16:16+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}

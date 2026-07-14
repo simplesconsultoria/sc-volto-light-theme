@@ -1,0 +1,118 @@
+{
+  "@id": "/news/olympia",
+  "@type": "News Item",
+  "UID": "843f25d577bc4ed0b45c6c3b032e2fbd",
+  "allow_discussion": null,
+  "blocks": {
+    "34c5272f-3181-4deb-b8ba-5ee64d7c6ef5": {
+      "@type": "slate",
+      "plaintext": "Sed vitae arcu id massa suscipit interdum vitae nec lorem. Pellentesque blandit tristique mauris id hendrerit. Fusce neque urna, vulputate id libero non, ullamcorper vulputate magna. Mauris tincidunt neque ultrices ligula tempor, quis aliquam ex lacinia. Nunc id libero sollicitudin, porttitor ligula nec, facilisis massa. Cras sit amet venenatis sem, sed convallis turpis. Suspendisse ex est, venenatis ac congue porttitor, pharetra aliquet diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris lacinia posuere mauris, a laoreet tellus rhoncus quis. Quisque non nulla tincidunt, rutrum lacus ullamcorper, fermentum sem. Suspendisse viverra erat a erat dictum ornare.",
+      "styles": {},
+      "theme": "default",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Sed vitae arcu id massa suscipit interdum vitae nec lorem. Pellentesque blandit tristique mauris id hendrerit. Fusce neque urna, vulputate id libero non, ullamcorper vulputate magna. Mauris tincidunt neque ultrices ligula tempor, quis aliquam ex lacinia. Nunc id libero sollicitudin, porttitor ligula nec, facilisis massa. Cras sit amet venenatis sem, sed convallis turpis. Suspendisse ex est, venenatis ac congue porttitor, pharetra aliquet diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris lacinia posuere mauris, a laoreet tellus rhoncus quis. Quisque non nulla tincidunt, rutrum lacus ullamcorper, fermentum sem. Suspendisse viverra erat a erat dictum ornare."
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "4cc6595b-f56a-4b94-88b9-9999d4ab4482": {
+      "@type": "title"
+    },
+    "7c74ebc8-590e-464a-bfd3-f6624c50260b": {
+      "@type": "slate",
+      "plaintext": "Etiam quis consequat odio. Nullam et cursus nisi. Nulla fermentum, metus a convallis sollicitudin, felis metus posuere felis, id cursus velit nunc ut massa. Pellentesque ut nisl dui. Pellentesque dapibus tristique velit, vel condimentum sapien placerat id. Nullam ac urna quis nisi accumsan rutrum aliquet quis magna. Proin orci quam, aliquet in sodales quis, finibus tincidunt leo. Vestibulum volutpat facilisis tristique. Vivamus ut nunc a elit vestibulum accumsan. Nam rutrum accumsan arcu, vel dignissim nisi cursus at. Proin in mi vitae magna dignissim sagittis at vel eros. Etiam molestie interdum augue, non congue nisi rutrum id. Nullam tincidunt convallis enim sed cursus. Maecenas ac nibh ut eros ullamcorper pretium eget id dolor.",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Etiam quis consequat odio. Nullam et cursus nisi. Nulla fermentum, metus a convallis sollicitudin, felis metus posuere felis, id cursus velit nunc ut massa. Pellentesque ut nisl dui. Pellentesque dapibus tristique velit, vel condimentum sapien placerat id. Nullam ac urna quis nisi accumsan rutrum aliquet quis magna. Proin orci quam, aliquet in sodales quis, finibus tincidunt leo. Vestibulum volutpat facilisis tristique. Vivamus ut nunc a elit vestibulum accumsan. Nam rutrum accumsan arcu, vel dignissim nisi cursus at. Proin in mi vitae magna dignissim sagittis at vel eros. Etiam molestie interdum augue, non congue nisi rutrum id. Nullam tincidunt convallis enim sed cursus. Maecenas ac nibh ut eros ullamcorper pretium eget id dolor."
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "de126dda-2093-4d69-87cc-04076d9b63fc": {
+      "@type": "description"
+    },
+    "ecc2f798-7f0a-4d39-811a-897d285b7ad8": {
+      "@type": "mainImageBlock",
+      "align": "center",
+      "description": "\u00c9rico Andrei",
+      "size": "l",
+      "styles": {
+        "blockWidth:noprefix": {
+          "--block-width": "var(--default-container-width)"
+        }
+      },
+      "theme": "default",
+      "title": "Olympic Stadium"
+    }
+  },
+  "blocks_layout": {
+    "items": [
+      "4cc6595b-f56a-4b94-88b9-9999d4ab4482",
+      "de126dda-2093-4d69-87cc-04076d9b63fc",
+      "ecc2f798-7f0a-4d39-811a-897d285b7ad8",
+      "7c74ebc8-590e-464a-bfd3-f6624c50260b",
+      "34c5272f-3181-4deb-b8ba-5ee64d7c6ef5"
+    ]
+  },
+  "changeNote": "",
+  "contributors": [],
+  "created": "2026-07-14T15:11:00+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "Second edition of the Summer Olympics in Germany",
+  "effective": "2022-02-10T18:20:00+00:00",
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "id": "olympia",
+  "is_folderish": true,
+  "language": "##DEFAULT##",
+  "layout": "newsitem_view",
+  "lock": {
+    "locked": false,
+    "stealable": true
+  },
+  "modified": "2026-07-14T20:32:40+00:00",
+  "nav_title": null,
+  "preview_caption_link": null,
+  "review_state": "published",
+  "rights": "",
+  "subjects": [
+    "Munich"
+  ],
+  "title": "1972 Munich Summer Olympics",
+  "type_title": "News Item",
+  "version": "current",
+  "versioning_enabled": true,
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "admin",
+        "comments": "",
+        "review_state": "private",
+        "time": "2026-07-14T15:11:13+00:00"
+      },
+      {
+        "action": "publish",
+        "actor": "admin",
+        "comments": "",
+        "review_state": "published",
+        "time": "2026-07-14T15:16:16+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}

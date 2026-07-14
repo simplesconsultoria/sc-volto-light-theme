@@ -1,0 +1,139 @@
+{
+  "@id": "/news/brasilia-cathedral",
+  "@type": "News Item",
+  "UID": "b60c9fa629bf4496b99cbd732db8212d",
+  "allow_discussion": null,
+  "blocks": {
+    "08b7733b-d3ee-41a3-970c-77c0e1bab410": {
+      "@type": "quoteBlock",
+      "author": "Somone, ",
+      "backgroundStyle": "filled",
+      "plaintext": "When the life gives you soccer balls, you invite Brazilians",
+      "styles": {},
+      "theme": "default",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "When the life gives you soccer balls, you invite Brazilians"
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "17d82772-14e8-4e01-b8bc-4376edc771c8": {
+      "@type": "slate",
+      "plaintext": "Etiam quis consequat odio. Nullam et cursus nisi. Nulla fermentum, metus a convallis sollicitudin, felis metus posuere felis, id cursus velit nunc ut massa. Pellentesque ut nisl dui. Pellentesque dapibus tristique velit, vel condimentum sapien placerat id. Nullam ac urna quis nisi accumsan rutrum aliquet quis magna. Proin orci quam, aliquet in sodales quis, finibus tincidunt leo. Vestibulum volutpat facilisis tristique. Vivamus ut nunc a elit vestibulum accumsan. Nam rutrum accumsan arcu, vel dignissim nisi cursus at. Proin in mi vitae magna dignissim sagittis at vel eros. Etiam molestie interdum augue, non congue nisi rutrum id. Nullam tincidunt convallis enim sed cursus. Maecenas ac nibh ut eros ullamcorper pretium eget id dolor.",
+      "styles": {},
+      "theme": "default",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Etiam quis consequat odio. Nullam et cursus nisi. Nulla fermentum, metus a convallis sollicitudin, felis metus posuere felis, id cursus velit nunc ut massa. Pellentesque ut nisl dui. Pellentesque dapibus tristique velit, vel condimentum sapien placerat id. Nullam ac urna quis nisi accumsan rutrum aliquet quis magna. Proin orci quam, aliquet in sodales quis, finibus tincidunt leo. Vestibulum volutpat facilisis tristique. Vivamus ut nunc a elit vestibulum accumsan. Nam rutrum accumsan arcu, vel dignissim nisi cursus at. Proin in mi vitae magna dignissim sagittis at vel eros. Etiam molestie interdum augue, non congue nisi rutrum id. Nullam tincidunt convallis enim sed cursus. Maecenas ac nibh ut eros ullamcorper pretium eget id dolor."
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "250d116c-db0b-4eef-9183-b2353049554f": {
+      "@type": "slate",
+      "plaintext": "Sed vitae arcu id massa suscipit interdum vitae nec lorem. Pellentesque blandit tristique mauris id hendrerit. Fusce neque urna, vulputate id libero non, ullamcorper vulputate magna. Mauris tincidunt neque ultrices ligula tempor, quis aliquam ex lacinia. Nunc id libero sollicitudin, porttitor ligula nec, facilisis massa. Cras sit amet venenatis sem, sed convallis turpis. Suspendisse ex est, venenatis ac congue porttitor, pharetra aliquet diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris lacinia posuere mauris, a laoreet tellus rhoncus quis. Quisque non nulla tincidunt, rutrum lacus ullamcorper, fermentum sem. Suspendisse viverra erat a erat dictum ornare.",
+      "styles": {},
+      "theme": "default",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Sed vitae arcu id massa suscipit interdum vitae nec lorem. Pellentesque blandit tristique mauris id hendrerit. Fusce neque urna, vulputate id libero non, ullamcorper vulputate magna. Mauris tincidunt neque ultrices ligula tempor, quis aliquam ex lacinia. Nunc id libero sollicitudin, porttitor ligula nec, facilisis massa. Cras sit amet venenatis sem, sed convallis turpis. Suspendisse ex est, venenatis ac congue porttitor, pharetra aliquet diam. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris lacinia posuere mauris, a laoreet tellus rhoncus quis. Quisque non nulla tincidunt, rutrum lacus ullamcorper, fermentum sem. Suspendisse viverra erat a erat dictum ornare."
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "4735ebb2-2400-4b12-8c9d-babee5611637": {
+      "@type": "mainImageBlock",
+      "align": "center",
+      "description": "\u00c9rico Andrei",
+      "size": "l",
+      "styles": {
+        "blockWidth:noprefix": {
+          "--block-width": "var(--default-container-width)"
+        }
+      },
+      "theme": "default",
+      "title": "Catedral de Bras\u00edlia"
+    },
+    "4cc6595b-f56a-4b94-88b9-9999d4ab4482": {
+      "@type": "title"
+    },
+    "de126dda-2093-4d69-87cc-04076d9b63fc": {
+      "@type": "description"
+    }
+  },
+  "blocks_layout": {
+    "items": [
+      "4cc6595b-f56a-4b94-88b9-9999d4ab4482",
+      "de126dda-2093-4d69-87cc-04076d9b63fc",
+      "4735ebb2-2400-4b12-8c9d-babee5611637",
+      "17d82772-14e8-4e01-b8bc-4376edc771c8",
+      "08b7733b-d3ee-41a3-970c-77c0e1bab410",
+      "250d116c-db0b-4eef-9183-b2353049554f"
+    ]
+  },
+  "changeNote": "",
+  "contributors": [],
+  "created": "2026-07-14T15:11:00+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "Brasilia is a well know city for its archtecture",
+  "effective": "2025-05-10T15:00:00+00:00",
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "id": "brasilia-cathedral",
+  "is_folderish": true,
+  "language": "##DEFAULT##",
+  "layout": "newsitem_view",
+  "lock": {
+    "locked": false,
+    "stealable": true
+  },
+  "modified": "2026-07-14T20:31:15+00:00",
+  "nav_title": null,
+  "preview_caption_link": null,
+  "review_state": "published",
+  "rights": "",
+  "subjects": [
+    "Bras\u00edlia"
+  ],
+  "title": "Brasilia and Archteculture",
+  "type_title": "News Item",
+  "version": "current",
+  "versioning_enabled": true,
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "admin",
+        "comments": "",
+        "review_state": "private",
+        "time": "2026-07-14T15:11:13+00:00"
+      },
+      {
+        "action": "publish",
+        "actor": "admin",
+        "comments": "",
+        "review_state": "published",
+        "time": "2026-07-14T15:16:16+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}

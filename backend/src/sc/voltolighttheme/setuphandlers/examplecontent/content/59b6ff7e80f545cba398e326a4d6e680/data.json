@@ -1,0 +1,39 @@
+{
+  "@id": "/images/konzerthaus-berlin",
+  "@type": "Image",
+  "UID": "59b6ff7e80f545cba398e326a4d6e680",
+  "allow_discussion": null,
+  "contributors": [],
+  "created": "2026-07-14T15:10:02+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "",
+  "effective": null,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "id": "konzerthaus-berlin",
+  "image": {
+    "blob_path": "59b6ff7e80f545cba398e326a4d6e680/image/Konzerthaus Berlin",
+    "content-type": "image/jpeg",
+    "filename": "Konzerthaus Berlin",
+    "height": 681,
+    "size": 170757,
+    "width": 1024
+  },
+  "is_folderish": false,
+  "language": "##DEFAULT##",
+  "layout": "image_view",
+  "lock": {},
+  "modified": "2026-07-14T15:10:02+00:00",
+  "review_state": null,
+  "rights": "",
+  "subjects": [],
+  "title": "Konzerthaus Berlin",
+  "type_title": "Image",
+  "version": "current",
+  "workflow_history": {},
+  "working_copy": null,
+  "working_copy_of": null
+}

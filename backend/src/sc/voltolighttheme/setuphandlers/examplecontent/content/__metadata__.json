@@ -1,17 +1,49 @@
 {
   "__version__": "1.0.0",
   "_blob_files_": [
+    "plone_site_root/logo/logo-simples.svg",
+    "967f87e7335e4b048feed0f456fd2674/image/Catedral Bras\u00edlia",
+    "44c771797b6c41d0865b4b98e05f4b00/image/Geirangerfjord",
+    "59b6ff7e80f545cba398e326a4d6e680/image/Konzerthaus Berlin",
+    "e63d37034939457e8a51fc22a5218000/image/Lombard Street",
+    "f98ff2810c6e4a44b94bb26c2dd6f934/image/Olympiastadion (Munich)",
     "6f64faaec60345bcb2caf4051f5533b9/image/Simples Consultoria"
   ],
   "_data_files_": [
     "plone_site_root/data.json",
+    "78bf604e5165465baf78e6ff5f1507e9/data.json",
+    "613381b396b049efba9174174503abe5/data.json",
+    "6c46de92b5b74add82d55f033619f8a7/data.json",
     "a720393b3c0240e5bd27c43fcd2cfd1e/data.json",
-    "6f64faaec60345bcb2caf4051f5533b9/data.json"
+    "967f87e7335e4b048feed0f456fd2674/data.json",
+    "44c771797b6c41d0865b4b98e05f4b00/data.json",
+    "59b6ff7e80f545cba398e326a4d6e680/data.json",
+    "e63d37034939457e8a51fc22a5218000/data.json",
+    "f98ff2810c6e4a44b94bb26c2dd6f934/data.json",
+    "6f64faaec60345bcb2caf4051f5533b9/data.json",
+    "db01c9ef00814e0cb6c4be324e004ec3/data.json",
+    "754ef7ee3e714687bac5920e92944a74/data.json",
+    "b60c9fa629bf4496b99cbd732db8212d/data.json",
+    "843f25d577bc4ed0b45c6c3b032e2fbd/data.json",
+    "fe7df55df725423a9267ecffd8b15750/data.json"
   ],
   "default_page": {},
   "local_permissions": {
+    "44c771797b6c41d0865b4b98e05f4b00": {},
+    "59b6ff7e80f545cba398e326a4d6e680": {},
+    "613381b396b049efba9174174503abe5": {},
+    "6c46de92b5b74add82d55f033619f8a7": {},
     "6f64faaec60345bcb2caf4051f5533b9": {},
+    "754ef7ee3e714687bac5920e92944a74": {},
+    "78bf604e5165465baf78e6ff5f1507e9": {},
+    "843f25d577bc4ed0b45c6c3b032e2fbd": {},
+    "967f87e7335e4b048feed0f456fd2674": {},
     "a720393b3c0240e5bd27c43fcd2cfd1e": {},
+    "b60c9fa629bf4496b99cbd732db8212d": {},
+    "db01c9ef00814e0cb6c4be324e004ec3": {},
+    "e63d37034939457e8a51fc22a5218000": {},
+    "f98ff2810c6e4a44b94bb26c2dd6f934": {},
+    "fe7df55df725423a9267ecffd8b15750": {},
     "plone_site_root": {
       "Add portal member": {
         "acquire": false,
@@ -66,6 +98,34 @@
     }
   },
   "local_roles": {
+    "44c771797b6c41d0865b4b98e05f4b00": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "59b6ff7e80f545cba398e326a4d6e680": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "613381b396b049efba9174174503abe5": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "6c46de92b5b74add82d55f033619f8a7": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
     "6f64faaec60345bcb2caf4051f5533b9": {
       "local_roles": {
         "admin": [
@@ -73,7 +133,70 @@
         ]
       }
     },
+    "754ef7ee3e714687bac5920e92944a74": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "78bf604e5165465baf78e6ff5f1507e9": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "843f25d577bc4ed0b45c6c3b032e2fbd": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "967f87e7335e4b048feed0f456fd2674": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
     "a720393b3c0240e5bd27c43fcd2cfd1e": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "b60c9fa629bf4496b99cbd732db8212d": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "db01c9ef00814e0cb6c4be324e004ec3": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "e63d37034939457e8a51fc22a5218000": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "f98ff2810c6e4a44b94bb26c2dd6f934": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "fe7df55df725423a9267ecffd8b15750": {
       "local_roles": {
         "admin": [
           "Owner"
@@ -89,8 +212,21 @@
     }
   },
   "ordering": {
+    "44c771797b6c41d0865b4b98e05f4b00": 2,
+    "59b6ff7e80f545cba398e326a4d6e680": 3,
+    "613381b396b049efba9174174503abe5": 0,
+    "6c46de92b5b74add82d55f033619f8a7": 1,
     "6f64faaec60345bcb2caf4051f5533b9": 0,
-    "a720393b3c0240e5bd27c43fcd2cfd1e": 41
+    "754ef7ee3e714687bac5920e92944a74": 1,
+    "78bf604e5165465baf78e6ff5f1507e9": 42,
+    "843f25d577bc4ed0b45c6c3b032e2fbd": 2,
+    "967f87e7335e4b048feed0f456fd2674": 1,
+    "a720393b3c0240e5bd27c43fcd2cfd1e": 41,
+    "b60c9fa629bf4496b99cbd732db8212d": 3,
+    "db01c9ef00814e0cb6c4be324e004ec3": 43,
+    "e63d37034939457e8a51fc22a5218000": 5,
+    "f98ff2810c6e4a44b94bb26c2dd6f934": 4,
+    "fe7df55df725423a9267ecffd8b15750": 0
   },
   "relations": []
 }

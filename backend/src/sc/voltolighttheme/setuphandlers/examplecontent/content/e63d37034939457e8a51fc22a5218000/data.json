@@ -1,0 +1,39 @@
+{
+  "@id": "/images/lombard-street",
+  "@type": "Image",
+  "UID": "e63d37034939457e8a51fc22a5218000",
+  "allow_discussion": null,
+  "contributors": [],
+  "created": "2026-07-14T15:10:02+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "",
+  "effective": null,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "id": "lombard-street",
+  "image": {
+    "blob_path": "e63d37034939457e8a51fc22a5218000/image/Lombard Street",
+    "content-type": "image/jpeg",
+    "filename": "Lombard Street",
+    "height": 768,
+    "size": 290966,
+    "width": 1024
+  },
+  "is_folderish": false,
+  "language": "##DEFAULT##",
+  "layout": "image_view",
+  "lock": {},
+  "modified": "2026-07-14T15:10:02+00:00",
+  "review_state": null,
+  "rights": "",
+  "subjects": [],
+  "title": "Lombard Street",
+  "type_title": "Image",
+  "version": "current",
+  "workflow_history": {},
+  "working_copy": null,
+  "working_copy_of": null
+}
