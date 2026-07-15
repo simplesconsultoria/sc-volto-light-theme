@@ -1,0 +1,1 @@
+Added a footer behavior with a brand slogan and a brand message, and enabled the kitconcept footer behavior so a site can set its own footer logo. Both are editable per site and subsite, and the example content now fills them in. @ericof

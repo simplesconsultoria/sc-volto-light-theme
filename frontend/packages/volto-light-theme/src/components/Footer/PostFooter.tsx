@@ -1,7 +1,7 @@
 import { Container } from '@plone/components';
 import type { Content } from '@plone/types';
 
-import Logo from '@plone/volto/components/theme/Logo/Logo';
+import Logo from '@kitconcept/volto-light-theme/components/Logo/Logo';
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
 import { useLiveData } from '@kitconcept/volto-light-theme/helpers/useLiveData';
 import ColumnLinks from '@kitconcept/volto-light-theme/components/Footer/ColumnLinks';
@@ -46,19 +46,27 @@ const PostFooter = ({
     'footer_column_right',
   );
 
+  const brand_slogan = useLiveData<any>(
+    content,
+    'sc.voltolighttheme.footer',
+    'footer_brand_slogan',
+  );
+  const brand_message = useLiveData<any>(
+    content,
+    'sc.voltolighttheme.footer',
+    'footer_brand_message',
+  );
+
   return (
     <Container className="footer-post-footer-container">
       <div className="navigation-row">
         <div className="column-brand">
           <div className="brand-logo">
-            <Logo />
+            <Logo isFooterLogo />
           </div>
           <div className="brand-info">
-            <p className="brand-slogan">Aqui ficará o texto</p>
-            <p className="brand-description">
-              Daqui ficará o texto para o rodapé do site, com as informações
-              necessárias para os usuários.
-            </p>
+            <p className="brand-slogan">{brand_slogan}</p>
+            <p className="brand-description">{brand_message}</p>
             <SlotRenderer
               name="followUs"
               content={content}

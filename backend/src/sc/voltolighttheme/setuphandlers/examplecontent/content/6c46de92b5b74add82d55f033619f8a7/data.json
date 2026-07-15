@@ -101,7 +101,7 @@
     "admin"
   ],
   "description": "Plone CMS is built by a global community of developers, designers and organizations.",
-  "effective": "2026-07-14T20:42:54+00:00",
+  "effective": "2026-07-14T20:42:00+00:00",
   "exclude_from_nav": false,
   "expires": null,
   "exportimport.constrains": {},

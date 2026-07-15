@@ -3,12 +3,19 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:plone="http://namespaces.plone.org/plone"
     xmlns:zcml="http://namespaces.zope.org/zcml"
-    i18n_domain="sc.voltolightthem"
+    i18n_domain="sc.voltolighttheme"
     >
 
   <adapter
       factory=".settings.SchemaCleanupPlugin"
       name="sc.voltolighttheme.schema_cleanup"
+      />
+
+  <plone:behavior
+      name="sc.voltolighttheme.footer"
+      title="sc.voltolighttheme specific footer customizations"
+      description="Set of fields to customize sc.voltolighttheme's distributions sites and subsites"
+      provides=".footer.ISCFooter"
       />
 
 </configure>

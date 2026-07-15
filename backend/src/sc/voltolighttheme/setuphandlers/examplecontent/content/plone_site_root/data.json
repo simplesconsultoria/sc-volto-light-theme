@@ -116,6 +116,9 @@
   "exportimport.conversation": [],
   "facebook_app_id": "",
   "facebook_username": "",
+  "footer_address": null,
+  "footer_brand_message": "This is the Volto Light Theme with strong opinions by Simples Consultoria",
+  "footer_brand_slogan": "Volto Light Theme Rocks",
   "footer_colophon_text": [
     {
       "children": [
@@ -168,7 +171,56 @@
       "type": "p"
     }
   ],
+  "footer_column_left": [
+    {
+      "@id": "3c06e6cb-d531-48bf-81c2-db71c6f490f8",
+      "href": [
+        {
+          "@id": "https://simplesconsultoria.com.br",
+          "title": "simplesconsultoria.com.br"
+        }
+      ],
+      "openLinkInNewTab": true,
+      "title": "Our site"
+    }
+  ],
+  "footer_column_left_header": "Simples Consultoria",
+  "footer_column_middle": [
+    {
+      "@id": "a8326a48-3bba-402c-8d34-85c803efb579",
+      "href": [
+        {
+          "@id": "https://plone.org/",
+          "title": "plone.org/"
+        }
+      ],
+      "openLinkInNewTab": true,
+      "title": "Plone.org"
+    },
+    {
+      "@id": "27548258-bb93-4b70-8663-b0566b85b121",
+      "href": [
+        {
+          "@id": "https://light-theme.kitconcept.io/",
+          "title": "light-theme.kitconcept.io/"
+        }
+      ],
+      "openLinkInNewTab": true,
+      "title": "Volto Light Time"
+    }
+  ],
+  "footer_column_middle_header": "Plone",
+  "footer_column_right": [],
+  "footer_column_right_header": null,
   "footer_links": [],
+  "footer_logo": {
+    "blob_path": "plone_site_root/footer_logo/logo-simples-reverse.svg",
+    "content-type": "image/svg+xml",
+    "filename": "logo-simples-reverse.svg",
+    "height": 283,
+    "size": 29114,
+    "width": 1095
+  },
   "footer_logos": [],
   "footer_logos_container_width": "default",
   "footer_logos_size": "s",
@@ -194,6 +246,8 @@
     "size": 29114,
     "width": 1095
   },
+  "post_footer_logo": null,
+  "post_footer_logo_link": null,
   "preview_caption_link": null,
   "review_state": null,
   "rights": "",
