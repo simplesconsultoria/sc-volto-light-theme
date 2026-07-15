@@ -2,6 +2,7 @@
 ARG VOLTO_VERSION=latest
 FROM plone/frontend-builder:${VOLTO_VERSION} AS builder
 
+COPY --chown=node packages/showcase /app/packages/showcase
 COPY --chown=node packages/volto-light-theme /app/packages/volto-light-theme
 COPY --chown=node volto.config.js /app/
 COPY --chown=node package.json /app/package.json.temp

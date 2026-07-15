@@ -1,0 +1,145 @@
+// The showcase renders from `appExtras`, so it is a sibling of the whole app
+// rather than a child of the header or the layout container. Every selector
+// here stays top-level for that reason: nesting it under an ancestor would
+// stop it matching.
+
+// The headerSearch overlay sits at 260, so the showcase clears it.
+$showcase-z-index: 1000;
+
+.vltShowcase {
+  position: fixed;
+  z-index: $showcase-z-index;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.vltShowcaseTrigger {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 8px 0 0 8px;
+  background-color: var(--primary-color, #0b78d0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  color: var(--primary-foreground-color, #fff);
+  cursor: pointer;
+
+  svg {
+    fill: currentcolor;
+  }
+
+  &:hover,
+  &:focus-visible {
+    filter: brightness(1.1);
+  }
+}
+
+.vltShowcaseOverlay {
+  position: fixed;
+  z-index: $showcase-z-index + 1;
+  background-color: rgba(0, 0, 0, 0.4);
+  inset: 0;
+}
+
+.vltShowcaseContent {
+  position: fixed;
+  z-index: $showcase-z-index + 2;
+  top: 50%;
+  left: 50%;
+  width: min(90vw, 560px);
+  max-height: 80vh;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: var(--theme-color, #fff);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  color: var(--theme-foreground-color, #000);
+  overflow-y: auto;
+  transform: translate(-50%, -50%);
+}
+
+.vltShowcaseHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.vltShowcaseClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+
+  svg {
+    fill: currentcolor;
+  }
+}
+
+.vltShowcaseSlot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+
+  label {
+    font-weight: 700;
+  }
+
+  select {
+    min-width: 12rem;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid var(--theme-high-contrast-color, #ccc);
+    border-radius: 4px;
+    background-color: var(--theme-color, #fff);
+    color: inherit;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+}
+
+.vltShowcaseFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.vltShowcaseHint {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.vltShowcaseReset {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid currentcolor;
+  border-radius: 4px;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover,
+  &:focus-visible {
+    opacity: 0.8;
+  }
+}

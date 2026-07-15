@@ -1,0 +1,1 @@
+Added a showcase add-on that lists the components registered for each slot and lets a visitor switch between them from a floating panel. It lives in its own package and only loads when RAZZLE_VLT_SHOWCASE is set on the server, so it stays out of client sites. @ericof

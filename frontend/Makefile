@@ -33,6 +33,8 @@ IMAGE_NAME=$(IMAGE_NAME_PREFIX)-frontend:$(IMAGE_TAG)
 export VOLTO_VERSION := $(shell echo '$(REPOSITORY_SETTINGS)' | jq -r '.frontend.volto_version')
 export PLONE_VERSION := $(shell echo '$(REPOSITORY_SETTINGS)' | jq -r '.backend.base_package_version')
 
+# Demo the configuration
+export RAZZLE_VLT_SHOWCASE := true
 
 .PHONY: help
 help: ## Show this help
@@ -106,11 +108,16 @@ release-dry-run: ## Dry-run the release of the add-on on npmjs.org
 test: ## Run unit tests
 	pnpm test
 
+.PHONY: test-showcase
+test-showcase: ## Run unit tests for showcase
+	pnpm test-showcase
+
 .PHONY: ci-test
 ci-test: ## Run unit tests in CI
 	# Unit Tests need the i18n to be built
 	VOLTOCONFIG=$(pwd)/volto.config.js pnpm --filter @plone/volto i18n
 	CI=1 pnpm run test --passWithNoTests
+	CI=1 pnpm run test-showcase --passWithNoTests
 
 .PHONY: backend-docker-start
 backend-docker-start:	## Starts a Docker-based backend for development
