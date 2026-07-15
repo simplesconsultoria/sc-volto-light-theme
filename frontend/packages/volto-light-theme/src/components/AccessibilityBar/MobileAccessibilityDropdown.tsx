@@ -3,7 +3,7 @@ import Anontools from '@plone/volto/components/theme/Anontools/Anontools';
 import LanguageSelector from '@plone/volto/components/theme/LanguageSelector/LanguageSelector';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import AccessibilityControls from './AccessibilityControls';
-import { Icon } from '@plone/volto/components';
+import Icon from '@plone/volto/components/theme/Icon/Icon';
 import moreIcon from '@plone/volto/icons/more.svg';
 
 type MobileAccessibilityDropdownProps = {

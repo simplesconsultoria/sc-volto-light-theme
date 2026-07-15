@@ -1,5 +1,5 @@
 import SubMenuItem from './SubMenuItem';
-import type { NavigationItem } from './types';
+import type { NavigationItem } from '@simplesconsultoria/volto-light-theme/types/navigation';
 
 type SubMenuItemsProps = {
   items: NavigationItem[];

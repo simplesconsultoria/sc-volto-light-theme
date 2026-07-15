@@ -1,6 +1,6 @@
 import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
 import cx from 'classnames';
-import type { NavigationItem } from './types';
+import type { NavigationItem } from '@simplesconsultoria/volto-light-theme/types/navigation';
 
 type SubMenuItemProps = {
   item: NavigationItem;

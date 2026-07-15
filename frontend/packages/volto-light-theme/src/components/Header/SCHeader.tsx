@@ -2,12 +2,10 @@ import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { Container } from '@plone/components';
 import SearchWidget from '@plone/volto/components/theme/SearchWidget/SearchWidget';
-import Navigation from '@plone/volto/components/theme/Navigation/Navigation';
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
+import { getComponent } from '@simplesconsultoria/volto-light-theme/helpers/settings';
 import type { Content } from '@plone/types';
-import MobileNavigation from '@kitconcept/volto-light-theme/components/MobileNavigation/MobileNavigation';
-import AccessibilityBar from './AccessibilityBar';
-import MobileAccessibilityDropdown from './MobileAccessibilityDropdown';
+import MobileAccessibilityDropdown from '../AccessibilityBar/MobileAccessibilityDropdown';
 import Logo from '@plone/volto/components/theme/Logo/Logo';
 
 type HeaderProps = {
@@ -25,7 +23,7 @@ type FormState = {
   };
 };
 
-const Header: React.FC<HeaderProps> = ({ pathname }) => {
+const SCHeader: React.FC<HeaderProps> = ({ pathname }) => {
   const token = useSelector(
     (state: any) => state.userSession.token,
     shallowEqual,
@@ -39,6 +37,9 @@ const Header: React.FC<HeaderProps> = ({ pathname }) => {
     (state: any) => state.navroot?.data?.navroot,
   );
 
+  const Navigation = getComponent('navigation');
+  const MobileNavigation = getComponent('mobileNavigation');
+
   return (
     <>
       <SlotRenderer
@@ -48,7 +49,12 @@ const Header: React.FC<HeaderProps> = ({ pathname }) => {
         location={content}
       />
       <header className="header-wrapper">
-        <AccessibilityBar token={token} />
+        <SlotRenderer
+          name="headerTop"
+          content={content}
+          navRoot={navRoot}
+          location={content}
+        />
         <Container layout>
           <div className="header">
             <div className="header-main">
@@ -82,4 +88,4 @@ const Header: React.FC<HeaderProps> = ({ pathname }) => {
   );
 };
 
-export default Header;
+export default SCHeader;

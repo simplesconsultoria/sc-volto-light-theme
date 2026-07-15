@@ -1,5 +1,5 @@
 import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
-import type { NavigationItem } from './types';
+import type { NavigationItem } from '@simplesconsultoria/volto-light-theme/types/navigation';
 import { defineMessages, useIntl } from 'react-intl';
 
 type SubMenuSectionProps = {

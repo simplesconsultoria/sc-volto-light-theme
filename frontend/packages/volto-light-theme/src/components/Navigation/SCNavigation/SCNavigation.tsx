@@ -7,7 +7,7 @@ import { hasApiExpander } from '@plone/volto/helpers/Utils/Utils';
 import config from '@plone/volto/registry';
 import { getNavigation } from '@plone/volto/actions/navigation/navigation';
 import MenuItem from './MenuItem';
-import type { NavigationItem } from './types';
+import type { NavigationItem } from '@simplesconsultoria/volto-light-theme/types/navigation';
 
 type NavigationProps = {
   pathname: string;
@@ -46,7 +46,7 @@ type RootState = {
   };
 };
 
-const Navigation = ({ pathname }: NavigationProps) => {
+const SCNavigation = ({ pathname }: NavigationProps) => {
   const [desktopMenuOpen, setDesktopMenuOpen] = useState<number | null>(null);
   const [currentOpenIndex, setCurrentOpenIndex] = useState<number | null>(null);
   const navigation = useRef<HTMLElement | null>(null);
@@ -57,7 +57,6 @@ const Navigation = ({ pathname }: NavigationProps) => {
         ?.data,
   );
   const formData = useSelector((state: RootState) => state.form.global);
-
   const hasFatMenuSetting =
     !isEmpty(formData) && formData?.has_fat_menu !== undefined
       ? formData.has_fat_menu
@@ -133,7 +132,7 @@ const Navigation = ({ pathname }: NavigationProps) => {
     <nav
       id="navigation"
       aria-label="navigation"
-      className="navigation"
+      className={'navigation scNavigation'}
       ref={navigation}
     >
       <div className={'computer large screen widescreen only'}>
@@ -159,4 +158,4 @@ const Navigation = ({ pathname }: NavigationProps) => {
   );
 };
 
-export default Navigation;
+export default SCNavigation;

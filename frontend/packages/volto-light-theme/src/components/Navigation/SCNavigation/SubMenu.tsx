@@ -4,7 +4,7 @@ import SubMenuItems from './SubMenuItems';
 import { defineMessages, useIntl } from 'react-intl';
 import clearSVG from '@plone/volto/icons/clear.svg';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
-import type { NavigationItem } from './types';
+import type { NavigationItem } from '@simplesconsultoria/volto-light-theme/types/navigation';
 
 type SubMenuProps = {
   index: number;

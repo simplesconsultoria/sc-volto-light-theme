@@ -2,7 +2,7 @@ import cx from 'classnames';
 import { defineMessages, useIntl } from 'react-intl';
 import NavItem from '@plone/volto/components/theme/Navigation/NavItem';
 import SubMenu from './SubMenu';
-import type { NavigationItem } from './types';
+import type { NavigationItem } from '@simplesconsultoria/volto-light-theme/types/navigation';
 
 type MenuItemProps = {
   index: number;
