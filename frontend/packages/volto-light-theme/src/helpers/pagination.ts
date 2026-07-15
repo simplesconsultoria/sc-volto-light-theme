@@ -97,3 +97,50 @@ export function computeLimit(
 
   return Math.max(0, toInteger(offset, 0)) + limitValue;
 }
+
+/**
+ * Compute how many items a listing can actually show.
+ *
+ * The `items_total` reported by `@querystring-search` is the length of the whole
+ * result set: `plone.restapi`'s HypermediaBatch derives it from the sequence
+ * length, so `b_start` never reduces it. The items an offset skips are counted
+ * in there even though the listing never renders them.
+ * @function computeVisibleTotal
+ * @param {IntegerLike} total The `items_total` reported by the backend.
+ * @param {IntegerLike} offset Number of leading items skipped. Defaults to 0.
+ * @returns {number} A non-negative integer count of reachable items.
+ */
+export function computeVisibleTotal(
+  total: IntegerLike,
+  offset: IntegerLike,
+): number {
+  const totalValue = Math.max(0, toInteger(total, 0));
+  const offsetValue = Math.max(0, toInteger(offset, 0));
+
+  return Math.max(0, totalValue - offsetValue);
+}
+
+/**
+ * Compute how many pages a listing spans.
+ *
+ * `total` is expected to be the reachable item count, so pass the result of
+ * `computeVisibleTotal` for an offset listing rather than the raw backend
+ * total. Otherwise the listing advertises pages that resolve to an empty batch.
+ * @function computeTotalPages
+ * @param {IntegerLike} total Number of items the listing can show.
+ * @param {IntegerLike} bSize Batch size, i.e. items per page.
+ * @returns {number} A non-negative integer page count, 0 when there is no
+ * usable batch size.
+ */
+export function computeTotalPages(
+  total: IntegerLike,
+  bSize: IntegerLike,
+): number {
+  const totalValue = Math.max(0, toInteger(total, 0));
+  const batchSize = Math.max(0, toInteger(bSize, 0));
+  if (batchSize <= 0) {
+    return 0;
+  }
+
+  return Math.ceil(totalValue / batchSize);
+}

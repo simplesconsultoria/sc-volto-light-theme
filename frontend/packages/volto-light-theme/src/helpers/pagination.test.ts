@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { computeBStart, computeLimit, type IntegerLike } from './pagination';
+import {
+  computeBStart,
+  computeLimit,
+  computeTotalPages,
+  computeVisibleTotal,
+  type IntegerLike,
+} from './pagination';
 
 describe('computeBStart', () => {
   describe('paging without an offset', () => {
@@ -167,6 +173,88 @@ describe('computeLimit', () => {
     for (const [offset, limit] of cases) {
       const result = computeLimit(offset, limit);
       expect(result === null || Number.isInteger(result)).toBe(true);
+    }
+  });
+});
+
+describe('computeVisibleTotal', () => {
+  it('subtracts the skipped items from the backend total', () => {
+    expect(computeVisibleTotal(23, 3)).toBe(20);
+  });
+
+  it('returns the total untouched when nothing is skipped', () => {
+    expect(computeVisibleTotal(23, 0)).toBe(23);
+  });
+
+  it('never goes negative when the offset exceeds the total', () => {
+    expect(computeVisibleTotal(2, 5)).toBe(0);
+  });
+
+  it('accepts values stored as strings by the widget', () => {
+    expect(computeVisibleTotal('23', '3')).toBe(20);
+  });
+
+  it('falls back to zero when the total is not yet loaded', () => {
+    expect(computeVisibleTotal(undefined, 3)).toBe(0);
+    expect(computeVisibleTotal(null, 3)).toBe(0);
+  });
+
+  it('ignores a negative offset', () => {
+    expect(computeVisibleTotal(23, -3)).toBe(23);
+  });
+});
+
+describe('computeTotalPages', () => {
+  it('splits the total across whole pages', () => {
+    expect(computeTotalPages(20, 10)).toBe(2);
+    expect(computeTotalPages(23, 10)).toBe(3);
+  });
+
+  it('counts a partial page', () => {
+    expect(computeTotalPages(21, 10)).toBe(3);
+  });
+
+  it('returns zero when there is nothing to show', () => {
+    expect(computeTotalPages(0, 10)).toBe(0);
+  });
+
+  it('returns zero when no batch size can be resolved', () => {
+    expect(computeTotalPages(20, 0)).toBe(0);
+    expect(computeTotalPages(20, undefined)).toBe(0);
+  });
+
+  it('accepts values stored as strings by the widget', () => {
+    expect(computeTotalPages('20', '10')).toBe(2);
+  });
+
+  // The regression this pair exists for: 23 results, skip 3, 10 per page.
+  // Dividing the raw total gives 3 pages, but page 3 asks for b_start 23 and
+  // comes back empty. Only 20 items are reachable, so there are 2 pages.
+  it('does not advertise a page the offset makes unreachable', () => {
+    const total = 23;
+    const offset = 3;
+    const bSize = 10;
+
+    expect(computeTotalPages(total, bSize)).toBe(3);
+    expect(computeTotalPages(computeVisibleTotal(total, offset), bSize)).toBe(
+      2,
+    );
+    expect(computeBStart(3, offset, bSize, 25)).toBe(23);
+  });
+
+  it('keeps the last page reachable across the offset range', () => {
+    const total = 25;
+    const bSize = 10;
+
+    for (const offset of [0, 1, 5, 10, 15, 24, 25, 30]) {
+      const pages = computeTotalPages(
+        computeVisibleTotal(total, offset),
+        bSize,
+      );
+      if (pages > 0) {
+        const lastPageStart = computeBStart(pages, offset, bSize, 25);
+        expect(lastPageStart).toBeLessThan(total);
+      }
     }
   });
 });
