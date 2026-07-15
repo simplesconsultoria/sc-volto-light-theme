@@ -1,0 +1,87 @@
+{
+  "@id": "/about-us/our-team",
+  "@type": "Document",
+  "UID": "613381b396b049efba9174174503abe5",
+  "allow_discussion": null,
+  "blocks": {
+    "378e2fb7-17d7-4730-8643-78d880bb8cb9": {
+      "@type": "description"
+    },
+    "c8d58c91-7461-415a-86b2-7abcc93545f4": {
+      "@type": "slate",
+      "plaintext": "",
+      "styles": {},
+      "theme": "default",
+      "value": [
+        {
+          "children": [
+            {
+              "text": ""
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "ede6cbda-b310-48e5-9f3d-1ab9a0287275": {
+      "@type": "title"
+    }
+  },
+  "blocks_layout": {
+    "items": [
+      "ede6cbda-b310-48e5-9f3d-1ab9a0287275",
+      "378e2fb7-17d7-4730-8643-78d880bb8cb9",
+      "c8d58c91-7461-415a-86b2-7abcc93545f4"
+    ]
+  },
+  "changeNote": "",
+  "contributors": [],
+  "created": "2026-07-14T20:41:13+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "The human beings behind this site",
+  "effective": "2026-07-14T20:42:54+00:00",
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "id": "our-team",
+  "is_folderish": true,
+  "language": "##DEFAULT##",
+  "layout": "document_view",
+  "lock": {
+    "locked": false,
+    "stealable": true
+  },
+  "modified": "2026-07-14T20:42:54+00:00",
+  "nav_title": null,
+  "preview_caption_link": null,
+  "review_state": "published",
+  "rights": "",
+  "subjects": [],
+  "title": "Our team",
+  "type_title": "Page",
+  "version": "current",
+  "versioning_enabled": true,
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "admin",
+        "comments": "",
+        "review_state": "private",
+        "time": "2026-07-14T20:41:13+00:00"
+      },
+      {
+        "action": "publish",
+        "actor": "admin",
+        "comments": "",
+        "review_state": "published",
+        "time": "2026-07-14T20:42:54+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}

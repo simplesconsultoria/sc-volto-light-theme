@@ -16,6 +16,8 @@ REPOSITORY_SETTINGS := $(shell uvx repoplone settings dump)
 PROJECT_NAME=$(shell echo '$(REPOSITORY_SETTINGS)' | jq -r '.name')
 STACK_NAME=${PROJECT_NAME}
 
+export STACK_HOSTNAME := sc-volto-light-theme.localhost
+
 IMAGE_NAME_PREFIX := $(shell echo '$(REPOSITORY_SETTINGS)' | jq -r '.container_images_prefix')
 
 # Environment variables to be exported

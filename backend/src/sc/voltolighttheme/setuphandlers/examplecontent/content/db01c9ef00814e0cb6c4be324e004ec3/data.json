@@ -1,0 +1,131 @@
+{
+  "@id": "/news",
+  "@type": "Document",
+  "UID": "db01c9ef00814e0cb6c4be324e004ec3",
+  "allow_discussion": null,
+  "blocks": {
+    "562a8da7-48c7-459f-8d38-b6177336eef7": {
+      "@type": "title"
+    },
+    "6b46f911-c440-4a42-8c34-642a237499d2": {
+      "@type": "description"
+    },
+    "7ac0be44-4b7d-4b85-ab7c-28e222c098b7": {
+      "@type": "listing",
+      "gridColumns": 2,
+      "headlineTag": "h2",
+      "querystring": {
+        "limit": "2",
+        "offset": "0",
+        "query": [
+          {
+            "i": "portal_type",
+            "o": "plone.app.querystring.operation.selection.any",
+            "v": [
+              "News Item"
+            ]
+          },
+          {
+            "i": "review_state",
+            "o": "plone.app.querystring.operation.selection.any",
+            "v": [
+              "published"
+            ]
+          }
+        ],
+        "sort_on": "effective",
+        "sort_order": "descending",
+        "sort_order_boolean": true
+      },
+      "styles": {},
+      "theme": "brand",
+      "variation": "grid"
+    },
+    "96c5a46a-497c-43bc-a205-9de8af2e1f31": {
+      "@type": "listing",
+      "gridColumns": 2,
+      "headline": "Other news",
+      "headlineTag": "h2",
+      "querystring": {
+        "offset": "2",
+        "query": [
+          {
+            "i": "portal_type",
+            "o": "plone.app.querystring.operation.selection.any",
+            "v": [
+              "News Item"
+            ]
+          }
+        ],
+        "sort_on": "effective",
+        "sort_order": "descending",
+        "sort_order_boolean": true
+      },
+      "styles": {},
+      "theme": "default",
+      "variation": "summary"
+    },
+    "f60b8714-03aa-4d03-8a85-d0f451bc715f": {
+      "@type": "slate"
+    }
+  },
+  "blocks_layout": {
+    "items": [
+      "562a8da7-48c7-459f-8d38-b6177336eef7",
+      "6b46f911-c440-4a42-8c34-642a237499d2",
+      "7ac0be44-4b7d-4b85-ab7c-28e222c098b7",
+      "96c5a46a-497c-43bc-a205-9de8af2e1f31",
+      "f60b8714-03aa-4d03-8a85-d0f451bc715f"
+    ]
+  },
+  "changeNote": "",
+  "contributors": [],
+  "created": "2026-07-14T15:06:27+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "Incredible stories from all over the world",
+  "effective": "2026-07-14T15:06:00+00:00",
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "id": "news",
+  "is_folderish": true,
+  "language": "##DEFAULT##",
+  "layout": "document_view",
+  "lock": {
+    "locked": false,
+    "stealable": true
+  },
+  "modified": "2026-07-14T20:41:28+00:00",
+  "nav_title": null,
+  "preview_caption_link": null,
+  "review_state": "published",
+  "rights": "",
+  "subjects": [],
+  "title": "News",
+  "type_title": "Page",
+  "version": "current",
+  "versioning_enabled": true,
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "admin",
+        "comments": "",
+        "review_state": "private",
+        "time": "2026-07-14T15:06:27+00:00"
+      },
+      {
+        "action": "publish",
+        "actor": "admin",
+        "comments": "",
+        "review_state": "published",
+        "time": "2026-07-14T15:06:32+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}

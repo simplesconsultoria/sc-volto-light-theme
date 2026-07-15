@@ -7,23 +7,72 @@
   "allow_discussion": null,
   "blocks": {
     "1c64bcb3-4e44-4d95-9e52-b3da07fd60f8": {
-      "@type": "slate",
-      "plaintext": "Hello World!",
-      "styles": {},
-      "theme": "default",
-      "value": [
+      "@type": "heroBlock",
+      "blockWidth": {
+        "--block-width": "var(--layout-container-width)"
+      },
+      "button": true,
+      "buttonLink": [
         {
-          "children": [
-            {
-              "text": "Hello World!"
-            }
-          ],
-          "type": "p"
+          "@id": "resolveuid/613381b396b049efba9174174503abe5",
+          "@type": "Document",
+          "CreationDate": "2026-07-14T17:41:13-03:00",
+          "Description": "The human beings behind this site",
+          "EffectiveDate": "2026-07-14T17:42:54-03:00",
+          "Title": "Our team",
+          "effective": "2026-07-14T20:42:54+00:00",
+          "end": null,
+          "hasPreviewImage": null,
+          "head_title": null,
+          "image_field": "",
+          "start": null,
+          "title": "Our team"
         }
-      ]
+      ],
+      "buttonText": "Know more",
+      "description": "A team of human beings dedicated to write lorem ipsum all the way down the ",
+      "fullWidth": false,
+      "headerText": "About",
+      "href": [
+        {
+          "@id": "resolveuid/613381b396b049efba9174174503abe5",
+          "@type": "Document",
+          "CreationDate": "2026-07-14T17:41:13-03:00",
+          "Description": "The human beings behind this site",
+          "EffectiveDate": "2026-07-14T17:42:54-03:00",
+          "Title": "Our team",
+          "effective": "2026-07-14T20:42:54+00:00",
+          "end": null,
+          "hasPreviewImage": null,
+          "head_title": null,
+          "image_field": "",
+          "start": null,
+          "title": "Our team"
+        }
+      ],
+      "imageFit": "cover",
+      "imageSize": "60%",
+      "overwrite": true,
+      "preview_image": [
+        {
+          "@id": "resolveuid/44c771797b6c41d0865b4b98e05f4b00",
+          "image_field": "image",
+          "title": "Geirangerfjord"
+        }
+      ],
+      "showDate": false,
+      "styles": {},
+      "tags": [
+        "People",
+        "Humans"
+      ],
+      "textSide": "right",
+      "theme": "brand",
+      "titleTag": "h1",
+      "variation": "flex"
     },
-    "5f31e9e4-173f-4ec1-ab48-64e9e2789b76": {
-      "@type": "title"
+    "32c2edd5-e1c4-4842-8f55-dd23dcdaed6b": {
+      "@type": "slate"
     },
     "68357972-bd25-47e2-a098-c7932a923182": {
       "@type": "image",
@@ -49,8 +98,8 @@
   },
   "blocks_layout": {
     "items": [
-      "5f31e9e4-173f-4ec1-ab48-64e9e2789b76",
       "1c64bcb3-4e44-4d95-9e52-b3da07fd60f8",
+      "32c2edd5-e1c4-4842-8f55-dd23dcdaed6b",
       "68357972-bd25-47e2-a098-c7932a923182"
     ]
   },
@@ -59,7 +108,7 @@
   "creators": [
     "admin"
   ],
-  "description": "",
+  "description": "VLT, with a Brazilian touch",
   "effective": null,
   "exclude_from_nav": false,
   "expires": null,
@@ -71,7 +120,21 @@
     {
       "children": [
         {
-          "text": "Powered by Plone and Volto Light Theme\nThe Plone\u00ae Open Source CMS/WCM is \u00a9 2000-2026 by the "
+          "text": "Powered by Plone, Volto Light Theme, and "
+        },
+        {
+          "children": [
+            {
+              "text": "Simples Consultoria"
+            }
+          ],
+          "data": {
+            "url": "https://www.simplesconsultoria.com.br"
+          },
+          "type": "link"
+        },
+        {
+          "text": " opinions\nThe Plone\u00ae Open Source CMS/WCM is \u00a9 2000-2026 by the "
         },
         {
           "children": [
@@ -116,14 +179,21 @@
   "id": "Plone",
   "intranet_flag": null,
   "is_folderish": true,
-  "items_total": 1,
+  "items_total": 3,
   "language": "##DEFAULT##",
   "layout": "document_view",
   "lock": {
     "locked": false,
     "stealable": true
   },
-  "logo": null,
+  "logo": {
+    "blob_path": "plone_site_root/logo/logo-simples.svg",
+    "content-type": "image/svg+xml",
+    "filename": "logo-simples.svg",
+    "height": 283,
+    "size": 29114,
+    "width": 1095
+  },
   "preview_caption_link": null,
   "review_state": null,
   "rights": "",

@@ -1,0 +1,39 @@
+{
+  "@id": "/images/olympiastadion-munich",
+  "@type": "Image",
+  "UID": "f98ff2810c6e4a44b94bb26c2dd6f934",
+  "allow_discussion": null,
+  "contributors": [],
+  "created": "2026-07-14T15:10:02+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "",
+  "effective": null,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "id": "olympiastadion-munich",
+  "image": {
+    "blob_path": "f98ff2810c6e4a44b94bb26c2dd6f934/image/Olympiastadion (Munich)",
+    "content-type": "image/jpeg",
+    "filename": "Olympiastadion (Munich)",
+    "height": 681,
+    "size": 206351,
+    "width": 1024
+  },
+  "is_folderish": false,
+  "language": "##DEFAULT##",
+  "layout": "image_view",
+  "lock": {},
+  "modified": "2026-07-14T15:10:02+00:00",
+  "review_state": null,
+  "rights": "",
+  "subjects": [],
+  "title": "Olympiastadion (Munich)",
+  "type_title": "Image",
+  "version": "current",
+  "workflow_history": {},
+  "working_copy": null,
+  "working_copy_of": null
+}

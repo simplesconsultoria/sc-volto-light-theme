@@ -1,0 +1,168 @@
+import React, { useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import hoistNonReactStatics from 'hoist-non-react-statics';
+import useDeepCompareEffect from 'use-deep-compare-effect';
+
+import { getContent } from '@plone/volto/actions/content/content';
+import { getQueryStringResults } from '@plone/volto/actions/querystringsearch/querystringsearch';
+import { usePagination } from '@plone/volto/helpers/Utils/usePagination';
+import { getBaseUrl } from '@plone/volto/helpers/Url/Url';
+import {
+  computeTotalPages,
+  computeVisibleTotal,
+} from '../../../helpers/pagination';
+
+import config from '@plone/volto/registry';
+
+function getDisplayName(WrappedComponent) {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
+
+export default function withQuerystringResults(WrappedComponent) {
+  function WithQuerystringResults(props) {
+    const {
+      data = {},
+      id = data.block,
+      properties: content,
+      path,
+      variation,
+    } = props;
+    const { settings } = config;
+    const querystring = data.querystring || data; // For backwards compat with data saved before Blocks schema. Note, this is also how the Search block passes data to ListingBody
+    const subrequestID = content?.UID ? `${content?.UID}-${id}` : id;
+    const { b_size = settings.defaultPageSize } = querystring; // batchsize
+
+    // save the path so it won't trigger dispatch on eager router location change
+    const [initialPath] = React.useState(getBaseUrl(path));
+
+    const copyFields = ['limit', 'query', 'sort_on', 'sort_order', 'depth'];
+    const { currentPage, setCurrentPage } = usePagination(id, 1);
+    const adaptedQuery = Object.assign(
+      variation?.fullobjects ? { fullobjects: 1 } : { metadata_fields: '_all' },
+      {
+        b_size: b_size,
+        offset: querystring?.offset || 0,
+      },
+      ...copyFields.map((name) =>
+        Object.keys(querystring).includes(name)
+          ? { [name]: querystring[name] }
+          : {},
+      ),
+    );
+    const adaptedQueryRef = useRef(adaptedQuery);
+    const currentPageRef = useRef(currentPage);
+
+    const querystringResults = useSelector(
+      (state) => state.querystringsearch.subrequests,
+    );
+    const dispatch = useDispatch();
+
+    const folderItems = content?.is_folderish ? content.items : [];
+    const hasQuery = querystring?.query?.length > 0;
+    const hasLoaded = hasQuery
+      ? querystringResults?.[subrequestID]?.loaded
+      : true;
+
+    const listingItems = hasQuery
+      ? querystringResults?.[subrequestID]?.items || []
+      : folderItems;
+
+    // The backend counts the items the offset skips in its total, but the
+    // listing never shows them. Everything the user sees — the page count and
+    // the result counter — is about the items past the offset.
+    const visibleTotal = computeVisibleTotal(
+      querystringResults?.[subrequestID]?.total,
+      adaptedQuery.offset,
+    );
+
+    const showAsFolderListing = !hasQuery && content?.items_total > b_size;
+    const showAsQueryListing = hasQuery && visibleTotal > b_size;
+
+    const totalPages = showAsFolderListing
+      ? computeTotalPages(content.items_total, b_size)
+      : showAsQueryListing
+        ? computeTotalPages(visibleTotal, b_size)
+        : 0;
+
+    const prevBatch = showAsFolderListing
+      ? content.batching?.prev
+      : showAsQueryListing
+        ? querystringResults[subrequestID].batching?.prev
+        : null;
+    const nextBatch = showAsFolderListing
+      ? content.batching?.next
+      : showAsQueryListing
+        ? querystringResults[subrequestID].batching?.next
+        : null;
+
+    const isImageGallery =
+      (!data.variation && data.template === 'imageGallery') ||
+      data.variation === 'imageGallery';
+
+    useDeepCompareEffect(() => {
+      if (hasQuery) {
+        dispatch(
+          getQueryStringResults(
+            initialPath,
+            adaptedQuery,
+            subrequestID,
+            currentPage,
+          ),
+        );
+      } else if (isImageGallery && !hasQuery) {
+        // when used as image gallery, it doesn't need a query to list children
+        dispatch(
+          getQueryStringResults(
+            initialPath,
+            {
+              ...adaptedQuery,
+              b_size: 10000000000,
+              query: [
+                {
+                  i: 'path',
+                  o: 'plone.app.querystring.operation.string.relativePath',
+                  v: '',
+                },
+              ],
+            },
+            subrequestID,
+          ),
+        );
+      } else {
+        dispatch(getContent(initialPath, null, null, currentPage));
+      }
+      adaptedQueryRef.current = adaptedQuery;
+      currentPageRef.current = currentPage;
+    }, [
+      subrequestID,
+      isImageGallery,
+      adaptedQuery,
+      hasQuery,
+      initialPath,
+      dispatch,
+      currentPage,
+    ]);
+
+    return (
+      <WrappedComponent
+        {...props}
+        onPaginationChange={(e, { activePage }) => setCurrentPage(activePage)}
+        total={hasQuery ? visibleTotal : undefined}
+        batch_size={b_size}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        prevBatch={prevBatch}
+        nextBatch={nextBatch}
+        listingItems={listingItems}
+        hasLoaded={hasLoaded}
+        isFolderContentsListing={showAsFolderListing}
+      />
+    );
+  }
+
+  WithQuerystringResults.displayName = `WithQuerystringResults(${getDisplayName(
+    WrappedComponent,
+  )})`;
+
+  return hoistNonReactStatics(WithQuerystringResults, WrappedComponent);
+}

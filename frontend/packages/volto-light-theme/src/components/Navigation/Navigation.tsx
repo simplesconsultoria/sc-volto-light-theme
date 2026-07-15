@@ -93,6 +93,13 @@ const Navigation = ({ pathname }: NavigationProps) => {
     };
   }, []);
 
+  // A link in the navigation is not an outside click, so handleClickOutside
+  // leaves an open fat menu behind once it navigates. Close it on every route
+  // change, which also covers the browser's back and forward buttons.
+  useEffect(() => {
+    closeMenu();
+  }, [pathname]);
+
   useEffect(() => {
     if (!hasApiExpander('navigation', getBaseUrl(pathname))) {
       dispatch(getNavigation(getBaseUrl(pathname), config.settings.navDepth));

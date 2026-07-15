@@ -1,0 +1,163 @@
+{
+  "@id": "/news/san-francisco",
+  "@type": "News Item",
+  "UID": "fe7df55df725423a9267ecffd8b15750",
+  "allow_discussion": null,
+  "blocks": {
+    "4cc6595b-f56a-4b94-88b9-9999d4ab4482": {
+      "@type": "title"
+    },
+    "62c03377-1ee7-4ffb-98da-abb4d17e3369": {
+      "@type": "slate",
+      "plaintext": "Suspendisse posuere libero vitae rutrum auctor. Duis quis est nulla. Fusce at risus viverra, fringilla risus vitae, consectetur justo. In gravida tincidunt dui nec sagittis. Quisque in erat eget mauris viverra feugiat. Ut convallis nibh et massa ullamcorper, eu vulputate magna suscipit. Mauris tempor elit turpis, quis semper libero tristique ut. Aliquam erat volutpat. Vivamus imperdiet pulvinar dolor sollicitudin malesuada. Sed blandit sapien in sapien vulputate maximus eu sodales ante. Nullam vitae sollicitudin massa. Integer dictum lorem malesuada ex sodales, a euismod purus suscipit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Suspendisse posuere libero vitae rutrum auctor. Duis quis est nulla. Fusce at risus viverra, fringilla risus vitae, consectetur justo. In gravida tincidunt dui nec sagittis. Quisque in erat eget mauris viverra feugiat. Ut convallis nibh et massa ullamcorper, eu vulputate magna suscipit. Mauris tempor elit turpis, quis semper libero tristique ut. Aliquam erat volutpat. Vivamus imperdiet pulvinar dolor sollicitudin malesuada. Sed blandit sapien in sapien vulputate maximus eu sodales ante. Nullam vitae sollicitudin massa. Integer dictum lorem malesuada ex sodales, a euismod purus suscipit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "6a7fecb8-6723-4629-9e68-70261f9838ed": {
+      "@type": "slate",
+      "plaintext": "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Praesent id eros nibh. Nulla condimentum gravida mi eu tempus. Aliquam ut lobortis metus, a ultricies enim. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed consequat orci dui, a pellentesque dolor condimentum vel. Aliquam pharetra sapien in erat cursus, et gravida dui fringilla. Proin euismod risus id suscipit gravida. Donec nec viverra nisi. Morbi tincidunt fermentum tortor sit amet auctor. Curabitur egestas viverra justo sit amet vestibulum. Aenean in ex sed ante condimentum posuere vitae eget lectus. Fusce sed malesuada ipsum, sit amet lacinia lorem. Proin fermentum dapibus nisl eu scelerisque. Aliquam varius vulputate turpis, id efficitur purus congue eu.",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Praesent id eros nibh. Nulla condimentum gravida mi eu tempus. Aliquam ut lobortis metus, a ultricies enim. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed consequat orci dui, a pellentesque dolor condimentum vel. Aliquam pharetra sapien in erat cursus, et gravida dui fringilla. Proin euismod risus id suscipit gravida. Donec nec viverra nisi. Morbi tincidunt fermentum tortor sit amet auctor. Curabitur egestas viverra justo sit amet vestibulum. Aenean in ex sed ante condimentum posuere vitae eget lectus. Fusce sed malesuada ipsum, sit amet lacinia lorem. Proin fermentum dapibus nisl eu scelerisque. Aliquam varius vulputate turpis, id efficitur purus congue eu."
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "7168b940-9eba-4bc8-aa96-8d560e2caa06": {
+      "@type": "slate",
+      "plaintext": "Donec ultricies rutrum laoreet. Vestibulum rhoncus mauris quis est interdum, quis porta massa tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed eget nisl eu purus vehicula malesuada. Maecenas pellentesque lacus justo, vel aliquam eros efficitur vitae. Praesent non dolor sodales risus dictum gravida vitae at nulla. Duis vitae dictum elit. Integer nec interdum justo. Sed ultrices consectetur orci ac luctus. Quisque sit amet vulputate lectus, vel semper lacus. Nulla a ligula in est blandit mollis eu sed neque. Integer in pharetra justo.",
+      "styles": {},
+      "theme": "default",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Donec ultricies rutrum laoreet. Vestibulum rhoncus mauris quis est interdum, quis porta massa tincidunt. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed eget nisl eu purus vehicula malesuada. Maecenas pellentesque lacus justo, vel aliquam eros efficitur vitae. Praesent non dolor sodales risus dictum gravida vitae at nulla. Duis vitae dictum elit. Integer nec interdum justo. Sed ultrices consectetur orci ac luctus. Quisque sit amet vulputate lectus, vel semper lacus. Nulla a ligula in est blandit mollis eu sed neque. Integer in pharetra justo."
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "8f2917ba-67c6-47e2-8f6d-8a6a8fbd769c": {
+      "@type": "slate",
+      "plaintext": "Vestibulum ut imperdiet nunc, at gravida dolor. Morbi pharetra nisl sit amet lorem imperdiet, nec varius mi pretium. Integer quis blandit enim, in malesuada metus. Proin vehicula interdum velit sit amet aliquet. Donec non pharetra nunc, ut cursus nunc. Suspendisse nunc orci, viverra in lacus vulputate, rhoncus interdum massa. Nulla vel ex maximus, aliquam purus a, vehicula dolor. Donec eget euismod felis, ut iaculis ligula. Maecenas aliquam libero quis sem pharetra, quis luctus lacus tempor. Donec nec velit turpis. Pellentesque venenatis nibh in lacinia commodo. Suspendisse sollicitudin et dolor non dignissim. Morbi eu orci elementum sapien molestie pretium.",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Vestibulum ut imperdiet nunc, at gravida dolor. Morbi pharetra nisl sit amet lorem imperdiet, nec varius mi pretium. Integer quis blandit enim, in malesuada metus. Proin vehicula interdum velit sit amet aliquet. Donec non pharetra nunc, ut cursus nunc. Suspendisse nunc orci, viverra in lacus vulputate, rhoncus interdum massa. Nulla vel ex maximus, aliquam purus a, vehicula dolor. Donec eget euismod felis, ut iaculis ligula. Maecenas aliquam libero quis sem pharetra, quis luctus lacus tempor. Donec nec velit turpis. Pellentesque venenatis nibh in lacinia commodo. Suspendisse sollicitudin et dolor non dignissim. Morbi eu orci elementum sapien molestie pretium."
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "9703f9fd-1207-401c-9634-018d7d12b03b": {
+      "@type": "mainImageBlock",
+      "align": "center",
+      "description": "\u00c9rico Andrei",
+      "size": "l",
+      "styles": {
+        "blockWidth:noprefix": {
+          "--block-width": "var(--default-container-width)"
+        }
+      },
+      "theme": "default",
+      "title": "Lombard Street, San Francisco"
+    },
+    "972a9d1b-5b2d-4c56-9451-9ee0de001424": {
+      "@type": "slate",
+      "plaintext": "Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris dolor leo, sagittis sed imperdiet in, scelerisque et elit. Cras sed commodo quam. Aliquam a mauris justo. Vivamus justo mauris, placerat in ultricies aliquet, semper nec libero. Nulla porta lectus nec enim posuere venenatis sed eu ex. Nam pulvinar sapien purus, vitae luctus dolor sollicitudin et. Nulla malesuada diam ac turpis pretium, vel tempor quam ornare.",
+      "value": [
+        {
+          "children": [
+            {
+              "text": "Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris dolor leo, sagittis sed imperdiet in, scelerisque et elit. Cras sed commodo quam. Aliquam a mauris justo. Vivamus justo mauris, placerat in ultricies aliquet, semper nec libero. Nulla porta lectus nec enim posuere venenatis sed eu ex. Nam pulvinar sapien purus, vitae luctus dolor sollicitudin et. Nulla malesuada diam ac turpis pretium, vel tempor quam ornare."
+            }
+          ],
+          "type": "p"
+        }
+      ]
+    },
+    "de126dda-2093-4d69-87cc-04076d9b63fc": {
+      "@type": "description"
+    }
+  },
+  "blocks_layout": {
+    "items": [
+      "4cc6595b-f56a-4b94-88b9-9999d4ab4482",
+      "de126dda-2093-4d69-87cc-04076d9b63fc",
+      "9703f9fd-1207-401c-9634-018d7d12b03b",
+      "6a7fecb8-6723-4629-9e68-70261f9838ed",
+      "62c03377-1ee7-4ffb-98da-abb4d17e3369",
+      "972a9d1b-5b2d-4c56-9451-9ee0de001424",
+      "8f2917ba-67c6-47e2-8f6d-8a6a8fbd769c",
+      "7168b940-9eba-4bc8-aa96-8d560e2caa06"
+    ]
+  },
+  "changeNote": "",
+  "contributors": [],
+  "created": "2026-07-14T15:11:00+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "If you are going to San Francisco, flowers in your head",
+  "effective": "2024-12-12T16:00:00+00:00",
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "id": "san-francisco",
+  "is_folderish": true,
+  "language": "##DEFAULT##",
+  "layout": "newsitem_view",
+  "lock": {
+    "locked": false,
+    "stealable": true
+  },
+  "modified": "2026-07-14T20:35:42+00:00",
+  "nav_title": null,
+  "preview_caption_link": null,
+  "review_state": "published",
+  "rights": "",
+  "subjects": [
+    "San Francisco"
+  ],
+  "title": "San Francisco",
+  "type_title": "News Item",
+  "version": "current",
+  "versioning_enabled": true,
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "admin",
+        "comments": "",
+        "review_state": "private",
+        "time": "2026-07-14T15:11:00+00:00"
+      },
+      {
+        "action": "publish",
+        "actor": "admin",
+        "comments": "",
+        "review_state": "published",
+        "time": "2026-07-14T15:16:15+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}
