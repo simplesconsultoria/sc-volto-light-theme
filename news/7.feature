@@ -1,0 +1,1 @@
+Changed the Docker Compose stack to run the published demo images from ghcr.io instead of building them locally, removing the ZEO service and its data volume, and made the stack hostname configurable through the STACK_HOSTNAME environment variable. @ericof

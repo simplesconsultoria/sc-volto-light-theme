@@ -27,6 +27,7 @@ REPOSITORY_SETTINGS := $(shell uvx repoplone settings dump)
 IMAGE_NAME_PREFIX := $(shell echo '$(REPOSITORY_SETTINGS)' | jq -r '.container_images_prefix')
 IMAGE_TAG=latest
 IMAGE_NAME=$(IMAGE_NAME_PREFIX)-backend:$(IMAGE_TAG)
+SEED=$(shell date +%Y%m%d%H%M%S)
 
 PLONE_SITE_ID=Plone
 BACKEND_FOLDER=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
@@ -65,6 +66,7 @@ debug-settings:  ## Debug settings
 	@echo "PACKAGE_NAME: $(PACKAGE_NAME)"
 	@echo "EXAMPLE_CONTENT_FOLDER: $(EXAMPLE_CONTENT_FOLDER)"
 	@echo "IMAGE_NAME: $(IMAGE_NAME)"
+	@echo "SEED: $(SEED)"
 
 
 requirements-mxdev.txt: pyproject.toml mx.ini ## Generate constraints file
@@ -95,6 +97,7 @@ install: $(VENV_FOLDER) config ## Install Plone and dependencies
 .PHONY: clean
 clean: ## Clean installation and instance
 	@echo "$(RED)==> Cleaning environment and build$(RESET)"
+
 	@rm -rf $(VENV_FOLDER) pyvenv.cfg .installed.cfg instance/etc .venv .pytest_cache .ruff_cache constraints* requirements*
 
 .PHONY: remove-data
@@ -155,7 +158,7 @@ test-coverage: $(VENV_FOLDER) ## run tests with coverage
 # Build Docker images
 .PHONY: build-image
 build-image:  ## Build Docker Images
-	@docker build . -t $(IMAGE_NAME) -f Dockerfile --build-arg PLONE_VERSION=$(PLONE_VERSION)
+	@docker build . -t $(IMAGE_NAME) -f Dockerfile --build-arg PLONE_VERSION=$(PLONE_VERSION) --build-arg SEED=$(SEED)
 
 # Acceptance tests
 .PHONY: acceptance-backend-start

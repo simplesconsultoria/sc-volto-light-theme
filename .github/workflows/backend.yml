@@ -71,6 +71,7 @@ jobs:
       working-directory: ${{ inputs.working-directory }}
       build-args: |
         PLONE_VERSION=${{ inputs.plone-version }}
+        SEED=${{ github.run_id }}
       push: ${{ github.event_name != 'pull_request' }}
     secrets:
       username: ${{ github.actor }}
