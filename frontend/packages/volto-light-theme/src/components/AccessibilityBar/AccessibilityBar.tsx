@@ -18,8 +18,8 @@ const AccessibilityBar: React.FC<AccessibilityBarProps> = (props) => {
     (state: any) => state.userSession.token,
     shallowEqual,
   );
-  const { vlt } = config.settings;
-  const displayAccessibilityBar = vlt?.display?.accessibilityBar ?? false;
+  const { scvlt } = config.settings;
+  const displayAccessibilityBar = scvlt?.display?.accessibilityBar ?? false;
 
   return displayAccessibilityBar ? (
     <div className="header-accessibility-bar">

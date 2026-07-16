@@ -1,10 +1,4 @@
-export type VLTSettings = {
-  components: {
-    header: string;
-    navigation: string;
-    mobileNavigation: string;
-    footer: string;
-  };
+export type SCVLTSettings = {
   display: {
     accessibilityBar: boolean;
   };

@@ -1,9 +1,11 @@
 import type { ConfigType } from '@plone/registry';
-import type { VLTSettings } from '../types/vlt';
+import type { SCVLTSettings } from '../types/vlt';
+import type { VLTSettings } from '@kitconcept/volto-light-theme/types';
 
 declare module '@plone/types' {
   interface SettingsConfig {
     vlt?: VLTSettings;
+    scvlt?: SCVLTSettings;
   }
 }
 
@@ -43,17 +45,20 @@ function applyExpanders(config: ConfigType) {
 }
 
 export default function install(config: ConfigType) {
-  config.settings.vlt = {
-    components: {
+  if (config.settings.vlt) {
+    config.settings.vlt.components = {
+      ...config.settings.vlt.components,
       header: 'sc',
       navigation: 'sc',
-      mobileNavigation: 'vlt',
-      footer: 'vlt',
-    },
+    };
+  }
+
+  config.settings.scvlt = {
     display: {
       accessibilityBar: true,
     },
   };
+
   applyExpanders(config);
   return config;
 }

@@ -3,7 +3,7 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { Container } from '@plone/components';
 import SearchWidget from '@plone/volto/components/theme/SearchWidget/SearchWidget';
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
-import { getComponent } from '@simplesconsultoria/volto-light-theme/helpers/settings';
+import { getVLTComponent } from '@kitconcept/volto-light-theme/helpers/settings';
 import type { Content } from '@plone/types';
 import MobileAccessibilityDropdown from '../AccessibilityBar/MobileAccessibilityDropdown';
 import Logo from '@plone/volto/components/theme/Logo/Logo';
@@ -37,8 +37,8 @@ const SCHeader: React.FC<HeaderProps> = ({ pathname }) => {
     (state: any) => state.navroot?.data?.navroot,
   );
 
-  const Navigation = getComponent('navigation');
-  const MobileNavigation = getComponent('mobileNavigation');
+  const Navigation = getVLTComponent('navigation');
+  const MobileNavigation = getVLTComponent('mobileNavigation');
 
   return (
     <>

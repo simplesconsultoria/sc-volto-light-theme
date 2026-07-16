@@ -1,20 +1,6 @@
-import React from 'react';
-import config from '@plone/volto/registry';
-import type { VLTSettings } from '../types/vlt';
-
-const defaultComponent = 'vlt';
-
-export type ComponentSlot = keyof VLTSettings['components'];
-
-export function getComponent(type: string): React.ComponentType<any> {
-  const settings = config.settings.vlt?.components;
-  const name = settings ? settings[type] || defaultComponent : defaultComponent;
-  const component = config.getUtility({
-    name: name,
-    type: type,
-  }).method;
-  return (
-    component ||
-    config.getUtility({ name: defaultComponent, type: type }).method
-  );
-}
+// The component-selection helper (`getVLTComponent`) and its `ComponentSlot`
+// type now live upstream in `@kitconcept/volto-light-theme`. We keep this
+// re-export so consumers of this theme (e.g. `@simplesconsultoria/showcase`)
+// can import `ComponentSlot` from the SC package without depending on the
+// kitconcept package directly.
+export type { ComponentSlot } from '@kitconcept/volto-light-theme/helpers/settings';
