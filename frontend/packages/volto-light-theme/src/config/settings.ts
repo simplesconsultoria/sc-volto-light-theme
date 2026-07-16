@@ -54,8 +54,14 @@ export default function install(config: ConfigType) {
   }
 
   config.settings.scvlt = {
-    display: {
-      accessibilityBar: true,
+    headerBar: {
+      display: true,
+      elements: {
+        accessibilityControls: true,
+        languageSelector: true,
+        themeToggle: true,
+        userTools: true,
+      },
     },
   };
 

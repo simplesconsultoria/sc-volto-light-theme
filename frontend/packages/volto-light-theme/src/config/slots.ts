@@ -1,15 +1,8 @@
 import type { ConfigType } from '@plone/registry';
-import AccessibilityBar from '../components/AccessibilityBar/AccessibilityBar';
 
 import PostFooter from '../components/Footer/PostFooter';
 
-function headerSlots(config: ConfigType) {
-  config.registerSlotComponent({
-    slot: 'headerTop',
-    name: 'AccessibilityBar',
-    component: AccessibilityBar,
-  });
-}
+function headerSlots(config: ConfigType) {}
 
 function footerSlots(config: ConfigType) {
   config.registerSlotComponent({

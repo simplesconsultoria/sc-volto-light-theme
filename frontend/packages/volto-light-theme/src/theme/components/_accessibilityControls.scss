@@ -1,0 +1,137 @@
+// =============================================================================
+// Accessibility Bar
+// Desktop bar, mobile dropdown, and inner controls styles.
+// =============================================================================
+
+.header-accessibility-controls {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 0.5rem;
+
+  &__button {
+    @include control-inline-button(
+      0.375rem 0.625rem,
+      var(--primary-foreground-color),
+      6px,
+      var(--primary-color),
+      var(--primary-foreground-color),
+      color-mix(in srgb, var(--primary-foreground-color) 20%, transparent),
+      color-mix(
+        in srgb,
+        var(--primary-color) 50%,
+        var(--primary-foreground-color)
+      )
+    );
+
+    @include headtitle1();
+
+    display: flex;
+
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  &__font-scale {
+    @include headtitle2();
+
+    display: flex;
+    min-width: 3rem;
+
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  &__group {
+    display: flex;
+    overflow: visible;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  &__hover-button {
+    @include control-inline-button(
+      0.375rem 0.625rem,
+      var(--primary-foreground-color),
+      6px,
+      var(--primary-color),
+      var(--primary-foreground-color),
+      color-mix(in srgb, var(--primary-foreground-color) 20%, transparent),
+      color-mix(
+        in srgb,
+        var(--primary-color) 50%,
+        var(--primary-foreground-color)
+      )
+    );
+    position: relative;
+
+    display: flex;
+    overflow: visible;
+
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__hover-options {
+    display: flex;
+    overflow: hidden;
+
+    width: 0;
+    max-width: 0;
+    align-items: center;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition:
+      width 260ms ease,
+      max-width 260ms ease,
+      opacity 220ms ease;
+
+    &.is-open {
+      width: 180px;
+      max-width: 180px;
+
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &__range {
+    @include control-range-label(var(--secondary-foreground-color));
+    @include headtitle2();
+
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    gap: 0.5rem;
+    white-space: nowrap;
+
+    input[type='range'] {
+      width: 96px;
+      accent-color: var(--secondary-foreground-color);
+    }
+  }
+
+  &__icon {
+    @include control-icon();
+    flex-shrink: 0;
+    fill: var(--secondary-color);
+  }
+
+  @media only screen and (max-width: $largest-mobile-screen) {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+}

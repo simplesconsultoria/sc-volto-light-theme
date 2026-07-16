@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import Helmet from '@plone/volto/helpers/Helmet/Helmet';
 
-import { getStoredNumber, savePreference } from '../../../utils/storage';
+import { getStoredNumber, savePreference } from '../../utils/storage';
 
 const STORAGE_KEY = 'accessibility:font-scale';
 const FONT_SCALE_MIN = 0.8;
@@ -61,7 +61,7 @@ const FontSizeControls: React.FC = () => {
 
   return (
     <>
-      {/* O Helmet injeta esse script no <head> durante o SSR do Volto. 
+      {/* O Helmet injeta esse script no <head> durante o SSR do Volto.
           Isso garante que o CSS correto seja aplicado antes da tela pintar. */}
       <Helmet>
         <script type="text/javascript">

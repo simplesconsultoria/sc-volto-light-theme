@@ -1,7 +1,7 @@
 import type { ConfigType } from '@plone/registry';
 
 // Header
-import SCHeader from '../components/Header/SCHeader';
+import Header from '../components/Header/Header';
 
 // Navigation
 import SCNavigation from '../components/Navigation/SCNavigation/SCNavigation';
@@ -11,7 +11,7 @@ function registerComponents(config: ConfigType) {
   config.registerUtility({
     name: 'sc',
     type: 'header',
-    method: SCHeader,
+    method: Header,
   });
 
   // Navigation

@@ -1,11 +1,12 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
+import type { Content } from '@plone/types';
 import { Container } from '@plone/components';
 import SearchWidget from '@plone/volto/components/theme/SearchWidget/SearchWidget';
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
 import { getVLTComponent } from '@kitconcept/volto-light-theme/helpers/settings';
-import type { Content } from '@plone/types';
-import MobileAccessibilityDropdown from '../AccessibilityBar/MobileAccessibilityDropdown';
+import HeaderBar from '../HeaderBar/HeaderBar';
+import MobileHeader from './MobileHeader/MobileHeader';
 import Logo from '@plone/volto/components/theme/Logo/Logo';
 
 type HeaderProps = {
@@ -23,7 +24,7 @@ type FormState = {
   };
 };
 
-const SCHeader: React.FC<HeaderProps> = ({ pathname }) => {
+const Header: React.FC<HeaderProps> = ({ pathname }) => {
   const token = useSelector(
     (state: any) => state.userSession.token,
     shallowEqual,
@@ -38,7 +39,6 @@ const SCHeader: React.FC<HeaderProps> = ({ pathname }) => {
   );
 
   const Navigation = getVLTComponent('navigation');
-  const MobileNavigation = getVLTComponent('mobileNavigation');
 
   return (
     <>
@@ -49,12 +49,7 @@ const SCHeader: React.FC<HeaderProps> = ({ pathname }) => {
         location={content}
       />
       <header className="header-wrapper">
-        <SlotRenderer
-          name="headerTop"
-          content={content}
-          navRoot={navRoot}
-          location={content}
-        />
+        <HeaderBar content={content} navRoot={navRoot} location={content} />
         <Container layout>
           <div className="header">
             <div className="header-main">
@@ -63,10 +58,7 @@ const SCHeader: React.FC<HeaderProps> = ({ pathname }) => {
                   <Logo />
                 </div>
                 <Navigation pathname={pathname} />
-                <div className="mobile-nav-actions">
-                  <MobileAccessibilityDropdown token={token} />
-                  <MobileNavigation pathname={pathname} />
-                </div>
+                <MobileHeader token={token} pathname={pathname} />
               </div>
 
               <div className="search-wrapper navigation-desktop">
@@ -88,4 +80,4 @@ const SCHeader: React.FC<HeaderProps> = ({ pathname }) => {
   );
 };
 
-export default SCHeader;
+export default Header;

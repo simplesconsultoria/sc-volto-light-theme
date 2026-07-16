@@ -2,19 +2,19 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 
-import speedSVG from '../../../icons/speed.svg';
-import earSVG from '../../../icons/ear.svg';
+import speedSVG from '../../icons/speed.svg';
+import earSVG from '../../icons/ear.svg';
 import {
   isSpeechSupported,
   ensureVoicesLoaded,
   configurePortugueseUtterance,
-} from '../../../utils/speechSynthesis';
+} from '../../utils/speechSynthesis';
 
 import {
   getStoredNumber,
   getStoredBoolean,
   savePreference,
-} from '../../../utils/storage';
+} from '../../utils/storage';
 
 const STORAGE_KEYS = {
   hoverReaderEnabled: 'accessibility:hover-reader-enabled',

@@ -1,6 +1,6 @@
 import React from 'react';
-import FontSizeControls from './AccessibilityControls/FontSizeControls';
-import HoverReaderControls from './AccessibilityControls/HoverReaderControls';
+import FontSizeControls from './FontSizeControls';
+import HoverReaderControls from './HoverReaderControls';
 
 const AccessibilityControls: React.FC = () => {
   return (
