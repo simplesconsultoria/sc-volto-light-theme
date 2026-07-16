@@ -33,6 +33,7 @@ services:
     platform: linux/amd64
     environment:
       RAZZLE_INTERNAL_API_PATH: http://backend:8080/Plone
+      RAZZLE_VLT_SHOWCASE: true
     depends_on:
       - backend
     labels:

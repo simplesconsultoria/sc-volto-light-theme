@@ -4,6 +4,7 @@ from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PloneSandboxLayer
+from plone.supermodel.model import finalizeSchemas
 from plone.testing.zope import WSGI_SERVER_FIXTURE
 
 import sc.voltolighttheme
@@ -20,6 +21,12 @@ class Layer(PloneSandboxLayer):
 
         self.loadZCML(package=plone.restapi)
         self.loadZCML(package=sc.voltolighttheme)
+        # plone.supermodel finalizes schemas from a customAction in its own
+        # configure.zcml, so at startup it runs last and sees every
+        # ISchemaPlugin. This layer loads our ZCML in a later context, after
+        # that action already fired, so SchemaCleanupPlugin would never run.
+        # Re-finalize here to get the ordering a real startup has.
+        finalizeSchemas()
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, "sc.voltolighttheme:default")

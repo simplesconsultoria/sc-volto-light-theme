@@ -12,6 +12,7 @@ const addonAliases = {
     './node_modules/@kitconcept/volto-light-theme/src',
   ),
   '@simplesconsultoria/volto-light-theme': path.resolve(__dirname, './src'),
+  '@simplesconsultoria/showcase': path.resolve(__dirname, '../showcase/src'),
   // 'promise-file-reader': require.resolve('promise-file-reader') // Add to identify dependency from package
 };
 

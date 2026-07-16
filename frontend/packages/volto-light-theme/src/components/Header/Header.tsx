@@ -1,13 +1,12 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
+import type { Content } from '@plone/types';
 import { Container } from '@plone/components';
 import SearchWidget from '@plone/volto/components/theme/SearchWidget/SearchWidget';
-import Navigation from '@plone/volto/components/theme/Navigation/Navigation';
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
-import type { Content } from '@plone/types';
-import MobileNavigation from '@kitconcept/volto-light-theme/components/MobileNavigation/MobileNavigation';
-import AccessibilityBar from './AccessibilityBar';
-import MobileAccessibilityDropdown from './MobileAccessibilityDropdown';
+import { getVLTComponent } from '@kitconcept/volto-light-theme/helpers/settings';
+import HeaderBar from '../HeaderBar/HeaderBar';
+import MobileHeader from './MobileHeader/MobileHeader';
 import Logo from '@plone/volto/components/theme/Logo/Logo';
 
 type HeaderProps = {
@@ -39,6 +38,8 @@ const Header: React.FC<HeaderProps> = ({ pathname }) => {
     (state: any) => state.navroot?.data?.navroot,
   );
 
+  const Navigation = getVLTComponent('navigation');
+
   return (
     <>
       <SlotRenderer
@@ -48,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ pathname }) => {
         location={content}
       />
       <header className="header-wrapper">
-        <AccessibilityBar token={token} />
+        <HeaderBar content={content} navRoot={navRoot} location={content} />
         <Container layout>
           <div className="header">
             <div className="header-main">
@@ -57,10 +58,7 @@ const Header: React.FC<HeaderProps> = ({ pathname }) => {
                   <Logo />
                 </div>
                 <Navigation pathname={pathname} />
-                <div className="mobile-nav-actions">
-                  <MobileAccessibilityDropdown token={token} />
-                  <MobileNavigation pathname={pathname} />
-                </div>
+                <MobileHeader token={token} pathname={pathname} />
               </div>
 
               <div className="search-wrapper navigation-desktop">

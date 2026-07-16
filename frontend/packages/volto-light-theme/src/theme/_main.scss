@@ -6,10 +6,12 @@
 @import 'globals';
 @import 'components/tags';
 @import 'components/navigation';
+@import 'components/mobileTools';
 @import 'components/header';
+@import 'components/headerBar';
 @import 'components/headerSearch';
-@import 'components/accessibilityBar';
 @import 'components/themeToggle';
+@import 'components/accessibilityControls';
 @import 'components/footer';
 @import 'components/breadcrumbs';
 @import 'components/search';

@@ -2,6 +2,7 @@
   "__version__": "1.0.0",
   "_blob_files_": [
     "plone_site_root/logo/logo-simples.svg",
+    "plone_site_root/footer_logo/logo-simples-reverse.svg",
     "967f87e7335e4b048feed0f456fd2674/image/Catedral Bras\u00edlia",
     "44c771797b6c41d0865b4b98e05f4b00/image/Geirangerfjord",
     "59b6ff7e80f545cba398e326a4d6e680/image/Konzerthaus Berlin",

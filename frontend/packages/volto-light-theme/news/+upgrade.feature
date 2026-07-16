@@ -1,0 +1,1 @@
+Upgraded Volto to 19.1.6 and `@kitconcept/volto-light-theme` to 8.0.0-alpha.31, adopting the upstream component registry (`getVLTComponent`) and removing the local customizations and helpers now provided upstream. Added the calendar, DSGVO banner and image-editor blocks. @ericof

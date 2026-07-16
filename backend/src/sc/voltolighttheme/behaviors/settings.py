@@ -24,6 +24,7 @@ FIELDS_TO_OMIT = {
         "secondary_color",
     ),
     footer.IKitconceptVoltoFooterSettings: (
+        "footer_address",
         "post_footer_logo",
         "post_footer_logo_link",
     ),
@@ -59,8 +60,7 @@ class SchemaCleanupPlugin:
         every form". We merge with whatever the schema already declares instead
         of overwriting it, and stay idempotent across repeated finalizations.
         """
-        fields = FIELDS_TO_OMIT.get(self.schema)
-        if not fields:
+        if not (fields := FIELDS_TO_OMIT.get(self.schema)):
             return
         omitted = list(self.schema.queryTaggedValue(OMITTED_KEY, []))
         already = {(iface, name) for iface, name, _ in omitted}

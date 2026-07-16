@@ -1,0 +1,1 @@
+Reorganized the header accessibility features into a dedicated header bar. The accessibility controls, language selector, theme toggle and user tools now render in a configurable `HeaderBar` (with a mobile dropdown), each toggled through `settings.scvlt.headerBar`, replacing the previous `headerTop` accessibility bar slot. @ericof

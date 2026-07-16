@@ -1,0 +1,61 @@
+// =============================================================================
+// Header Bar
+// =============================================================================
+body header.header-wrapper {
+  // Header bar
+  .header-bar-wrapper {
+    @media only screen and (max-width: $largest-mobile-screen) {
+      display: none;
+    }
+
+    position: relative;
+    z-index: 15;
+    background-color: var(--secondary-color);
+    color: var(--secondary-foreground-color);
+    .header-bar {
+      @include adjustMarginsToContainer($layout-container-width);
+      @include layout-container-width();
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0.5rem 0;
+
+      &__actions {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.75rem;
+
+        @media only screen and (max-width: $tablet-breakpoint) {
+          justify-content: center;
+
+          .header-accessibility-controls {
+            align-items: center;
+            justify-content: center;
+          }
+        }
+        // Shared styles for selectors inside the bar
+        .language-selector,
+        .tools,
+        .tools .anontools {
+          display: flex;
+          align-items: center;
+
+          a {
+            color: var(--accent-foreground-color);
+          }
+        }
+        &__user {
+          display: flex;
+          align-items: center;
+
+          a {
+            color: var(--secondary-foreground-color);
+          }
+        }
+      }
+    }
+  }
+}

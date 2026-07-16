@@ -1,0 +1,56 @@
+{
+  "name": "@simplesconsultoria/showcase",
+  "version": "1.0.0-alpha.0",
+  "description": "Showcase options",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "keywords": [
+    "volto-addon",
+    "volto",
+    "plone",
+    "react"
+  ],
+  "author": "Simples Consultoria",
+  "homepage": "https://github.com/simplesconsultoria/sc-volto-light-theme#readme",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:simplesconsultoria/sc-volto-light-theme"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "i18n": "rm -rf build/messages && NODE_ENV=production i18n --addon",
+    "dry-release": "release-it --dry-run",
+    "release": "release-it",
+    "release-major-alpha": "release-it major --preRelease=alpha",
+    "release-alpha": "release-it --preRelease=alpha"
+  },
+  "addons": [],
+  "theme": "",
+  "dependencies": {
+    "@simplesconsultoria/volto-light-theme": "workspace:*",
+    "@plone/components": "workspace:*"
+  },
+  "peerDependencies": {
+    "@plone/registry": "workspace:*",
+    "@plone/types": "workspace:*",
+    "classnames": "2.5.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-intl": "3.12.1"
+  },
+  "devDependencies": {
+    "@plone/registry": "workspace:*",
+    "@plone/scripts": "workspace:*",
+    "@plone/types": "workspace:*",
+    "@testing-library/react": "^16.2.0",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "classnames": "2.5.1",
+    "react-intl": "3.12.1",
+    "release-it": "^19.0.5",
+    "typescript": "^5.7.3",
+    "vitest": "^3.1.2"
+  }
+}

@@ -1,11 +1,28 @@
 import type { ConfigType } from '@plone/registry';
-import PostFooter from '../components/Footer/PostFooter';
+
+// Header
+import Header from '../components/Header/Header';
+
+// Navigation
+import SCNavigation from '../components/Navigation/SCNavigation/SCNavigation';
+
+function registerComponents(config: ConfigType) {
+  // Header
+  config.registerUtility({
+    name: 'sc',
+    type: 'header',
+    method: Header,
+  });
+
+  // Navigation
+  config.registerUtility({
+    name: 'sc',
+    type: 'navigation',
+    method: SCNavigation,
+  });
+}
 
 export default function install(config: ConfigType) {
-  // Register Slots
-  config.registerSlotComponent({
-    slot: 'postFooter',
-    name: 'PostFooterFollowUsLogoAndLinks',
-    component: PostFooter,
-  });
+  // Register Components
+  registerComponents(config);
 }
