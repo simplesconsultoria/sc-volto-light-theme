@@ -31,6 +31,7 @@ const MobileTools: React.FC<MobileToolsProps> = ({ token }) => {
   return display ? (
     <div className="mobile-tools-dropdown" ref={dropdownRef}>
       <button
+        type="button"
         className="mobile-tools-button"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Opções de Acessibilidade"

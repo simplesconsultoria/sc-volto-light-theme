@@ -39,6 +39,7 @@ const MenuItem = ({
       {hasFatMenu && hasItems ? (
         <>
           <button
+            type="button"
             onClick={() => openMenu(index)}
             className={cx('item', {
               active:

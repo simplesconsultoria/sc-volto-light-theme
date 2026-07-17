@@ -1,4 +1,4 @@
-import React, { createRef, useRef, useMemo } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import cx from 'classnames';
@@ -9,6 +9,9 @@ import config from '@plone/volto/registry';
 import withQuerystringResults from '@plone/volto/components/manage/Blocks/Listing/withQuerystringResults';
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
 import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
+
+const EMPTY_DATA = {};
+const EMPTY_ITEMS: any[] = [];
 
 const messages = defineMessages({
   PaginationNavigationFor: {
@@ -98,9 +101,9 @@ export interface ListingBodyProps {
 
 export const ListingBody: React.FC<ListingBodyProps> = (props) => {
   const {
-    data = {},
+    data = EMPTY_DATA,
     isEditMode,
-    listingItems = [],
+    listingItems = EMPTY_ITEMS,
     totalPages,
     onPaginationChange,
     variation,
@@ -135,7 +138,7 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
   }
 
   const galleryRef = useRef<any>(null);
-  const listingRef = createRef<HTMLDivElement>();
+  const listingRef = useRef<HTMLDivElement>(null);
 
   const NoResults = variation?.noResultsComponent
     ? variation.noResultsComponent

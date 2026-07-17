@@ -84,7 +84,7 @@ const HeroBlockView: React.FC<HeroBlockViewProps> = (props) => {
   return (
     <BlockWrapper {...(props as any)}>
       <div
-        className={`block heroBlock ${typeHref} ${blockWidthClass}`}
+        className={cx('hero-block-container', typeHref, blockWidthClass)}
         style={finalStyle}
       >
         {variation === 'card' ? (

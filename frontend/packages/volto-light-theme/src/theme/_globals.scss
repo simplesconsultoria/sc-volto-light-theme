@@ -60,3 +60,9 @@ body .block.search .search-wrapper {
     }
   }
 }
+
+.contenttype-news-item {
+  .blocks-group-wrapper + .blocks-group-wrapper {
+    @include color-block-change-vertical-spacing();
+  }
+}

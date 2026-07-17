@@ -220,6 +220,7 @@ const CarouselTemplate: React.FC<
                     ].join('')}
                     title={title || 'Vídeo'}
                     loading={isActiveSlide ? 'eager' : 'lazy'}
+                    sandbox="allow-scripts allow-presentation"
                     allowFullScreen
                   />
                 </div>

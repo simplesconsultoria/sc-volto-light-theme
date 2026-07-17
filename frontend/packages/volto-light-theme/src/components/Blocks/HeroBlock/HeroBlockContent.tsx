@@ -76,8 +76,8 @@ const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
 
       {data.tags && data.tags.length > 0 && (
         <ul className="hero-tags" aria-label="Tags">
-          {data.tags.map((tag: string, idx: number) => (
-            <li key={idx} className="hero-tag">
+          {data.tags.map((tag: string) => (
+            <li key={tag} className="hero-tag">
               {tag}
             </li>
           ))}

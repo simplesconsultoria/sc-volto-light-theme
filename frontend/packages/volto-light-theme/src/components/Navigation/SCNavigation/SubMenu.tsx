@@ -38,6 +38,7 @@ const SubMenu = ({
       >
         <div className="submenu-inner">
           <button
+            type="button"
             className="close"
             onClick={closeMenu}
             aria-label={intl.formatMessage(messages.closeMenu)}

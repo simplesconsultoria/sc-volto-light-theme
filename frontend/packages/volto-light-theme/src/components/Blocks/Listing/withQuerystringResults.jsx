@@ -18,6 +18,8 @@ function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
 
+const copyFields = ['limit', 'query', 'sort_on', 'sort_order', 'depth'];
+
 export default function withQuerystringResults(WrappedComponent) {
   function WithQuerystringResults(props) {
     const {
@@ -33,9 +35,7 @@ export default function withQuerystringResults(WrappedComponent) {
     const { b_size = settings.defaultPageSize } = querystring; // batchsize
 
     // save the path so it won't trigger dispatch on eager router location change
-    const [initialPath] = React.useState(getBaseUrl(path));
-
-    const copyFields = ['limit', 'query', 'sort_on', 'sort_order', 'depth'];
+    const [initialPath] = React.useState(() => getBaseUrl(path));
     const { currentPage, setCurrentPage } = usePagination(id, 1);
     const adaptedQuery = Object.assign(
       variation?.fullobjects ? { fullobjects: 1 } : { metadata_fields: '_all' },

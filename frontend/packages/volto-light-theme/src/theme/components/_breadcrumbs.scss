@@ -1,7 +1,7 @@
 .breadcrumbs {
   .breadcrumb {
-    @include layout-container-width();
-    @include adjustMarginsToContainer($layout-container-width);
+    @include default-container-width();
+    @include adjustMarginsToContainer($default-container-width);
     .section.active {
       display: block;
       overflow: hidden;

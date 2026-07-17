@@ -14,8 +14,39 @@ $hero-card-overlap: 60px;
 }
 
 .block.heroBlock {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
   background-color: var(--theme-color, transparent);
   color: var(--theme-foreground-color, inherit);
+}
+
+.hero-block-container {
+  // Default fallback if no block-width is selected
+  @include layout-container-width();
+  @include adjustMarginsToContainer($layout-container-width);
+
+  // Block widths overrides
+  &.has--block-width--var\(--narrow-container-width\) {
+    @include narrow-container-width();
+    @include adjustMarginsToContainer($narrow-container-width);
+  }
+  &.has--block-width--var\(--default-container-width\) {
+    @include default-container-width();
+    @include adjustMarginsToContainer($default-container-width);
+  }
+  &.has--block-width--var\(--layout-container-width\),
+  &.has--block-width--layout {
+    @include layout-container-width();
+    @include adjustMarginsToContainer($layout-container-width);
+  }
+  &.has--block-width--unset {
+    width: calc(100% - 40px) !important;
+    max-width: 100% !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
 }
 
 .hero-block {
@@ -26,26 +57,6 @@ $hero-card-overlap: 60px;
   }
   &.image-fit-cover {
     --hero-image-fit: cover;
-  }
-
-  // Default fallback if no block-width is selected
-  @include layout-container-width();
-
-  // Block widths overrides
-  .block.heroBlock.has--block-width--var\(--narrow-container-width\) & {
-    @include narrow-container-width();
-  }
-  .block.heroBlock.has--block-width--var\(--default-container-width\) & {
-    @include default-container-width();
-  }
-  .block.heroBlock.has--block-width--var\(--layout-container-width\) & {
-    @include layout-container-width();
-  }
-  .block.heroBlock.has--block-width--unset & {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-right: auto !important;
-    margin-left: auto !important;
   }
 
   .hero-header-text {
@@ -188,16 +199,18 @@ $hero-card-overlap: 60px;
   .hero-tags {
     display: flex;
     flex-wrap: wrap;
+    padding: 0;
     gap: 0.5rem;
 
     .hero-tag {
       padding: 0.25rem 0.75rem;
       border: 2px solid var(--theme-high-contrast-color);
       border-radius: 2px;
+      letter-spacing: 0.03em;
+      list-style-type: none;
+      text-transform: uppercase;
       @include body-text-bold();
       @include add(size, xs);
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
     }
   }
 

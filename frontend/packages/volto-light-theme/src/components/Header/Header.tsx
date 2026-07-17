@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import type { Content } from '@plone/types';
 import { Container } from '@plone/components';
@@ -7,7 +7,7 @@ import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRendere
 import { getVLTComponent } from '@kitconcept/volto-light-theme/helpers/settings';
 import HeaderBar from '../HeaderBar/HeaderBar';
 import MobileHeader from './MobileHeader/MobileHeader';
-import Logo from '@plone/volto/components/theme/Logo/Logo';
+import Logo from '@kitconcept/volto-light-theme/components/Logo/Logo';
 
 type HeaderProps = {
   pathname: string;
@@ -22,6 +22,23 @@ type FormState = {
       navroot: Content;
     };
   };
+};
+
+const useTheme = () => {
+  const [theme, setTheme] = useState('light');
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const observer = new MutationObserver(() => {
+      setTheme(document.documentElement.getAttribute('data-theme') || 'light');
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    setTheme(document.documentElement.getAttribute('data-theme') || 'light');
+    return () => observer.disconnect();
+  }, []);
+  return theme;
 };
 
 const Header: React.FC<HeaderProps> = ({ pathname }) => {
@@ -39,6 +56,8 @@ const Header: React.FC<HeaderProps> = ({ pathname }) => {
   );
 
   const Navigation = getVLTComponent('navigation');
+  const theme = useTheme();
+  const isDark = theme === 'dark' || theme === 'high-contrast';
 
   return (
     <>
@@ -55,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({ pathname }) => {
             <div className="header-main">
               <div className="logo-nav-wrapper">
                 <div className="logo">
-                  <Logo />
+                  <Logo isFooterLogo={isDark} />
                 </div>
                 <Navigation pathname={pathname} />
                 <MobileHeader token={token} pathname={pathname} />

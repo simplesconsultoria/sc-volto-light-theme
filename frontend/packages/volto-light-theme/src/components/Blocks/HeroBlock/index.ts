@@ -1,6 +1,6 @@
 import HeroBlockView from './View';
 import HeroBlockEdit from './Edit';
-import { HeroBlockDataAdapter } from './adapter';
+import { heroBlockDataAdapter } from './adapter';
 import { HeroBlockSchema } from './schema';
 import presentationSVG from '@plone/volto/icons/presentation.svg';
 import type { BlockConfigBase } from '@plone/types';
@@ -19,7 +19,7 @@ const HeroBlockInfo: BlockConfigBase = {
   mostUsed: false,
   sidebarTab: 1,
   blockHasOwnFocusManagement: false,
-  dataAdapter: HeroBlockDataAdapter,
+  dataAdapter: heroBlockDataAdapter,
   variations: [
     {
       id: 'flex',

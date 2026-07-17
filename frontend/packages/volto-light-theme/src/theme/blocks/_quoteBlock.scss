@@ -7,11 +7,16 @@ $quote-border-width: 8px;
 $quote-padding-left: $spacing-medium;
 $quote-padding-vertical: $spacing-medium;
 
+#page-document .block.quoteBlock,
+#page-edit .block-editor-quoteBlock,
+#page-add .block-editor-quoteBlock,
 .block.quoteBlock {
   background-color: var(--theme-color);
   color: var(--theme-foreground-color, var(--primary-foreground-color));
-  @include narrow-container-width();
-  @include adjustMarginsToContainer($narrow-container-width);
+
+  // Always force default-container-width regardless of other wrappers or missing options
+  @include default-container-width();
+  @include adjustMarginsToContainer($default-container-width);
 }
 
 .quote-block {
@@ -41,7 +46,7 @@ $quote-padding-vertical: $spacing-medium;
   .quote-text {
     p,
     [data-slate-node='element'] > span {
-      color: inherit;
+      color: var(--theme-top-foreground-color);
       font-family: var(--font-sans);
       font-size: map-get($font-sizes, m);
       font-style: italic;
@@ -54,7 +59,7 @@ $quote-padding-vertical: $spacing-medium;
     margin-top: $spacing-small;
 
     cite {
-      color: var(--theme-foreground-color);
+      color: var(--theme-top-foreground-color);
       font-family: var(--font-sans);
       font-size: map-get($font-sizes, xs);
       font-style: normal;

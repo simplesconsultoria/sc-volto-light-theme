@@ -66,7 +66,7 @@ export function getQueryStringResults(
   const { settings } = config;
 
   // fixes https://github.com/plone/volto/issues/1059
-  const requestData: QuerystringData = JSON.parse(JSON.stringify(data));
+  const requestData: QuerystringData = structuredClone(data);
   if (data?.depth != null) {
     delete requestData.depth;
     requestData.query?.forEach((q) => {
