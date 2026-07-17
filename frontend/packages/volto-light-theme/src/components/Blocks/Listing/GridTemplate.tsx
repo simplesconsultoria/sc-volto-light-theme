@@ -5,6 +5,7 @@ import Card from '@kitconcept/volto-light-theme/primitives/Card/Card';
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers/Url/Url';
 import config from '@plone/volto/registry';
 import DefaultSummary from '@kitconcept/volto-light-theme/components/Summary/DefaultSummary';
+import { getContentTypeColor } from '../../../config/contentTypeColors';
 import cx from 'classnames';
 
 export interface GridTemplateProps {
@@ -14,6 +15,33 @@ export interface GridTemplateProps {
   isEditMode?: boolean;
   gridColumns?: number;
 }
+
+const GridItemBody = ({
+  item,
+  CustomItemBodyTemplate,
+  PreviewImageComponent,
+  Summary,
+  a11yLabelId,
+  LinkToItem,
+}: any) => {
+  if (CustomItemBodyTemplate) {
+    return <CustomItemBodyTemplate item={item} />;
+  }
+  return (
+    <>
+      {item.image_field !== '' && (
+        <Card.Image
+          className="item-image"
+          item={item}
+          imageComponent={PreviewImageComponent}
+        />
+      )}
+      <Card.Summary a11yLabelId={a11yLabelId} LinkToItem={LinkToItem}>
+        <Summary item={item} />
+      </Card.Summary>
+    </>
+  );
+};
 
 const GridTemplate: React.FC<GridTemplateProps> = ({
   items,
@@ -61,29 +89,16 @@ const GridTemplate: React.FC<GridTemplateProps> = ({
             showLink = !hideProfileLinks && !isEditMode;
           }
 
-          const ItemBodyTemplate: React.FC<{
-            a11yLabelId?: string;
-            LinkToItem?: any;
-          }> = (props) =>
-            CustomItemBodyTemplate ? (
-              <CustomItemBodyTemplate item={item} />
-            ) : (
-              <>
-                {item.image_field !== '' && (
-                  <Card.Image
-                    className="item-image"
-                    item={item}
-                    imageComponent={PreviewImageComponent}
-                  />
-                )}
-                <Card.Summary
-                  a11yLabelId={props.a11yLabelId}
-                  LinkToItem={props.LinkToItem}
-                >
-                  <Summary item={item} />
-                </Card.Summary>
-              </>
-            );
+          const borderColor = getContentTypeColor(
+            item['@type'],
+            config.settings.contentTypeColors,
+          );
+
+          const style = borderColor
+            ? ({
+                '--content-type-border-color': borderColor,
+              } as React.CSSProperties)
+            : undefined;
 
           return (
             <li
@@ -91,9 +106,15 @@ const GridTemplate: React.FC<GridTemplateProps> = ({
                 [`${item['@type']?.toLowerCase()}-listing`]: item['@type'],
               })}
               key={item['@id']}
+              style={style}
             >
               <Card item={showLink ? item : null}>
-                <ItemBodyTemplate />
+                <GridItemBody
+                  item={item}
+                  CustomItemBodyTemplate={CustomItemBodyTemplate}
+                  PreviewImageComponent={PreviewImageComponent}
+                  Summary={Summary}
+                />
               </Card>
             </li>
           );

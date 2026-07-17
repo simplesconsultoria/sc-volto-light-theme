@@ -155,6 +155,7 @@ const MediaCarouselTemplate: React.FC<
                     ].join('')}
                     title={item?.title || 'Vídeo'}
                     loading={isActiveSlide ? 'eager' : 'lazy'}
+                    sandbox="allow-scripts allow-presentation"
                     allowFullScreen
                   />
                 </div>

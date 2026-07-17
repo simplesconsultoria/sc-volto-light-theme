@@ -52,19 +52,19 @@ const getInitialTheme = (): ThemeName => {
   }
 };
 
+const applyTheme = (themeToApply: ThemeName) => {
+  if (typeof document === 'undefined') return;
+  const root = document.documentElement;
+  const body = document.body;
+
+  root.setAttribute('data-theme', themeToApply);
+  body.setAttribute('data-theme', themeToApply);
+};
+
 const ThemeToggle: React.FC = () => {
   const intl = useIntl();
   const [theme, setTheme] = useState<ThemeName>('light');
   const [mounted, setMounted] = useState(false);
-
-  const applyTheme = (themeToApply: ThemeName) => {
-    if (typeof document === 'undefined') return;
-    const root = document.documentElement;
-    const body = document.body;
-
-    root.setAttribute('data-theme', themeToApply);
-    body.setAttribute('data-theme', themeToApply);
-  };
 
   useEffect(() => {
     const initialTheme = getInitialTheme();

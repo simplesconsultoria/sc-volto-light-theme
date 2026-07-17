@@ -105,6 +105,8 @@ interface HeroSchemaProps {
   [key: string]: any;
 }
 
+const layoutFields = ['blockWidth', 'textSide', 'imageSize', 'titleTag'];
+
 export function HeroBlockSchema(props: HeroSchemaProps): any {
   const { intl } = props;
   const formData = props.formData ?? props.data ?? {};
@@ -129,8 +131,6 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
   if (variation === 'card') {
     defaultFields.unshift('fileType');
   }
-
-  const layoutFields = ['blockWidth', 'textSide', 'imageSize', 'titleTag'];
 
   const schema: any = {
     title: intl.formatMessage(messages.heroBlock),

@@ -50,10 +50,17 @@
   --footer-foreground: var(--secondary-foreground-color);
   --fatmenu-background: var(--primary-color);
   --fatmenu-foreground: var(--primary-foreground-color);
-  --breadcrumbs-background: var(--primary-color);
-  --breadcrumbs-foreground: var(--primary-foreground-color);
+  --breadcrumbs-background: var(--accent-color);
+  --breadcrumbs-foreground: var(--accent-foreground-color);
   --search-background: var(--primary-color);
   --search-foreground: var(--primary-foreground-color);
+
+  // Content Types
+  --news-item-color: var(--pure-black);
+  --document-color: var(--accent-color);
+  --event-color: red;
+  --file-color: blue;
+  --image-color: green;
 
   // Type
   --font-sans: system-ui, sans-serif;
@@ -61,28 +68,58 @@
   --custom-main-font: system-ui, sans-serif;
   --font-body: system-ui, sans-serif;
 
-  // Block theme: Default
+  // =========================================================================
+  // Block Themes
+  //
+  // Each theme defines tokens for two visual layers:
+  //   Ground      — the block's own surface (bg, text, accent, etc.)
+  //   High Ground — elevated child elements (cards, chips, badges)
+  //
+  // Plus optional decoration tokens:
+  //   Border      — border-color & border-width (unset = no border)
+  //   Pattern     — decorative background image & opacity (none/0 = off)
+  //
+  // High-contrast mode overrides ALL themes to force white-on-black
+  // and always-visible borders.
+  // =========================================================================
+
+  // Block theme: Default — Ground
   --block-theme-default-bg: var(--primary-color);
   --block-theme-default-text: var(--primary-foreground-color);
+  --block-theme-default-high-contrast: var(--primary-foreground-color);
   --block-theme-default-low-contrast: var(--primary-low-foreground-color);
   --block-theme-default-accent-color: var(--primary-accent-color);
+  // Block theme: Default — High Ground
   --block-theme-default-high-bg: var(--neutral-color);
   --block-theme-default-top-text: var(--neutral-foreground-color);
+  --block-theme-default-top-high-contrast: var(--neutral-foreground-color);
   --block-theme-default-top-low-contrast: var(--neutral-low-foreground-color);
   --block-theme-default-top-accent-color: var(--neutral-accent-color);
+  // Block theme: Default — Border
   --block-theme-default-border: var(--accent-color);
   --block-theme-default-border-width: 4px 0 0;
+  // Block theme: Default — Pattern (disabled by default)
+  --block-theme-default-pattern-image: none;
+  --block-theme-default-pattern-opacity: 0;
 
-  // Block theme: Brand
+  // Block theme: Brand — Ground
   --block-theme-brand-bg: var(--accent-color);
   --block-theme-brand-text: var(--accent-foreground-color);
+  --block-theme-brand-high-contrast: var(--accent-foreground-color);
   --block-theme-brand-low-contrast: var(--accent-low-foreground-color);
   --block-theme-brand-accent-color: var(--accent-accent-color);
+  // Block theme: Brand — High Ground
   --block-theme-brand-high-bg: var(--primary-color);
   --block-theme-brand-top-text: var(--primary-foreground-color);
+  --block-theme-brand-top-high-contrast: var(--primary-foreground-color);
   --block-theme-brand-top-low-contrast: var(--primary-low-foreground-color);
   --block-theme-brand-top-accent-color: var(--primary-accent-color);
+  // Block theme: Brand — Border
   --block-theme-brand-border: unset;
+  --block-theme-brand-border-width: 0;
+  // Block theme: Brand — Pattern (disabled by default)
+  --block-theme-brand-pattern-image: none;
+  --block-theme-brand-pattern-opacity: 0;
 
   // Links
   --link-color: var(--brand-color);
@@ -124,6 +161,12 @@
   --neutral-accent-color: var(--accent-high-contrast);
 
   --link-foreground-color: var(--link-high-contrast);
+
+  --news-item-color: var(--text-high-contrast);
+  --document-color: var(--text-high-contrast);
+  --event-color: var(--text-high-contrast);
+  --file-color: var(--text-high-contrast);
+  --image-color: var(--text-high-contrast);
 
   --block-theme-default-border: var(--border-high-contrast);
   --block-theme-default-border-width: 3px;

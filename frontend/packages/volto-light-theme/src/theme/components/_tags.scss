@@ -1,7 +1,13 @@
+.content-area {
+  container-type: inline-size;
+}
+
 .q.container.tags {
   max-width: var(--default-container-width) !important;
   margin-right: auto;
   margin-left: auto;
+
+  @include adjustMarginsToContainer($default-container-width);
   > a.ui.label {
     border: 2px solid var(--primary-foreground-color);
     border-radius: 0;

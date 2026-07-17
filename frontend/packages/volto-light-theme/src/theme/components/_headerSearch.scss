@@ -38,7 +38,7 @@ body header.header-wrapper {
               transform 100ms ease-in-out;
 
             svg {
-              height: $spacing-small;
+              height: $spacing-small !important;
               transition: transform 300ms ease-in-out;
             }
 

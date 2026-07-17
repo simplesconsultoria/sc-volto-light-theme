@@ -45,6 +45,10 @@ body .block.listing,
         height: 100%;
         border: solid var(--theme-border-color);
         border-width: var(--theme-border-width);
+        border-top-color: var(
+          --content-type-border-color,
+          var(--theme-border-color)
+        );
         background-color: var(--theme-high-contrast-color);
 
         .card-inner {

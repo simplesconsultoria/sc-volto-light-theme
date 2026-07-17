@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import Helmet from '@plone/volto/helpers/Helmet/Helmet';
 
@@ -30,9 +30,6 @@ const FontSizeControls: React.FC = () => {
     );
   });
 
-  // Estado para garantir que a renderização do texto "80%" não quebre a hidratação do Volto
-  const [mounted, setMounted] = useState(false);
-
   const applyFontScale = useCallback((scale: number) => {
     if (typeof document === 'undefined') return;
     document.documentElement.style.setProperty('--font-scale', String(scale));
@@ -54,10 +51,6 @@ const FontSizeControls: React.FC = () => {
     },
     [applyFontScale],
   );
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <>
@@ -91,9 +84,9 @@ const FontSizeControls: React.FC = () => {
         <span
           className="header-accessibility-controls__font-scale"
           aria-hidden="true"
+          suppressHydrationWarning
         >
-          {/* O mounted garante que o texto 100% seja renderizado no servidor, e no cliente ele atualize para o valor real */}
-          {mounted ? `${Math.round(fontScale * 100)}%` : '100%'}
+          {`${Math.round(fontScale * 100)}%`}
         </span>
         <button
           type="button"

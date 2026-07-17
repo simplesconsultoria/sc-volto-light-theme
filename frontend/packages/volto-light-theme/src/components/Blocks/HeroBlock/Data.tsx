@@ -3,7 +3,7 @@ import BlockDataForm from '@plone/volto/components/manage/Form/BlockDataForm';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { HeroBlockSchema } from './schema';
-import { HeroBlockDataAdapter } from './adapter';
+import { heroBlockDataAdapter } from './adapter';
 
 interface HeroBlockDataProps {
   data: Record<string, any>;
@@ -19,7 +19,7 @@ const HeroBlockDataForm: React.FC<HeroBlockDataProps> = (props) => {
   const schema = HeroBlockSchema({ ...props, intl, formData: data });
 
   const dataAdapter =
-    (blocksConfig as any)?.heroBlock?.dataAdapter || HeroBlockDataAdapter;
+    (blocksConfig as any)?.heroBlock?.dataAdapter || heroBlockDataAdapter;
 
   const request = useSelector(
     (state: any) => state.content?.subrequests?.[block],

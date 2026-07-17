@@ -13,6 +13,7 @@ import {
   mediaCarouselSchemaEnhancer,
   listingSchemaEnhancer,
 } from '../components/Blocks/Listing/schema';
+import { defaultContentTypeColors } from './contentTypeColors';
 
 declare module '@plone/types' {
   export interface BlocksConfigData {
@@ -23,56 +24,75 @@ declare module '@plone/types' {
   }
 }
 
-const customThemes = [
-  {
-    style: {
-      '--theme-color': 'var(--block-theme-default-bg)',
-      '--theme-foreground-color': 'var(--block-theme-default-text)',
-      '--theme-high-contrast-foreground-color':
-        'var(--block-theme-default-high-contrast)',
-      '--theme-low-contrast-foreground-color':
-        'var(--block-theme-default-low-contrast)',
-      '--theme-foreground-accent-color':
-        'var(--block-theme-default-accent-color)',
+// =============================================================================
+// Theme Definition Factory
+// =============================================================================
+//
+// Each theme maps semantic `--theme-*` CSS custom properties to concrete
+// `--block-theme-{name}-*` tokens defined in `_root.scss`.
+//
+// The structure follows a two-layer model:
+//
+//   Ground          — the block's own background & text.
+//   High Ground     — elevated elements within the block (cards, chips, etc.).
+//   Border          — optional border style & width.
+//   Pattern         — optional decorative background pattern / image.
+//
+// By using a factory, adding a new theme in a downstream project is a
+// one-liner:  `createThemeDefinition('purple', 'Roxo')`
 
-      '--theme-high-contrast-color': 'var(--block-theme-default-high-bg)',
-      '--theme-top-foreground-color': 'var(--block-theme-default-top-text)',
-      '--theme-top-high-contrast-foreground-color':
-        'var(--block-theme-default-top-high-contrast)',
-      '--theme-top-low-contrast-foreground-color':
-        'var(--block-theme-default-top-low-contrast)',
-      '--theme-top-accent-color': 'var(--block-theme-default-top-accent-color)',
-      '--theme-border-color': 'var(--block-theme-default-border)',
-      '--theme-border-width': 'var(--block-theme-default-border-width)',
-    },
-    name: 'default',
-    label: 'Default',
-  },
-  {
-    style: {
-      '--theme-color': 'var(--block-theme-brand-bg)',
-      '--theme-foreground-color': 'var(--block-theme-brand-text)',
-      '--theme-high-contrast-foreground-color':
-        'var(--block-theme-brand-high-contrast)',
-      '--theme-low-contrast-foreground-color':
-        'var(--block-theme-brand-low-contrast)',
-      '--theme-foreground-accent-color':
-        'var(--block-theme-brand-accent-color)',
+export interface ThemeDefinition {
+  style: Record<string, string>;
+  name: string;
+  label: string;
+}
 
-      '--theme-high-contrast-color': 'var(--block-theme-brand-high-bg)',
-      '--theme-top-foreground-color': 'var(--block-theme-brand-top-text)',
-      '--theme-top-high-contrast-foreground-color':
-        'var(--block-theme-brand-top-high-contrast)',
-      '--theme-top-low-contrast-foreground-color':
-        'var(--block-theme-brand-top-low-contrast)',
-      '--theme-top-accent-color': 'var(--block-theme-brand-top-accent-color)',
-      '--theme-border-color': 'var(--block-theme-brand-border)',
-      '--theme-border-width': 'var(--block-theme-brand-border-width)',
+/**
+ * Create a complete theme definition by mapping every `--theme-*` variable
+ * to its `--block-theme-{name}-*` counterpart.
+ *
+ * @param name  — Machine name used as the CSS token root (e.g. `"default"`, `"brand"`).
+ * @param label — Human-readable label shown in the editor color picker.
+ */
+export function createThemeDefinition(
+  name: string,
+  label: string,
+): ThemeDefinition {
+  const v = (suffix: string) => `var(--block-theme-${name}-${suffix})`;
+  return {
+    style: {
+      // Ground
+      '--theme-color': v('bg'),
+      '--theme-foreground-color': v('text'),
+      '--theme-high-contrast-foreground-color': v('high-contrast'),
+      '--theme-low-contrast-foreground-color': v('low-contrast'),
+      '--theme-foreground-accent-color': v('accent-color'),
+      // High Ground
+      '--theme-high-contrast-color': v('high-bg'),
+      '--theme-top-foreground-color': v('top-text'),
+      '--theme-top-high-contrast-foreground-color': v('top-high-contrast'),
+      '--theme-top-low-contrast-foreground-color': v('top-low-contrast'),
+      '--theme-top-accent-color': v('top-accent-color'),
+      // Border
+      '--theme-border-color': v('border'),
+      '--theme-border-width': v('border-width'),
+      // Pattern (optional — defaults to none/0 in _root.scss)
+      '--theme-pattern-image': v('pattern-image'),
+      '--theme-pattern-opacity': v('pattern-opacity'),
     },
-    name: 'brand',
-    label: 'Marca',
-  },
+    name,
+    label,
+  };
+}
+
+const customThemes: ThemeDefinition[] = [
+  createThemeDefinition('default', 'Primary'),
+  createThemeDefinition('brand', 'Brand'),
 ];
+
+// =============================================================================
+// Installers
+// =============================================================================
 
 function installLocalBlocks(config: ConfigType) {
   config.blocks.blocksConfig.documentByline = DocumentByLineInfo;
@@ -119,10 +139,19 @@ function installGridBlock(config: ConfigType) {
   return config;
 }
 
+function installContentTypeColors(config: ConfigType) {
+  (config.settings as any).contentTypeColors = {
+    ...defaultContentTypeColors,
+    ...((config.settings as any).contentTypeColors ?? {}),
+  };
+  return config;
+}
+
 export default function install(config: ConfigType) {
   installLocalBlocks(config);
   installThemes(config);
   installGridBlock(config);
+  installContentTypeColors(config);
 
   // Listing: add a media carousel variation and override GridTemplate
   if ((config.blocks.blocksConfig as any).listing?.variations) {

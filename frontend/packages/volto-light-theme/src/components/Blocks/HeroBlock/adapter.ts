@@ -10,7 +10,7 @@ interface AdapterParams {
   item?: Record<string, any>;
 }
 
-export const HeroBlockDataAdapter = ({
+export const heroBlockDataAdapter = ({
   block,
   data,
   id,
