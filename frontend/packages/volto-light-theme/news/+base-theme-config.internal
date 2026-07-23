@@ -1,0 +1,1 @@
+Refactored base SCSS structure (added mixins, moved views) and updated project TypeScript definitions and configurations.
