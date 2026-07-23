@@ -258,3 +258,48 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
 
   return schema;
 };
+
+export const teaserSchemaEnhancer = ({ schema, formData, intl }) => {
+  if (formData?.variation !== 'teaser') return schema;
+
+  const properties = {
+    ...schema.properties,
+    align: {
+      widget: 'align',
+      title: 'Alinhamento',
+      actions: ['left', 'right', 'center'],
+      default: 'left',
+    },
+  };
+
+  // Se o schema já tiver fieldset styles, adiciona lá, senão no default
+  const hasStyles = schema.fieldsets?.some((f) => f.id === 'styling');
+
+  if (!hasStyles) {
+    const defaultFieldset = schema.fieldsets.find((f) => f.id === 'default');
+    if (defaultFieldset && !defaultFieldset.fields.includes('align')) {
+      defaultFieldset.fields.push('align');
+    }
+  }
+
+  // We ensure styles schema has it if it's nested (Volto 16+ uses addStyling)
+  if (schema.properties?.styles?.schema) {
+    schema.properties.styles.schema.properties.align = {
+      widget: 'align',
+      title: 'Alinhamento',
+      actions: ['left', 'right', 'center'],
+      default: 'left',
+    };
+    const stylesDefault = schema.properties.styles.schema.fieldsets.find(
+      (f) => f.id === 'default',
+    );
+    if (stylesDefault && !stylesDefault.fields.includes('align')) {
+      stylesDefault.fields.push('align');
+    }
+  }
+
+  return {
+    ...schema,
+    properties,
+  };
+};

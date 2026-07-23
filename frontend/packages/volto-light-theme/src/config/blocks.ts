@@ -8,10 +8,12 @@ import QuoteBlockInfo from '../components/Blocks/QuoteBlock';
 import CarouselTemplate from '../components/Blocks/Listing/CarouselTemplate';
 import MediaCarouselTemplate from '../components/Blocks/Listing/MediaCarouselTemplate';
 import GridTemplate from '../components/Blocks/Listing/GridTemplate';
+import TeaserTemplate from '../components/Blocks/Listing/TeaserTemplate';
 import {
   carouselSchemaEnhancer,
   mediaCarouselSchemaEnhancer,
   listingSchemaEnhancer,
+  teaserSchemaEnhancer,
 } from '../components/Blocks/Listing/schema';
 import { defaultContentTypeColors } from './contentTypeColors';
 
@@ -194,6 +196,18 @@ export default function install(config: ConfigType) {
           title: 'Carrossel de Mídia',
           template: MediaCarouselTemplate,
           schemaEnhancer: mediaCarouselSchemaEnhancer,
+        },
+      ];
+    }
+    const hasTeaser = variations.some((v: any) => v.id === 'teaser');
+    if (!hasTeaser) {
+      variations = [
+        ...variations,
+        {
+          id: 'teaser',
+          title: 'Destaque',
+          template: TeaserTemplate,
+          schemaEnhancer: teaserSchemaEnhancer,
         },
       ];
     }
