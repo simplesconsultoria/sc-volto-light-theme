@@ -2,6 +2,7 @@
   #main {
     background-color: var(--primary-color);
     .ui.basic.segment.content-area {
+      width: 100%;
       background-color: var(--primary-color);
       color: var(--primary-foreground-color);
     }

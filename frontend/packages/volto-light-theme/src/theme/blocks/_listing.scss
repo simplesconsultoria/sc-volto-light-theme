@@ -52,7 +52,7 @@ body .block.listing,
         background-color: var(--theme-high-contrast-color);
 
         .card-inner {
-          padding: 0;
+          padding: 0 !important;
 
           .card-summary {
             @container (max-width: #{$largest-mobile-screen}) {

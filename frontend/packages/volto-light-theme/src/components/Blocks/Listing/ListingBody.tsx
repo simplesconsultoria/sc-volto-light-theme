@@ -148,7 +148,7 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
 
   return (
     <>
-      {data.headline && (
+      {(data.headline || data.headlineButtonText) && (
         <Headline
           headlineTag={HeadlineTag}
           id={id}

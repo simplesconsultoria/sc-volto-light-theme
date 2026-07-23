@@ -165,6 +165,8 @@ const MediaCarouselTemplate: React.FC<
                 <PreviewImageComponent
                   item={item}
                   className="listing-carousel__image"
+                  loading="lazy"
+                  size="large"
                 />
               );
             } else {
@@ -210,7 +212,7 @@ const MediaCarouselTemplate: React.FC<
           >
             {slides.map((item, index) => (
               <button
-                key={item?.['@id'] || index}
+                key={item['@id']}
                 type="button"
                 className={cx('listing-carousel__dot', {
                   'is-active': index === activeIndex,
