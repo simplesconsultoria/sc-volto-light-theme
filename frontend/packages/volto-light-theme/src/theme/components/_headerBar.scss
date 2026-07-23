@@ -1,9 +1,12 @@
 // =============================================================================
 // Header Bar
+// The utility bar above the main header (accessibility, theme, language, etc.)
+// Features auto-collapse: when content overflows, it collapses into a dropdown.
 // =============================================================================
 body header.header-wrapper {
-  // Header bar
   .header-bar-wrapper {
+    --header-bar-gap: 0.75rem;
+
     @media only screen and (max-width: $largest-mobile-screen) {
       display: none;
     }
@@ -12,50 +15,240 @@ body header.header-wrapper {
     z-index: 15;
     background-color: var(--secondary-color);
     color: var(--secondary-foreground-color);
+    container-type: inline-size;
+
     .header-bar {
+      position: static;
       @include adjustMarginsToContainer($layout-container-width);
       @include layout-container-width();
+
+      .header-bar__inner {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.1rem 0;
+
+        .header-bar__social {
+          .social-networks {
+            margin: 0;
+            svg {
+              height: 45px !important;
+            }
+          }
+        }
+      }
+    }
+
+    .header-bar__mock-links {
       display: flex;
+      gap: 1rem;
+      a.quick-link,
+      button {
+        @include add(size, xs);
+        @include add(weight, medium);
+        color: var(--secondary-foreground-color);
+      }
+
+      a {
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // Invisible measurer
+    // Renders the full (uncollapsed) content to measure its natural width.
+    // Must stay in the DOM but invisible so ResizeObserver can read scrollWidth.
+    // -------------------------------------------------------------------------
+    .header-bar__measurer {
+      position: absolute;
+      z-index: -1;
+      right: 0;
+      width: max-content;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+      white-space: nowrap;
+
+      // The inner actions inside the measurer should lay out exactly like the
+      // real ones so the measurement is accurate.
+      .header-bar__actions,
+      .header-bar__actions__tools {
+        display: flex !important;
+        width: max-content !important;
+        flex-wrap: nowrap !important;
+        align-items: center;
+        gap: var(--header-bar-gap);
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // Actions container (visible)
+    // -------------------------------------------------------------------------
+    .header-bar__actions {
+      display: flex;
+      width: 100%;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: flex-end;
-      padding: 0.5rem 0;
+      gap: var(--header-bar-gap);
 
-      &__actions {
+      .header-bar__actions__tools {
         display: flex;
         width: 100%;
         flex-wrap: wrap;
         align-items: center;
         justify-content: flex-end;
-        gap: 0.75rem;
-
-        @media only screen and (max-width: $tablet-breakpoint) {
-          justify-content: center;
-
-          .header-accessibility-controls {
-            align-items: center;
-            justify-content: center;
-          }
-        }
-        // Shared styles for selectors inside the bar
-        .language-selector,
-        .tools,
-        .tools .anontools {
-          display: flex;
-          align-items: center;
-
+        gap: var(--header-bar-gap);
+        .language-selector:is(.language-selector, .tools, .tools .anontools) {
+          margin: 0;
           a {
-            color: var(--accent-foreground-color);
-          }
-        }
-        &__user {
-          display: flex;
-          align-items: center;
-
-          a {
+            @include add(size, xs);
+            @include add(weight, medium);
             color: var(--secondary-foreground-color);
           }
         }
       }
+
+      @media only screen and (max-width: $tablet-breakpoint) {
+        justify-content: center;
+        .header-bar__actions__tools {
+          justify-content: center;
+        }
+
+        .header-accessibility-controls {
+          align-items: center;
+          justify-content: center;
+        }
+      }
+
+      // Shared styles for selectors inside the bar
+      :is(.language-selector, .tools, .tools .anontools) {
+        @include header-tool-cluster(var(--accent-foreground-color));
+      }
+
+      &__user {
+        display: flex;
+        align-items: center;
+
+        a {
+          @include add(size, xs);
+          @include add(weight, medium);
+          color: var(--secondary-foreground-color);
+        }
+      }
+
+      // Collapsed state — only the trigger button is visible
+      &.is-collapsed {
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+      }
     }
+
+    // -------------------------------------------------------------------------
+    // Collapsed wrapper & trigger
+    // -------------------------------------------------------------------------
+    .header-bar__collapsed-wrapper {
+      display: flex;
+      height: 100%;
+      align-items: center;
+    }
+
+    .header-bar__collapsed-trigger {
+      display: flex;
+      align-items: center;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid currentColor;
+      border-radius: 4px;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      gap: 0.5rem;
+
+      span {
+        @include add(size, 2xs);
+        letter-spacing: 0.05em;
+      }
+
+      &:hover,
+      &:focus-visible {
+        background-color: color-mix(
+          in srgb,
+          var(--secondary-foreground-color) 15%,
+          transparent
+        );
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // Collapsed dropdown menu
+    // -------------------------------------------------------------------------
+    .header-bar__collapsed-menu {
+      position: absolute;
+      z-index: 50;
+      top: 100%;
+      right: 0;
+      left: 0;
+      display: flex;
+      width: 100%;
+      min-width: 100%;
+      max-width: none;
+      flex-direction: column;
+      padding: 1.5rem $horizontal-space-small-screens;
+      border: none;
+      border-radius: 0;
+      border-top: 1px solid
+        color-mix(in srgb, var(--secondary-foreground-color) 20%, transparent);
+      border-bottom: 1px solid
+        color-mix(in srgb, var(--secondary-foreground-color) 20%, transparent);
+      background: var(--secondary-color);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+
+      .header-bar__collapsed-menu-inner {
+        // @include layout-container-width();
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 1.5rem;
+
+        .header-bar__actions__tools {
+          display: flex;
+          width: 100%;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1.5rem;
+
+          .header-accessibility-controls {
+            width: 100%;
+            justify-content: flex-start;
+          }
+
+          :is(.language-selector, .tools, .tools .anontools) {
+            @include header-tool-cluster(var(--accent-foreground-color));
+          }
+
+          .header-bar__actions__user {
+            display: flex;
+            align-items: center;
+
+            a {
+              @include add(size, xs);
+              @include add(weight, medium);
+              color: var(--secondary-foreground-color);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Fix accessibility controls slider cutoff
+  .header-accessibility-controls__hover-options.is-open {
+    width: 220px !important;
+    max-width: 220px !important;
   }
 }
