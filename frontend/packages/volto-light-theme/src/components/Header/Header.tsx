@@ -1,61 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import type { Content } from '@plone/types';
 import { Container } from '@plone/components';
 import SearchWidget from '@plone/volto/components/theme/SearchWidget/SearchWidget';
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
+import config from '@plone/volto/registry';
 import { getVLTComponent } from '@kitconcept/volto-light-theme/helpers/settings';
-import HeaderBar from '../HeaderBar/HeaderBar';
-import MobileHeader from './MobileHeader/MobileHeader';
 import Logo from '@kitconcept/volto-light-theme/components/Logo/Logo';
+import useTheme from '../../hooks/useTheme';
 
 type HeaderProps = {
   pathname: string;
 };
 
-type FormState = {
+type RootState = {
+  userSession: {
+    token?: string | null;
+  };
   content: {
     data: Content;
   };
-  navroot: {
-    data: {
+  navroot?: {
+    data?: {
       navroot: Content;
     };
   };
 };
 
-const useTheme = () => {
-  const [theme, setTheme] = useState('light');
-  useEffect(() => {
-    if (typeof document === 'undefined') return;
-    const observer = new MutationObserver(() => {
-      setTheme(document.documentElement.getAttribute('data-theme') || 'light');
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
-    setTheme(document.documentElement.getAttribute('data-theme') || 'light');
-    return () => observer.disconnect();
-  }, []);
-  return theme;
-};
-
 const Header: React.FC<HeaderProps> = ({ pathname }) => {
   const token = useSelector(
-    (state: any) => state.userSession.token,
+    (state: RootState) => state.userSession?.token,
     shallowEqual,
   );
-  const content = useSelector<FormState, Content>(
-    (state: any) => state.content.data,
+  const content = useSelector(
+    (state: RootState) => state.content?.data,
     shallowEqual,
   );
 
-  const navRoot = useSelector<FormState, Content>(
-    (state: any) => state.navroot?.data?.navroot,
+  const navRoot = useSelector(
+    (state: RootState) => state.navroot?.data?.navroot,
   );
 
   const Navigation = getVLTComponent('navigation');
+  const HeaderBar = config.getComponent('HeaderBar').component;
+  const MobileHeader = config.getComponent('MobileHeader').component;
   const theme = useTheme();
   const isDark = theme === 'dark' || theme === 'high-contrast';
 

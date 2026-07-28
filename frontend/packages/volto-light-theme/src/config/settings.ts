@@ -1,6 +1,7 @@
 import type { ConfigType } from '@plone/registry';
 import type { SCVLTSettings } from '../types/vlt';
 import type { VLTSettings } from '@kitconcept/volto-light-theme/types';
+import { bootstrapAccessibilityPreferences } from '../utils/preferences';
 
 declare module '@plone/types' {
   interface SettingsConfig {
@@ -45,6 +46,8 @@ function applyExpanders(config: ConfigType) {
 }
 
 export default function install(config: ConfigType) {
+  bootstrapAccessibilityPreferences();
+
   if (config.settings.vlt) {
     config.settings.vlt.components = {
       ...config.settings.vlt.components,
@@ -53,14 +56,30 @@ export default function install(config: ConfigType) {
     };
   }
 
-  config.settings.scvlt = {
+  const scvltDefaults: SCVLTSettings = {
     headerBar: {
       display: true,
+      quickLinks: [],
       elements: {
         accessibilityControls: true,
         languageSelector: true,
         themeToggle: true,
         userTools: true,
+      },
+    },
+  };
+
+  const previousSettings = config.settings.scvlt;
+
+  config.settings.scvlt = {
+    ...scvltDefaults,
+    ...previousSettings,
+    headerBar: {
+      ...scvltDefaults.headerBar,
+      ...previousSettings?.headerBar,
+      elements: {
+        ...scvltDefaults.headerBar.elements,
+        ...previousSettings?.headerBar?.elements,
       },
     },
   };

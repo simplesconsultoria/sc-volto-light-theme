@@ -11,19 +11,7 @@
   gap: 0.5rem;
 
   &__button {
-    @include control-inline-button(
-      0.375rem 0.625rem,
-      var(--primary-foreground-color),
-      6px,
-      var(--primary-color),
-      var(--primary-foreground-color),
-      color-mix(in srgb, var(--primary-foreground-color) 20%, transparent),
-      color-mix(
-        in srgb,
-        var(--primary-color) 50%,
-        var(--primary-foreground-color)
-      )
-    );
+    @include header-accessibility-action-button();
 
     @include headtitle1();
 
@@ -59,19 +47,7 @@
   }
 
   &__hover-button {
-    @include control-inline-button(
-      0.375rem 0.625rem,
-      var(--primary-foreground-color),
-      6px,
-      var(--primary-color),
-      var(--primary-foreground-color),
-      color-mix(in srgb, var(--primary-foreground-color) 20%, transparent),
-      color-mix(
-        in srgb,
-        var(--primary-color) 50%,
-        var(--primary-foreground-color)
-      )
-    );
+    @include header-accessibility-action-button();
     position: relative;
 
     display: flex;

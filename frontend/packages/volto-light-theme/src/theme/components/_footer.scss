@@ -14,15 +14,15 @@
     );
     background-color: var(--secondary-color);
     color: var(--secondary-foreground-color);
+    container-type: inline-size;
 
     .footer-post-footer-container {
+      @include layout-container-width();
+      @include adjustMarginsToContainer($layout-container-width);
+
       display: flex;
-      width: 100%;
-      max-width: var(--layout-container-width);
       flex-direction: column;
       justify-content: center;
-      padding: 0 1rem;
-      margin: 0 auto;
 
       .navigation-row {
         display: grid;
@@ -88,8 +88,9 @@
           }
 
           @media only screen and (max-width: 991px) {
-            flex-direction: row;
+            flex-direction: row-reverse;
             align-items: center;
+            justify-content: space-between;
 
             .brand-logo {
               width: 150px;

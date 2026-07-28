@@ -1,0 +1,143 @@
+// =============================================================================
+// Utility Mixins
+// Shared helpers used across components and blocks.
+// =============================================================================
+
+// ---------------------------------------------------------------------------
+// Layout
+// ---------------------------------------------------------------------------
+
+/// Flex-center shorthand.
+/// @param {String} $direction [row] - flex-direction
+/// @param {Boolean} $inline [false] - use inline-flex instead of flex
+@mixin flex-center($direction: row, $inline: false) {
+  display: if($inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: center;
+}
+
+// ---------------------------------------------------------------------------
+// Accessibility
+// ---------------------------------------------------------------------------
+
+/// Visually-hidden (screen-reader only).
+/// Keeps the element in the a11y tree while hiding it visually.
+@mixin sr-only() {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  margin: -1px;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/// Focus ring utility.
+/// @param {Color} $color - outline color
+/// @param {Length} $width [2px]
+/// @param {Length} $offset [3px]
+@mixin focus-ring($color, $width: 2px, $offset: 3px) {
+  outline: $width solid $color;
+  outline-offset: $offset;
+}
+
+// ---------------------------------------------------------------------------
+// Color helpers
+// ---------------------------------------------------------------------------
+
+/// Darken a background via color-mix.
+@mixin hover-mix-darken($base, $mix: 90%, $dark: var(--pure-black)) {
+  background: color-mix(in srgb, $base $mix, $dark);
+}
+
+// ---------------------------------------------------------------------------
+// Control components (accessibility bar buttons / ranges)
+// ---------------------------------------------------------------------------
+
+/// Inline button used in the accessibility controls.
+@mixin control-inline-button(
+  $padding: 0.35rem,
+  $border-color: color-mix(in srgb, currentColor 40%, transparent),
+  $radius: 6px,
+  $background: transparent,
+  $color: inherit,
+  $hover-border-color: color-mix(in srgb, currentColor 80%, transparent),
+  $hover-background: color-mix(in srgb, currentColor 15%, transparent)
+) {
+  @include flex-center(row, true);
+  padding: $padding;
+  border: 1px solid $border-color;
+  border-radius: $radius;
+  background: $background;
+  color: $color;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+
+  &:hover,
+  &:focus-visible,
+  &.is-active {
+    border-color: $hover-border-color;
+    background-color: $hover-background;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+/// Range + label group used for speed / font-size sliders.
+@mixin control-range-label($color: inherit) {
+  @include flex-center(row, true);
+  margin: 0;
+  color: $color;
+  gap: 0.25rem;
+}
+
+/// Icon wrapper in accessibility controls.
+@mixin control-icon() {
+  @include flex-center(row, true);
+  opacity: 0.95;
+}
+
+/// Shared color treatment for header accessibility action buttons.
+@mixin header-accessibility-action-button() {
+  @include control-inline-button(
+    0.375rem 0.625rem,
+    var(--primary-foreground-color),
+    6px,
+    var(--primary-color),
+    var(--primary-foreground-color),
+    color-mix(in srgb, var(--primary-foreground-color) 20%, transparent),
+    color-mix(
+      in srgb,
+      var(--primary-color) 50%,
+      var(--primary-foreground-color)
+    )
+  );
+}
+
+/// Shared cluster style for compact tool groups used in header bars.
+@mixin header-tool-cluster($link-color) {
+  display: flex;
+  align-items: center;
+
+  a {
+    color: $link-color;
+  }
+}
+
+/// Shared text treatment for uppercase navigation labels.
+@mixin nav-uppercase-label($color: var(--header-foreground)) {
+  color: $color;
+  font-family: var(--custom-font);
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}

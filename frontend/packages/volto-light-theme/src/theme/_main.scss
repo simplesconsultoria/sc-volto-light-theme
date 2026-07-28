@@ -1,4 +1,5 @@
 // This theme extends the volto-light-theme
+@import 'mixins';
 @import 'variables';
 @import 'root';
 @import 'accessibility';
@@ -12,10 +13,10 @@
 @import 'components/headerSearch';
 @import 'components/themeToggle';
 @import 'components/accessibilityControls';
+@import 'components/dropdownMenu';
 @import 'components/footer';
 @import 'components/breadcrumbs';
 @import 'components/search';
-@import 'components/notFound';
 @import 'blocks/listing';
 @import 'blocks/teaser';
 @import 'blocks/slider';
@@ -26,3 +27,4 @@
 @import 'blocks/eventCalendar';
 @import 'blocks/schemaBlock';
 @import 'blocks/buttonBlock';
+@import 'views/notFound';
