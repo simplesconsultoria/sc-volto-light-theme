@@ -52,7 +52,11 @@ export function useHeroBlockContent({
       defaultTitleTag) as keyof JSX.IntrinsicElements;
 
     const imageInfo = imageInfoFromHeroBlock(data);
-    const hasImage = imageInfo.hasImage;
+    let hasImage = imageInfo.hasImage;
+
+    if (data.hideImage || imageSize === '0%') {
+      hasImage = false;
+    }
 
     return {
       title,

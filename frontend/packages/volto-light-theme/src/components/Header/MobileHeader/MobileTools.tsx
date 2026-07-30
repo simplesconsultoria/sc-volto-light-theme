@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import config from '@plone/volto/registry';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import moreIcon from '@plone/volto/icons/more.svg';
 import HeaderBarActions from '../../HeaderBar/HeaderBarActions';
+import useClickOutside from '../../../hooks/useClickOutside';
 
 type MobileToolsProps = {
   token?: string | null;
@@ -15,18 +16,10 @@ const MobileTools: React.FC<MobileToolsProps> = ({ token }) => {
   const { headerBar } = config.settings?.scvlt || {};
   const display = headerBar?.display ?? false;
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const close = useCallback(() => setIsOpen(false), []);
+
+  // Fecha ao clicar fora ou pressionar Escape
+  useClickOutside(dropdownRef, close, isOpen);
 
   return display ? (
     <div className="mobile-tools-dropdown" ref={dropdownRef}>

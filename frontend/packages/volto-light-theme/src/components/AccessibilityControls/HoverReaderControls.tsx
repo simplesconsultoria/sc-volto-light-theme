@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 
@@ -25,7 +25,7 @@ const RATE_MIN = 0.6;
 const RATE_MAX = 1.4;
 const DEFAULT_RATE = 1;
 const TEXT_TARGET_SELECTOR =
-  'h1, h2, h3, h4, h5, h6, p, span, a, button, label, li, td, th, figcaption, blockquote, div';
+  'h1, h2, h3, h4, h5, h6, p, span, a, button, label, li, td, th, figcaption, blockquote, div, time, strong, em, b, i, address, img';
 const messages = defineMessages({
   hoverReaderLabel: {
     id: 'accessibilityHoverReaderLabel',
@@ -37,10 +37,11 @@ const messages = defineMessages({
   },
 });
 
+let globalHoverTimeout: number | null = null;
+let globalLastHoverText = '';
+
 const HoverReaderControls: React.FC = () => {
   const intl = useIntl();
-  const hoverTimeoutRef = useRef<number | null>(null);
-  const lastHoverTextRef = useRef<string>('');
   const [speechSupported, setSpeechSupported] = useState(false);
   const [hoverReaderEnabled, setHoverReaderEnabled] = useState(false);
   const [rate, setRate] = useState(DEFAULT_RATE);
@@ -84,6 +85,30 @@ const HoverReaderControls: React.FC = () => {
     return ensureVoicesLoaded();
   }, []);
 
+  // Sync state across instances (e.g., between the real DOM and the absolute measurer)
+  useEffect(() => {
+    const handleSync = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setHoverReaderEnabled(customEvent.detail);
+    };
+    const handleRateSync = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setRate(customEvent.detail);
+    };
+    window.addEventListener('accessibilityHoverReaderToggled', handleSync);
+    window.addEventListener(
+      'accessibilityHoverReaderRateChanged',
+      handleRateSync,
+    );
+    return () => {
+      window.removeEventListener('accessibilityHoverReaderToggled', handleSync);
+      window.removeEventListener(
+        'accessibilityHoverReaderRateChanged',
+        handleRateSync,
+      );
+    };
+  }, []);
+
   useEffect(() => {
     if (!speechSupported || !hoverReaderEnabled) return undefined;
 
@@ -94,26 +119,54 @@ const HoverReaderControls: React.FC = () => {
       const ignoredSelector = '[aria-hidden="true"], script, style, noscript';
       if (target.closest(ignoredSelector)) return;
 
-      const textElement = target.closest<HTMLElement>(TEXT_TARGET_SELECTOR);
+      const COMPOSITE_BLOCK_SELECTOR = '.listing-item, .card, article';
+      const blockElement = target.closest<HTMLElement>(
+        COMPOSITE_BLOCK_SELECTOR,
+      );
+
+      let textElement: HTMLElement | null = null;
+
+      if (blockElement) {
+        textElement = blockElement;
+      } else {
+        textElement = target.closest<HTMLElement>(TEXT_TARGET_SELECTOR);
+      }
+
       if (!textElement) return;
       if (
         textElement.tagName.toLowerCase() === 'div' &&
-        textElement.children.length > 0
+        textElement.children.length > 0 &&
+        !blockElement
       ) {
         return;
       }
 
-      const text = textElement.textContent?.replace(/\s+/g, ' ').trim() ?? '';
-
-      if (!text || text.length < 3 || text.length > 220) return;
-      if (text === lastHoverTextRef.current) return;
-
-      if (hoverTimeoutRef.current) {
-        window.clearTimeout(hoverTimeoutRef.current);
+      let text = '';
+      if (textElement.tagName.toLowerCase() === 'img') {
+        text = (textElement as HTMLImageElement).alt || '';
+      } else {
+        const clone = textElement.cloneNode(true) as HTMLElement;
+        const images = clone.querySelectorAll('img');
+        images.forEach((img) => {
+          if (img.alt) {
+            const altText = document.createTextNode(` ${img.alt} `);
+            img.parentNode?.replaceChild(altText, img);
+          }
+        });
+        text = clone.textContent || '';
       }
 
-      hoverTimeoutRef.current = window.setTimeout(() => {
-        lastHoverTextRef.current = text;
+      text = text.replace(/\s+/g, ' ').trim();
+
+      if (!text || text.length < 3 || text.length > 3000) return;
+      if (text === globalLastHoverText) return;
+
+      if (globalHoverTimeout !== null) {
+        window.clearTimeout(globalHoverTimeout);
+      }
+
+      globalHoverTimeout = window.setTimeout(() => {
+        globalLastHoverText = text;
         speakText(text);
       }, 250);
     };
@@ -122,24 +175,19 @@ const HoverReaderControls: React.FC = () => {
 
     return () => {
       document.body.removeEventListener('mouseover', onMouseOver);
-      if (hoverTimeoutRef.current) {
-        window.clearTimeout(hoverTimeoutRef.current);
+      if (globalHoverTimeout !== null) {
+        window.clearTimeout(globalHoverTimeout);
       }
     };
   }, [hoverReaderEnabled, speakText, speechSupported]);
-
-  useEffect(() => {
-    return () => {
-      if (speechSupported) {
-        window.speechSynthesis.cancel();
-      }
-    };
-  }, [speechSupported]);
 
   const onToggleHoverReader = useCallback(() => {
     const next = !hoverReaderEnabled;
     setHoverReaderEnabled(next);
     savePreference(STORAGE_KEYS.hoverReaderEnabled, String(next));
+    window.dispatchEvent(
+      new CustomEvent('accessibilityHoverReaderToggled', { detail: next }),
+    );
     if (!next) {
       stopSpeaking();
     }
@@ -150,6 +198,11 @@ const HoverReaderControls: React.FC = () => {
       const nextRate = Number(event.target.value);
       setRate(nextRate);
       savePreference(STORAGE_KEYS.hoverReaderRate, String(nextRate));
+      window.dispatchEvent(
+        new CustomEvent('accessibilityHoverReaderRateChanged', {
+          detail: nextRate,
+        }),
+      );
     },
     [],
   );

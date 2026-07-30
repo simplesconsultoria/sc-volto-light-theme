@@ -21,7 +21,9 @@ export function imageInfoFromHeroBlock(data: HeroBlockData): ImageInformation {
   const oldUrl = data.url;
   const useHrefImage =
     hasImageAttributes(hrefItem) &&
-    (!data.overwrite || (data.overwrite && !data.preview_image));
+    (!data.overwrite ||
+      (data.overwrite &&
+        (!data.preview_image || data.preview_image.length === 0)));
   const previewImageItem = Array.isArray(data.preview_image)
     ? data.preview_image[0]
     : null;

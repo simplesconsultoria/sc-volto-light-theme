@@ -22,7 +22,9 @@
     background: transparent;
     color: inherit;
     cursor: pointer;
-    @include add(size, sm);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
     gap: 0.25rem;
     white-space: nowrap;
   }
@@ -89,8 +91,8 @@
 
     a {
       display: block;
-      padding: 0.5rem 1rem;
-      color: var(--primary-foreground-color, #333);
+      padding: 0.5rem 1rem !important;
+      color: var(--primary-foreground-color, #333) !important;
       text-decoration: none;
       white-space: nowrap;
 

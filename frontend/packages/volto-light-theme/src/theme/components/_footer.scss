@@ -103,7 +103,8 @@
             align-items: center;
             text-align: center;
 
-            .brand-social {
+            .brand-social,
+            .social-networks {
               justify-content: center;
             }
           }
@@ -218,8 +219,9 @@
     }
     .q.container.colophon {
       @include layout-container-width();
+      @include adjustMarginsToContainer($layout-container-width);
+
       display: flex;
-      width: 100%;
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
@@ -229,11 +231,7 @@
       margin-top: 3rem;
       gap: 1rem;
       .colophon-left {
-        color: color-mix(
-          in srgb,
-          var(--secondary-foreground-color) 70%,
-          transparent
-        );
+        @include muted-color(70%);
         text-align: start;
         &:hover {
           color: var(--secondary-foreground-color);
@@ -257,19 +255,11 @@
 
       .slate.widget {
         p {
-          color: color-mix(
-            in srgb,
-            var(--secondary-foreground-color) 70%,
-            transparent
-          );
+          @include muted-color(70%);
         }
         margin: 0;
         a {
-          color: color-mix(
-            in srgb,
-            var(--secondary-foreground-color) 70%,
-            transparent
-          );
+          @include muted-color(70%);
           &:hover {
             color: var(--secondary-foreground-color);
           }

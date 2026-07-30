@@ -144,8 +144,8 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
         id: 'image',
         title: intl.formatMessage(messages.imageFieldset),
         fields: formData.overwrite
-          ? ['preview_image', 'imageFit']
-          : ['imageFit'],
+          ? ['preview_image', 'hideImage', 'imageFit']
+          : ['hideImage', 'imageFit'],
       },
       {
         id: 'cta',
@@ -210,6 +210,11 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
         mode: 'image',
         allowExternals: true,
         selectedItemAttrs: ['image_field', 'image_scales'],
+      },
+      hideImage: {
+        title: 'Esconder Imagem',
+        type: 'boolean',
+        default: false,
       },
       imageFit: {
         title: 'Ajuste da Imagem',

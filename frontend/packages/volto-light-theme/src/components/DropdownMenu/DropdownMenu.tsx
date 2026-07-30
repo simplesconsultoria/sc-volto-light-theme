@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
+import useClickOutside from '../../hooks/useClickOutside';
 
 export type DropdownLink = {
   title: string;
@@ -53,30 +54,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   const close = useCallback(() => setIsOpen(false), []);
   const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
 
-  // Click outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        close();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [close]);
-
-  // Escape key
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') close();
-    };
-    if (isOpen) {
-      window.addEventListener('keydown', handleEscape);
-      return () => window.removeEventListener('keydown', handleEscape);
-    }
-  }, [isOpen, close]);
+  // Fecha ao clicar fora ou pressionar Escape
+  useClickOutside(dropdownRef, close, isOpen);
 
   const hasContent = children || (links && links.length > 0);
 

@@ -290,6 +290,9 @@ $hero-card-overlap: 60px;
         flex-direction: column;
         align-items: end;
       }
+      .hero-flex-content {
+        text-align: right;
+      }
 
       @media only screen and (max-width: $largest-mobile-screen) {
         flex-direction: column;
@@ -432,6 +435,42 @@ $hero-card-overlap: 60px;
     &.text-right .hero-card-inner {
       justify-content: flex-end;
     }
+  }
+}
+
+// Support for HeroBlock inside Grid
+.gridBlock,
+.grid-items {
+  .hero-block-container,
+  .hero-block {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .hero-flex .hero-flex-inner {
+    flex-direction: column;
+    .hero-flex-content,
+    .hero-flex-image-wrapper {
+      width: 100%;
+      min-width: 0 !important;
+      flex: 1 1 auto !important;
+    }
+  }
+
+  .hero-card .hero-card-inner {
+    flex-direction: column;
+    .hero-card-info,
+    .hero-card-image-wrapper {
+      width: 100%;
+      min-width: 0 !important;
+      flex: 1 1 auto !important;
+    }
+  }
+
+  .hero-block.text-right .hero-flex-inner {
+    flex-direction: column;
   }
 }
 

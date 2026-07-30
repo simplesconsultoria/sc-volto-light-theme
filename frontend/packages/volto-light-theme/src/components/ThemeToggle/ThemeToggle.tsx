@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
+import Helmet from '@plone/volto/helpers/Helmet/Helmet';
 
 import contrastSVG from '../../icons/contrast.svg';
 import moonSVG from '../../icons/moon.svg';
@@ -42,12 +43,12 @@ const messages = defineMessages({
 const ThemeToggle: React.FC = () => {
   const intl = useIntl();
   const [theme, setTheme] = useState<ThemeName>('light');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const actualTheme = getAppliedTheme() ?? resolveThemePreference();
-    if (actualTheme !== 'light') {
-      setTheme(actualTheme);
-    }
+    setTheme(actualTheme);
+    setMounted(true);
   }, []);
 
   const selectTheme = (themeToApply: ThemeName) => {
@@ -82,41 +83,62 @@ const ThemeToggle: React.FC = () => {
   );
 
   return (
-    <div
-      className="theme-toggle"
-      role="group"
-      aria-label={intl.formatMessage(messages.toggleTheme)}
-    >
+    <>
+      <Helmet>
+        <script type="text/javascript">
+          {`
+            (function() {
+              try {
+                var savedTheme = localStorage.getItem('accessibility:theme');
+                var theme = 'light';
+                if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'high-contrast') {
+                  theme = savedTheme;
+                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                  theme = 'dark';
+                }
+                document.documentElement.setAttribute('data-theme', theme);
+                document.body.setAttribute('data-theme', theme);
+              } catch (e) {}
+            })();
+          `}
+        </script>
+      </Helmet>
       <div
-        className={`theme-toggle-segmented theme-toggle-segmented--${theme}`}
+        className="theme-toggle"
+        role="group"
+        aria-label={intl.formatMessage(messages.toggleTheme)}
       >
-        <span
-          aria-hidden="true"
-          className={`theme-toggle-segmented__indicator theme-toggle-segmented__indicator--${theme}`}
-          style={{
-            transform: `translateX(${activeIndex * 100}%)`,
-          }}
-        />
+        <div
+          className={`theme-toggle-segmented theme-toggle-segmented--${mounted ? theme : 'light'}`}
+        >
+          <span
+            aria-hidden="true"
+            className={`theme-toggle-segmented__indicator theme-toggle-segmented__indicator--${mounted ? theme : 'light'}`}
+            style={{
+              transform: `translateX(${mounted ? activeIndex * 100 : 0}%)`,
+            }}
+          />
 
-        {themeOptions.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            className={
-              theme === option.value
-                ? 'theme-toggle-segmented__option is-active'
-                : 'theme-toggle-segmented__option'
-            }
-            aria-pressed={theme === option.value}
-            aria-label={option.label}
-            title={option.label}
-            onClick={() => selectTheme(option.value)}
-          >
-            <Icon name={option.icon} size="18px" />
-          </button>
-        ))}
+          {themeOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              className={
+                (mounted ? theme : 'light') === option.value
+                  ? 'theme-toggle-segmented__option is-active'
+                  : 'theme-toggle-segmented__option'
+              }
+              aria-pressed={(mounted ? theme : 'light') === option.value}
+              aria-label={option.label}
+              title={option.label}
+              onClick={() => selectTheme(option.value)}
+            >
+              <Icon name={option.icon} size="18px" />
+            </button>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

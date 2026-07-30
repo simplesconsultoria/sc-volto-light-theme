@@ -16,6 +16,7 @@ export type HeaderBarActionsUIProps = {
   ThemeToggleComponent?: React.ElementType;
   AccessibilityControlsComponent?: React.ElementType;
   AnontoolsComponent?: React.ElementType;
+  SocialNetworksComponent?: React.ElementType;
 };
 
 const HeaderBarActionsUI: React.FC<HeaderBarActionsUIProps> = ({
@@ -28,6 +29,7 @@ const HeaderBarActionsUI: React.FC<HeaderBarActionsUIProps> = ({
   ThemeToggleComponent,
   AccessibilityControlsComponent,
   AnontoolsComponent,
+  SocialNetworksComponent,
 }) => {
   const classNameValue = cx('header-bar__actions__tools', className);
   const {
@@ -60,16 +62,23 @@ const HeaderBarActionsUI: React.FC<HeaderBarActionsUIProps> = ({
         </div>
       )}
 
-      {languageSelector && LanguageSelectorComponent && (
-        <LanguageSelectorComponent />
-      )}
-      {themeToggle && ThemeToggleComponent && <ThemeToggleComponent />}
-      {accessibilityControls && AccessibilityControlsComponent && (
-        <AccessibilityControlsComponent />
-      )}
+      <div className="header-accessibility-wrapper">
+        {languageSelector && LanguageSelectorComponent && (
+          <LanguageSelectorComponent />
+        )}
+        {themeToggle && ThemeToggleComponent && <ThemeToggleComponent />}
+        {accessibilityControls && AccessibilityControlsComponent && (
+          <AccessibilityControlsComponent />
+        )}
+      </div>
       {userTools && AnontoolsComponent && (
         <div className="header-bar__actions__user">
           <AnontoolsComponent />
+        </div>
+      )}
+      {SocialNetworksComponent && (
+        <div className="header-bar__social-mobile">
+          <SocialNetworksComponent />
         </div>
       )}
     </div>

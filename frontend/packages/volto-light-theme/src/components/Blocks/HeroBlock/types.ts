@@ -14,7 +14,9 @@ export interface HeroBlockData {
   buttonLink?: Array<ObjectBrowserItem>;
   buttonText?: string;
   fullWidth?: boolean;
-  textSide?: 'left' | 'right';
+  imageSize?: string;
+  hideImage?: boolean;
+  textSide?: 'left' | 'right' | 'top' | 'bottom';
   variation?: 'flex' | 'card';
   fileType?: string;
   href?: Array<ObjectBrowserItem>;
@@ -22,7 +24,6 @@ export interface HeroBlockData {
   styles?: Record<string, any>;
   overwrite?: boolean;
   imageFit?: 'cover' | 'contain';
-  imageSize?: string;
   titleTag?: string;
   showDate?: boolean;
 }
