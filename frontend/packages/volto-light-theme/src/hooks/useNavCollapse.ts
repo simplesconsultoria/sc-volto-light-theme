@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, type RefObject } from 'react';
+import * as React from 'react';
+import type { RefObject } from 'react';
 
 type UseNavCollapseOptions = {
   /** Ref to the container that defines the available width. */
@@ -31,9 +32,9 @@ export const useNavCollapse = ({
   reservedWidth = 0,
 }: UseNavCollapseOptions): UseNavCollapseResult => {
   // Start by assuming all items are visible (or 0 if none)
-  const [visibleCount, setVisibleCount] = useState(totalItems);
+  const [visibleCount, setVisibleCount] = React.useState(totalItems);
 
-  const measure = useCallback(() => {
+  const measure = React.useCallback(() => {
     const container = containerRef.current;
     const measurer = measurerRef.current;
     if (!container || !measurer) return;
@@ -77,7 +78,7 @@ export const useNavCollapse = ({
     setVisibleCount(Math.max(0, count));
   }, [containerRef, measurerRef, totalItems, reservedWidth]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const container = containerRef.current;
     const measurer = measurerRef.current;
     if (!container || !measurer) return;

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 import { THEME_STORAGE_KEY, isThemeName } from '../utils/preferences';
 
 // Observa o tema atual via data-theme no <html> e sincroniza com localStorage
 const useTheme = () => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = React.useState('light');
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (typeof document === 'undefined') return;
 
     // Tenta restaurar o tema salvo no localStorage

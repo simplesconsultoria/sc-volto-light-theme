@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, type RefObject } from 'react';
+import * as React from 'react';
+import type { RefObject } from 'react';
 
 type UseAutoCollapseOptions = {
   /** Ref to the outer container that defines the available width. */
@@ -42,9 +43,9 @@ export const useAutoCollapse = ({
   forceCollapse = false,
   targetRef,
 }: UseAutoCollapseOptions): UseAutoCollapseResult => {
-  const [shouldCollapse, setShouldCollapse] = useState(forceCollapse);
+  const [shouldCollapse, setShouldCollapse] = React.useState(forceCollapse);
 
-  const measure = useCallback(() => {
+  const measure = React.useCallback(() => {
     if (forceCollapse) {
       setShouldCollapse(true);
       return;
@@ -75,7 +76,7 @@ export const useAutoCollapse = ({
     setShouldCollapse(needed > available);
   }, [containerRef, measurerRef, targetRef, reservedWidth, forceCollapse]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (forceCollapse) {
       setShouldCollapse(true);
       return;
