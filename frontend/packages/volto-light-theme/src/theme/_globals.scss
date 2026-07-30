@@ -67,8 +67,12 @@ body .block.search .search-wrapper {
   }
 }
 /* Seleciona os formulários, exceto se estiverem dentro do sidebar ou do schemaForm */
-.ui.form:not(#sidebar-metadata *, #sidebar-metadata, .block.schemaForm *, .block.schemaForm) {
-  
+.ui.form:not(
+    #sidebar-metadata *,
+    #sidebar-metadata,
+    .block.schemaForm *,
+    .block.schemaForm
+  ) {
   .ui.secondary.pointing.menu {
     .item {
       color: var(--primary-foreground-color);
@@ -88,7 +92,8 @@ body .block.search .search-wrapper {
     label {
       color: var(--primary-foreground-color);
     }
-    input, textarea {
+    input,
+    textarea {
       background-color: var(--primary-color);
       color: var(--primary-foreground-color);
     }
