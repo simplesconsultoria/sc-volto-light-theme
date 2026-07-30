@@ -4,10 +4,10 @@ import HoverReaderControls from './HoverReaderControls';
 
 const AccessibilityControls: React.FC = () => {
   return (
-    <div className="header-accessibility-controls">
+    <>
       <FontSizeControls />
       <HoverReaderControls />
-    </div>
+    </>
   );
 };
 

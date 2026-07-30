@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
@@ -7,6 +13,7 @@ import config from '@plone/volto/registry';
 import type { Content } from '@plone/types';
 import HeaderBarActions from './HeaderBarActions';
 import { useAutoCollapse } from '../../hooks/useAutoCollapse';
+import useClickOutside from '../../hooks/useClickOutside';
 
 type HeaderBarProps = {
   content: Content;
@@ -59,6 +66,8 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const menuRef = useRef<HTMLDivElement>(null);
+
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
   }, []);
@@ -74,37 +83,16 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
     reservedWidth: 32, // Allow a bit more breathing room for the flex gap
   });
 
-  // Close dropdown when collapse state changes (e.g. window resizes back)
+  // Fecha dropdown quando sai do estado colapsado (ex: resize da janela)
   useEffect(() => {
     if (!shouldCollapse) {
       closeMenu();
     }
   }, [shouldCollapse, closeMenu]);
 
-  // Close dropdown on click outside
-  useEffect(() => {
-    if (!isMenuOpen) return;
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        closeMenu();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isMenuOpen, closeMenu]);
-
-  // Close dropdown on Escape
-  useEffect(() => {
-    if (!isMenuOpen) return;
-    const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') closeMenu();
-    };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [isMenuOpen, closeMenu]);
+  // Fecha ao clicar fora do trigger e do menu, ou ao pressionar Escape
+  const extraRefs = useMemo(() => [menuRef], []);
+  useClickOutside(dropdownRef, closeMenu, isMenuOpen, extraRefs);
 
   if (!display) return null;
 
@@ -188,6 +176,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
         <div
           className="header-bar__collapsed-menu"
           id="header-bar__dropdown-menu"
+          ref={menuRef}
         >
           <div className="header-bar__collapsed-menu-inner">
             <HeaderBarActions token={token} />

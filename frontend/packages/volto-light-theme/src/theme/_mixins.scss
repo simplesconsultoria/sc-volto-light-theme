@@ -141,3 +141,131 @@
   letter-spacing: 0.2px;
   text-transform: uppercase;
 }
+
+// ---------------------------------------------------------------------------
+// Shared dropdown / panel patterns
+// Extracted from _headerBar.scss and _mobileTools.scss to avoid duplication.
+// ---------------------------------------------------------------------------
+
+/// Subtle divider border using color-mix on the secondary foreground.
+/// Repeated 8+ times across headerBar and mobileTools.
+/// @param {String} $side [bottom] - border side (top, bottom, etc.)
+/// @param {Percentage} $opacity [20%] - foreground opacity in the mix
+@mixin divider-border($side: bottom, $opacity: 20%) {
+  border-#{$side}: 1px solid
+    color-mix(in srgb, var(--secondary-foreground-color) $opacity, transparent);
+}
+
+/// Muted text color via color-mix on the secondary foreground.
+/// Used in footer colophon, links, and decorative text.
+/// @param {Percentage} $opacity [70%] - foreground opacity in the mix
+@mixin muted-color($opacity: 70%) {
+  color: color-mix(
+    in srgb,
+    var(--secondary-foreground-color) $opacity,
+    transparent
+  );
+}
+
+/// Full-width overlay panel (collapsed menus and mobile tools).
+/// Shared surface, shadow, and border treatment.
+@mixin dropdown-overlay() {
+  position: absolute;
+  z-index: 50;
+  top: 100%;
+  right: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  min-width: 100%;
+  max-width: none;
+  flex-direction: column;
+  padding: 1.5rem $horizontal-space-small-screens;
+  border: none;
+  border-radius: 0;
+  @include divider-border(top);
+  @include divider-border(bottom);
+  background: var(--secondary-color);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/// Inner layout for tools dropdown panels (both desktop collapsed and mobile).
+/// Contains the ordered sections: accessibility, quick-links, user, social.
+@mixin tools-dropdown-inner() {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+
+  .header-accessibility-wrapper {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    order: 1;
+    gap: 1.5rem;
+  }
+
+  .header-bar__mock-links {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    order: 2;
+    gap: 0;
+
+    a,
+    .sc-dropdown-menu,
+    .navigation-more-dropdown {
+      padding: 1rem 0;
+      @include divider-border(bottom);
+    }
+
+    .navigation-more-dropdown .sc-dropdown-menu__trigger {
+      padding: 0;
+      border: none;
+    }
+  }
+
+  .header-bar__actions__user {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    order: 3;
+    gap: 0;
+
+    a,
+    .tools {
+      padding: 1rem 0;
+      @include divider-border(bottom);
+    }
+
+    .tools {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+
+  .header-bar__social-mobile {
+    display: flex;
+    order: 4;
+    padding: 1rem 0;
+
+    @include social-network-icons();
+  }
+
+  :is(.language-selector, .tools, .tools .anontools) {
+    @include header-tool-cluster(var(--accent-foreground-color));
+  }
+}
+
+/// Consistent social network icon sizing used across header and panels.
+@mixin social-network-icons() {
+  .social-networks {
+    margin: 0;
+
+    svg {
+      height: 45px !important;
+    }
+  }
+}

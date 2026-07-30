@@ -28,7 +28,7 @@ const FlexView: React.FC<FlexViewProps> = ({ data, className, isEditMode }) => {
         `image-fit-${contentData.imageFit}`,
         {
           full: data.fullWidth && !contentData.hasImage,
-          'has-image': contentData.hasImage,
+          'has-image': !data.fullWidth || contentData.hasImage,
         },
         className,
       )}
@@ -41,15 +41,19 @@ const FlexView: React.FC<FlexViewProps> = ({ data, className, isEditMode }) => {
             contentData={contentData}
           />
         </div>
-        {contentData.hasImage && (
+        {(!data.fullWidth || contentData.hasImage) && (
           <div
             className="hero-flex-image-wrapper"
             style={{ flex: `1 1 ${contentData.imageSize}` }}
           >
-            <div className="hero-decorative-square" aria-hidden="true" />
-            <div className="hero-image">
-              <CardImage imageInfo={contentData.imageInfo} />
-            </div>
+            {contentData.hasImage && (
+              <>
+                <div className="hero-decorative-square" aria-hidden="true" />
+                <div className="hero-image">
+                  <CardImage imageInfo={contentData.imageInfo} />
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>

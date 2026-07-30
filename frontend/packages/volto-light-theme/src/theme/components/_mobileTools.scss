@@ -1,13 +1,13 @@
 // =============================================================================
-// Accessibility Bar
-// Desktop bar, mobile dropdown, and inner controls styles.
+// Mobile Tools Dropdown
+// Dropdown menu shown on mobile screens for accessibility controls,
+// quick links, user tools, and social networks.
 // =============================================================================
 
 body header.header-wrapper {
   // Mobile accessibility dropdown
   .header .header-main .logo-nav-wrapper .mobile-nav-actions {
     .mobile-tools-dropdown {
-      position: relative;
       display: none;
 
       @media only screen and (max-width: $largest-mobile-screen) {
@@ -32,37 +32,15 @@ body header.header-wrapper {
       }
 
       .mobile-tools-menu {
-        position: absolute;
+        @include dropdown-overlay();
         z-index: 100;
-        top: 100%;
-        right: 0;
-        min-width: 200px;
-        padding: 1rem;
-        border-radius: 4px;
-        margin-top: 1rem;
-        background-color: var(--secondary-color);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         color: var(--secondary-foreground-color);
 
         .mobile-tools-menu-inner {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 1rem;
-
-          .header-accessibility-controls {
-            justify-content: center;
-          }
+          @include tools-dropdown-inner();
 
           a {
             color: var(--secondary-foreground-color);
-          }
-
-          .language-selector,
-          .tools,
-          .tools .anontools {
-            display: flex;
-            align-items: center;
           }
         }
       }

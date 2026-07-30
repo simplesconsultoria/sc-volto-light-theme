@@ -17,6 +17,11 @@ body #page-edit [class^='block-editor-'] > .block .teaser,
           color: var(--theme-foreground-accent-color);
         }
       }
+      .image-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 }

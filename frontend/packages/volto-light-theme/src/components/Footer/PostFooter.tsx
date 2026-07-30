@@ -4,7 +4,7 @@ import type { Content } from '@plone/types';
 import Logo from '@kitconcept/volto-light-theme/components/Logo/Logo';
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
 import { useLiveData } from '@kitconcept/volto-light-theme/helpers/useLiveData';
-import ColumnLinks from '@kitconcept/volto-light-theme/components/Footer/ColumnLinks';
+import FooterDoormatSection from './FooterDoormatSection';
 
 const PostFooter = ({
   content,
@@ -76,44 +76,18 @@ const PostFooter = ({
         </div>
 
         <div className="footer-grid footer-doormat">
-          {footer_column_left && (
-            <div className="footer-doormat-section">
-              <div className="footer-doormat-section-content">
-                {footer_column_left_header && (
-                  <h2>
-                    <strong>{footer_column_left_header}</strong>
-                  </h2>
-                )}
-                <ColumnLinks links={footer_column_left} />
-              </div>
-            </div>
-          )}
-
-          {footer_column_middle && (
-            <div className="footer-doormat-section">
-              <div className="footer-doormat-section-content">
-                {footer_column_middle_header && (
-                  <h2>
-                    <strong>{footer_column_middle_header}</strong>
-                  </h2>
-                )}
-                <ColumnLinks links={footer_column_middle} />
-              </div>
-            </div>
-          )}
-
-          {footer_column_right && (
-            <div className="footer-doormat-section">
-              <div className="footer-doormat-section-content">
-                {footer_column_right_header && (
-                  <h2>
-                    <strong>{footer_column_right_header}</strong>
-                  </h2>
-                )}
-                <ColumnLinks links={footer_column_right} />
-              </div>
-            </div>
-          )}
+          <FooterDoormatSection
+            header={footer_column_left_header}
+            links={footer_column_left}
+          />
+          <FooterDoormatSection
+            header={footer_column_middle_header}
+            links={footer_column_middle}
+          />
+          <FooterDoormatSection
+            header={footer_column_right_header}
+            links={footer_column_right}
+          />
         </div>
       </div>
     </Container>

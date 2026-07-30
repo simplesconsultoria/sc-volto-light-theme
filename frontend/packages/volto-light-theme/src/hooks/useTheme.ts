@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
+import { THEME_STORAGE_KEY, isThemeName } from '../utils/preferences';
 
+// Observa o tema atual via data-theme no <html> e sincroniza com localStorage
 const useTheme = () => {
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
 
+    // Tenta restaurar o tema salvo no localStorage
     try {
-      const savedTheme = localStorage.getItem('theme');
-      if (
-        savedTheme === 'light' ||
-        savedTheme === 'dark' ||
-        savedTheme === 'high-contrast'
-      ) {
+      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+      if (isThemeName(savedTheme)) {
         setTheme(savedTheme);
       }
     } catch {
       // ignore
     }
 
+    // Observa mudancas no atributo data-theme do <html>
     const observer = new MutationObserver(() => {
       setTheme(document.documentElement.getAttribute('data-theme') || 'light');
     });

@@ -5,6 +5,7 @@ import LanguageSelector from '@plone/volto/components/theme/LanguageSelector/Lan
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import AccessibilityControls from '../AccessibilityControls/AccessibilityControls';
 import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
+import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
 import HeaderBarActionsUI from './HeaderBarActionsUI';
 
 type HeaderBarActionsProps = {
@@ -33,13 +34,17 @@ const HeaderBarActions: React.FC<HeaderBarActionsProps> = ({
         languageSelector,
         themeToggle,
         accessibilityControls,
-        userTools: userTools && !token,
+        userTools,
       }}
       LinkComponent={UniversalLink}
       LanguageSelectorComponent={LanguageSelector}
       ThemeToggleComponent={ThemeToggle}
       AccessibilityControlsComponent={AccessibilityControls}
       AnontoolsComponent={Anontools}
+      SocialNetworksComponent={() => (
+        // @ts-ignore - Volto injects content/location
+        <SlotRenderer name="followUs" />
+      )}
     />
   );
 };

@@ -66,3 +66,47 @@ body .block.search .search-wrapper {
     @include color-block-change-vertical-spacing();
   }
 }
+/* Seleciona os formulários, exceto se estiverem dentro do sidebar ou do schemaForm */
+.ui.form:not(
+    #sidebar-metadata *,
+    #sidebar-metadata,
+    .block.schemaForm *,
+    .block.schemaForm
+  ) {
+  .ui.secondary.pointing.menu {
+    .item {
+      color: var(--primary-foreground-color);
+      &.active {
+        color: var(--primary-accent-color);
+      }
+    }
+  }
+
+  .ui.secondary.attached.segment {
+    background-color: var(--primary-color);
+    color: var(--primary-foreground-color);
+  }
+
+  .inline.field {
+    color: var(--primary-foreground-color);
+    label {
+      color: var(--primary-foreground-color);
+    }
+    input,
+    textarea {
+      background-color: var(--primary-color);
+      color: var(--primary-foreground-color);
+    }
+  }
+}
+
+#toolbar-body.toolbar {
+  background-color: var(--primary-color);
+  .toolbar-actions .edit {
+    color: var(--primary-accent-color);
+  }
+  button,
+  a {
+    color: var(--primary-foreground-color);
+  }
+}

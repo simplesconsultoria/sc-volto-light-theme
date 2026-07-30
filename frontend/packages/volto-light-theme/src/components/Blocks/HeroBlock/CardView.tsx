@@ -28,20 +28,22 @@ const CardView: React.FC<CardViewProps> = ({ data, className, isEditMode }) => {
         `image-fit-${contentData.imageFit}`,
         {
           full: data.fullWidth && !contentData.hasImage,
-          'has-image': contentData.hasImage,
+          'has-image': !data.fullWidth || contentData.hasImage,
         },
         className,
       )}
     >
       <div className="hero-card-inner">
-        {contentData.hasImage && (
+        {(!data.fullWidth || contentData.hasImage) && (
           <div
             className="hero-card-image-wrapper"
             style={{ flex: `1 1 ${contentData.imageSize}` }}
           >
-            <div className="hero-image">
-              <CardImage imageInfo={contentData.imageInfo} />
-            </div>
+            {contentData.hasImage && (
+              <div className="hero-image">
+                <CardImage imageInfo={contentData.imageInfo} />
+              </div>
+            )}
           </div>
         )}
         <div className="hero-card-info">

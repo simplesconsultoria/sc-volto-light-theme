@@ -51,6 +51,19 @@
 
 #page-document {
   .blocks-group-wrapper > .block.image {
+    &.align.right img {
+      margin-right: max(
+        1rem,
+        calc(50vw - #{$default-container-width} / 2)
+      ) !important;
+    }
+    &.align.left img {
+      margin-left: max(
+        1rem,
+        calc(50vw - #{$default-container-width} / 2)
+      ) !important;
+    }
+
     &.has--block-width--narrow {
       max-width: var(--narrow-container-width) !important;
       margin-right: auto !important;

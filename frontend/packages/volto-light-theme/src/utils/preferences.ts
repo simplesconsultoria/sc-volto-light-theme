@@ -1,6 +1,6 @@
 export type ThemeName = 'light' | 'dark' | 'high-contrast';
 
-export const THEME_STORAGE_KEY = 'theme';
+export const THEME_STORAGE_KEY = 'accessibility:theme';
 export const FONT_SCALE_STORAGE_KEY = 'accessibility:font-scale';
 export const FONT_SCALE_MIN = 0.8;
 export const FONT_SCALE_MAX = 1.3;
