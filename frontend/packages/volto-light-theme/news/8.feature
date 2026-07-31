@@ -1,1 +1,0 @@
-Added a component registry lookup for structural components, so a project can choose which header, navigation, mobile navigation and footer to render through the vlt settings instead of customizing the components. Unknown names fall back to the upstream light theme component. @ericof
