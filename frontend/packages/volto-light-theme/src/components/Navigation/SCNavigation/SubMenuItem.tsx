@@ -37,7 +37,7 @@ const SubMenuItem = ({ item, pathname, closeMenu }: SubMenuItemProps) => {
           {linkContent}
         </UniversalLink>
         <ul className="subitem-children">
-          {item.items.map((subitem) => (
+          {item.items.slice(0, 1).map((subitem) => (
             <li key={subitem.url}>
               <UniversalLink
                 href={subitem.url}

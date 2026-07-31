@@ -54,22 +54,24 @@ const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
       )}
 
       {data.button && (data.buttonText || 'Saiba mais') && (
-        <div className="hero-cta">
-          {isEditMode ? (
+        isEditMode ? (
+          <div className="hero-cta">
             <span className="hero-button item" aria-hidden="true">
               {data.buttonText || 'Saiba mais'}
             </span>
-          ) : (
-            <ConditionalLink
-              condition={!!buttonLink}
-              href={buttonLink}
-              className="hero-button item"
-              aria-label={`${data.buttonText || 'Saiba mais'} sobre ${displayTitle}`}
-            >
+          </div>
+        ) : (
+          <ConditionalLink
+            condition={!!buttonLink}
+            href={buttonLink}
+            className="hero-cta"
+            aria-label={`${data.buttonText || 'Saiba mais'} sobre ${displayTitle}`}
+          >
+            <span className="hero-button item">
               {data.buttonText || 'Saiba mais'}
-            </ConditionalLink>
-          )}
-        </div>
+            </span>
+          </ConditionalLink>
+        )
       )}
 
       {data.footerText && <p className="hero-footer-text">{data.footerText}</p>}
