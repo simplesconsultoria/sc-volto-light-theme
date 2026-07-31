@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@plone/volto/*": ["../../core/packages/volto/src/*"],
+      "@kitconcept/volto-light-theme/*": [
+        "./node_modules/@kitconcept/volto-light-theme/src/*"
+      ],
+      "@simplesconsultoria/showcase/*": ["../showcase/src/*"],
+      "@simplesconsultoria/volto-light-theme/*": ["./src/*"]
+    }
+  }
+}
