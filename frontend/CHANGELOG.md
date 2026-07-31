@@ -8,6 +8,12 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0-alpha.2 (2026-07-31)
+
+### Bugfix
+
+- Fix `tsconfig.json` to avoid shipping dev-only `paths` to the published npm tarball, which broke alias resolution in consuming projects. @humanaice [#14](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/14)
+
 ## 1.0.0-alpha.1 (2026-07-30)
 
 ### Feature
