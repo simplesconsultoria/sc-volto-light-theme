@@ -53,8 +53,9 @@ const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
         <p className="hero-description">{displayDescription}</p>
       )}
 
-      {data.button && (data.buttonText || 'Saiba mais') && (
-        isEditMode ? (
+      {data.button &&
+        (data.buttonText || 'Saiba mais') &&
+        (isEditMode ? (
           <div className="hero-cta">
             <span className="hero-button item" aria-hidden="true">
               {data.buttonText || 'Saiba mais'}
@@ -71,8 +72,7 @@ const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
               {data.buttonText || 'Saiba mais'}
             </span>
           </ConditionalLink>
-        )
-      )}
+        ))}
 
       {data.footerText && <p className="hero-footer-text">{data.footerText}</p>}
 
