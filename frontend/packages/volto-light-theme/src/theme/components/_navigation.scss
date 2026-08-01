@@ -201,7 +201,7 @@
     .subitem-child-link {
       display: flex;
       flex-direction: column;
-      color: var(--primary-foreground-color);
+      color: var(--fatmenu-foreground);
       @include add(size, xs);
       text-decoration: none;
     }
@@ -214,7 +214,8 @@
       padding-left: 1.2rem;
       margin-top: 0.2rem;
       @include add(size, 2xs);
-      color: var(--primary-low-foreground-color);
+      color: var(--fatmenu-foreground);
+      opacity: 0.8;
     }
   }
 }
