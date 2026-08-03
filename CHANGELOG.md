@@ -7,6 +7,30 @@
 -->
 
 <!-- towncrier release notes start -->
+## 1.0.0a3 (2026-08-03)
+
+### Backend
+
+No significant changes.
+
+
+
+
+### Frontend
+
+#### Bugfix
+
+- Fixed subitem and it's styling + Hero block button styling. @humanaice 
+
+
+
+### Project
+
+No significant changes.
+
+
+
+
 ## 1.0.0a2 (2026-07-31)
 
 ### Backend

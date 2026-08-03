@@ -8,6 +8,12 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0-alpha.3 (2026-08-03)
+
+### Bugfix
+
+- Fixed subitem and it's styling + Hero block button styling. @humanaice 
+
 ## 1.0.0-alpha.2 (2026-07-31)
 
 ### Bugfix
