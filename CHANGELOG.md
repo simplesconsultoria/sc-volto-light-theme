@@ -7,6 +7,30 @@
 -->
 
 <!-- towncrier release notes start -->
+## 1.0.0a4 (2026-08-05)
+
+### Backend
+
+No significant changes.
+
+
+
+
+### Frontend
+
+#### Breaking
+
+- Removed the `@kitconcept/volto-dsgvo-banner` add-on, so the theme no longer ships the DSGVO cookie banner or its Matomo and Google Analytics tracker dependencies. Projects that need it should add the add-on to their own configuration. @ericof [#18](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/18)
+
+
+
+### Project
+
+No significant changes.
+
+
+
+
 ## 1.0.0a3 (2026-08-03)
 
 ### Backend
