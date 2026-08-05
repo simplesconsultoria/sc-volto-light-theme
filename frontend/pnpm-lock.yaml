@@ -1416,9 +1416,6 @@ importers:
       '@kitconcept/volto-carousel-block':
         specifier: ^3.0.0-alpha.1
         version: 3.0.0-alpha.1(classnames@2.5.1)(embla-carousel@8.6.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@kitconcept/volto-dsgvo-banner':
-        specifier: ^4.0.0-alpha.2
-        version: 4.0.0-alpha.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@kitconcept/volto-heading-block':
         specifier: ^2.5.0
         version: 2.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2328,9 +2325,6 @@ packages:
 
   '@cypress/xvfb@1.2.4':
     resolution: {integrity: sha512-skbBzPggOVYCbnGgV+0dmBdW/s77ZkAOXIC1knS8NagwDjBrNC1LuXtQJeiN6l+m7lzmHtaoUw/ctJKdqkG57Q==}
-
-  '@datapunt/matomo-tracker-js@0.5.1':
-    resolution: {integrity: sha512-9/MW9vt/BA5Db7tO6LqCeQKtuvBNjyq51faF3AzUmPMlYsJCnASIxcut3VqJKiribhUoey7aYbPIYuj9x4DLPA==}
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -3337,12 +3331,6 @@ packages:
 
   '@kitconcept/volto-carousel-block@3.0.0-alpha.1':
     resolution: {integrity: sha512-xPh5WTSCIDoCRodrzv+fXtQsrHhckZAw818HGiTYyCPaf7xdtU8cSIK3hSWEwMajPTt4CB8Wg1cgXq5PefabGg==}
-    peerDependencies:
-      react: 18.2.0
-      react-dom: 18.2.0
-
-  '@kitconcept/volto-dsgvo-banner@4.0.0-alpha.2':
-    resolution: {integrity: sha512-mtjpNjLHqGSZLcrMDixKeFTK8do4sHjtFujs6mxSkeHljMg3nkQ0ODPrjl3WkP7TnPlTJo5T2tARVRja69JWig==}
     peerDependencies:
       react: 18.2.0
       react-dom: 18.2.0
@@ -9493,9 +9481,6 @@ packages:
   react-fast-compare@3.2.2:
     resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
 
-  react-ga4@2.1.0:
-    resolution: {integrity: sha512-ZKS7PGNFqqMd3PJ6+C2Jtz/o1iU9ggiy8Y8nUeksgVuvNISbmrQtJiZNvC/TjDsqD0QlU5Wkgs7i+w9+OjHhhQ==}
-
   react-html-props@2.1.1:
     resolution: {integrity: sha512-tM+YCYlr90m3JontKUAa+gNVU2zkyprlCS7OQ9aa3z2MfyJjAioJzrSmi1Vef/+UCTE6CQlPqLX4ebdLIJDKxw==}
     peerDependencies:
@@ -12476,8 +12461,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@datapunt/matomo-tracker-js@0.5.1': {}
-
   '@discoveryjs/json-ext@0.5.7': {}
 
   '@dnd-kit/accessibility@3.1.1(react@18.2.0)':
@@ -13375,13 +13358,6 @@ snapshots:
     transitivePeerDependencies:
       - classnames
       - embla-carousel
-
-  '@kitconcept/volto-dsgvo-banner@4.0.0-alpha.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@datapunt/matomo-tracker-js': 0.5.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-ga4: 2.1.0
 
   '@kitconcept/volto-heading-block@2.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -20374,8 +20350,6 @@ snapshots:
   react-fast-compare@2.0.4: {}
 
   react-fast-compare@3.2.2: {}
-
-  react-ga4@2.1.0: {}
 
   react-html-props@2.1.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
