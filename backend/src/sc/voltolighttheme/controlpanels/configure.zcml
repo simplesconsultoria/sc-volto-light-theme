@@ -12,10 +12,10 @@
   -->
   <adapter
       factory=".themes.ThemesControlpanel"
-      name="themes"
       provides="sc.voltolighttheme.interfaces.ISCVLTThemesControlpanel"
       for="zope.interface.Interface
            plone.restapi.interfaces.IControlpanelLayer"
+      name="themes"
       />
 
 </configure>

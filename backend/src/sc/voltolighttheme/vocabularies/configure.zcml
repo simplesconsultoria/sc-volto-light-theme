@@ -1,9 +1,9 @@
 <configure xmlns="http://namespaces.zope.org/zope">
 
   <utility
-      component=".themes.ThemesVocabularyFactory"
-      name="sc.voltolighttheme.themes"
       provides="zope.schema.interfaces.IVocabularyFactory"
+      name="sc.voltolighttheme.themes"
+      component=".themes.ThemesVocabularyFactory"
       />
 
 </configure>

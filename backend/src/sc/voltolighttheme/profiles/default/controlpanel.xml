@@ -3,17 +3,16 @@
         name="portal_controlpanel"
 >
 
-  <configlet
-      title="Themes"
-      action_id="sc.voltolighttheme.themes"
-      appId="sc.voltolighttheme"
-      category="Products"
-      condition_expr=""
-      icon_expr=""
-      url_expr="string:${portal_url}/@@sc-voltolighttheme-themes"
-      visible="True"
-      i18n:attributes="title"
-      >
+  <configlet action_id="sc.voltolighttheme.themes"
+             appId="sc.voltolighttheme"
+             category="Products"
+             condition_expr=""
+             icon_expr=""
+             title="Themes"
+             url_expr="string:${portal_url}/@@sc-voltolighttheme-themes"
+             visible="True"
+             i18n:attributes="title"
+  >
     <permission>sc.voltolighttheme: Manage themes</permission>
   </configlet>
 
