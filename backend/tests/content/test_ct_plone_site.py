@@ -26,8 +26,11 @@ class TestContentTypeFTI:
         "attr,expected",
         [
             ("title", "Plone Site"),
+            ("description", ""),
+            ("factory", "manage_addSite"),
             ("klass", "Products.CMFPlone.Portal.PloneSite"),
-            ("global_allow", False),
+            ("filter_content_types", False),
+            ("allowed_content_types", ()),
         ],
     )
     def test_fti(self, attr: str, expected):
@@ -37,19 +40,20 @@ class TestContentTypeFTI:
         assert isinstance(fti, DexterityFTI)
         assert getattr(fti, attr) == expected
 
-    def test_behaviors(self):
-        """Test behaviors are present and in correct order."""
-        assert self.fti.behaviors == (
-            "voltolighttheme.header",
-            "voltolighttheme.theme",
-            "kitconcept.footer",
-            "sc.voltolighttheme.footer",
-            "voltolighttheme.footer",
+    @pytest.mark.parametrize(
+        "idx,behavior",
+        enumerate((
             "plonegovbr.socialmedia.settings",
+            "sc.voltolighttheme.siteheader",
+            "sc.voltolighttheme.themeselector",
+            "sc.voltolighttheme.footer",
             "volto.preview_image_link",
             "plone.dublincore",
             "plone.relateditems",
             "plone.locking",
             "plone.excludefromnavigation",
             "volto.blocks",
-        )
+        )),
+    )
+    def test_behaviors(self, idx: int, behavior: str):
+        assert self.fti.behaviors[idx] == behavior

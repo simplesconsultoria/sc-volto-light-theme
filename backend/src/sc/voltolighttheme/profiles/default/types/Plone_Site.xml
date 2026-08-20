@@ -9,12 +9,12 @@
   <property name="behaviors"
             purge="true"
   >
-    <element value="voltolighttheme.header" />
-    <element value="voltolighttheme.theme" />
-    <element value="kitconcept.footer" />
-    <element value="sc.voltolighttheme.footer" />
-    <element value="voltolighttheme.footer" />
     <element value="plonegovbr.socialmedia.settings" />
+    <element value="sc.voltolighttheme.siteheader" />
+    <!-- <element value="sc.voltolighttheme.intranetheader" /> -->
+    <!-- <element value="voltolighttheme.theme" /> -->
+    <element value="sc.voltolighttheme.themeselector" />
+    <element value="sc.voltolighttheme.footer" />
     <element value="volto.preview_image_link" />
     <element value="plone.dublincore" />
     <element value="plone.relateditems" />

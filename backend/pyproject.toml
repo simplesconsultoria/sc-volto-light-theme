@@ -165,7 +165,9 @@ order-by-type = false
 preview = true
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["E501", "RUF001", "S101"]
+# S105: "token" is a vocabulary term in Plone, not a secret — the theme
+# selector serializes to {token, title, value}.
+"tests/*" = ["E501", "RUF001", "S101", "S105"]
 
 [tool.check-manifest]
 ignore = [
