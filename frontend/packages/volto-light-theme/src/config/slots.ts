@@ -10,6 +10,11 @@ function footerSlots(config: ConfigType) {
   });
 }
 
+// The theme's <style> element is contributed by `components/Theming`, which
+// replaces the upstream component of the same name through a customization —
+// upstream already registers it in the `aboveHeader` slot, so registering it
+// again here would emit the rule twice.
+
 export default function install(config: ConfigType) {
   footerSlots(config);
 }

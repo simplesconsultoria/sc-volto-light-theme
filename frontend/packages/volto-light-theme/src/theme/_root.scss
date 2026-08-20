@@ -45,7 +45,15 @@
 
   // Layout mappings
   --header-background: var(--primary-color);
-  --header-foreground: var(--primary-foreground-color);
+  // `--header-foreground` is the token this theme and upstream VLT both read
+  // (see `_bgcolor-blocks-layout.scss` in @kitconcept/volto-light-theme), so it
+  // keeps its name. A selected theme sets `--header-foreground-color`, derived
+  // from its `header_foreground_color` setting; resolving through `var()` means
+  // the override works regardless of stylesheet order.
+  --header-foreground: var(
+    --header-foreground-color,
+    var(--primary-foreground-color)
+  );
   --footer-background: var(--secondary-color);
   --footer-foreground: var(--secondary-foreground-color);
   --fatmenu-background: var(--primary-color);
