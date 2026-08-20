@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<registry xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+          i18n:domain="sc.voltolighttheme"
+>
+
+  <!--
+    Theme definitions. One <records> block per theme; the theme id is the last
+    segment of the prefix, so it must not contain a dot.
+    The "default" theme is shipped with the add-on and cannot be deleted.
+  -->
+
+  <records interface="sc.voltolighttheme.interfaces.ISCVLTThemeDefinition"
+           prefix="sc.voltolighttheme.theme.default"
+  >
+    <value key="name"
+           i18n:translate=""
+    >Default</value>
+    <value key="description"
+           i18n:translate=""
+    >The theme shipped with sc.voltolighttheme.</value>
+    <value key="primary_color">#10375c</value>
+    <value key="primary_foreground_color">#ffffff</value>
+    <value key="header_foreground_color">#ffffff</value>
+    <value key="secondary_color">#f4f4f4</value>
+    <value key="secondary_foreground_color">#10375c</value>
+    <value key="accent_color">#ffb703</value>
+    <value key="accent_foreground_color">#10375c</value>
+  </records>
+
+</registry>
