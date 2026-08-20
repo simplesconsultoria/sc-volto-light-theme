@@ -57,7 +57,7 @@ describe('themeCustomProperties', () => {
       secondary_color: '#000000',
       secondary_foreground_color: '#fafafa',
       accent_color: '#ffb703',
-      accent_foreground_color: '#10375c',
+      accent_foreground_color: '#000000',
     });
     expect(themeCustomProperties(values)).toEqual({
       '--primary-color': '#123456',
@@ -66,7 +66,7 @@ describe('themeCustomProperties', () => {
       '--secondary-color': '#000000',
       '--secondary-foreground-color': '#fafafa',
       '--accent-color': '#ffb703',
-      '--accent-foreground-color': '#10375c',
+      '--accent-foreground-color': '#000000',
     });
   });
 

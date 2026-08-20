@@ -18,30 +18,82 @@
   --brand-color-dark: #b55e1c;
 
   // Semantic colors
-  --primary-color: light-dark(var(--pure-white), var(--pure-black));
-  --primary-foreground-color: light-dark(var(--pure-black), var(--pure-white));
-  --primary-low-foreground-color: light-dark(var(--gray-80), var(--gray-02));
+  --primary-color: light-dark(
+    var(--primary-color-light, var(--pure-white)),
+    var(--primary-color-dark, var(--pure-black))
+  );
+  --primary-foreground-color: light-dark(
+    var(--primary-foreground-color-light, var(--pure-black)),
+    var(--primary-foreground-color-dark, var(--pure-white))
+  );
+  --primary-low-foreground-color: light-dark(
+    var(--primary-low-foreground-color-light, var(--gray-80)),
+    var(--primary-low-foreground-color-dark, var(--gray-02))
+  );
   --primary-accent-color: light-dark(
-    var(--brand-color-dark),
-    var(--brand-color)
+    var(--primary-accent-color-light, var(--brand-color-dark)),
+    var(--primary-accent-color-dark, var(--brand-color))
   );
 
-  --secondary-color: var(--pure-black);
-  --secondary-foreground-color: var(--pure-white);
-  --secondary-low-foreground-color: var(--gray-10);
-  --secondary-accent-color: var(--brand-color);
+  --secondary-color: light-dark(
+    var(--secondary-color-light, var(--pure-black)),
+    var(--secondary-color-dark, var(--pure-white))
+  );
+  --secondary-foreground-color: light-dark(
+    var(--secondary-foreground-color-light, var(--pure-white)),
+    var(--secondary-foreground-color-dark, var(--pure-black))
+  );
+  --secondary-low-foreground-color: light-dark(
+    var(--secondary-low-foreground-color-light, var(--gray-10)),
+    var(--secondary-low-foreground-color-dark, var(--gray-80))
+  );
+  --secondary-accent-color: light-dark(
+    var(--secondary-accent-color-light, var(--brand-color)),
+    var(--secondary-accent-color-dark, var(--brand-color))
+  );
 
-  --accent-color: var(--brand-color);
-  --accent-foreground-color: var(--pure-black);
-  --accent-low-foreground-color: var(--gray-80);
-  --accent-accent-color: var(--pure-black);
+  --accent-color: light-dark(
+    var(--accent-color-light, var(--brand-color)),
+    var(--accent-color-dark, var(--brand-color-dark))
+  );
+  --accent-foreground-color: light-dark(
+    var(--accent-foreground-color-light, var(--pure-black)),
+    var(--accent-foreground-color-dark, var(--pure-white))
+  );
+  --accent-low-foreground-color: light-dark(
+    var(--accent-low-foreground-color-light, var(--gray-80)),
+    var(--accent-low-foreground-color-dark, var(--gray-02))
+  );
+  --accent-accent-color: light-dark(
+    var(--accent-accent-color-light, var(--pure-black)),
+    var(--accent-accent-color-dark, var(--pure-white))
+  );
 
-  --neutral-color: var(--gray-cool-05);
-  --neutral-foreground-color: var(--pure-black);
-  --neutral-low-foreground-color: var(--gray-80);
-  --neutral-accent-color: var(--brand-color);
+  --neutral-color: light-dark(
+    var(--neutral-color-light, var(--gray-cool-05)),
+    var(--neutral-color-dark, var(--gray-80))
+  );
+  --neutral-foreground-color: light-dark(
+    var(--neutral-foreground-color-light, var(--pure-black)),
+    var(--neutral-foreground-color-dark, var(--pure-white))
+  );
+  --neutral-low-foreground-color: light-dark(
+    var(--neutral-low-foreground-color-light, var(--gray-80)),
+    var(--neutral-low-foreground-color-dark, var(--gray-10))
+  );
+  --neutral-accent-color: light-dark(
+    var(--neutral-accent-color-light, var(--brand-color)),
+    var(--neutral-accent-color-dark, var(--brand-color))
+  );
 
   --link-foreground-color: var(--brand-color);
+
+  // Content Types
+  --news-item-color: var(--pure-black);
+  --document-color: var(--accent-color);
+  --event-color: red;
+  --file-color: blue;
+  --image-color: green;
 
   // Layout mappings
   --header-background: var(--primary-color);
@@ -63,71 +115,34 @@
   --search-background: var(--primary-color);
   --search-foreground: var(--primary-foreground-color);
 
-  // Content Types
-  --news-item-color: var(--pure-black);
-  --document-color: var(--accent-color);
-  --event-color: red;
-  --file-color: blue;
-  --image-color: green;
-
   // Type
   --font-sans: system-ui, sans-serif;
   --custom-font: system-ui, sans-serif;
   --custom-main-font: system-ui, sans-serif;
   --font-body: system-ui, sans-serif;
 
-  // =========================================================================
-  // Block Themes
-  //
-  // Each theme defines tokens for two visual layers:
-  //   Ground      — the block's own surface (bg, text, accent, etc.)
-  //   High Ground — elevated child elements (cards, chips, badges)
-  //
-  // Plus optional decoration tokens:
-  //   Border      — border-color & border-width (unset = no border)
-  //   Pattern     — decorative background image & opacity (none/0 = off)
-  //
-  // High-contrast mode overrides ALL themes to force white-on-black
-  // and always-visible borders.
-  // =========================================================================
-
-  // Block theme: Default — Ground
+  // Block theme: Default
   --block-theme-default-bg: var(--primary-color);
   --block-theme-default-text: var(--primary-foreground-color);
-  --block-theme-default-high-contrast: var(--primary-foreground-color);
   --block-theme-default-low-contrast: var(--primary-low-foreground-color);
   --block-theme-default-accent-color: var(--primary-accent-color);
-  // Block theme: Default — High Ground
   --block-theme-default-high-bg: var(--neutral-color);
   --block-theme-default-top-text: var(--neutral-foreground-color);
-  --block-theme-default-top-high-contrast: var(--neutral-foreground-color);
   --block-theme-default-top-low-contrast: var(--neutral-low-foreground-color);
   --block-theme-default-top-accent-color: var(--neutral-accent-color);
-  // Block theme: Default — Border
   --block-theme-default-border: var(--accent-color);
   --block-theme-default-border-width: 4px 0 0;
-  // Block theme: Default — Pattern (disabled by default)
-  --block-theme-default-pattern-image: none;
-  --block-theme-default-pattern-opacity: 0;
 
-  // Block theme: Brand — Ground
+  // Block theme: Brand
   --block-theme-brand-bg: var(--accent-color);
   --block-theme-brand-text: var(--accent-foreground-color);
-  --block-theme-brand-high-contrast: var(--accent-foreground-color);
   --block-theme-brand-low-contrast: var(--accent-low-foreground-color);
   --block-theme-brand-accent-color: var(--accent-accent-color);
-  // Block theme: Brand — High Ground
   --block-theme-brand-high-bg: var(--primary-color);
   --block-theme-brand-top-text: var(--primary-foreground-color);
-  --block-theme-brand-top-high-contrast: var(--primary-foreground-color);
   --block-theme-brand-top-low-contrast: var(--primary-low-foreground-color);
   --block-theme-brand-top-accent-color: var(--primary-accent-color);
-  // Block theme: Brand — Border
   --block-theme-brand-border: unset;
-  --block-theme-brand-border-width: 0;
-  // Block theme: Brand — Pattern (disabled by default)
-  --block-theme-brand-pattern-image: none;
-  --block-theme-brand-pattern-opacity: 0;
 
   // Links
   --link-color: var(--brand-color);

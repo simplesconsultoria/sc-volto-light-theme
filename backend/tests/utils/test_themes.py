@@ -22,13 +22,13 @@ class TestThemeUtils:
     def test_default_theme_carries_its_colors(self):
         values = themes.theme_values(themes.DEFAULT_THEME_ID, self.registry)
         assert values["name"] == "Default"
-        assert values["primary_color"] == "#10375c"
+        assert values["primary_color_light"] == "#ffffff"
 
     def test_theme_field_names_come_from_the_schema(self):
         names = themes.theme_field_names()
         assert "name" in names
-        assert "primary_color" in names
-        assert "accent_foreground_color" in names
+        assert "primary_color_light" in names
+        assert "accent_foreground_color_light" in names
 
     @pytest.mark.parametrize(
         "theme_id,expected",
@@ -48,8 +48,8 @@ class TestThemeUtils:
 
     def test_record_name(self):
         assert (
-            themes.record_name("corporate", "primary_color")
-            == "sc.voltolighttheme.theme.corporate.primary_color"
+            themes.record_name("corporate", "primary_color_light")
+            == "sc.voltolighttheme.theme.corporate.primary_color_light"
         )
 
     def test_theme_exists(self):
@@ -119,11 +119,11 @@ class TestThemeUtils:
         def test_create_stores_the_given_values(self):
             values = themes.create_theme(
                 "corporate",
-                {"name": "Corporate", "primary_color": "#123456"},
+                {"name": "Corporate", "primary_color_light": "#123456"},
                 registry=self.registry,
             )
             assert values["name"] == "Corporate"
-            assert values["primary_color"] == "#123456"
+            assert values["primary_color_light"] == "#123456"
 
         def test_create_shows_up_in_the_listing(self):
             themes.create_theme("corporate", registry=self.registry)
@@ -141,7 +141,9 @@ class TestThemeUtils:
         def test_create_rejects_an_invalid_color(self):
             with pytest.raises(InvalidColor):
                 themes.create_theme(
-                    "corporate", {"primary_color": "banana"}, registry=self.registry
+                    "corporate",
+                    {"primary_color_light": "banana"},
+                    registry=self.registry,
                 )
 
     class TestUpdate:
@@ -150,20 +152,20 @@ class TestThemeUtils:
             self.registry = getUtility(IRegistry)
             themes.create_theme(
                 "corporate",
-                {"name": "Corporate", "primary_color": "#123456"},
+                {"name": "Corporate", "primary_color_light": "#123456"},
                 registry=self.registry,
             )
 
         def test_update_writes_the_given_field(self):
             themes.update_theme(
-                "corporate", {"primary_color": "#abcdef"}, registry=self.registry
+                "corporate", {"primary_color_light": "#abcdef"}, registry=self.registry
             )
             values = themes.theme_values("corporate", self.registry)
-            assert values["primary_color"] == "#abcdef"
+            assert values["primary_color_light"] == "#abcdef"
 
         def test_update_is_partial(self):
             themes.update_theme(
-                "corporate", {"primary_color": "#abcdef"}, registry=self.registry
+                "corporate", {"primary_color_light": "#abcdef"}, registry=self.registry
             )
             assert themes.theme_values("corporate", self.registry)["name"] == (
                 "Corporate"

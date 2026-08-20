@@ -78,7 +78,7 @@ class TestInheritExpander:
     def test_a_nested_section_overrides_its_parent(self):
         themes.create_theme(
             "sub",
-            {"name": "Sub", "primary_color": "#0f0f0f"},
+            {"name": "Sub", "primary_color_light": "#0f0f0f"},
             registry=self.registry,
         )
         subsection = api.content.create(
@@ -89,7 +89,9 @@ class TestInheritExpander:
 
         data = self._inherit("/section/sub/deep")
         assert data[BEHAVIOR]["data"]["theme"]["title"] == "Sub"
-        assert data[BEHAVIOR]["data"]["theme"]["value"]["primary_color"] == "#0f0f0f"
+        assert (
+            data[BEHAVIOR]["data"]["theme"]["value"]["primary_color_light"] == "#0f0f0f"
+        )
 
     def test_content_outside_a_themed_section_falls_back_to_the_site(self):
         # The behavior is enabled on Plone Site, so the site root is always the

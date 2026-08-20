@@ -50,19 +50,24 @@ class TestColorPersistence:
     def test_register_theme_interface(self):
         """The call that used to raise TypeError."""
         self.registry.registerInterface(ISCVLTThemeDefinition, prefix=PREFIX)
-        assert f"{PREFIX}.primary_color" in self.registry.records
+        assert f"{PREFIX}.primary_color_light" in self.registry.records
 
     def test_color_value_round_trips(self):
         self.registry.registerInterface(ISCVLTThemeDefinition, prefix=PREFIX)
-        self.registry[f"{PREFIX}.primary_color"] = "#0a4a7a"
-        assert self.registry[f"{PREFIX}.primary_color"] == "#0a4a7a"
+        self.registry[f"{PREFIX}.primary_color_light"] = "#0a4a7a"
+        assert self.registry[f"{PREFIX}.primary_color_light"] == "#0a4a7a"
 
     def test_registry_rejects_an_invalid_color(self):
         self.registry.registerInterface(ISCVLTThemeDefinition, prefix=PREFIX)
         with pytest.raises(InvalidColor):
-            self.registry[f"{PREFIX}.primary_color"] = "banana"
+            self.registry[f"{PREFIX}.primary_color_light"] = "banana"
 
     def test_every_theme_field_is_registered(self):
         self.registry.registerInterface(ISCVLTThemeDefinition, prefix=PREFIX)
-        for name in ("name", "description", "primary_color", "accent_color"):
+        for name in (
+            "name",
+            "description",
+            "primary_color_light",
+            "accent_color_light",
+        ):
             assert f"{PREFIX}.{name}" in self.registry.records

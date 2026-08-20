@@ -151,7 +151,11 @@ const ThemesControlpanel = () => {
     const theme = findTheme(data, editing as string);
     if (!theme) return;
     const { values } = splitFormData({ ...formData, id: theme.id });
-    (dispatch(updateControlpanel(theme['@id'], values) as any) as any)
+    (
+      dispatch(
+        updateControlpanel(`/@controlpanels/themes/${theme.id}`, values) as any,
+      ) as any
+    )
       .then(() => succeed(intl.formatMessage(messages.saved)))
       .catch(fail);
   };

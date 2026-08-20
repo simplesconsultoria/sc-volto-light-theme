@@ -3,6 +3,8 @@
 .sc-themes-controlpanel {
   .sc-theme-swatches {
     display: inline-flex;
+    max-width: 300px;
+    flex-wrap: wrap;
     gap: 4px;
   }
 
@@ -17,5 +19,29 @@
   code {
     color: var(--gray-50);
     font-size: 0.9em;
+  }
+
+  // Typography tab padding
+  .ui.attached.segment {
+    padding: 1.5rem;
+  }
+
+  // Fix ColorPicker widget X button alignment
+  .field-wrapper-colorPicker,
+  [class*='field-wrapper-'][class*='_color'] {
+    .ui.input {
+      display: flex;
+      align-items: center;
+
+      input {
+        flex: 1;
+      }
+
+      .ui.basic.icon.button {
+        height: auto;
+        padding: 0.78571429em;
+        margin-left: 0.5rem;
+      }
+    }
   }
 }

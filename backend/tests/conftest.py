@@ -53,7 +53,7 @@ def theme_registry(themed_portal):
     registry = getUtility(IRegistry)
     themes.create_theme(
         "corporate",
-        {"name": "Corporate", "primary_color": "#123456"},
+        {"name": "Corporate", "primary_color_light": "#123456"},
         registry=registry,
     )
     transaction.commit()

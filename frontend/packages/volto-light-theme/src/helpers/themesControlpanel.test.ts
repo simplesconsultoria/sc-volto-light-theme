@@ -38,7 +38,7 @@ const data: ThemesControlpanelData = {
       '@id': 'http://localhost:8080/Plone/@controlpanels/themes/default',
       id: 'default',
       name: 'Default',
-      primary_color: '#10375c',
+      primary_color: '#000000',
     },
     {
       '@id': 'http://localhost:8080/Plone/@controlpanels/themes/corporate',
@@ -193,7 +193,7 @@ describe('cloneThemeFormData', () => {
   const source = data.items![0];
 
   it('keeps the settings', () => {
-    expect(cloneThemeFormData(source).primary_color).toBe('#10375c');
+    expect(cloneThemeFormData(source).primary_color).toBe('#000000');
   });
 
   it('drops the identity', () => {

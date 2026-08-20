@@ -35,7 +35,7 @@ class TestThemeFieldSerializer:
 
     def test_theme_serializes_to_its_colors(self):
         value = self.api.get("/site").json()["theme"]["value"]
-        assert value["primary_color"] == "#123456"
+        assert value["primary_color_light"] == "#123456"
 
     def test_the_value_carries_no_metadata(self):
         # `name` is already the `title`, and every key of `value` becomes a CSS
@@ -55,11 +55,11 @@ class TestThemeFieldSerializer:
 
     def test_theme_reflects_a_registry_update(self):
         themes.update_theme(
-            "corporate", {"primary_color": "#abcdef"}, registry=self.registry
+            "corporate", {"primary_color_light": "#abcdef"}, registry=self.registry
         )
         transaction.commit()
         data = self.api.get("/site").json()
-        assert data["theme"]["value"]["primary_color"] == "#abcdef"
+        assert data["theme"]["value"]["primary_color_light"] == "#abcdef"
 
     def test_an_unset_theme_serializes_to_none(self):
         api.content.create(container=self.portal, type="Themed", id="plain")
@@ -138,11 +138,11 @@ class TestColorJsonSchemaProvider:
 
     def test_color_fields_use_the_color_picker_widget(self):
         schema = self.api.get("/@controlpanels/themes").json()["schema"]
-        assert schema["properties"]["primary_color"]["widget"] == "colorPicker"
+        assert schema["properties"]["primary_color_light"]["widget"] == "colorPicker"
 
     def test_color_fields_declare_the_color_factory(self):
         schema = self.api.get("/@controlpanels/themes").json()["schema"]
-        assert schema["properties"]["primary_color"]["factory"] == "Color"
+        assert schema["properties"]["primary_color_light"]["factory"] == "Color"
 
     def test_non_color_fields_are_untouched(self):
         schema = self.api.get("/@controlpanels/themes").json()["schema"]

@@ -48,10 +48,12 @@ class TestListing:
     def test_schema_carries_the_theme_fields(self):
         properties = self.data["schema"]["properties"]
         assert "name" in properties
-        assert "primary_color" in properties
+        assert "primary_color_light" in properties
+        assert "font_family_primary" in properties
+        assert "neutral_accent_color_dark" in properties
 
     def test_color_fields_use_the_color_picker_widget(self):
-        primary = self.data["schema"]["properties"]["primary_color"]
+        primary = self.data["schema"]["properties"]["primary_color_light"]
         assert primary.get("widget") == "colorPicker"
 
     def test_listing_returns_the_default_theme(self):
@@ -68,7 +70,7 @@ class TestListing:
     def test_each_item_carries_its_values(self):
         item = next(i for i in self.data["items"] if i["id"] == themes.DEFAULT_THEME_ID)
         assert item["name"] == "Default"
-        assert item["primary_color"] == "#10375c"
+        assert item["primary_color_light"] == "#ffffff"
 
     def test_panel_is_listed_among_the_controlpanels(self):
         response = self.api.get("/@controlpanels")
@@ -88,7 +90,7 @@ class TestGet:
 
     def test_get_returns_the_values(self):
         response = self.api.get(f"{PANEL}/{themes.DEFAULT_THEME_ID}")
-        assert response.json()["primary_color"] == "#10375c"
+        assert response.json()["primary_color_light"] == "#ffffff"
 
     def test_get_a_missing_theme_is_404(self):
         response = self.api.get(f"{PANEL}/not-here")
@@ -115,9 +117,9 @@ class TestAdd:
 
     def test_create_stores_the_colors(self):
         response = self.api.post(
-            PANEL, json={"id": "corporate", "primary_color": "#123456"}
+            PANEL, json={"id": "corporate", "primary_color_light": "#123456"}
         )
-        assert response.json()["primary_color"] == "#123456"
+        assert response.json()["primary_color_light"] == "#123456"
 
     def test_created_theme_is_readable(self):
         self.api.post(PANEL, json={"id": "corporate", "name": "Corporate"})
@@ -148,23 +150,30 @@ class TestUpdate:
         self.api = api
         self.api.post(
             PANEL,
-            json={"id": "corporate", "name": "Corporate", "primary_color": "#123456"},
+            json={
+                "id": "corporate",
+                "name": "Corporate",
+                "primary_color_light": "#123456",
+            },
         )
         transaction.commit()
 
     def test_update_a_field(self):
         response = self.api.patch(
-            f"{PANEL}/corporate", json={"primary_color": "#abcdef"}
+            f"{PANEL}/corporate", json={"primary_color_light": "#abcdef"}
         )
         assert response.status_code in (200, 204)
 
     def test_update_is_persisted(self):
-        self.api.patch(f"{PANEL}/corporate", json={"primary_color": "#abcdef"})
+        self.api.patch(f"{PANEL}/corporate", json={"primary_color_light": "#abcdef"})
         transaction.commit()
-        assert self.api.get(f"{PANEL}/corporate").json()["primary_color"] == "#abcdef"
+        assert (
+            self.api.get(f"{PANEL}/corporate").json()["primary_color_light"]
+            == "#abcdef"
+        )
 
     def test_update_is_partial(self):
-        self.api.patch(f"{PANEL}/corporate", json={"primary_color": "#abcdef"})
+        self.api.patch(f"{PANEL}/corporate", json={"primary_color_light": "#abcdef"})
         transaction.commit()
         assert self.api.get(f"{PANEL}/corporate").json()["name"] == "Corporate"
 
@@ -185,12 +194,12 @@ class TestUpdate:
     def test_editing_the_default_theme_is_persisted(self):
         self.api.patch(
             f"{PANEL}/{themes.DEFAULT_THEME_ID}",
-            json={"name": "Renamed", "primary_color": "#abcdef"},
+            json={"name": "Renamed", "primary_color_light": "#abcdef"},
         )
         transaction.commit()
         data = self.api.get(f"{PANEL}/{themes.DEFAULT_THEME_ID}").json()
         assert data["name"] == "Renamed"
-        assert data["primary_color"] == "#abcdef"
+        assert data["primary_color_light"] == "#abcdef"
 
     def test_update_a_missing_theme_is_404(self):
         response = self.api.patch(f"{PANEL}/not-here", json={"name": "X"})
