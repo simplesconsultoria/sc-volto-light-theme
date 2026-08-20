@@ -2,5 +2,56 @@
 <rolemap>
   <permissions>
     <!-- -*- extra stuff goes here -*- -->
+    <!-- Header settings -->
+    <permission acquire="False"
+                name="sc.voltolighttheme: Edit header settings"
+    >
+      <role name="Manager" />
+      <role name="Site Administrator" />
+    </permission>
+
+    <permission acquire="False"
+                name="sc.voltolighttheme: View header settings"
+    >
+      <role name="Anonymous" />
+      <role name="Authenticated" />
+    </permission>
+
+    <!-- Footer settings -->
+    <permission acquire="False"
+                name="sc.voltolighttheme: Edit footer settings"
+    >
+      <role name="Manager" />
+      <role name="Site Administrator" />
+    </permission>
+
+    <permission acquire="False"
+                name="sc.voltolighttheme: View footer settings"
+    >
+      <role name="Anonymous" />
+      <role name="Authenticated" />
+    </permission>
+    <!-- Themes -->
+    <permission acquire="False"
+                name="sc.voltolighttheme: Manage themes"
+    >
+      <role name="Manager" />
+      <role name="Site Administrator" />
+    </permission>
+
+    <!-- Theme selector -->
+    <permission acquire="False"
+                name="sc.voltolighttheme: Edit theme settings"
+    >
+      <role name="Manager" />
+      <role name="Site Administrator" />
+    </permission>
+
+    <permission acquire="False"
+                name="sc.voltolighttheme: View theme settings"
+    >
+      <role name="Anonymous" />
+      <role name="Authenticated" />
+    </permission>
   </permissions>
 </rolemap>

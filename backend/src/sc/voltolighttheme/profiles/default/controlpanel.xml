@@ -3,6 +3,18 @@
         name="portal_controlpanel"
 >
 
-  <!-- -*- extra stuff goes here -*- -->
+  <configlet
+      title="Themes"
+      action_id="sc.voltolighttheme.themes"
+      appId="sc.voltolighttheme"
+      category="Products"
+      condition_expr=""
+      icon_expr=""
+      url_expr="string:${portal_url}/@@sc-voltolighttheme-themes"
+      visible="True"
+      i18n:attributes="title"
+      >
+    <permission>sc.voltolighttheme: Manage themes</permission>
+  </configlet>
 
 </object>

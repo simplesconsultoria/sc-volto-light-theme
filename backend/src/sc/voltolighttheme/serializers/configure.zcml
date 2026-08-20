@@ -7,4 +7,8 @@
       name="sc.voltolighttheme.summary_serializer_metadata"
       />
 
+  <adapter factory=".fields.ColorJsonSchemaProvider" />
+  <adapter factory=".fields.ThemeFieldSerializer" />
+  <adapter factory=".controlpanels.ThemesControlpanelSerializeToJson" />
+
 </configure>
