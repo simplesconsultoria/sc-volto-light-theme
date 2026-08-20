@@ -1,0 +1,21 @@
+// Themes control panel: colour chips in the listing, so a theme can be
+// recognised without opening it.
+.sc-themes-controlpanel {
+  .sc-theme-swatches {
+    display: inline-flex;
+    gap: 4px;
+  }
+
+  .sc-theme-swatch {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--gray-10);
+    border-radius: 3px;
+  }
+
+  code {
+    color: var(--gray-50);
+    font-size: 0.9em;
+  }
+}
