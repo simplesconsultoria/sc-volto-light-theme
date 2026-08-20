@@ -1,0 +1,1 @@
+Fixed the header and footer briefly losing their inherited settings when leaving an edit form. Volto resets `content.data` before re-fetching, which blanked every value read from the inherit expander; those values now live in their own store slice that survives the reset. @ericof

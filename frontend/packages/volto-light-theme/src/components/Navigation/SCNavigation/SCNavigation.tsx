@@ -5,13 +5,13 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import isEmpty from 'lodash/isEmpty';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { getBaseUrl } from '@plone/volto/helpers/Url/Url';
 import { hasApiExpander } from '@plone/volto/helpers/Utils/Utils';
 import config from '@plone/volto/registry';
 import { getNavigation } from '@plone/volto/actions/navigation/navigation';
 import MenuItem from './MenuItem';
+import { useLiveData } from '@simplesconsultoria/volto-light-theme/helpers/useLiveData';
 import { useNavCollapse } from '../../../hooks/useNavCollapse';
 import type { NavigationItem } from '@simplesconsultoria/volto-light-theme/types/navigation';
 
@@ -25,14 +25,8 @@ type HeaderSettings = {
 
 type RootState = {
   content: {
-    data?: {
-      '@components'?: {
-        inherit?: {
-          'voltolighttheme.header'?: {
-            data?: HeaderSettings;
-          };
-        };
-      };
+    data: {
+      [key: string]: unknown;
     };
   };
   form: {
@@ -74,16 +68,12 @@ const SCNavigation = ({ pathname }: NavigationProps) => {
   }
   const navigation = useRef<HTMLElement | null>(null);
   const dispatch = useDispatch();
-  const headerSettings = useSelector(
-    (state: RootState) =>
-      state.content.data?.['@components']?.inherit?.['voltolighttheme.header']
-        ?.data,
+  const contentData = useSelector((state: RootState) => state.content.data);
+  const hasFatMenuSetting = useLiveData<HeaderSettings>(
+    contentData,
+    'sc.voltolighttheme.siteheader',
+    'has_fat_menu',
   );
-  const formData = useSelector((state: RootState) => state.form.global);
-  const hasFatMenuSetting =
-    !isEmpty(formData) && formData?.has_fat_menu !== undefined
-      ? formData.has_fat_menu
-      : headerSettings?.has_fat_menu;
   const hasFatMenu = hasFatMenuSetting ?? false;
 
   const lang = useSelector((state: RootState) => state.intl.locale);
