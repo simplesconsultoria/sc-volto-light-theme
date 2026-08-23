@@ -21,9 +21,9 @@
         import_steps="controlpanel"
         />
 
-    <genericsetup:upgradeDepends
+    <genericsetup:upgradeStep
         title="Uninstall kitconcept.voltolighttheme"
-        import_profile="kitconcept.voltolighttheme:uninstall"
+        handler=".uninstall_kc_voltolighttheme"
         />
 
   </genericsetup:upgradeSteps>

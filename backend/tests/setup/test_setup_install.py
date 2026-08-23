@@ -12,18 +12,52 @@ class TestHiddenProfiles:
         self.portal = portal
         self.non_installable = api.addon._get_non_installable_addons()
 
-    def test_uninstall_profiles_hidden(self):
+    @pytest.mark.parametrize(
+        "profile,reason",
+        [
+            (
+                f"{PACKAGE_NAME}:uninstall",
+                "Uninstall profiles are reached through the add-on, not listed.",
+            ),
+            (
+                "kitconcept.voltolighttheme:default",
+                "kitconcept.voltolighttheme profiles should not be listed.",
+            ),
+            (
+                "kitconcept.voltolighttheme:uninstall",
+                "kitconcept.voltolighttheme profiles should not be listed.",
+            ),
+        ],
+    )
+    def test_hidden_profiles(self, profile: str, reason: str):
         """Uninstall profiles are reached through the add-on, not listed."""
 
-        assert f"{PACKAGE_NAME}:uninstall" in self.non_installable.profiles
+        assert profile in self.non_installable.profiles, (
+            f"{profile} should be hidden: {reason}"
+        )
 
     def test_default_profile_stays_installable(self):
         """Hiding must not hide the profile people actually install."""
         assert f"{PACKAGE_NAME}:default" not in (self.non_installable.profiles)
 
-    def test_upgrades_package_hidden(self):
+    @pytest.mark.parametrize(
+        "package,reason",
+        [
+            (
+                "kitconcept.voltolighttheme",
+                "kitconcept.voltolighttheme should not be listed.",
+            ),
+            (
+                f"{PACKAGE_NAME}.upgrades",
+                "The upgrades package is machinery, not a product.",
+            ),
+        ],
+    )
+    def test_package_hidden(self, package: str, reason: str):
         """The upgrades package is machinery, not a product."""
-        assert f"{PACKAGE_NAME}.upgrades" in self.non_installable.products
+        assert package in self.non_installable.products, (
+            f"{package} should be hidden: {reason}"
+        )
 
 
 class TestSetupInstall:
