@@ -1,0 +1,1 @@
+Moved the `natal` example theme out of the default profile and into the `initial` example-content profile, so a plain installation ships only the `default` theme. @ericof
