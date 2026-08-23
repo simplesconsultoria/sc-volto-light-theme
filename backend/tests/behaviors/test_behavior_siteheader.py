@@ -26,8 +26,6 @@ def portal(portal_factory, payload, behavior):
 
 
 class TestBehavior:
-    name: str = f"{PACKAGE_NAME}.siteheader"
-
     @pytest.fixture(autouse=True)
     def _setup(self, portal, dummy_type_schema):
         self.portal = portal

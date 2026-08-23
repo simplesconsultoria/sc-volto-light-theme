@@ -20,7 +20,7 @@ class TestThemeFieldSerializer:
         self.registry = theme_registry
         self.api = manager_request
         api.content.create(
-            container=self.portal, type="Themed", id="site", theme="corporate"
+            container=self.portal, type="DummyType", id="site", theme="corporate"
         )
         transaction.commit()
 
@@ -62,7 +62,7 @@ class TestThemeFieldSerializer:
         assert data["theme"]["value"]["primary_color_light"] == "#abcdef"
 
     def test_an_unset_theme_serializes_to_none(self):
-        api.content.create(container=self.portal, type="Themed", id="plain")
+        api.content.create(container=self.portal, type="DummyType", id="plain")
         transaction.commit()
         assert self.api.get("/plain").json()["theme"] is None
 
@@ -100,7 +100,7 @@ class TestThemeFieldRoundTrip:
         self.portal = themed_portal
         self.api = manager_request
         api.content.create(
-            container=self.portal, type="Themed", id="site", theme="corporate"
+            container=self.portal, type="DummyType", id="site", theme="corporate"
         )
         transaction.commit()
 
