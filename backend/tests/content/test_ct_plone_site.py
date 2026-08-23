@@ -44,8 +44,29 @@ class TestContentTypeFTI:
         "idx,behavior",
         enumerate((
             "plonegovbr.socialmedia.settings",
-            "sc.voltolighttheme.siteheader",
             "sc.voltolighttheme.themeselector",
+            "sc.voltolighttheme.siteheader",
+            "sc.voltolighttheme.footer",
+            "volto.preview_image_link",
+            "plone.dublincore",
+            "plone.relateditems",
+            "plone.locking",
+            "plone.excludefromnavigation",
+            "volto.blocks",
+        )),
+    )
+    def test_behaviors(self, idx: int, behavior: str):
+        assert self.fti.behaviors[idx] == behavior
+
+
+@pytest.mark.portal(profiles=["sc.voltolighttheme:intranet"])
+class TestContentTypeIntranetFTI(TestContentTypeFTI):
+    @pytest.mark.parametrize(
+        "idx,behavior",
+        enumerate((
+            "plonegovbr.socialmedia.settings",
+            "sc.voltolighttheme.themeselector",
+            "sc.voltolighttheme.intranetheader",
             "sc.voltolighttheme.footer",
             "volto.preview_image_link",
             "plone.dublincore",

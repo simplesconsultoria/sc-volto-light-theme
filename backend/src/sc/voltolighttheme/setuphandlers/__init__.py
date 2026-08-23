@@ -7,6 +7,7 @@ class HiddenProfiles:
     def getNonInstallableProfiles(self):
         """Hide uninstall profile from site-creation and quickinstaller."""
         return [
+            "sc.voltolighttheme:intranet",
             "sc.voltolighttheme:uninstall",
         ]
 
