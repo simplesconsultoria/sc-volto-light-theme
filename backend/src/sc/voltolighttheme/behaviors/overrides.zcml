@@ -1,0 +1,50 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    >
+
+  <include
+      package="kitconcept.voltolighttheme.behaviors"
+      file="configure.zcml"
+      />
+
+  <include
+      package="z3c.unconfigure"
+      file="meta.zcml"
+      />
+
+  <unconfigure>
+
+    <plone:behavior
+        name="voltolighttheme.header"
+        title="Header customizations for sites/subsites"
+        description="Set of fields to customize sites and subsites"
+        provides="kitconcept.voltolighttheme.behaviors.customizations.ISiteHeaderCustomizationSettings"
+        />
+
+    <plone:behavior
+        name="voltolighttheme.theme"
+        title="Theme colors customizations for sites/subsites"
+        description="Set of fields to customize sites and subsites"
+        provides="kitconcept.voltolighttheme.behaviors.customizations.ISiteThemeCustomizationSettings"
+        />
+
+    <plone:behavior
+        name="voltolighttheme.footer"
+        title="Footer customizations for sites/subsites"
+        description="Set of fields to customize sites and subsites"
+        provides="kitconcept.voltolighttheme.behaviors.customizations.ISiteFooterCustomizationSettings"
+        />
+
+    <plone:behavior
+        name="kitconcept.footer"
+        title="kitconcept specific footer customizations"
+        description="Set of fields to customize kitconcept's distributions sites and subsites"
+        provides="kitconcept.voltolighttheme.behaviors.footer.IKitconceptVoltoFooterSettings"
+        />
+
+
+  </unconfigure>
+
+</configure>

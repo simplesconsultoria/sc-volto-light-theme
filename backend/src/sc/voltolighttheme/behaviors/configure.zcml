@@ -6,6 +6,17 @@
     i18n_domain="sc.voltolighttheme"
     >
 
+  <include
+      package="plone.behavior"
+      file="meta.zcml"
+      />
+
+  <!-- Include overrides -->
+  <includeOverrides
+      file="overrides.zcml"
+      zcml:condition="installed kitconcept.voltolighttheme"
+      />
+
   <!-- Header -->
   <plone:behavior
       name="sc.voltolighttheme.siteheader"
