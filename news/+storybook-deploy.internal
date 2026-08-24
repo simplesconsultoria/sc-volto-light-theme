@@ -1,0 +1,1 @@
+Deploy Storybook from the main workflow, and take the Node version from the workflow inputs rather than a job output that is not in scope there. @ericof
