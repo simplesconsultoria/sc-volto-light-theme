@@ -45,7 +45,7 @@ jobs:
         storybook-deploy: true
     if: ${{ needs.config.outputs.frontend == 'true' }}
     permissions:
-      contents: read
+      contents: write
       packages: write
 
   report:
