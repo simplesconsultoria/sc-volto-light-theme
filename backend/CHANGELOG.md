@@ -9,6 +9,25 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a5 (2026-08-24)
+
+
+### New features:
+
+- Added named themes: managers define them in a new Themes control panel and editors select one per site or section through the `sc.voltolighttheme.themeselector` behavior. Themes are stored in the registry as `ISCVLTThemeDefinition` records, exposed through the `sc.voltolighttheme.themes` vocabulary, and their settings are resolved when the field is serialized, so the closest theme up the acquisition chain applies. Also replaced the `kitconcept.voltolighttheme` header and footer behaviors with our own. @ericof [#20](https://github.com/simplesconsultoria/sc-volto-light-theme/issues/20)
+- Added an `intranet` extension profile that enables the `sc.voltolighttheme.intranetheader` behavior on the site root in place of `sc.voltolighttheme.siteheader`. The profile is hidden from the add-ons control panel, so it is applied by a distribution rather than installed by hand. @ericof 
+
+
+### Internal:
+
+- Bumped the default profile to version 1001 and added the matching upgrade step, which reimports the registry, the Plone Site FTI and the control panel configuration, and uninstalls `kitconcept.voltolighttheme`. The dependency on `profile-kitconcept.voltolighttheme:default` was dropped, and its header, theme and footer behaviors are now unregistered through `z3c.unconfigure` when the package is present. @ericof [#20](https://github.com/simplesconsultoria/sc-volto-light-theme/issues/20)
+- Moved the `natal` example theme out of the default profile and into the `initial` example-content profile, so a plain installation ships only the `default` theme. @ericof 
+
+
+### Tests
+
+- Consolidated the test fixtures into a single `tests/conftest.py`: `dummy_type_schema` and `create_dummy_content` were duplicated verbatim in `tests/behaviors/conftest.py`, which also held the only definition of the `role_request` they depend on. `portal_factory` gained a `container` flag so a type can hold pages, and `themed_portal` builds on it instead of declaring its own FTI. @ericof 
+
 ## 1.0.0a4 (2026-08-05)
 
 No significant changes.

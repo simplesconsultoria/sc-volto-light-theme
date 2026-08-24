@@ -8,6 +8,21 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0-alpha.5 (2026-08-24)
+
+### Feature
+
+- Added a Themes control panel for managing named themes, where a theme can be edited, duplicated from an existing one, or deleted — the default theme can be edited like any other, only its deletion is refused. The selected theme is applied by overriding the colour custom properties for the whole page; it is read from the `@inherit` expander, so a section inherits the closest theme set above it, and unsaved edits are previewed live while the form is open. @ericof [#20](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/20)
+
+### Bugfix
+
+- Fixed the header and footer briefly losing their inherited settings when leaving an edit form. Volto resets `content.data` before re-fetching, which blanked every value read from the inherit expander; those values now live in their own store slice that survives the reset. @ericof 
+- Fixed the themes control panel showing a blank page to a user without the permission to manage themes. The panel now renders `Unauthorized` when the API refuses the fetch, which is the only check that tells an editor apart from a manager — a token is present for both. @ericof 
+
+### Internal
+
+- Split the themes control panel into `ThemesUI`, `ThemesList`, `ThemeForm`, `ThemesToolbarActions` and `ThemeSwatches`, with a Storybook story for each, so the panel's four states can be seen without a running site. @ericof 
+
 ## 1.0.0-alpha.4 (2026-08-05)
 
 ### Breaking

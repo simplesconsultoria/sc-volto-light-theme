@@ -1,1 +1,0 @@
-Added an `intranet` extension profile that enables the `sc.voltolighttheme.intranetheader` behavior on the site root in place of `sc.voltolighttheme.siteheader`. The profile is hidden from the add-ons control panel, so it is applied by a distribution rather than installed by hand. @ericof

@@ -1,1 +1,0 @@
-Fixed the themes control panel showing a blank page to a user without the permission to manage themes. The panel now renders `Unauthorized` when the API refuses the fetch, which is the only check that tells an editor apart from a manager — a token is present for both. @ericof
