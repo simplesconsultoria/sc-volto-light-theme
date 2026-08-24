@@ -10,37 +10,68 @@ declare module '@plone/types' {
   }
 }
 
+type Querystring = { [key: string]: string };
+
 type apiExpanderInherit = {
   match: string;
   GET_CONTENT: string[];
   querystring:
-    | { [key: string]: string }
-    | ((
-        config: ConfigType,
-        querystring: { config: ConfigType; querystring: object },
-      ) => { [key: string]: string });
+    | Querystring
+    | ((config: ConfigType, querystring: Querystring) => Querystring);
 };
 
+const INHERIT_BEHAVIORS_PARAM = 'expand.inherit.behaviors';
+
+/**
+ * Behaviors provided by kitconcept.voltolighttheme that this add-on replaces
+ * with its own. They are dropped from the inherit expander so the backend does
+ * not resolve them alongside ours.
+ */
+const SUPERSEDED_INHERIT_BEHAVIORS = [
+  'voltolighttheme.header',
+  'voltolighttheme.theme',
+  'voltolighttheme.footer',
+  'kitconcept.footer',
+];
+
+const FOOTER_BEHAVIOR = 'sc.voltolighttheme.footer';
+const THEME_BEHAVIOR = 'sc.voltolighttheme.themeselector';
+
+/**
+ * Build the value of the `expand.inherit.behaviors` querystring parameter:
+ * take whatever previous expanders already requested, drop the behaviors we
+ * supersede, and append this add-on's own ones.
+ */
+export function inheritBehaviors(
+  config: ConfigType,
+  querystring: Querystring,
+): string {
+  const inherited = (querystring[INHERIT_BEHAVIORS_PARAM] ?? '')
+    .split(',')
+    .map((behavior) => behavior.trim())
+    .filter(
+      (behavior) =>
+        behavior && !SUPERSEDED_INHERIT_BEHAVIORS.includes(behavior),
+    );
+
+  const local = [
+    config.settings.scvlt?.headerBehavior,
+    THEME_BEHAVIOR,
+    FOOTER_BEHAVIOR,
+  ].filter(Boolean) as string[];
+
+  return [...new Set([...inherited, ...local])].join(',');
+}
+
 function applyExpanders(config: ConfigType) {
-  const EXPANDERS_INHERIT_BEHAVIORS = 'sc.voltolighttheme.footer';
   config.settings.apiExpanders = [
     ...config.settings.apiExpanders,
     {
       match: '',
       GET_CONTENT: ['inherit'],
-      querystring: (config, querystring) => {
-        if (querystring['expand.inherit.behaviors']) {
-          return {
-            'expand.inherit.behaviors': querystring[
-              'expand.inherit.behaviors'
-            ].concat(',', EXPANDERS_INHERIT_BEHAVIORS),
-          };
-        } else {
-          return {
-            'expand.inherit.behaviors': EXPANDERS_INHERIT_BEHAVIORS,
-          };
-        }
-      },
+      querystring: (config, querystring) => ({
+        [INHERIT_BEHAVIORS_PARAM]: inheritBehaviors(config, querystring),
+      }),
     } as apiExpanderInherit,
   ];
 }
@@ -57,6 +88,7 @@ export default function install(config: ConfigType) {
   }
 
   const scvltDefaults: SCVLTSettings = {
+    headerBehavior: 'sc.voltolighttheme.siteheader',
     headerBar: {
       display: true,
       quickLinks: [],

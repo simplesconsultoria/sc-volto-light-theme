@@ -14,6 +14,25 @@ const addonAliases = {
   '@simplesconsultoria/volto-light-theme': path.resolve(__dirname, './src'),
   '@simplesconsultoria/showcase': path.resolve(__dirname, '../showcase/src'),
   // 'promise-file-reader': require.resolve('promise-file-reader') // Add to identify dependency from package
+  // Volto provides these at runtime, so they are not our dependencies and are
+  // not resolvable from this package. Tests that render hooks needing a store
+  // or a router still have to import them, so point at Volto's own copies.
+  'redux-mock-store': path.resolve(
+    __dirname,
+    '../../core/packages/volto/node_modules/redux-mock-store',
+  ),
+  'react-intl-redux': path.resolve(
+    __dirname,
+    '../../core/packages/volto/node_modules/react-intl-redux',
+  ),
+  'react-router-dom': path.resolve(
+    __dirname,
+    '../../core/packages/volto/node_modules/react-router-dom',
+  ),
+  'react-redux': path.resolve(
+    __dirname,
+    '../../core/packages/volto/node_modules/react-redux',
+  ),
 };
 
 export default defineConfig({

@@ -4,6 +4,14 @@
 // =============================================================================
 
 body {
+  --font-body: var(--font-family-primary, 'Inter', sans-serif);
+  --custom-font: var(
+    --font-family-secondary,
+    var(--font-family-primary, 'Inter', sans-serif)
+  );
+  --custom-main-font: var(--font-family-primary, 'Inter', sans-serif);
+  --font-sans: var(--font-family-primary, 'Inter', sans-serif);
+
   font-family: var(--font-body);
   overflow-x: hidden;
 }
@@ -67,12 +75,7 @@ body .block.search .search-wrapper {
   }
 }
 /* Seleciona os formulários, exceto se estiverem dentro do sidebar ou do schemaForm */
-.ui.form:not(
-    #sidebar-metadata *,
-    #sidebar-metadata,
-    .block.schemaForm *,
-    .block.schemaForm
-  ) {
+.ui.form:not(#sidebar *, #sidebar, .block.schemaForm *, .block.schemaForm) {
   .ui.secondary.pointing.menu {
     .item {
       color: var(--primary-foreground-color);
@@ -89,11 +92,15 @@ body .block.search .search-wrapper {
 
   .inline.field {
     color: var(--primary-foreground-color);
-    label {
+    label,
+    p {
       color: var(--primary-foreground-color);
     }
     input,
-    textarea {
+    textarea,
+    div.react-select__control,
+    div.react-select__control .react-select__single-value,
+    div.react-select__menu {
       background-color: var(--primary-color);
       color: var(--primary-foreground-color);
     }

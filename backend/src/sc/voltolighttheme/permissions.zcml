@@ -1,5 +1,45 @@
-<configure xmlns="http://namespaces.zope.org/zope">
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
 
   <!-- -*- extra stuff goes here -*- -->
+
+  <configure zcml:condition="installed AccessControl.security">
+    <!-- Header settings -->
+    <permission
+        id="sc.voltolighttheme.header_settings.edit"
+        title="sc.voltolighttheme: Edit header settings"
+        />
+    <permission
+        id="sc.voltolighttheme.header_settings.view"
+        title="sc.voltolighttheme: View header settings"
+        />
+    <!-- Footer settings -->
+    <permission
+        id="sc.voltolighttheme.footer_settings.edit"
+        title="sc.voltolighttheme: Edit footer settings"
+        />
+    <permission
+        id="sc.voltolighttheme.footer_settings.view"
+        title="sc.voltolighttheme: View footer settings"
+        />
+
+    <!-- Themes -->
+    <permission
+        id="sc.voltolighttheme.themes.manage"
+        title="sc.voltolighttheme: Manage themes"
+        />
+    <!-- Theme selector -->
+    <permission
+        id="sc.voltolighttheme.theme_settings.edit"
+        title="sc.voltolighttheme: Edit theme settings"
+        />
+    <permission
+        id="sc.voltolighttheme.theme_settings.view"
+        title="sc.voltolighttheme: View theme settings"
+        />
+
+  </configure>
 
 </configure>

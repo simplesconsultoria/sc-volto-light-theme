@@ -13,6 +13,14 @@
       />
 
   <genericsetup:registerProfile
+      name="intranet"
+      title="Simples Consultoria VLT: Intranet"
+      description="Settings used by Intranet sites."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/intranet"
+      />
+
+  <genericsetup:registerProfile
       name="initial"
       title="Simples Consultoria VLT: Example content"
       description="Create example content to showcase this addon."

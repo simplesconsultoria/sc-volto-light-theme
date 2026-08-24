@@ -7,11 +7,15 @@ class HiddenProfiles:
     def getNonInstallableProfiles(self):
         """Hide uninstall profile from site-creation and quickinstaller."""
         return [
+            "sc.voltolighttheme:intranet",
             "sc.voltolighttheme:uninstall",
+            "kitconcept.voltolighttheme:default",
+            "kitconcept.voltolighttheme:uninstall",
         ]
 
     def getNonInstallableProducts(self):
         """Hide the upgrades package from site-creation and quickinstaller."""
         return [
             "sc.voltolighttheme.upgrades",
+            "kitconcept.voltolighttheme",
         ]

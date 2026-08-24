@@ -4,11 +4,7 @@ import config from '@plone/volto/registry';
 import { BlockWrapper } from '@kitconcept/volto-bm3-compat';
 import FlexView from './FlexView';
 import CardView from './CardView';
-
-type ThemeDefinition = {
-  name: string;
-  style: Record<string, string>;
-};
+import type { ThemeDefinition } from '../../../config/blocks';
 
 function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
   const blockThemes = blockType

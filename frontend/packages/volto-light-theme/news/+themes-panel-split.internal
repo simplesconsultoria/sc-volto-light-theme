@@ -1,0 +1,1 @@
+Split the themes control panel into `ThemesUI`, `ThemesList`, `ThemeForm`, `ThemesToolbarActions` and `ThemeSwatches`, with a Storybook story for each, so the panel's four states can be seen without a running site. @ericof

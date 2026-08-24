@@ -1,0 +1,6 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <!-- Makes Color storable in plone.registry; see persistence.py -->
+  <adapter factory=".persistence.color_persistent_field_adapter" />
+
+</configure>

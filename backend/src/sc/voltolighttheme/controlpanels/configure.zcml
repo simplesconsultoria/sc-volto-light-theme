@@ -5,6 +5,17 @@
     i18n_domain="sc.voltolighttheme"
     >
 
-  <!-- -*- extra stuff goes here -*- -->
+  <!--
+    Named adapter: plone.restapi looks control panels up by name via
+    getAdapters((context, request), IControlpanel). The IControlpanelLayer
+    marker is applied to the request by the services themselves.
+  -->
+  <adapter
+      factory=".themes.ThemesControlpanel"
+      provides="sc.voltolighttheme.interfaces.ISCVLTThemesControlpanel"
+      for="zope.interface.Interface
+           plone.restapi.interfaces.IControlpanelLayer"
+      name="themes"
+      />
 
 </configure>

@@ -6,16 +6,46 @@
     i18n_domain="sc.voltolighttheme"
     >
 
-  <adapter
-      factory=".settings.SchemaCleanupPlugin"
-      name="sc.voltolighttheme.schema_cleanup"
+  <include
+      package="plone.behavior"
+      file="meta.zcml"
+      />
+
+  <!-- Include overrides -->
+  <includeOverrides
+      file="overrides.zcml"
+      zcml:condition="installed kitconcept.voltolighttheme"
+      />
+
+  <!-- Header -->
+  <plone:behavior
+      name="sc.voltolighttheme.siteheader"
+      title="Header configuration for sites/subsites"
+      description="Set of fields to customize sites and subsites"
+      provides=".header.ISiteHeaderSettings"
+      former_dotted_names="voltolighttheme.header"
       />
 
   <plone:behavior
+      name="sc.voltolighttheme.intranetheader"
+      title="Header configuration for intranet sites"
+      description="Set of fields to customize intranet sites"
+      provides=".header.IIntranetHeaderSettings"
+      />
+
+  <!-- Footer -->
+  <plone:behavior
       name="sc.voltolighttheme.footer"
-      title="sc.voltolighttheme specific footer customizations"
+      title="Footer configuration for sites/subsites"
       description="Set of fields to customize sc.voltolighttheme's distributions sites and subsites"
-      provides=".footer.ISCFooter"
+      provides=".footer.IFooterSettings"
+      />
+  <!-- Theme -->
+  <plone:behavior
+      name="sc.voltolighttheme.themeselector"
+      title="Theme selection"
+      description="Select one of the named themes for a site or section"
+      provides=".theme.IThemeSelector"
       />
 
 </configure>

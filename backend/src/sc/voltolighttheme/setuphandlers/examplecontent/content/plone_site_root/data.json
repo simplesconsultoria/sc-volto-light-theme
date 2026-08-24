@@ -256,6 +256,7 @@
   "share_social_data": true,
   "social_links": [],
   "subjects": [],
+  "theme": "default",
   "title": "Volto Light Theme",
   "type_title": "Plone Site",
   "workflow_history": {},

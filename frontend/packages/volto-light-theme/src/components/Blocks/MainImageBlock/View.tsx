@@ -7,6 +7,7 @@ import cx from 'classnames';
 import type { Content } from '@plone/types';
 import type { MainImageBlockData } from './index';
 import Layout, { type MainImageAlign, type MainImageSize } from './Layout';
+import type { ThemeDefinition } from '../../../config/blocks';
 
 interface MainImageBlockViewProps {
   data: MainImageBlockData;
@@ -17,11 +18,6 @@ interface MainImageBlockViewProps {
   properties?: Content;
   [key: string]: any;
 }
-
-type ThemeDefinition = {
-  name: string;
-  style: Record<string, string>;
-};
 
 function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
   const blockThemes = blockType

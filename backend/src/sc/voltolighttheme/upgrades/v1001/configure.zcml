@@ -1,0 +1,33 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    >
+
+  <genericsetup:upgradeSteps
+      profile="sc.voltolighttheme:default"
+      source="1000"
+      destination="1001"
+      >
+    <genericsetup:upgradeDepends
+        title="Add theme control panel registry settings"
+        import_steps="plone.app.registry"
+        />
+    <genericsetup:upgradeDepends
+        title="Upgrade Plone Site FTI"
+        import_steps="typeinfo"
+        />
+    <genericsetup:upgradeDepends
+        title="Add control panel configuration"
+        import_steps="controlpanel"
+        />
+
+    <genericsetup:upgradeStep
+        title="Uninstall kitconcept.voltolighttheme"
+        handler=".uninstall_kc_voltolighttheme"
+        />
+
+  </genericsetup:upgradeSteps>
+
+  <!-- -*- extra stuff goes here -*- -->
+
+</configure>

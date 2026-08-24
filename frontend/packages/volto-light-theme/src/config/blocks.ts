@@ -50,6 +50,19 @@ export interface ThemeDefinition {
 }
 
 /**
+ * `themes` and `defaultTheme` are a kitconcept convention that Volto's own
+ * block config type does not declare, so reading them off `blocksConfig`
+ * fails to typecheck without this augmentation. Same approach as the
+ * `SettingsConfig` augmentation in `config/settings.ts`.
+ */
+declare module '@plone/types' {
+  interface BlockConfigBase {
+    themes?: ThemeDefinition[];
+    defaultTheme?: string;
+  }
+}
+
+/**
  * Create a complete theme definition by mapping every `--theme-*` variable
  * to its `--block-theme-{name}-*` counterpart.
  *
