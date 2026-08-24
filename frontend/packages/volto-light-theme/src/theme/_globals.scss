@@ -97,7 +97,10 @@ body .block.search .search-wrapper {
       color: var(--primary-foreground-color);
     }
     input,
-    textarea {
+    textarea,
+    div.react-select__control,
+    div.react-select__control .react-select__single-value,
+    div.react-select__menu {
       background-color: var(--primary-color);
       color: var(--primary-foreground-color);
     }

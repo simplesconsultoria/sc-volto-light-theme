@@ -18,7 +18,7 @@ const meta: Meta<typeof ThemeSwatches> = {
   },
   decorators: [
     (Story) => (
-      <div style={{ padding: '2rem' }}>
+      <div className="sc-themes-controlpanel" style={{ padding: '2rem' }}>
         <Story />
       </div>
     ),
