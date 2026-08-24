@@ -143,3 +143,22 @@ export function validateNewThemeId(
   if (existing.includes(themeId)) return 'A theme with this id already exists.';
   return null;
 }
+
+/** The API failure shape Volto stores under `controlpanels.get.error`. */
+export type ApiError = {
+  status?: number;
+  response?: { status?: number };
+} | null;
+
+/**
+ * Whether an API failure means "you may not see this".
+ *
+ * `plone.restapi` answers 401 both for an anonymous visitor and for a logged-in
+ * user without the permission, so a token on its own never settles the
+ * question — only the response does. 403 is accepted too, for a front-end
+ * server that rewrites the status.
+ */
+export function isUnauthorizedError(error: ApiError | undefined): boolean {
+  const status = error?.status ?? error?.response?.status;
+  return status === 401 || status === 403;
+}

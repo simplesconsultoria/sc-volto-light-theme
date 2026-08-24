@@ -7,6 +7,7 @@ import {
   existingThemeIds,
   findTheme,
   isDeletable,
+  isUnauthorizedError,
   isValidThemeId,
   splitFormData,
   validateNewThemeId,
@@ -223,5 +224,28 @@ describe('cloneThemeFormData', () => {
     for (const key of Object.keys(clone)) {
       expect(properties[key]).toBeDefined();
     }
+  });
+});
+
+describe('isUnauthorizedError', () => {
+  it('accepts a 401 on the error itself', () => {
+    expect(isUnauthorizedError({ status: 401 })).toBe(true);
+  });
+
+  it('accepts a 401 carried on the response', () => {
+    expect(isUnauthorizedError({ response: { status: 401 } })).toBe(true);
+  });
+
+  it('accepts a 403', () => {
+    expect(isUnauthorizedError({ status: 403 })).toBe(true);
+  });
+
+  it('rejects an unrelated failure', () => {
+    expect(isUnauthorizedError({ status: 500 })).toBe(false);
+  });
+
+  it('rejects the absence of an error', () => {
+    expect(isUnauthorizedError(null)).toBe(false);
+    expect(isUnauthorizedError(undefined)).toBe(false);
   });
 });

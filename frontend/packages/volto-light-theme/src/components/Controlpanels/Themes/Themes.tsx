@@ -1,17 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { createPortal } from 'react-dom';
-import { Button, Container, Segment, Table } from 'semantic-ui-react';
-import { defineMessages, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { toast } from 'react-toastify';
 
-import Helmet from '@plone/volto/helpers/Helmet/Helmet';
 import { useClient } from '@plone/volto/hooks/client/useClient';
-import Icon from '@plone/volto/components/theme/Icon/Icon';
-import Toolbar from '@plone/volto/components/manage/Toolbar/Toolbar';
 import Toast from '@plone/volto/components/manage/Toast/Toast';
-import { Form } from '@plone/volto/components/manage/Form';
+import Unauthorized from '@plone/volto/components/theme/Unauthorized/Unauthorized';
 import {
   getControlpanel,
   postControlpanel,
@@ -19,67 +14,34 @@ import {
   deleteControlpanel,
 } from '@plone/volto/actions/controlpanels/controlpanels';
 
-import addSVG from '@plone/volto/icons/add.svg';
-import backSVG from '@plone/volto/icons/back.svg';
-import copySVG from '@plone/volto/icons/copy.svg';
-import deleteSVG from '@plone/volto/icons/delete.svg';
-import pencilSVG from '@plone/volto/icons/pencil.svg';
-import saveSVG from '@plone/volto/icons/save.svg';
-import clearSVG from '@plone/volto/icons/clear.svg';
-
+import type { ThemeItem, ThemesControlpanelData } from '../../../types/theme';
+import type { ApiError } from '../../../helpers/themesControlpanel';
 import {
-  addSchema,
-  cloneThemeFormData,
-  editSchema,
   existingThemeIds,
   findTheme,
-  isDeletable,
+  isUnauthorizedError,
   splitFormData,
   validateNewThemeId,
 } from '../../../helpers/themesControlpanel';
-import type { ThemeItem, ThemesControlpanelData } from '../../../types/theme';
-import { themeCustomProperties } from '../../../helpers/themeStyles';
+import ThemesUI from './ThemesUI';
+import messages from './messages';
 
 const PANEL_ID = 'themes';
 
-const messages = defineMessages({
-  title: { id: 'Themes', defaultMessage: 'Themes' },
-  add: { id: 'Add theme', defaultMessage: 'Add theme' },
-  back: { id: 'Back', defaultMessage: 'Back' },
-  save: { id: 'Save', defaultMessage: 'Save' },
-  cancel: { id: 'Cancel', defaultMessage: 'Cancel' },
-  edit: { id: 'Edit', defaultMessage: 'Edit' },
-  duplicate: { id: 'Duplicate', defaultMessage: 'Duplicate' },
-  duplicateOf: {
-    id: 'Duplicate of {name}',
-    defaultMessage: 'Duplicate of {name}',
-  },
-  delete: { id: 'Delete', defaultMessage: 'Delete' },
-  saved: { id: 'Changes saved', defaultMessage: 'Changes saved' },
-  deleted: { id: 'Theme deleted', defaultMessage: 'Theme deleted' },
-  error: { id: 'Error', defaultMessage: 'Error' },
-  confirmDelete: {
-    id: 'Delete this theme?',
-    defaultMessage:
-      'Delete this theme? Content still using it keeps the stored id but ' +
-      'falls back to the default colours.',
-  },
-});
+type RootState = {
+  controlpanels: {
+    controlpanel: ThemesControlpanelData | null;
+    get: { error: ApiError };
+  };
+};
 
-/** Small colour chips, so the listing is scannable without opening a theme. */
-const ThemeSwatches = ({ theme }: { theme: ThemeItem }) => (
-  <span className="sc-theme-swatches">
-    {Object.entries(themeCustomProperties(theme)).map(([variable, color]) => (
-      <span
-        key={variable}
-        className="sc-theme-swatch"
-        style={{ backgroundColor: color }}
-        title={`${variable}: ${color}`}
-      />
-    ))}
-  </span>
-);
-
+/**
+ * The themes control panel: everything that talks to the store or the API.
+ *
+ * The markup lives in `ThemesUI`, which is where to look for what the panel
+ * shows; this half owns the fetch, the four actions, and the small amount of
+ * state that decides between listing, add, edit and duplicate.
+ */
 const ThemesControlpanel = () => {
   const intl = useIntl();
   const dispatch = useDispatch();
@@ -87,9 +49,15 @@ const ThemesControlpanel = () => {
   const { pathname } = useLocation();
   const formRef = useRef<any>(null);
 
-  const data = useSelector((state: any) => state.controlpanels.controlpanel) as
-    | ThemesControlpanelData
-    | undefined;
+  const data = useSelector(
+    (state: RootState) => state.controlpanels.controlpanel,
+  ) as ThemesControlpanelData | undefined;
+  // The panel fetch is what decides whether this user may be here. Reading the
+  // failure off the store rather than the dispatch promise keeps it correct
+  // regardless of whether the API middleware rejects or resolves on _FAIL.
+  const loadError = useSelector(
+    (state: RootState) => state.controlpanels.get.error,
+  );
   const [editing, setEditing] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   // Theme the add form is seeded from, when it was opened by Duplicate.
@@ -135,7 +103,7 @@ const ThemesControlpanel = () => {
     setAdding(true);
   };
 
-  const onAdd = (formData: Record<string, unknown>) => {
+  const submitAdd = (formData: Record<string, unknown>) => {
     const { id, values } = splitFormData(formData);
     const problem = validateNewThemeId(id, existingThemeIds(data));
     if (problem) {
@@ -147,7 +115,7 @@ const ThemesControlpanel = () => {
       .catch(fail);
   };
 
-  const onEdit = (formData: Record<string, unknown>) => {
+  const submitEdit = (formData: Record<string, unknown>) => {
     const theme = findTheme(data, editing as string);
     if (!theme) return;
     const { values } = splitFormData({ ...formData, id: theme.id });
@@ -160,7 +128,7 @@ const ThemesControlpanel = () => {
       .catch(fail);
   };
 
-  const onDelete = (theme: ThemeItem) => {
+  const confirmAndDelete = (theme: ThemeItem) => {
     // eslint-disable-next-line no-alert
     if (!window.confirm(intl.formatMessage(messages.confirmDelete))) return;
     (dispatch(deleteControlpanel(PANEL_ID, theme.id) as any) as any)
@@ -168,161 +136,30 @@ const ThemesControlpanel = () => {
       .catch(fail);
   };
 
+  if (isUnauthorizedError(loadError)) return <Unauthorized />;
+
   if (!data?.schema) return null;
 
-  const isForm = adding || editing !== null;
-  const current = editing ? findTheme(data, editing) : undefined;
-  const source = cloneOf ? findTheme(data, cloneOf) : undefined;
-  const addFormData = source ? cloneThemeFormData(source) : {};
-
   return (
-    <div id="page-controlpanel" className="sc-themes-controlpanel">
-      <Helmet title={intl.formatMessage(messages.title)} />
-      <Container>
-        {isForm ? (
-          <Form
-            ref={formRef}
-            title={
-              adding
-                ? intl.formatMessage(messages.add)
-                : current?.name ?? current?.id
-            }
-            schema={adding ? addSchema(data.schema) : editSchema(data.schema)}
-            formData={adding ? addFormData : current}
-            requestError={error}
-            onSubmit={adding ? onAdd : onEdit}
-            onCancel={closeForm}
-            hideActions
-          />
-        ) : (
-          <Segment.Group raised>
-            <Segment className="primary">
-              {intl.formatMessage(messages.title)}
-            </Segment>
-            <Segment>
-              <Table selectable compact>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Name</Table.HeaderCell>
-                    <Table.HeaderCell>Id</Table.HeaderCell>
-                    <Table.HeaderCell>Colours</Table.HeaderCell>
-                    <Table.HeaderCell textAlign="right">
-                      Actions
-                    </Table.HeaderCell>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {(data.items ?? []).map((theme) => (
-                    <Table.Row key={theme.id}>
-                      <Table.Cell>{theme.name || theme.id}</Table.Cell>
-                      <Table.Cell>
-                        <code>{theme.id}</code>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <ThemeSwatches theme={theme} />
-                      </Table.Cell>
-                      <Table.Cell textAlign="right">
-                        <Button
-                          basic
-                          icon
-                          aria-label={intl.formatMessage(messages.edit)}
-                          title={intl.formatMessage(messages.edit)}
-                          onClick={() => setEditing(theme.id)}
-                        >
-                          <Icon name={pencilSVG} size="20px" />
-                        </Button>
-                        <Button
-                          basic
-                          icon
-                          aria-label={intl.formatMessage(messages.duplicate)}
-                          title={intl.formatMessage(messages.duplicate)}
-                          onClick={() => startDuplicate(theme)}
-                        >
-                          <Icon name={copySVG} size="20px" />
-                        </Button>
-                        {isDeletable(theme.id) && (
-                          <Button
-                            basic
-                            icon
-                            aria-label={intl.formatMessage(messages.delete)}
-                            title={intl.formatMessage(messages.delete)}
-                            onClick={() => onDelete(theme)}
-                          >
-                            <Icon name={deleteSVG} size="20px" />
-                          </Button>
-                        )}
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table>
-            </Segment>
-          </Segment.Group>
-        )}
-      </Container>
-      {isClient &&
-        createPortal(
-          <Toolbar
-            pathname={pathname}
-            hideDefaultViewButtons
-            inner={
-              isForm ? (
-                <>
-                  <Button
-                    id="toolbar-save"
-                    className="save"
-                    aria-label={intl.formatMessage(messages.save)}
-                    onClick={() => formRef.current?.onSubmit()}
-                  >
-                    <Icon
-                      name={saveSVG}
-                      className="circled"
-                      size="30px"
-                      title={intl.formatMessage(messages.save)}
-                    />
-                  </Button>
-                  <Button
-                    className="cancel"
-                    aria-label={intl.formatMessage(messages.cancel)}
-                    onClick={closeForm}
-                  >
-                    <Icon
-                      name={clearSVG}
-                      className="circled"
-                      size="30px"
-                      title={intl.formatMessage(messages.cancel)}
-                    />
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    id="toolbar-add"
-                    aria-label={intl.formatMessage(messages.add)}
-                    onClick={() => setAdding(true)}
-                  >
-                    <Icon
-                      name={addSVG}
-                      className="circled"
-                      size="30px"
-                      title={intl.formatMessage(messages.add)}
-                    />
-                  </Button>
-                  <a className="item" href="/controlpanel">
-                    <Icon
-                      name={backSVG}
-                      className="circled"
-                      size="30px"
-                      title={intl.formatMessage(messages.back)}
-                    />
-                  </a>
-                </>
-              )
-            }
-          />,
-          document.getElementById('toolbar') as HTMLElement,
-        )}
-    </div>
+    <ThemesUI
+      // Re-stated rather than cast: the guard above proves the schema is
+      // there, and `ThemesUI` requires it in its props.
+      data={{ ...data, schema: data.schema }}
+      pathname={pathname}
+      editing={editing}
+      adding={adding}
+      cloneOf={cloneOf}
+      requestError={error}
+      isClient={isClient}
+      onEdit={(theme) => setEditing(theme.id)}
+      onDuplicate={startDuplicate}
+      onDelete={confirmAndDelete}
+      onAdd={() => setAdding(true)}
+      onSave={() => formRef.current?.onSubmit()}
+      onSubmit={adding ? submitAdd : submitEdit}
+      onCancel={closeForm}
+      formRef={formRef}
+    />
   );
 };
 
