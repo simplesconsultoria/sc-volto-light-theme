@@ -11,6 +11,9 @@ import { describe, expect, it, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 
+import ThemeForm from './ThemeForm';
+import { corporateTheme, schema } from './fixtures';
+
 const received: Record<string, any>[] = [];
 
 vi.mock('@plone/volto/components/manage/Form', () => ({
@@ -19,9 +22,6 @@ vi.mock('@plone/volto/components/manage/Form', () => ({
     return <form data-testid="volto-form" />;
   },
 }));
-
-import ThemeForm from './ThemeForm';
-import { corporateTheme, schema } from './fixtures';
 
 const renderForm = (props: Record<string, unknown>) => {
   received.length = 0;
