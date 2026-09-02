@@ -30,7 +30,7 @@ type RootState = {
 const messages = defineMessages({
   accessibilityMenu: {
     id: 'headerBarAccessibilityMenu',
-    defaultMessage: 'Menu de acessibilidade',
+    defaultMessage: 'Accessibility menu',
   },
   menuLabel: {
     id: 'headerBarMenuLabel',

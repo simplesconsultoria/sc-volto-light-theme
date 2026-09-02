@@ -23,12 +23,12 @@ const HeroBlockInfo: BlockConfigBase = {
   variations: [
     {
       id: 'flex',
-      title: 'Flex / Decorativa',
+      title: 'Flex / Decorative',
       isDefault: true,
     },
     {
       id: 'card',
-      title: 'Card Colado',
+      title: 'Attached Card',
     },
   ],
 };

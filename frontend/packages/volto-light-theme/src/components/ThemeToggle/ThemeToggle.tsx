@@ -24,19 +24,19 @@ type ThemeOption = {
 const messages = defineMessages({
   toggleTheme: {
     id: 'toggleTheme',
-    defaultMessage: 'Alternar tema',
+    defaultMessage: 'Toggle theme',
   },
   lightTheme: {
     id: 'lightTheme',
-    defaultMessage: 'Claro',
+    defaultMessage: 'Light',
   },
   darkTheme: {
     id: 'darkTheme',
-    defaultMessage: 'Escuro',
+    defaultMessage: 'Dark',
   },
   highContrastTheme: {
     id: 'highContrastTheme',
-    defaultMessage: 'Alto contraste',
+    defaultMessage: 'High contrast',
   },
 });
 

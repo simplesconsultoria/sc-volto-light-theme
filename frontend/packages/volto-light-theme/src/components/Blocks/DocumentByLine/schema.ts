@@ -2,21 +2,21 @@ import { defineMessages } from 'react-intl';
 import type { BlockSchemaProps } from '@plone/types';
 
 const messages = defineMessages({
-  DocumentByLineBlock: {
-    id: 'Previsão do Tempo',
-    defaultMessage: 'Previsão do Tempo',
+  documentByline: {
+    id: 'Byline',
+    defaultMessage: 'Byline',
   },
   showPublished: {
-    id: 'Exibir data de publicação?',
-    defaultMessage: 'Exibir data de publicação?',
+    id: 'Show publication date',
+    defaultMessage: 'Show publication date',
   },
   showModified: {
-    id: 'Exibir última modificação?',
-    defaultMessage: 'Exibir última modificação?',
+    id: 'Show last modification date',
+    defaultMessage: 'Show last modification date',
   },
   showAuthor: {
-    id: 'Exibir autor?',
-    defaultMessage: 'Exibir autor?',
+    id: 'Show author',
+    defaultMessage: 'Show author',
   },
 });
 
@@ -24,7 +24,7 @@ export const DocumentByLineSchema = (props: BlockSchemaProps): any => {
   const { intl } = props;
 
   return {
-    title: intl.formatMessage(messages.DocumentByLineBlock),
+    title: intl.formatMessage(messages.documentByline),
     fieldsets: [
       {
         id: 'default',
@@ -50,6 +50,6 @@ export const DocumentByLineSchema = (props: BlockSchemaProps): any => {
       },
     },
 
-    required: ['showPublished', 'showModified', 'showAuthor'],
+    required: [],
   };
 };

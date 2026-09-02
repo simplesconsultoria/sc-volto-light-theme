@@ -5,13 +5,14 @@ import DocumentByLineSVG from '@plone/volto/icons/pencil.svg';
 import type { BlockConfigBase } from '@plone/types';
 
 export interface DocumentByLineBlockData {
-  location?: string;
-  measure?: string;
+  showPublished?: boolean;
+  showModified?: boolean;
+  showAuthor?: boolean;
 }
 
 const DocumentByLineBlockInfo: BlockConfigBase = {
   id: 'documentByline',
-  title: 'Assinatura',
+  title: 'Byline',
   icon: DocumentByLineSVG,
   group: 'common',
   view: DocumentByLineBlockView,

@@ -1,6 +1,19 @@
 import { useMemo } from 'react';
+import { defineMessages, useIntl } from 'react-intl';
 import type { HeroBlockData } from './types';
 import { imageInfoFromHeroBlock } from './imageInformation';
+
+const messages = defineMessages({
+  selectHighlightItem: {
+    id: 'Select a highlighted item',
+    defaultMessage: 'Select a highlighted item',
+  },
+  emptyHeroBlock: {
+    id: 'Empty hero block placeholder',
+    defaultMessage:
+      'This is a Hero Block. Add an item in the sidebar to fill it automatically.',
+  },
+});
 
 interface UseHeroBlockContentProps {
   data: HeroBlockData;
@@ -13,6 +26,8 @@ export function useHeroBlockContent({
   isEditMode,
   defaultTitleTag = 'h2',
 }: UseHeroBlockContentProps) {
+  const intl = useIntl();
+
   return useMemo(() => {
     const hrefItem = data.href?.[0];
 
@@ -27,13 +42,12 @@ export function useHeroBlockContent({
         : hrefItem?.Description || hrefItem?.description || data.description;
 
     const displayTitle =
-      title || (isEditMode ? 'Selecione um Item de Destaque' : '');
+      title ||
+      (isEditMode ? intl.formatMessage(messages.selectHighlightItem) : '');
 
     const displayDescription =
       description ||
-      (isEditMode && !title
-        ? 'Este é um Hero Block. Por favor, adicione um item no menu lateral para preenchê-lo automaticamente.'
-        : '');
+      (isEditMode && !title ? intl.formatMessage(messages.emptyHeroBlock) : '');
 
     const date =
       hrefItem?.EffectiveDate ||
@@ -72,5 +86,5 @@ export function useHeroBlockContent({
       imageInfo,
       hasImage,
     };
-  }, [data, isEditMode, defaultTitleTag]);
+  }, [data, isEditMode, defaultTitleTag, intl]);
 }

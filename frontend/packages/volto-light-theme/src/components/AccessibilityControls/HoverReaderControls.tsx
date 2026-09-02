@@ -29,11 +29,11 @@ const TEXT_TARGET_SELECTOR =
 const messages = defineMessages({
   hoverReaderLabel: {
     id: 'accessibilityHoverReaderLabel',
-    defaultMessage: 'Leitura ao passar o mouse',
+    defaultMessage: 'Read on hover',
   },
   speedLabel: {
     id: 'accessibilitySpeedLabel',
-    defaultMessage: 'Velocidade do leitor',
+    defaultMessage: 'Reader speed',
   },
 });
 

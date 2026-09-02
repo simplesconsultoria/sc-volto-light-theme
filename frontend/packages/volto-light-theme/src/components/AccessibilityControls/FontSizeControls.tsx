@@ -15,11 +15,11 @@ const FONT_SCALE_STEP = 0.1;
 const messages = defineMessages({
   increaseFontSize: {
     id: 'accessibilityIncreaseFontSize',
-    defaultMessage: 'Aumentar fonte',
+    defaultMessage: 'Increase font size',
   },
   decreaseFontSize: {
     id: 'accessibilityDecreaseFontSize',
-    defaultMessage: 'Diminuir fonte',
+    defaultMessage: 'Decrease font size',
   },
 });
 

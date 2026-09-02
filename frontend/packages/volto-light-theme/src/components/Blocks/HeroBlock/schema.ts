@@ -4,97 +4,175 @@ import { defaultStylingSchema } from '../schema';
 
 const messages = defineMessages({
   heroBlock: {
-    id: 'heroBlock',
+    id: 'Hero Block',
     defaultMessage: 'Hero Block',
   },
+  content: {
+    id: 'Content',
+    defaultMessage: 'Content',
+  },
+  overwrite: {
+    id: 'Overwrite content',
+    defaultMessage: 'Overwrite content',
+  },
+  overwriteDescription: {
+    id: 'Overwrite content description',
+    defaultMessage:
+      'Check to customise the title, description and image instead of pulling them automatically from the highlighted item',
+  },
   headerText: {
-    id: 'heroHeaderText',
-    defaultMessage: 'Texto do cabeçalho',
+    id: 'Header text',
+    defaultMessage: 'Header text',
+  },
+  headerTextDescription: {
+    id: 'Header text description',
+    defaultMessage: 'Small text displayed above the main title.',
   },
   title: {
     id: 'Title',
-    defaultMessage: 'Título',
+    defaultMessage: 'Title',
+  },
+  titleDescription: {
+    id: 'Hero title description',
+    defaultMessage: 'Main highlighted title.',
   },
   description: {
     id: 'Description',
-    defaultMessage: 'Descrição',
+    defaultMessage: 'Description',
+  },
+  descriptionDescription: {
+    id: 'Hero description description',
+    defaultMessage: 'Explanatory text or summary displayed below the title.',
   },
   footerText: {
-    id: 'heroFooterText',
-    defaultMessage: 'Texto do rodapé',
+    id: 'Footer text',
+    defaultMessage: 'Footer text',
+  },
+  footerTextDescription: {
+    id: 'Footer text description',
+    defaultMessage:
+      'Additional information displayed at the foot of the block.',
   },
   showDate: {
-    id: 'heroShowDate',
-    defaultMessage: 'Mostrar data',
+    id: 'Show date',
+    defaultMessage: 'Show date',
   },
   tags: {
-    id: 'heroTags',
+    id: 'Tags',
     defaultMessage: 'Tags',
   },
   image: {
     id: 'Image',
-    defaultMessage: 'Imagem',
+    defaultMessage: 'Image',
   },
-  imageFieldset: {
-    id: 'heroImageFieldset',
-    defaultMessage: 'Imagem',
+  hideImage: {
+    id: 'Hide image',
+    defaultMessage: 'Hide image',
+  },
+  imageFit: {
+    id: 'Image fit',
+    defaultMessage: 'Image fit',
+  },
+  imageFitCover: {
+    id: 'Cover',
+    defaultMessage: 'Cover',
+  },
+  imageFitContain: {
+    id: 'Contain',
+    defaultMessage: 'Contain',
+  },
+  imageFitDescription: {
+    id: 'Image fit description',
+    defaultMessage:
+      '"Cover" fills the whole available space, cropping the edges of the image if needed. "Contain" fits the entire image inside the space, which may leave empty bands at the sides.',
   },
   cta: {
-    id: 'heroCTA',
+    id: 'Call to Action',
     defaultMessage: 'Call to Action',
   },
   button: {
-    id: 'Button',
-    defaultMessage: 'Mostrar botão',
+    id: 'Show button',
+    defaultMessage: 'Show button',
   },
   buttonLink: {
-    id: 'buttonLink',
-    defaultMessage: 'Link do botão',
+    id: 'Button link',
+    defaultMessage: 'Button link',
   },
   buttonText: {
-    id: 'buttonText',
-    defaultMessage: 'Texto do botão',
+    id: 'Button text',
+    defaultMessage: 'Button text',
+  },
+  buttonTextDescription: {
+    id: 'Button text description',
+    defaultMessage: 'The text shown inside the button (e.g. "Read more").',
   },
   layout: {
-    id: 'heroLayout',
+    id: 'Layout',
     defaultMessage: 'Layout',
   },
   fullWidth: {
-    id: 'heroFullWidth',
-    defaultMessage: 'Largura total',
+    id: 'Full width',
+    defaultMessage: 'Full width',
+  },
+  fullWidthDescription: {
+    id: 'Full width description',
+    defaultMessage:
+      'Let the text span the whole block when there is no image to show.',
+  },
+  blockWidth: {
+    id: 'Block Width',
+    defaultMessage: 'Block Width',
+  },
+  imageSize: {
+    id: 'Image size / empty space',
+    defaultMessage: 'Image size / empty space',
+  },
+  imageSizeDescription: {
+    id: 'Image size description',
+    defaultMessage:
+      'Controls the width reserved for the image (even when there is none), which in turn sets the space for the text.',
+  },
+  imageSizeNone: {
+    id: 'Image size none',
+    defaultMessage: '0% (text full width)',
+  },
+  imageSizeHalf: {
+    id: 'Image size half',
+    defaultMessage: '50% (half)',
+  },
+  titleTag: {
+    id: 'Title element',
+    defaultMessage: 'Title element',
+  },
+  titleTagParagraph: {
+    id: 'Paragraph (P)',
+    defaultMessage: 'Paragraph (P)',
+  },
+  titleTagDescription: {
+    id: 'Title element description',
+    defaultMessage:
+      'H1 is the main page title, H2 the secondary title and H3 the tertiary one. P renders the title as a paragraph.',
   },
   textSide: {
-    id: 'heroTextSide',
-    defaultMessage: 'Lado do texto',
-  },
-  textSideLeft: {
-    id: 'heroTextSideLeft',
-    defaultMessage: 'Esquerda',
-  },
-  textSideRight: {
-    id: 'heroTextSideRight',
-    defaultMessage: 'Direita',
+    id: 'Text side',
+    defaultMessage: 'Text side',
   },
   highlightItem: {
-    id: 'heroHighlightItem',
-    defaultMessage: 'Item de Destaque',
-  },
-  href: {
-    id: 'heroHref',
-    defaultMessage: 'Item de destaque',
+    id: 'Highlighted item',
+    defaultMessage: 'Highlighted item',
   },
   hrefDescription: {
-    id: 'heroHrefDescription',
+    id: 'Highlighted item description',
     defaultMessage:
-      'Selecione um conteúdo para puxar dados automaticamente (título, descrição, imagem)',
+      'Select a content item to pull its data automatically (title, description, image)',
   },
   fileType: {
-    id: 'heroFileType',
-    defaultMessage: 'Tipo do arquivo',
+    id: 'File type',
+    defaultMessage: 'File type',
   },
-  styling: {
-    id: 'Styling',
-    defaultMessage: 'Estilo',
+  fileTypeDescription: {
+    id: 'File type description',
+    defaultMessage: 'E.g. PDF, Report, Article',
   },
 });
 
@@ -105,7 +183,13 @@ interface HeroSchemaProps {
   [key: string]: any;
 }
 
-const layoutFields = ['blockWidth', 'textSide', 'imageSize', 'titleTag'];
+const layoutFields = [
+  'blockWidth',
+  'textSide',
+  'imageSize',
+  'fullWidth',
+  'titleTag',
+];
 
 export function HeroBlockSchema(props: HeroSchemaProps): any {
   const { intl } = props;
@@ -137,12 +221,12 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
     fieldsets: [
       {
         id: 'default',
-        title: 'Conteúdo',
+        title: intl.formatMessage(messages.content),
         fields: defaultFields,
       },
       {
         id: 'image',
-        title: intl.formatMessage(messages.imageFieldset),
+        title: intl.formatMessage(messages.image),
         fields: formData.overwrite
           ? ['preview_image', 'hideImage', 'imageFit']
           : ['hideImage', 'imageFit'],
@@ -160,15 +244,14 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
     ],
     properties: {
       overwrite: {
-        title: 'Sobrescrever conteúdo',
-        description:
-          'Marque para customizar o título, descrição e imagem ao invés de puxar automaticamente do item de destaque',
+        title: intl.formatMessage(messages.overwrite),
+        description: intl.formatMessage(messages.overwriteDescription),
         type: 'boolean',
         default: false,
       },
       headerText: {
         title: intl.formatMessage(messages.headerText),
-        description: 'Texto pequeno exibido acima do título principal.',
+        description: intl.formatMessage(messages.headerTextDescription),
         type: 'string',
       },
       showDate: {
@@ -178,18 +261,18 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
       },
       title: {
         title: intl.formatMessage(messages.title),
-        description: 'Título principal em destaque.',
+        description: intl.formatMessage(messages.titleDescription),
         type: 'string',
       },
       description: {
         title: intl.formatMessage(messages.description),
-        description: 'Texto explicativo ou resumo exibido abaixo do título.',
+        description: intl.formatMessage(messages.descriptionDescription),
         type: 'string',
         widget: 'textarea',
       },
       footerText: {
         title: intl.formatMessage(messages.footerText),
-        description: 'Informação adicional exibida no rodapé do bloco.',
+        description: intl.formatMessage(messages.footerTextDescription),
         type: 'string',
       },
       tags: {
@@ -202,7 +285,7 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
       fileType: {
         title: intl.formatMessage(messages.fileType),
         type: 'string',
-        description: 'Ex: PDF, Relatório, Artigo',
+        description: intl.formatMessage(messages.fileTypeDescription),
       },
       preview_image: {
         title: intl.formatMessage(messages.image),
@@ -212,20 +295,19 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
         selectedItemAttrs: ['image_field', 'image_scales'],
       },
       hideImage: {
-        title: 'Esconder Imagem',
+        title: intl.formatMessage(messages.hideImage),
         type: 'boolean',
         default: false,
       },
       imageFit: {
-        title: 'Ajuste da Imagem',
+        title: intl.formatMessage(messages.imageFit),
         type: 'string',
         choices: [
-          ['cover', 'Preencher (Cover)'],
-          ['contain', 'Conter (Contain)'],
+          ['cover', intl.formatMessage(messages.imageFitCover)],
+          ['contain', intl.formatMessage(messages.imageFitContain)],
         ],
         default: 'cover',
-        description:
-          'O "Cover" preenche todo o espaço disponível, cortando as bordas da imagem se necessário. O "Contain" ajusta a imagem inteira dentro do espaço, podendo deixar faixas laterais vazias.',
+        description: intl.formatMessage(messages.imageFitDescription),
       },
       button: {
         title: intl.formatMessage(messages.button),
@@ -239,47 +321,45 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
       },
       buttonText: {
         title: intl.formatMessage(messages.buttonText),
-        description:
-          'O texto que aparecerá dentro do botão (ex: "Saiba mais").',
+        description: intl.formatMessage(messages.buttonTextDescription),
         type: 'string',
       },
       fullWidth: {
         title: intl.formatMessage(messages.fullWidth),
+        description: intl.formatMessage(messages.fullWidthDescription),
         type: 'boolean',
         default: false,
       },
       blockWidth: {
-        title: 'Largura do Bloco',
+        title: intl.formatMessage(messages.blockWidth),
         widget: 'blockWidth',
         default: 'layout',
       },
       imageSize: {
-        title: 'Tamanho da Imagem / Espaço Vazio',
-        description:
-          'Controla a largura reservada para a imagem (mesmo se não houver uma), definindo o espaço do texto.',
+        title: intl.formatMessage(messages.imageSize),
+        description: intl.formatMessage(messages.imageSizeDescription),
         type: 'string',
         choices: [
-          ['0%', '0% (Texto 100%)'],
+          ['0%', intl.formatMessage(messages.imageSizeNone)],
           ['30%', '30%'],
           ['40%', '40%'],
-          ['50%', '50% (Metade)'],
+          ['50%', intl.formatMessage(messages.imageSizeHalf)],
           ['60%', '60%'],
           ['70%', '70%'],
         ],
         default: '50%',
       },
       titleTag: {
-        title: 'Elemento do Título',
+        title: intl.formatMessage(messages.titleTag),
         type: 'string',
         choices: [
           ['h1', 'H1'],
           ['h2', 'H2'],
           ['h3', 'H3'],
-          ['p', 'Parágrafo (P)'],
+          ['p', intl.formatMessage(messages.titleTagParagraph)],
         ],
         default: 'h2',
-        description:
-          'O H1 é o título principal da página. O H2 é o título secundário. O H3 é o título terciário. O P é o parágrafo.',
+        description: intl.formatMessage(messages.titleTagDescription),
       },
       textSide: {
         title: intl.formatMessage(messages.textSide),
@@ -288,7 +368,7 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
         default: 'left',
       },
       href: {
-        title: intl.formatMessage(messages.href),
+        title: intl.formatMessage(messages.highlightItem),
         description: intl.formatMessage(messages.hrefDescription),
         widget: 'object_browser',
         mode: 'link',

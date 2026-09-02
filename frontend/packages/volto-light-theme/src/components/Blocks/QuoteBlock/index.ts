@@ -13,7 +13,7 @@ export interface QuoteBlockData {
 
 const QuoteBlockInfo: BlockConfigBase = {
   id: 'quoteBlock',
-  title: 'Citação',
+  title: 'Quote',
   icon: quoteSVG,
   group: 'text',
   view: QuoteBlockView as any,

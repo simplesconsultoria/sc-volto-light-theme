@@ -10,3 +10,749 @@ msgstr ""
 "Content-Type: \n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. Default: "Accessibility options"
+#: components/Header/MobileHeader/MobileTools
+msgid "Accessibility options"
+msgstr ""
+
+#. Default: "Actions"
+#: components/Controlpanels/Themes/messages
+msgid "Actions"
+msgstr ""
+
+#. Default: "Add theme"
+#: components/Controlpanels/Themes/messages
+msgid "Add theme"
+msgstr ""
+
+#. Default: "Alignment"
+#: components/Blocks/Listing/schema
+#: components/Blocks/MainImageBlock/schema
+msgid "Alignment"
+msgstr ""
+
+#. Default: "Alt Text"
+#: components/Blocks/MainImageBlock/schema
+msgid "Alt Text"
+msgstr ""
+
+#. Default: "Leave empty if the image is purely decorative"
+#: components/Blocks/MainImageBlock/schema
+msgid "Alt text hint"
+msgstr ""
+
+#. Default: "Describe the purpose of the image"
+#: components/Blocks/MainImageBlock/schema
+msgid "Alt text hint link text"
+msgstr ""
+
+#. Default: "Attached Card"
+#: index
+msgid "Attached Card"
+msgstr ""
+
+#. Default: "Author / Source"
+#: components/Blocks/QuoteBlock/schema
+msgid "Author / Source"
+msgstr ""
+
+#. Default: "Auto-advance"
+#: components/Blocks/Listing/schema
+msgid "Auto-advance"
+msgstr ""
+
+#. Default: "Auto-advance interval (ms)"
+#: components/Blocks/Listing/schema
+msgid "Auto-advance interval (ms)"
+msgstr ""
+
+#. Default: "Back"
+#: components/Controlpanels/Themes/messages
+msgid "Back"
+msgstr ""
+
+#. Default: "Background color"
+#: components/Blocks/schema
+msgid "Background color"
+msgstr ""
+
+#. Default: "Background style"
+#: components/Blocks/QuoteBlock/schema
+msgid "Background style"
+msgstr ""
+
+#. Default: "Block Width"
+#: components/Blocks/HeroBlock/schema
+#: components/Blocks/MainImageBlock/schema
+msgid "Block Width"
+msgstr ""
+
+#. Default: "Brand"
+#: index
+msgid "Brand"
+msgstr ""
+
+#. Default: "Button link"
+#: components/Blocks/HeroBlock/schema
+msgid "Button link"
+msgstr ""
+
+#. Default: "Button text"
+#: components/Blocks/HeroBlock/schema
+msgid "Button text"
+msgstr ""
+
+#. Default: "The text shown inside the button (e.g. \"Read more\")."
+#: components/Blocks/HeroBlock/schema
+msgid "Button text description"
+msgstr ""
+
+#. Default: "By"
+#: components/DocumentByLine/DocumentByLine
+msgid "By"
+msgstr ""
+
+#. Default: "Byline"
+#: components/Blocks/DocumentByLine/schema
+#: index
+msgid "Byline"
+msgstr ""
+
+#. Default: "Call to Action"
+#: components/Blocks/HeroBlock/schema
+msgid "Call to Action"
+msgstr ""
+
+#. Default: "Cancel"
+#: components/Controlpanels/Themes/messages
+msgid "Cancel"
+msgstr ""
+
+#. Default: "Carousel"
+#: components/Blocks/Listing/messages
+#: components/Blocks/Listing/schema
+#: index
+msgid "Carousel"
+msgstr ""
+
+#. Default: "Carousel controls"
+#: components/Blocks/Listing/messages
+msgid "Carousel controls"
+msgstr ""
+
+#. Default: "Center"
+#: components/Blocks/Listing/schema
+msgid "Center"
+msgstr ""
+
+#. Default: "Center bottom"
+#: components/Blocks/Listing/schema
+msgid "Center bottom"
+msgstr ""
+
+#. Default: "Center top"
+#: components/Blocks/Listing/schema
+msgid "Center top"
+msgstr ""
+
+#. Default: "Changes saved"
+#: components/Controlpanels/Themes/messages
+msgid "Changes saved"
+msgstr ""
+
+#. Default: "Close menu"
+#: components/Navigation/SCNavigation/SubMenu
+msgid "Close menu"
+msgstr ""
+
+#. Default: "Colours"
+#: components/Controlpanels/Themes/messages
+msgid "Colours"
+msgstr ""
+
+#. Default: "Contain"
+#: components/Blocks/HeroBlock/schema
+msgid "Contain"
+msgstr ""
+
+#. Default: "Content"
+#: components/Blocks/HeroBlock/schema
+msgid "Content"
+msgstr ""
+
+#. Default: "Cover"
+#: components/Blocks/HeroBlock/schema
+msgid "Cover"
+msgstr ""
+
+#. Default: "Criteria"
+#: components/Widgets/QuerystringWidget
+msgid "Criteria"
+msgstr ""
+
+#. Default: "Delete"
+#: components/Controlpanels/Themes/messages
+msgid "Delete"
+msgstr ""
+
+#. Default: "Delete this theme? Content still using it keeps the stored id but falls back to the default colours."
+#: components/Controlpanels/Themes/messages
+msgid "Delete this theme?"
+msgstr ""
+
+#. Default: "Description"
+#: components/Blocks/HeroBlock/schema
+#: components/Blocks/MainImageBlock/schema
+msgid "Description"
+msgstr ""
+
+#. Default: "Duplicate"
+#: components/Controlpanels/Themes/messages
+msgid "Duplicate"
+msgstr ""
+
+#. Default: "Duplicate of {name}"
+#: components/Controlpanels/Themes/messages
+msgid "Duplicate of {name}"
+msgstr ""
+
+#. Default: "Edit"
+#: components/Controlpanels/Themes/messages
+msgid "Edit"
+msgstr ""
+
+#. Default: "This is a Hero Block. Add an item in the sidebar to fill it automatically."
+#: components/Blocks/HeroBlock/useHeroBlockContent
+msgid "Empty hero block placeholder"
+msgstr ""
+
+#. Default: "Error"
+#: components/Controlpanels/Themes/messages
+msgid "Error"
+msgstr ""
+
+#. Default: "File type"
+#: components/Blocks/HeroBlock/schema
+msgid "File type"
+msgstr ""
+
+#. Default: "E.g. PDF, Report, Article"
+#: components/Blocks/HeroBlock/schema
+msgid "File type description"
+msgstr ""
+
+#. Default: "Filled"
+#: components/Blocks/QuoteBlock/schema
+msgid "Filled"
+msgstr ""
+
+#. Default: "Flex / Decorative"
+#: index
+msgid "Flex / Decorative"
+msgstr ""
+
+#. Default: "Footer text"
+#: components/Blocks/HeroBlock/schema
+msgid "Footer text"
+msgstr ""
+
+#. Default: "Additional information displayed at the foot of the block."
+#: components/Blocks/HeroBlock/schema
+msgid "Footer text description"
+msgstr ""
+
+#. Default: "Full width"
+#: components/Blocks/HeroBlock/schema
+msgid "Full width"
+msgstr ""
+
+#. Default: "Let the text span the whole block when there is no image to show."
+#: components/Blocks/HeroBlock/schema
+msgid "Full width description"
+msgstr ""
+
+#. Default: "Go to item {index}"
+#: components/Blocks/Listing/messages
+msgid "Go to item {index}"
+msgstr ""
+
+#. Default: "Header text"
+#: components/Blocks/HeroBlock/schema
+msgid "Header text"
+msgstr ""
+
+#. Default: "Small text displayed above the main title."
+#: components/Blocks/HeroBlock/schema
+msgid "Header text description"
+msgstr ""
+
+#. Default: "Headline button link"
+#: components/Blocks/Listing/schema
+msgid "Headline button link"
+msgstr ""
+
+#. Default: "Headline button text"
+#: components/Blocks/Listing/schema
+msgid "Headline button text"
+msgstr ""
+
+#. Default: "Height (px)"
+#: components/Blocks/Listing/schema
+msgid "Height (px)"
+msgstr ""
+
+#. Default: "Hero Block"
+#: components/Blocks/HeroBlock/schema
+#: index
+msgid "Hero Block"
+msgstr ""
+
+#. Default: "Explanatory text or summary displayed below the title."
+#: components/Blocks/HeroBlock/schema
+msgid "Hero description description"
+msgstr ""
+
+#. Default: "Main highlighted title."
+#: components/Blocks/HeroBlock/schema
+msgid "Hero title description"
+msgstr ""
+
+#. Default: "Hide image"
+#: components/Blocks/HeroBlock/schema
+msgid "Hide image"
+msgstr ""
+
+#. Default: "Highlight"
+#: index
+msgid "Highlight"
+msgstr ""
+
+#. Default: "Highlighted item"
+#: components/Blocks/HeroBlock/schema
+msgid "Highlighted item"
+msgstr ""
+
+#. Default: "Select a content item to pull its data automatically (title, description, image)"
+#: components/Blocks/HeroBlock/schema
+msgid "Highlighted item description"
+msgstr ""
+
+#. Default: "Id"
+#: components/Controlpanels/Themes/messages
+msgid "Id"
+msgstr ""
+
+#. Default: "Image"
+#: components/Blocks/HeroBlock/schema
+msgid "Image"
+msgstr ""
+
+#. Default: "Image fit"
+#: components/Blocks/HeroBlock/schema
+msgid "Image fit"
+msgstr ""
+
+#. Default: "\"Cover\" fills the whole available space, cropping the edges of the image if needed. \"Contain\" fits the entire image inside the space, which may leave empty bands at the sides."
+#: components/Blocks/HeroBlock/schema
+msgid "Image fit description"
+msgstr ""
+
+#. Default: "Image size"
+#: components/Blocks/MainImageBlock/schema
+msgid "Image size"
+msgstr ""
+
+#. Default: "Image size / empty space"
+#: components/Blocks/HeroBlock/schema
+msgid "Image size / empty space"
+msgstr ""
+
+#. Default: "Controls the width reserved for the image (even when there is none), which in turn sets the space for the text."
+#: components/Blocks/HeroBlock/schema
+msgid "Image size description"
+msgstr ""
+
+#. Default: "50% (half)"
+#: components/Blocks/HeroBlock/schema
+msgid "Image size half"
+msgstr ""
+
+#. Default: "0% (text full width)"
+#: components/Blocks/HeroBlock/schema
+msgid "Image size none"
+msgstr ""
+
+#. Default: "Item batch size"
+#: components/Widgets/QuerystringWidget
+msgid "Item batch size"
+msgstr ""
+
+#. Default: "Items"
+#: components/Blocks/Listing/messages
+msgid "Items"
+msgstr ""
+
+#. Default: "Last modified"
+#: components/DocumentByLine/DocumentByLine
+msgid "Last modified"
+msgstr ""
+
+#. Default: "Layout"
+#: components/Blocks/HeroBlock/schema
+msgid "Layout"
+msgstr ""
+
+#. Default: "Left bottom"
+#: components/Blocks/Listing/schema
+msgid "Left bottom"
+msgstr ""
+
+#. Default: "Left center"
+#: components/Blocks/Listing/schema
+msgid "Left center"
+msgstr ""
+
+#. Default: "Left top"
+#: components/Blocks/Listing/schema
+msgid "Left top"
+msgstr ""
+
+#. Default: "Link settings"
+#: components/Blocks/MainImageBlock/schema
+msgid "Link settings"
+msgstr ""
+
+#. Default: "Link to"
+#: components/Blocks/MainImageBlock/schema
+msgid "Link to"
+msgstr ""
+
+#. Default: "Main Image"
+#: components/Blocks/MainImageBlock/schema
+#: index
+msgid "Main Image"
+msgstr ""
+
+#. Default: "Media Carousel"
+#: components/Blocks/Listing/messages
+#: index
+msgid "Media Carousel"
+msgstr ""
+
+#. Default: "Media fit (object-fit)"
+#: components/Blocks/Listing/schema
+msgid "Media fit (object-fit)"
+msgstr ""
+
+#. Default: "Name"
+#: components/Controlpanels/Themes/messages
+msgid "Name"
+msgstr ""
+
+#. Default: "Next"
+#: components/Blocks/Listing/messages
+msgid "Next"
+msgstr ""
+
+#. Default: "Next Page"
+#: components/Blocks/Listing/ListingBody
+msgid "Next Page"
+msgstr ""
+
+#. Default: "No items found in this container."
+#: components/Blocks/Listing/ListingBody
+msgid "No items found in this container."
+msgstr ""
+
+#. Default: "No preview image found on this page. Add a preview image to the page to display it in this block."
+#: components/Blocks/MainImageBlock/View
+msgid "No preview image found on this page."
+msgstr ""
+
+#. Default: "No selection"
+#: components/Widgets/QuerystringWidget
+msgid "No selection"
+msgstr ""
+
+#. Default: "Number of columns"
+#: components/Blocks/Listing/schema
+msgid "Number of columns"
+msgstr ""
+
+#. Default: "Offset"
+#: components/Widgets/QuerystringWidget
+msgid "Offset"
+msgstr ""
+
+#. Default: "Open in a new tab"
+#: components/Blocks/MainImageBlock/schema
+msgid "Open in a new tab"
+msgstr ""
+
+#. Default: "Open menu"
+#: components/Navigation/SCNavigation/MenuItem
+msgid "Open menu"
+msgstr ""
+
+#. Default: "Overwrite content"
+#: components/Blocks/HeroBlock/schema
+msgid "Overwrite content"
+msgstr ""
+
+#. Default: "Check to customise the title, description and image instead of pulling them automatically from the highlighted item"
+#: components/Blocks/HeroBlock/schema
+msgid "Overwrite content description"
+msgstr ""
+
+#. Default: "Pagination Navigation"
+#: components/Blocks/Listing/ListingBody
+msgid "Pagination Navigation"
+msgstr ""
+
+#. Default: "Pagination Navigation for {headline}"
+#: components/Blocks/Listing/ListingBody
+msgid "Pagination Navigation for {headline}"
+msgstr ""
+
+#. Default: "Paragraph (P)"
+#: components/Blocks/HeroBlock/schema
+msgid "Paragraph (P)"
+msgstr ""
+
+#. Default: "Pause carousel"
+#: components/Blocks/Listing/messages
+msgid "Pause carousel"
+msgstr ""
+
+#. Default: "Play carousel"
+#: components/Blocks/Listing/messages
+msgid "Play carousel"
+msgstr ""
+
+#. Default: "Position (object-position)"
+#: components/Blocks/Listing/schema
+msgid "Position (object-position)"
+msgstr ""
+
+#. Default: "Previous"
+#: components/Blocks/Listing/messages
+msgid "Previous"
+msgstr ""
+
+#. Default: "Previous Page"
+#: components/Blocks/Listing/ListingBody
+msgid "Previous Page"
+msgstr ""
+
+#. Default: "Primary"
+#: index
+msgid "Primary"
+msgstr ""
+
+#. Default: "Published"
+#: components/DocumentByLine/DocumentByLine
+msgid "Published"
+msgstr ""
+
+#. Default: "Quote"
+#: components/Blocks/QuoteBlock/schema
+#: index
+msgid "Quote"
+msgstr ""
+
+#. Default: "Result"
+#: components/Blocks/Listing/ListingBody
+msgid "Result"
+msgstr ""
+
+#. Default: "Results limit"
+#: components/Widgets/QuerystringWidget
+msgid "Results limit"
+msgstr ""
+
+#. Default: "Reversed order"
+#: components/Widgets/QuerystringWidget
+msgid "Reversed order"
+msgstr ""
+
+#. Default: "Right bottom"
+#: components/Blocks/Listing/schema
+msgid "Right bottom"
+msgstr ""
+
+#. Default: "Right center"
+#: components/Blocks/Listing/schema
+msgid "Right center"
+msgstr ""
+
+#. Default: "Right top"
+#: components/Blocks/Listing/schema
+msgid "Right top"
+msgstr ""
+
+#. Default: "Save"
+#: components/Controlpanels/Themes/messages
+msgid "Save"
+msgstr ""
+
+#. Default: "Section"
+#: components/Navigation/SCNavigation/SubMenuSection
+msgid "Section"
+msgstr ""
+
+#. Default: "Select a highlighted item"
+#: components/Blocks/HeroBlock/useHeroBlockContent
+msgid "Select a highlighted item"
+msgstr ""
+
+#. Default: "Show author"
+#: components/Blocks/DocumentByLine/schema
+msgid "Show author"
+msgstr ""
+
+#. Default: "Show button"
+#: components/Blocks/HeroBlock/schema
+msgid "Show button"
+msgstr ""
+
+#. Default: "Show date"
+#: components/Blocks/HeroBlock/schema
+msgid "Show date"
+msgstr ""
+
+#. Default: "Show last modification date"
+#: components/Blocks/DocumentByLine/schema
+msgid "Show last modification date"
+msgstr ""
+
+#. Default: "Show publication date"
+#: components/Blocks/DocumentByLine/schema
+msgid "Show publication date"
+msgstr ""
+
+#. Default: "Sort on"
+#: components/Widgets/QuerystringWidget
+msgid "Sort on"
+msgstr ""
+
+#. Default: "Styling"
+#: components/Blocks/MainImageBlock/schema
+msgid "Styling"
+msgstr ""
+
+#. Default: "Tags"
+#: components/Blocks/HeroBlock/schema
+msgid "Tags"
+msgstr ""
+
+#. Default: "Text side"
+#: components/Blocks/HeroBlock/schema
+msgid "Text side"
+msgstr ""
+
+#. Default: "Theme deleted"
+#: components/Controlpanels/Themes/messages
+msgid "Theme deleted"
+msgstr ""
+
+#. Default: "Themes"
+#: components/Controlpanels/Themes/messages
+msgid "Themes"
+msgstr ""
+
+#. Default: "Title"
+#: components/Blocks/HeroBlock/schema
+#: components/Blocks/MainImageBlock/schema
+msgid "Title"
+msgstr ""
+
+#. Default: "Title element"
+#: components/Blocks/HeroBlock/schema
+msgid "Title element"
+msgstr ""
+
+#. Default: "H1 is the main page title, H2 the secondary title and H3 the tertiary one. P renders the title as a paragraph."
+#: components/Blocks/HeroBlock/schema
+msgid "Title element description"
+msgstr ""
+
+#. Default: "Transparent"
+#: components/Blocks/QuoteBlock/schema
+msgid "Transparent"
+msgstr ""
+
+#. Default: "Video"
+#: components/Blocks/Listing/messages
+msgid "Video"
+msgstr ""
+
+#. Default: "Decrease font size"
+#: components/AccessibilityControls/FontSizeControls
+msgid "accessibilityDecreaseFontSize"
+msgstr ""
+
+#. Default: "Read on hover"
+#: components/AccessibilityControls/HoverReaderControls
+msgid "accessibilityHoverReaderLabel"
+msgstr ""
+
+#. Default: "Increase font size"
+#: components/AccessibilityControls/FontSizeControls
+msgid "accessibilityIncreaseFontSize"
+msgstr ""
+
+#. Default: "Reader speed"
+#: components/AccessibilityControls/HoverReaderControls
+msgid "accessibilitySpeedLabel"
+msgstr ""
+
+#. Default: "Dark"
+#: components/ThemeToggle/ThemeToggle
+msgid "darkTheme"
+msgstr ""
+
+#. Default: "Toggle menu"
+#: components/DropdownMenu/DropdownMenu
+msgid "dropdownMenuToggle"
+msgstr ""
+
+#. Default: "Accessibility menu"
+#: components/HeaderBar/HeaderBar
+msgid "headerBarAccessibilityMenu"
+msgstr ""
+
+#. Default: "MENU"
+#: components/HeaderBar/HeaderBar
+msgid "headerBarMenuLabel"
+msgstr ""
+
+#. Default: "High contrast"
+#: components/ThemeToggle/ThemeToggle
+msgid "highContrastTheme"
+msgstr ""
+
+#. Default: "Light"
+#: components/ThemeToggle/ThemeToggle
+msgid "lightTheme"
+msgstr ""
+
+#. Default: "Loading"
+#: components/Blocks/Listing/ListingBody
+msgid "loading"
+msgstr ""
+
+#. Default: "of"
+#: components/Blocks/Listing/ListingBody
+msgid "of"
+msgstr ""
+
+#. Default: "Toggle theme"
+#: components/ThemeToggle/ThemeToggle
+msgid "toggleTheme"
+msgstr ""
+
+#. Default: "{count, plural, one {# column} other {# columns}}"
+#: components/Blocks/Listing/schema
+msgid "{count, plural, one {# column} other {# columns}}"
+msgstr ""

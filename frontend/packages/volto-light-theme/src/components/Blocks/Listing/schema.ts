@@ -1,50 +1,75 @@
 import { defineMessages } from 'react-intl';
+import type { IntlShape } from '@plone/types/src/i18n';
 
 const messages = defineMessages({
+  carousel: {
+    id: 'Carousel',
+    defaultMessage: 'Carousel',
+  },
   carouselMaxHeight: {
-    id: 'Altura (px)',
-    defaultMessage: 'Altura (px)',
+    id: 'Height (px)',
+    defaultMessage: 'Height (px)',
   },
   carouselObjectFit: {
-    id: 'Ajuste da mídia (object-fit)',
-    defaultMessage: 'Ajuste da mídia (object-fit)',
+    id: 'Media fit (object-fit)',
+    defaultMessage: 'Media fit (object-fit)',
   },
   carouselObjectPosition: {
-    id: 'Posição (object-position)',
-    defaultMessage: 'Posição (object-position)',
+    id: 'Position (object-position)',
+    defaultMessage: 'Position (object-position)',
   },
   carouselAutoPlay: {
-    id: 'Auto-avanço',
-    defaultMessage: 'Auto-avanço',
+    id: 'Auto-advance',
+    defaultMessage: 'Auto-advance',
   },
   carouselAutoPlayInterval: {
-    id: 'Intervalo do auto-avanço (ms)',
-    defaultMessage: 'Intervalo do auto-avanço (ms)',
+    id: 'Auto-advance interval (ms)',
+    defaultMessage: 'Auto-advance interval (ms)',
   },
   headlineButtonText: {
-    id: 'headlineButtonText',
-    defaultMessage: 'Texto do Botão (Título)',
+    id: 'Headline button text',
+    defaultMessage: 'Headline button text',
   },
   headlineButtonLink: {
-    id: 'headlineButtonLink',
-    defaultMessage: 'Link do Botão (Título)',
+    id: 'Headline button link',
+    defaultMessage: 'Headline button link',
   },
   gridColumns: {
-    id: 'gridColumns',
-    defaultMessage: 'Número de Colunas (Grid)',
+    id: 'Number of columns',
+    defaultMessage: 'Number of columns',
   },
+  columnCount: {
+    id: '{count, plural, one {# column} other {# columns}}',
+    defaultMessage: '{count, plural, one {# column} other {# columns}}',
+  },
+  align: {
+    id: 'Alignment',
+    defaultMessage: 'Alignment',
+  },
+  positionLeftTop: { id: 'Left top', defaultMessage: 'Left top' },
+  positionCenterTop: { id: 'Center top', defaultMessage: 'Center top' },
+  positionRightTop: { id: 'Right top', defaultMessage: 'Right top' },
+  positionLeftCenter: { id: 'Left center', defaultMessage: 'Left center' },
+  positionCenter: { id: 'Center', defaultMessage: 'Center' },
+  positionRightCenter: { id: 'Right center', defaultMessage: 'Right center' },
+  positionLeftBottom: { id: 'Left bottom', defaultMessage: 'Left bottom' },
+  positionCenterBottom: {
+    id: 'Center bottom',
+    defaultMessage: 'Center bottom',
+  },
+  positionRightBottom: { id: 'Right bottom', defaultMessage: 'Right bottom' },
 });
 
-const objectPositionChoices = [
-  ['left top', 'Topo esquerdo'],
-  ['center top', 'Topo centro'],
-  ['right top', 'Topo direito'],
-  ['left center', 'Centro esquerdo'],
-  ['center center', 'Centro'],
-  ['right center', 'Centro direito'],
-  ['left bottom', 'Fundo esquerdo'],
-  ['center bottom', 'Fundo centro'],
-  ['right bottom', 'Fundo direito'],
+const objectPositionChoices = (intl: IntlShape) => [
+  ['left top', intl.formatMessage(messages.positionLeftTop)],
+  ['center top', intl.formatMessage(messages.positionCenterTop)],
+  ['right top', intl.formatMessage(messages.positionRightTop)],
+  ['left center', intl.formatMessage(messages.positionLeftCenter)],
+  ['center center', intl.formatMessage(messages.positionCenter)],
+  ['right center', intl.formatMessage(messages.positionRightCenter)],
+  ['left bottom', intl.formatMessage(messages.positionLeftBottom)],
+  ['center bottom', intl.formatMessage(messages.positionCenterBottom)],
+  ['right bottom', intl.formatMessage(messages.positionRightBottom)],
 ];
 
 export const carouselSchemaEnhancer = ({ schema, formData, intl }) => {
@@ -72,7 +97,7 @@ export const carouselSchemaEnhancer = ({ schema, formData, intl }) => {
       title: intl.formatMessage(messages.carouselObjectPosition),
       type: 'string',
       default: 'center center',
-      choices: objectPositionChoices,
+      choices: objectPositionChoices(intl),
     },
     carouselAutoPlay: {
       title: intl.formatMessage(messages.carouselAutoPlay),
@@ -94,7 +119,7 @@ export const carouselSchemaEnhancer = ({ schema, formData, intl }) => {
   if (!hasFieldset) {
     fieldsets.push({
       id: 'carousel',
-      title: 'Carrossel',
+      title: intl.formatMessage(messages.carousel),
       fields: [
         'carouselMaxHeight',
         'carouselObjectFit',
@@ -153,7 +178,7 @@ export const mediaCarouselSchemaEnhancer = ({ schema, formData, intl }) => {
       title: intl.formatMessage(messages.carouselObjectPosition),
       type: 'string',
       default: 'center center',
-      choices: objectPositionChoices,
+      choices: objectPositionChoices(intl),
     },
     carouselAutoPlay: {
       title: intl.formatMessage(messages.carouselAutoPlay),
@@ -175,7 +200,7 @@ export const mediaCarouselSchemaEnhancer = ({ schema, formData, intl }) => {
   if (!hasFieldset) {
     fieldsets.push({
       id: 'carousel',
-      title: 'Carrossel',
+      title: intl.formatMessage(messages.carousel),
       fields: [
         'carouselMaxHeight',
         'carouselObjectFit',
@@ -225,19 +250,17 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
     gridColumns: {
       title: intl.formatMessage(messages.gridColumns),
       type: 'number',
-      choices: [
-        [1, '1 Coluna'],
-        [2, '2 Colunas'],
-        [3, '3 Colunas'],
-        [4, '4 Colunas'],
-      ],
+      choices: [1, 2, 3, 4].map((count) => [
+        count,
+        intl.formatMessage(messages.columnCount, { count }),
+      ]),
       default: 2,
     },
   };
 
   const fieldsets = schema.fieldsets || [];
 
-  // Adiciona ao default fieldset
+  // Add to the default fieldset
   const defaultFieldset = fieldsets.find((f) => f.id === 'default');
   if (defaultFieldset) {
     if (!defaultFieldset.fields.includes('headlineButtonText')) {
@@ -245,8 +268,8 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
     }
   }
 
-  // Se a variação for grid (imageGallery é o nome interno de grid no Volto Light Theme e padrão), adiciona o gridColumns
-  // Vamos adicionar globalmente no 'default' e ignorar se não for usado, ou checar a variação:
+  // `imageGallery` is the internal id Volto Light Theme uses for its grid
+  // variation, so both ids get the column control.
   if (
     formData?.variation === 'imageGallery' ||
     formData?.variation === 'grid'
@@ -266,13 +289,13 @@ export const teaserSchemaEnhancer = ({ schema, formData, intl }) => {
     ...schema.properties,
     align: {
       widget: 'align',
-      title: 'Alinhamento',
+      title: intl.formatMessage(messages.align),
       actions: ['left', 'right', 'center'],
       default: 'left',
     },
   };
 
-  // Se o schema já tiver fieldset styles, adiciona lá, senão no default
+  // Prefer the styling fieldset when the schema already has one.
   const hasStyles = schema.fieldsets?.some((f) => f.id === 'styling');
 
   if (!hasStyles) {
@@ -286,7 +309,7 @@ export const teaserSchemaEnhancer = ({ schema, formData, intl }) => {
   if (schema.properties?.styles?.schema) {
     schema.properties.styles.schema.properties.align = {
       widget: 'align',
-      title: 'Alinhamento',
+      title: intl.formatMessage(messages.align),
       actions: ['left', 'right', 'center'],
       default: 'left',
     };

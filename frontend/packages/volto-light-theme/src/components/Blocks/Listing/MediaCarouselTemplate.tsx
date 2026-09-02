@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 import cx from 'classnames';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import config from '@plone/volto/registry';
@@ -7,6 +8,8 @@ import leftSVG from '@plone/volto/icons/left-key.svg';
 import rightSVG from '@plone/volto/icons/right-key.svg';
 import playSVG from '@plone/volto/icons/play.svg';
 import pauseSVG from '@plone/volto/icons/pause.svg';
+
+import { carouselMessages } from './messages';
 
 type ListingItem = Record<string, any>;
 
@@ -64,6 +67,7 @@ const MediaCarouselTemplate: React.FC<
   carouselAutoPlay,
   carouselAutoPlayInterval,
 }) => {
+  const intl = useIntl();
   const slides = items.filter(Boolean);
   const PreviewImageComponent = config.getComponent('PreviewImage').component;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -129,7 +133,7 @@ const MediaCarouselTemplate: React.FC<
       <div
         className="listing-carousel__viewport"
         aria-roledescription="carousel"
-        aria-label="Carrossel de Mídia"
+        aria-label={intl.formatMessage(carouselMessages.mediaCarousel)}
         onFocusCapture={() => setIsPlaying(false)}
       >
         <div
@@ -153,7 +157,9 @@ const MediaCarouselTemplate: React.FC<
                         ? '?autoplay=0&mute=1&playsinline=1&rel=0&modestbranding=1'
                         : '?autoplay=0&muted=1&playsinline=1',
                     ].join('')}
-                    title={item?.title || 'Vídeo'}
+                    title={
+                      item?.title || intl.formatMessage(carouselMessages.video)
+                    }
                     loading={isActiveSlide ? 'eager' : 'lazy'}
                     sandbox="allow-scripts allow-presentation"
                     allowFullScreen
@@ -191,7 +197,7 @@ const MediaCarouselTemplate: React.FC<
       {canNavigate && (
         <div
           className="listing-carousel__controls"
-          aria-label="Controles do carrossel"
+          aria-label={intl.formatMessage(carouselMessages.controls)}
         >
           <button
             type="button"
@@ -200,7 +206,7 @@ const MediaCarouselTemplate: React.FC<
               'listing-carousel__arrow--prev',
             )}
             onClick={() => goTo(activeIndex - 1)}
-            aria-label="Anterior"
+            aria-label={intl.formatMessage(carouselMessages.previous)}
           >
             <Icon name={leftSVG} size="20px" />
           </button>
@@ -208,7 +214,7 @@ const MediaCarouselTemplate: React.FC<
           <div
             className="listing-carousel__dots"
             role="tablist"
-            aria-label="Itens"
+            aria-label={intl.formatMessage(carouselMessages.items)}
           >
             {slides.map((item, index) => (
               <button
@@ -218,7 +224,9 @@ const MediaCarouselTemplate: React.FC<
                   'is-active': index === activeIndex,
                 })}
                 onClick={() => goTo(index)}
-                aria-label={`Ir para item ${index + 1}`}
+                aria-label={intl.formatMessage(carouselMessages.goToItem, {
+                  index: index + 1,
+                })}
                 aria-current={index === activeIndex ? 'true' : undefined}
                 role="tab"
               />
@@ -233,9 +241,9 @@ const MediaCarouselTemplate: React.FC<
                 'listing-carousel__toggle',
               )}
               onClick={() => setIsPlaying((prev) => !prev)}
-              aria-label={
-                isPlaying ? 'Pausar carrossel' : 'Reproduzir carrossel'
-              }
+              aria-label={intl.formatMessage(
+                isPlaying ? carouselMessages.pause : carouselMessages.play,
+              )}
               aria-pressed={isPlaying}
             >
               <Icon name={isPlaying ? pauseSVG : playSVG} size="20px" />
@@ -249,7 +257,7 @@ const MediaCarouselTemplate: React.FC<
               'listing-carousel__arrow--next',
             )}
             onClick={() => goTo(activeIndex + 1)}
-            aria-label="Próximo"
+            aria-label={intl.formatMessage(carouselMessages.next)}
           >
             <Icon name={rightSVG} size="20px" />
           </button>

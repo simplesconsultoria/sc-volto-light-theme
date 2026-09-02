@@ -42,22 +42,19 @@ const DocumentByLine = ({
     <Container className={'documentByLine'}>
       {displayPublished && (
         <Container className={'info effective'}>
-          <FormattedMessage id="effective" defaultMessage="Publicado" />
+          <FormattedMessage id="Published" defaultMessage="Published" />
           : <FormattedDate date={effective} />
         </Container>
       )}
       {displayModified && (
         <Container className={'info modified'}>
-          <FormattedMessage
-            id="last_modified"
-            defaultMessage="Última Modificação"
-          />
+          <FormattedMessage id="Last modified" defaultMessage="Last modified" />
           : <FormattedDate date={modified} />
         </Container>
       )}
       {displayAuthor && (
         <Container className={'info author'}>
-          <FormattedMessage id="author" defaultMessage="Por" />:{' '}
+          <FormattedMessage id="By" defaultMessage="By" />:{' '}
           {authors &&
             authors.map((author, i) => (
               <span className={'name'} key={i}>

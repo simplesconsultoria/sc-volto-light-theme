@@ -33,7 +33,7 @@ declare module '@plone/types' {
 // Each theme maps semantic `--theme-*` CSS custom properties to concrete
 // `--block-theme-{name}-*` tokens defined in `_root.scss`.
 //
-// The structure follows a two-layer model:
+// The structure follows a four-layer model:
 //
 //   Ground          — the block's own background & text.
 //   High Ground     — elevated elements within the block (cards, chips, etc.).
@@ -41,7 +41,7 @@ declare module '@plone/types' {
 //   Pattern         — optional decorative background pattern / image.
 //
 // By using a factory, adding a new theme in a downstream project is a
-// one-liner:  `createThemeDefinition('purple', 'Roxo')`
+// one-liner:  `createThemeDefinition('purple', 'Purple')`
 
 export interface ThemeDefinition {
   style: Record<string, string>;
@@ -91,7 +91,7 @@ export function createThemeDefinition(
       // Border
       '--theme-border-color': v('border'),
       '--theme-border-width': v('border-width'),
-      // Pattern (optional — defaults to none/0 in _root.scss)
+      // Pattern (optional)
       '--theme-pattern-image': v('pattern-image'),
       '--theme-pattern-opacity': v('pattern-opacity'),
     },
@@ -192,7 +192,7 @@ export default function install(config: ConfigType) {
         ...variations,
         {
           id: 'carousel',
-          title: 'Carrossel',
+          title: 'Carousel',
           template: CarouselTemplate,
           schemaEnhancer: carouselSchemaEnhancer,
         },
@@ -206,7 +206,7 @@ export default function install(config: ConfigType) {
         ...variations,
         {
           id: 'mediaCarousel',
-          title: 'Carrossel de Mídia',
+          title: 'Media Carousel',
           template: MediaCarouselTemplate,
           schemaEnhancer: mediaCarouselSchemaEnhancer,
         },
@@ -218,7 +218,7 @@ export default function install(config: ConfigType) {
         ...variations,
         {
           id: 'teaser',
-          title: 'Destaque',
+          title: 'Highlight',
           template: TeaserTemplate,
           schemaEnhancer: teaserSchemaEnhancer,
         },
