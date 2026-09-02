@@ -16,6 +16,7 @@
   // Brand colors
   --brand-color: #f4822c;
   --brand-color-dark: #b55e1c;
+  --brand-color-darker: #af5009;
 
   // Semantic colors
   --primary-color: light-dark(
@@ -49,7 +50,7 @@
   );
   --secondary-accent-color: light-dark(
     var(--secondary-accent-color-light, var(--brand-color)),
-    var(--secondary-accent-color-dark, var(--brand-color))
+    var(--secondary-accent-color-dark, var(--brand-color-dark))
   );
 
   --accent-color: light-dark(
@@ -82,7 +83,7 @@
     var(--neutral-low-foreground-color-dark, var(--gray-10))
   );
   --neutral-accent-color: light-dark(
-    var(--neutral-accent-color-light, var(--brand-color)),
+    var(--neutral-accent-color-light, var(--brand-color-darker)),
     var(--neutral-accent-color-dark, var(--brand-color))
   );
 
@@ -91,9 +92,9 @@
   // Content Types
   --news-item-color: var(--pure-black);
   --document-color: var(--accent-color);
-  --event-color: red;
-  --file-color: blue;
-  --image-color: green;
+  --event-color: var(--event-color-override, #d32f2f);
+  --file-color: var(--file-color-override, #1976d2);
+  --image-color: var(--image-color-override, #388e3c);
 
   // Layout mappings
   --header-background: var(--primary-color);

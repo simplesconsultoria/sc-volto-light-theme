@@ -20,7 +20,7 @@ const HEX_COLOR = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
  * `*_color`. A setting that does not match takes the general rule instead, so
  * naming a colour anything else would quietly relax its validation.
  */
-const COLOR_FIELD = /_color$/;
+const COLOR_FIELD = /_color(_light|_dark)?$/;
 
 /**
  * Constructs that would end the declaration, open a new rule, or start a

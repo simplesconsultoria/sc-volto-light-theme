@@ -12,13 +12,13 @@ export const defaultTheme: ThemeItem = {
   id: 'default',
   name: 'Default',
   description: 'The theme shipped with sc.voltolighttheme.',
-  primary_color: '#ffffff',
-  primary_foreground_color: '#000000',
+  primary_color_light: '#ffffff',
+  primary_foreground_color_light: '#000000',
   header_foreground_color: '#000000',
-  secondary_color: '#000000',
-  secondary_foreground_color: '#ffffff',
-  accent_color: '#f4822c',
-  accent_foreground_color: '#000000',
+  secondary_color_light: '#000000',
+  secondary_foreground_color_light: '#ffffff',
+  accent_color_light: '#f4822c',
+  accent_foreground_color_light: '#000000',
 };
 
 export const corporateTheme: ThemeItem = {
@@ -26,13 +26,13 @@ export const corporateTheme: ThemeItem = {
   id: 'corporate',
   name: 'Corporate',
   description: 'Blues, for a public-facing site.',
-  primary_color: '#123456',
-  primary_foreground_color: '#ffffff',
+  primary_color_light: '#123456',
+  primary_foreground_color_light: '#ffffff',
   header_foreground_color: '#ffffff',
-  secondary_color: '#1b3a5c',
-  secondary_foreground_color: '#ffffff',
-  accent_color: '#4a90d9',
-  accent_foreground_color: '#000000',
+  secondary_color_light: '#1b3a5c',
+  secondary_foreground_color_light: '#ffffff',
+  accent_color_light: '#4a90d9',
+  accent_foreground_color_light: '#000000',
 };
 
 export const natalTheme: ThemeItem = {
@@ -40,13 +40,13 @@ export const natalTheme: ThemeItem = {
   id: 'natal',
   name: 'Natal',
   description: 'Um tema festivo com tipografia Inter e bordas arredondadas.',
-  primary_color: '#d32f2f',
-  primary_foreground_color: '#ffffff',
+  primary_color_light: '#d32f2f',
+  primary_foreground_color_light: '#ffffff',
   header_foreground_color: '#ffffff',
-  secondary_color: '#2e7d32',
-  secondary_foreground_color: '#ffffff',
-  accent_color: '#fbc02d',
-  accent_foreground_color: '#000000',
+  secondary_color_light: '#2e7d32',
+  secondary_foreground_color_light: '#ffffff',
+  accent_color_light: '#fbc02d',
+  accent_foreground_color_light: '#000000',
 };
 
 export const themes: ThemeItem[] = [defaultTheme, corporateTheme, natalTheme];
@@ -66,15 +66,20 @@ export const schema: JsonSchema = {
   properties: {
     name: { title: 'Theme name', type: 'string' },
     description: { title: 'Description', type: 'string' },
-    primary_color: { title: 'Primary colour', type: 'string' },
-    accent_color: { title: 'Accent colour', type: 'string' },
+    primary_color_light: { title: 'Primary colour', type: 'string' },
+    accent_color_light: { title: 'Accent colour', type: 'string' },
   },
   required: ['name'],
   fieldsets: [
     {
       id: 'default',
       title: 'Default',
-      fields: ['name', 'description', 'primary_color', 'accent_color'],
+      fields: [
+        'name',
+        'description',
+        'primary_color_light',
+        'accent_color_light',
+      ],
     },
   ],
 };

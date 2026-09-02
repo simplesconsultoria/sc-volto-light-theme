@@ -84,6 +84,18 @@ class ISCVLTThemeDefinition(model.Schema):
             "neutral_accent_color_dark",
         ],
     )
+    model.fieldset(
+        "content_types",
+        label=_("Content Types Colors"),
+        fields=[
+            "event_color_light",
+            "event_color_dark",
+            "file_color_light",
+            "file_color_dark",
+            "image_color_light",
+            "image_color_dark",
+        ],
+    )
 
     name = schema.TextLine(
         title="Theme name",
@@ -316,5 +328,29 @@ class ISCVLTThemeDefinition(model.Schema):
         title=_(
             "label_neutral_accent_color_dark", default="Neutral Accent Color (Dark)"
         ),
+        required=False,
+    )
+    event_color_light = fields.Color(
+        title=_("label_event_color_light", default="Event Color (Light)"),
+        required=False,
+    )
+    event_color_dark = fields.Color(
+        title=_("label_event_color_dark", default="Event Color (Dark)"),
+        required=False,
+    )
+    file_color_light = fields.Color(
+        title=_("label_file_color_light", default="File Color (Light)"),
+        required=False,
+    )
+    file_color_dark = fields.Color(
+        title=_("label_file_color_dark", default="File Color (Dark)"),
+        required=False,
+    )
+    image_color_light = fields.Color(
+        title=_("label_image_color_light", default="Image Color (Light)"),
+        required=False,
+    )
+    image_color_dark = fields.Color(
+        title=_("label_image_color_dark", default="Image Color (Dark)"),
         required=False,
     )
