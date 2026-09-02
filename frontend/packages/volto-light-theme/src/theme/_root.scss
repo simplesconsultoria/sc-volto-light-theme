@@ -122,27 +122,44 @@
   --font-body: system-ui, sans-serif;
 
   // Block theme: Default
+  // Ground
   --block-theme-default-bg: var(--primary-color);
   --block-theme-default-text: var(--primary-foreground-color);
+  --block-theme-default-high-contrast: var(--primary-foreground-color);
   --block-theme-default-low-contrast: var(--primary-low-foreground-color);
   --block-theme-default-accent-color: var(--primary-accent-color);
+  // High Ground
   --block-theme-default-high-bg: var(--neutral-color);
   --block-theme-default-top-text: var(--neutral-foreground-color);
+  --block-theme-default-top-high-contrast: var(--neutral-foreground-color);
   --block-theme-default-top-low-contrast: var(--neutral-low-foreground-color);
   --block-theme-default-top-accent-color: var(--neutral-accent-color);
+  // Border
   --block-theme-default-border: var(--accent-color);
   --block-theme-default-border-width: 4px 0 0;
+  // Pattern
+  --block-theme-default-pattern-image: none;
+  --block-theme-default-pattern-opacity: 0;
 
   // Block theme: Brand
+  // Ground
   --block-theme-brand-bg: var(--accent-color);
   --block-theme-brand-text: var(--accent-foreground-color);
+  --block-theme-brand-high-contrast: var(--accent-foreground-color);
   --block-theme-brand-low-contrast: var(--accent-low-foreground-color);
   --block-theme-brand-accent-color: var(--accent-accent-color);
+  // High Ground
   --block-theme-brand-high-bg: var(--primary-color);
   --block-theme-brand-top-text: var(--primary-foreground-color);
+  --block-theme-brand-top-high-contrast: var(--primary-foreground-color);
   --block-theme-brand-top-low-contrast: var(--primary-low-foreground-color);
   --block-theme-brand-top-accent-color: var(--primary-accent-color);
+  // Border
   --block-theme-brand-border: unset;
+  --block-theme-brand-border-width: 0;
+  // Pattern
+  --block-theme-brand-pattern-image: none;
+  --block-theme-brand-pattern-opacity: 0;
 
   // Links
   --link-color: var(--brand-color);
@@ -190,6 +207,11 @@
   --event-color: var(--text-high-contrast);
   --file-color: var(--text-high-contrast);
   --image-color: var(--text-high-contrast);
+
+  --block-theme-default-high-contrast: var(--text-high-contrast);
+  --block-theme-default-top-high-contrast: var(--text-high-contrast);
+  --block-theme-brand-high-contrast: var(--text-high-contrast);
+  --block-theme-brand-top-high-contrast: var(--text-high-contrast);
 
   --block-theme-default-border: var(--border-high-contrast);
   --block-theme-default-border-width: 3px;

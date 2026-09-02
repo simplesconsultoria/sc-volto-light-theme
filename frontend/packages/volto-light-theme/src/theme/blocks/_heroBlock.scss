@@ -217,7 +217,7 @@ $hero-card-overlap: 60px;
   .hero-file-type {
     display: inline-block;
     margin-bottom: $spacing-small;
-    color: var(--theme-low-contrast-foreground);
+    color: var(--theme-low-contrast-foreground-color);
     @include body-text-bold();
     @include add(size, 2xs);
     letter-spacing: 0.03em;
