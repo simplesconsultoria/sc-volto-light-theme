@@ -1,0 +1,229 @@
+<!-- @dsCard group="Type" -->
+<!--
+  Type scale — @simplesconsultoria/volto-light-theme
+  Generated from src/theme/_variables.scss and src/theme/_typography.scss.
+  rem values shown at a 16px root; the global --font-scale on <html> shifts them.
+-->
+<meta charset="utf-8" />
+<title>Type scale</title>
+<style>
+  :root {
+    --ink: #16181d;
+    --ink-soft: #5b6270;
+    --rule: #e4e7ec;
+    --ground: #ffffff;
+    --warn: #8a5300;
+    --warn-bg: #fdf3e2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 32px 56px;
+    background: var(--ground);
+    color: var(--ink);
+    font: 400 14px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  h1 { margin: 0 0 6px; font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+  .lede { margin: 0; max-width: 66ch; color: var(--ink-soft); }
+  h2 {
+    margin: 40px 0 4px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  h2 + .note { margin: 0 0 16px; color: var(--ink-soft); font-size: 13px; max-width: 66ch; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em; }
+
+  .scale { border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
+  .step {
+    display: grid;
+    grid-template-columns: 78px 122px 1fr;
+    align-items: baseline;
+    gap: 18px;
+    padding: 16px 20px;
+  }
+  .step + .step { border-top: 1px solid var(--rule); }
+  .step:nth-child(odd) { background: #fcfcfd; }
+  .step .key {
+    font: 600 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--ink);
+  }
+  .step .num {
+    font: 400 11.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--ink-soft);
+  }
+  .step .num b { display: block; font-weight: 400; color: var(--ink-soft); }
+  .step .spec {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .miss { background: var(--warn-bg) !important; }
+  .miss .num b { color: var(--warn); font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+  th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--rule); }
+  th {
+    font: 600 10.5px/1.4 system-ui, sans-serif;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .heads { border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; margin-top: 16px; }
+  .head-row { padding: 20px; }
+  .head-row + .head-row { border-top: 1px solid var(--rule); }
+  .head-row .meta {
+    margin-bottom: 9px;
+    font: 400 11.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--ink-soft);
+  }
+  .stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .font-chip {
+    padding: 10px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 9px;
+    font: 400 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--ink-soft);
+  }
+  .font-chip b { display: block; margin-bottom: 3px; color: var(--ink); font-weight: 600; }
+  footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+</style>
+
+<div class="wrap">
+  <h1>Type scale</h1>
+  <p class="lede">
+    Eleven steps, declared in rem so the global <code>--font-scale</code> applied to
+    <code>html</code> resizes theme-mixin text without per-component edits. Pixel values
+    below assume a 16px root.
+  </p>
+
+  <h2>Scale</h2>
+  <p class="note">
+    <code>$font-sizes</code> has 11 steps; <code>$line-heights</code> has 10.
+    <code>2xs</code> has no matching line-height.
+  </p>
+  <div class="scale">
+    <div class="step miss">
+      <div class="key">2xs</div>
+      <div class="num">0.75rem &middot; 12px<b>no line-height</b></div>
+      <div class="spec" style="font-size:12px;line-height:1.4">Grade labels and fine print</div>
+    </div>
+    <div class="step">
+      <div class="key">xs</div>
+      <div class="num">0.875rem &middot; 14px<b>1rem &middot; 16px</b></div>
+      <div class="spec" style="font-size:14px;line-height:16px">Captions, metadata, tags</div>
+    </div>
+    <div class="step">
+      <div class="key">s</div>
+      <div class="num">1.125rem &middot; 18px<b>1.125rem &middot; 18px</b></div>
+      <div class="spec" style="font-size:18px;line-height:18px">Body copy &mdash; the base size</div>
+    </div>
+    <div class="step">
+      <div class="key">m</div>
+      <div class="num">1.3125rem &middot; 21px<b>1.5rem &middot; 24px</b></div>
+      <div class="spec" style="font-size:21px;line-height:24px">Lead paragraphs and decks</div>
+    </div>
+    <div class="step">
+      <div class="key">l</div>
+      <div class="num">1.5rem &middot; 24px<b>1.875rem &middot; 30px</b></div>
+      <div class="spec" style="font-size:24px;line-height:30px">Section heading &mdash; h2 base</div>
+    </div>
+    <div class="step">
+      <div class="key">xl</div>
+      <div class="num">1.875rem &middot; 30px<b>2.0625rem &middot; 33px</b></div>
+      <div class="spec" style="font-size:30px;line-height:33px">Headline h2</div>
+    </div>
+    <div class="step">
+      <div class="key">2xl</div>
+      <div class="num">2.0625rem &middot; 33px<b>2.25rem &middot; 36px</b></div>
+      <div class="spec" style="font-size:33px;line-height:36px">Display small</div>
+    </div>
+    <div class="step">
+      <div class="key">3xl</div>
+      <div class="num">2.25rem &middot; 36px<b>2.625rem &middot; 42px</b></div>
+      <div class="spec" style="font-size:36px;line-height:42px">Mobile page title</div>
+    </div>
+    <div class="step">
+      <div class="key">4xl</div>
+      <div class="num">2.625rem &middot; 42px<b>3rem &middot; 48px</b></div>
+      <div class="spec" style="font-size:42px;line-height:48px">Block title</div>
+    </div>
+    <div class="step">
+      <div class="key">5xl</div>
+      <div class="num">3rem &middot; 48px<b>3.5rem &middot; 56px</b></div>
+      <div class="spec" style="font-size:48px;line-height:56px">Page title</div>
+    </div>
+    <div class="step">
+      <div class="key">6xl</div>
+      <div class="num">5rem &middot; 80px<b>5.5rem &middot; 88px</b></div>
+      <div class="spec" style="font-size:80px;line-height:88px">Display</div>
+    </div>
+  </div>
+
+  <h2>Heading rules</h2>
+  <p class="note">
+    From <code>_typography.scss</code>. <code>h1</code>&ndash;<code>h6</code> are reset to
+    <code>font-family: inherit</code>. Mobile overrides fire at
+    <code>$largest-mobile-screen</code> and centre the text with 2rem side margins.
+  </p>
+  <div class="heads">
+    <div class="head-row">
+      <div class="meta">h1.documentFirstHeading &middot; 5xl / 400 / 5xl &middot; mobile 3xl</div>
+      <div style="font-size:48px;line-height:56px;font-weight:400;letter-spacing:-.01em">Page title sits at the top of the document</div>
+    </div>
+    <div class="head-row">
+      <div class="meta">@mixin h2_base &rarr; h2 &middot; l / 700 / l &middot; padding-top 2rem</div>
+      <div style="font-size:24px;line-height:30px;font-weight:700">Section heading inside a block</div>
+    </div>
+    <div class="head-row">
+      <div class="meta">@mixin h2_headline &rarr; h2.headline &middot; xl / 400 / 2xl</div>
+      <div style="font-size:30px;line-height:36px;font-weight:400">Headline variant used above block content</div>
+    </div>
+  </div>
+
+  <h2>Scalar overrides</h2>
+  <p class="note">
+    Upstream VLT declares these <code>!default</code> so add-ons can replace them. Each
+    override is an exact px&rarr;rem conversion at a 16px root, which is what lets the
+    global <code>--font-scale</code> resize text emitted by upstream mixins.
+  </p>
+  <table>
+    <thead><tr><th>Variable</th><th>Upstream !default</th><th>Override</th><th>Exact</th></tr></thead>
+    <tbody>
+      <tr><td><code>$font-size</code></td><td>18px</td><td>1.125rem</td><td>&check;</td></tr>
+      <tr><td><code>$line-height</code></td><td>24px</td><td>1.5rem</td><td>&check;</td></tr>
+      <tr><td><code>$heading1</code></td><td>60px</td><td>3.75rem</td><td>&check;</td></tr>
+      <tr><td><code>$heading2</code></td><td>30px</td><td>1.875rem</td><td>&check;</td></tr>
+      <tr><td><code>$heading3</code></td><td>24px</td><td>1.5rem</td><td>&check;</td></tr>
+      <tr><td><code>$block-title-h2</code></td><td>42px</td><td>2.625rem</td><td>&check;</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Font stacks</h2>
+  <p class="note">All four tokens resolve to the same stack &mdash; the theme ships no brand typeface.</p>
+  <div class="stack">
+    <div class="font-chip"><b>--font-sans</b>system-ui, sans-serif</div>
+    <div class="font-chip"><b>--font-body</b>system-ui, sans-serif</div>
+    <div class="font-chip"><b>--custom-font</b>system-ui, sans-serif</div>
+    <div class="font-chip"><b>--custom-main-font</b>system-ui, sans-serif &mdash; drives upstream $page-font</div>
+  </div>
+
+  <footer>
+    <code>2xs</code> is the one real gap &mdash; it has a font-size but no line-height, so
+    <code>map-get($line-heights, 2xs)</code> returns null. <code>--custom-main-font</code>
+    has no consumer in this package but is read twice by upstream VLT, where it drives
+    <code>$page-font</code>. See <code>GAPS.md</code> &sect;2.6 and &sect;2.7.
+  </footer>
+</div>
