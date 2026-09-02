@@ -6,6 +6,11 @@ import enMessages from '@root/../locales/en.json';
 
 import '@root/theme';
 
+import {
+  globalTypes as themeGlobalTypes,
+  withTheme,
+} from '@simplesconsultoria/volto-light-theme/storybook/withTheme';
+
 export const parameters = {
   controls: {
     matchers: {
@@ -15,7 +20,10 @@ export const parameters = {
   },
 };
 
+export const globalTypes = themeGlobalTypes;
+
 export const decorators = [
+  withTheme,
   (Story) => (
     <IntlProvider messages={enMessages} locale="en" defaultLocale="en">
       <StaticRouter location="/">

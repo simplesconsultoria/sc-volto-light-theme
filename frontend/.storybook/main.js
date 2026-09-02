@@ -61,6 +61,11 @@ const defaultRazzleOptions = {
 };
 
 module.exports = {
+  // Served at the Storybook root, so a story can reference `/images/foo.jpg`.
+  // `packages/volto-light-theme/public` is the add-on's own asset folder; it
+  // ships with the package, so fixtures pointing at it work for anyone building
+  // this Storybook rather than depending on a remote host.
+  staticDirs: ['../packages/volto-light-theme/public'],
   stories: [
     '../packages/**/*.mdx',
     '../packages/**/*.stories.@(js|jsx|ts|tsx)',
