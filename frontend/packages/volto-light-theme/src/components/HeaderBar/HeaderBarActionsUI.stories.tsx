@@ -22,7 +22,7 @@ const MockLanguageSelector = () => (
 const MockAnontools = () => (
   <div className="anontools">
     <a href="/login" onClick={(e) => e.preventDefault()}>
-      Entrar
+      Log in
     </a>
   </div>
 );
@@ -30,6 +30,7 @@ const MockAnontools = () => (
 const meta: Meta<typeof HeaderBarActionsUI> = {
   title: 'Components/HeaderBarActions',
   component: HeaderBarActionsUI,
+  parameters: { fullBleed: true },
   decorators: [
     (Story) => (
       <div
@@ -37,7 +38,9 @@ const meta: Meta<typeof HeaderBarActionsUI> = {
           padding: '2rem',
           display: 'flex',
           justifyContent: 'flex-end',
-          background: '#e0e0e0',
+          // the page ground the bar sits on, so the story follows the colour
+          // mode instead of being pinned to one grey
+          background: 'var(--primary-color)',
         }}
       >
         <header className="header-wrapper" style={{ width: '100%' }}>
@@ -63,8 +66,8 @@ type Story = StoryObj<typeof HeaderBarActionsUI>;
 export const Default: Story = {
   args: {
     quickLinks: [
-      { label: 'Ouvidoria', href: '/ouvidoria' },
-      { label: 'Acesso à Informação', href: '/acesso-a-informacao' },
+      { label: 'Ombudsman', href: '/ombudsman' },
+      { label: 'Freedom of Information', href: '/freedom-of-information' },
     ],
     features: {
       languageSelector: true,

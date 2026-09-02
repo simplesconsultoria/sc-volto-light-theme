@@ -17,9 +17,26 @@ const wrapperStyle: React.CSSProperties = {
 };
 
 /**
- * The container + navigation scope. `children` lets each story supply the
- * inner markup (`ul.desktop-menu`, `.submenu-items`, ...) its component
- * expects to be nested in.
+ * Just the themed ground, for `SCNavigation` itself — it renders its own
+ * `#navigation.navigation.scNavigation` element, so wrapping it in a second one
+ * would duplicate the id.
+ */
+export const NavigationGround = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => <div style={wrapperStyle}>{children}</div>;
+
+/**
+ * The container + navigation scope, for the sub-components. `children` lets each
+ * story supply the inner markup (`ul.desktop-menu`, `.submenu-items`, ...) its
+ * component expects to be nested in.
+ *
+ * The class list matters: `_navigation.scss` nests everything under
+ * `#navigation.navigation` **and** `&.scNavigation`, so all three selectors have
+ * to be present. Without `scNavigation` the rules silently miss — the fat menu
+ * still renders its content, but `.submenu-items` never becomes the two-column
+ * grid and the links keep the browser's default colour.
  */
 export const NavigationCanvas = ({
   children,
@@ -27,7 +44,11 @@ export const NavigationCanvas = ({
   children: React.ReactNode;
 }) => (
   <div style={wrapperStyle}>
-    <nav id="navigation" className="navigation" style={{ padding: 24 }}>
+    <nav
+      id="navigation"
+      className="navigation scNavigation"
+      style={{ padding: 24 }}
+    >
       {children}
     </nav>
   </div>

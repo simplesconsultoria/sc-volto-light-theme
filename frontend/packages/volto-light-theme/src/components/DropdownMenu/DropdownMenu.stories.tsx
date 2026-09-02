@@ -37,9 +37,9 @@ export const Default: Story = {
     title: 'Portais',
     LinkComponent: MockLink,
     links: [
-      { title: 'Portal da Transparência', href: '/transparencia' },
+      { title: 'Transparency Portal', href: '/transparency' },
       { title: 'Dados Abertos', href: '/dados' },
-      { title: 'Diário Oficial', href: '/diario-oficial' },
+      { title: 'Official Gazette', href: '/official-gazette' },
     ],
   },
 };
@@ -70,7 +70,13 @@ export const CustomChildren: Story = {
   args: {
     title: 'Custom Content',
     children: (
-      <div style={{ padding: '1rem', background: '#f5f5f5', color: '#333' }}>
+      <div
+        style={{
+          padding: '1rem',
+          background: 'var(--neutral-color)',
+          color: 'var(--neutral-foreground-color)',
+        }}
+      >
         <strong>Hello!</strong> This is arbitrary React content inside the
         dropdown panel.
       </div>
