@@ -3,12 +3,13 @@ import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import Wrapper from '@plone/volto/storybook';
 
 import Layout from './Layout';
+import mainImage from '../../../storybook/images/main-image.jpg';
 
 type StoryParams = {
   containerWidth?: number;
 };
 
-const SAMPLE_IMAGE = 'https://picsum.photos/seed/main-image/1200/600';
+const SAMPLE_IMAGE = mainImage;
 
 const sampleImage = (
   <img

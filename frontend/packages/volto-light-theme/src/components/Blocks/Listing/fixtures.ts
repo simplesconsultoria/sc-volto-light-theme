@@ -8,36 +8,28 @@
  * Not a `*.stories.*` file, so Storybook does not try to render it.
  */
 
+import listing01 from '../../../storybook/images/listing-01.jpg';
+import listing02 from '../../../storybook/images/listing-02.jpg';
+import listing03 from '../../../storybook/images/listing-03.jpg';
+import listing04 from '../../../storybook/images/listing-04.jpg';
+import listing05 from '../../../storybook/images/listing-05.jpg';
+import listing06 from '../../../storybook/images/listing-06.jpg';
+
+import { imageScales } from '../../../storybook/images/imageScales';
+
 type ListingItem = Record<string, any>;
 
 /**
- * Deterministic placeholder imagery, seeded per item so cards stay distinct.
+ * Photography bundled with the package, so cards render with no backend and no
+ * network behind Storybook.
  *
- * Volto's `Image` builds its `src` as `flattenToAppURL(base_path || item['@id'])`
- * joined to `download` (`Image.jsx:56-60`). `flattenToAppURL` only strips the
- * configured API and public URLs, so an external `base_path` survives untouched
- * and the scales resolve against the image host instead of the item's path —
- * which is what lets these render with no backend behind Storybook.
- *
- * This also exercises the `base_path` branch, the same one `preview_image_link`
- * takes on a real site.
+ * This still exercises the `base_path` branch of Volto's `Image` — the same one
+ * `preview_image_link` takes on a real site — because :func:`imageScales` splits
+ * the imported URL across `base_path` and `download` exactly as the API would.
  */
-const image = (seed: string) => ({
+const image = (url: string) => ({
   image_field: 'preview_image',
-  image_scales: {
-    preview_image: [
-      {
-        base_path: `https://picsum.photos/seed/${seed}`,
-        download: '1200/800',
-        width: 1200,
-        height: 800,
-        scales: {
-          preview: { download: '400/267', width: 400, height: 267 },
-          large: { download: '800/533', width: 800, height: 533 },
-        },
-      },
-    ],
-  },
+  image_scales: { preview_image: [imageScales(url)] },
 });
 
 export const listingItems: ListingItem[] = [
@@ -50,7 +42,7 @@ export const listingItems: ListingItem[] = [
     description:
       'Residents filled the chamber to question next year’s spending plan, with most of the debate turning on transport.',
     effective: '2026-08-14T10:00:00+00:00',
-    ...image('listing-1'),
+    ...image(listing01),
   },
   {
     '@id': '/documents/open-data-policy',
@@ -61,7 +53,7 @@ export const listingItems: ListingItem[] = [
     description:
       'What the new policy covers, which datasets are published first, and how to request one that is missing.',
     effective: '2026-07-30T09:30:00+00:00',
-    ...image('listing-2'),
+    ...image(listing02),
   },
   {
     '@id': '/events/accessibility-workshop',
@@ -75,7 +67,7 @@ export const listingItems: ListingItem[] = [
     // upstream's `EventSummary` reads these; without them it throws
     start: '2026-09-05T13:00:00+00:00',
     end: '2026-09-05T16:00:00+00:00',
-    ...image('listing-3'),
+    ...image(listing03),
   },
   {
     '@id': '/documents/annual-report-2025',
@@ -86,7 +78,7 @@ export const listingItems: ListingItem[] = [
     description:
       'The full year in review, including the audited accounts and the service performance figures.',
     effective: '2026-06-18T08:00:00+00:00',
-    ...image('listing-4'),
+    ...image(listing04),
   },
   {
     '@id': '/news/library-reopens-after-refurbishment',
@@ -97,7 +89,7 @@ export const listingItems: ListingItem[] = [
     description:
       'Longer opening hours, a new study area and a lift to the first floor.',
     effective: '2026-05-22T11:15:00+00:00',
-    ...image('listing-5'),
+    ...image(listing05),
   },
   {
     '@id': '/documents/how-to-request-a-service',
@@ -108,7 +100,7 @@ export const listingItems: ListingItem[] = [
     description:
       'The three routes available, what each one needs from you, and the expected turnaround.',
     effective: '2026-04-09T16:45:00+00:00',
-    ...image('listing-6'),
+    ...image(listing06),
   },
 ];
 

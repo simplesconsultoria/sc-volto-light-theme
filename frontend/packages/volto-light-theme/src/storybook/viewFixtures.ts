@@ -13,6 +13,8 @@
  */
 
 import { listingItems } from '../components/Blocks/Listing/fixtures';
+import pageHero from './images/page-hero.jpg';
+import { imageScales } from './images/imageScales';
 import { imageGrid, socialBlocks } from './galleryFixtures';
 
 /** Block ids, named rather than UUID so the layout below stays readable. */
@@ -44,18 +46,7 @@ const previewImageLink = {
   title: 'Council chamber during a public session',
   image_field: 'image',
   image_scales: {
-    image: [
-      {
-        base_path: 'https://picsum.photos/seed/page-hero',
-        download: '1600/900',
-        width: 1600,
-        height: 900,
-        scales: {
-          preview: { download: '400/225', width: 400, height: 225 },
-          large: { download: '1200/675', width: 1200, height: 675 },
-        },
-      },
-    ],
+    image: [imageScales(pageHero)],
   },
 };
 

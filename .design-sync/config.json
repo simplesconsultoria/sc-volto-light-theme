@@ -51,5 +51,10 @@
       "cardMode": "column"
     }
   },
-  "tsconfig": "../../../.design-sync/tsconfig.ds.json"
+  "tsconfig": "../../../.design-sync/tsconfig.ds.json",
+  "storyImports": {
+    "loaders": {
+      ".jpg": "dataurl"
+    }
+  }
 }

@@ -3,6 +3,7 @@ import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import Wrapper from '@plone/volto/storybook';
 
 import View from './View';
+import heroImage from '../../../storybook/images/hero.jpg';
 
 const withWrapper: Decorator = (Story, context) => {
   return (
@@ -40,7 +41,7 @@ const sampleData = {
   footerText: 'Official source',
   button: true,
   buttonText: 'Read more',
-  url: 'https://picsum.photos/seed/hero/800/600',
+  url: heroImage,
   date: '2026-06-17T16:33:00-03:00',
   showDate: true,
   tags: ['Policy', 'Community'],

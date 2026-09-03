@@ -11,4 +11,12 @@ build/
 # Claude Design export; a project installing this package renders none of them.
 *.stories.tsx
 *.test.*
-src/storybook/images/
+
+# Story-support modules. They import the bundled photographs, which are excluded
+# above, so shipping them would publish broken imports — and no project renders
+# them anyway.
+src/storybook/
+**/fixtures.ts
+**/mocks.ts
+**/storyMocks.ts
+**/storyDecorators.tsx

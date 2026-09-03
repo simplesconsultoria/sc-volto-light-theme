@@ -13,20 +13,20 @@
  */
 
 import { listingItems } from '../components/Blocks/Listing/fixtures';
+import gallery from './images/gallery.jpg';
+import grid01 from './images/grid-01.jpg';
+import grid02 from './images/grid-02.jpg';
+import grid03 from './images/grid-03.jpg';
+import grid04 from './images/grid-04.jpg';
+import { imageScales } from './images/imageScales';
 
 /** A Slate value — `[{ type, children }]`. */
 const slate = (text: string) => [{ type: 'p', children: [{ text }] }];
 
-const IMAGE = {
-  base_path: 'https://picsum.photos/seed/gallery',
-  download: '1200/675',
-  width: 1200,
-  height: 675,
-  scales: {
-    preview: { download: '400/225', width: 400, height: 225 },
-    large: { download: '1000/563', width: 1000, height: 563 },
-  },
-};
+const IMAGE = imageScales(gallery);
+
+/** One photograph per grid cell, cycled so any column count has images. */
+const GRID_PHOTOS = [grid01, grid02, grid03, grid04];
 
 /** An item shaped for the blocks that take an `href` to another object. */
 const linkedItem = {
@@ -50,7 +50,7 @@ export function imageGrid(count: number): Record<string, any> {
         id,
         {
           '@type': 'image',
-          url: `https://picsum.photos/seed/grid-${i + 1}/800/600`,
+          url: GRID_PHOTOS[i % GRID_PHOTOS.length],
           alt: `Placeholder photograph ${i + 1}`,
           title: `Column ${i + 1}`,
           description: 'A short caption under the image.',
@@ -166,7 +166,7 @@ export const sampleBlocks: Record<string, Record<string, any>> = {
     description: linkedItem.description,
   },
   image: {
-    url: 'https://picsum.photos/seed/gallery/1200/675',
+    url: gallery,
     alt: 'Placeholder photograph',
     align: 'center',
     size: 'l',
@@ -338,7 +338,7 @@ export const galleryContent = {
     image_field: 'image',
     image_scales: { image: [IMAGE] },
   },
-  image: { ...IMAGE, download: 'https://picsum.photos/seed/gallery/1200/675' },
+  image: { ...IMAGE },
   image_field: 'image',
   image_scales: { image: [IMAGE] },
   // `followUsBlock` reads its networks from the inherit expander rather than

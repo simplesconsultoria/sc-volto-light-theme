@@ -80,9 +80,9 @@ want of sample data:
   pipeline lives **outside the repo**, so nobody else can regenerate them. Either commit
   the generator or drop them — shipping unreproducible generated artifacts is the worst of
   the options.
-- Story imagery points at `picsum.photos`: arbitrary third-party photographs, unknown
-  licence and subject, and a network dependency at view time. `public/images/` is wired
-  and served, ready for bundled replacements.
+- Story imagery is now fourteen bundled photographs in `src/storybook/images/`, imported
+  by the fixtures so they inline at build time and need no network. `.npmignore` keeps
+  them out of the published package.
 
 ---
 
