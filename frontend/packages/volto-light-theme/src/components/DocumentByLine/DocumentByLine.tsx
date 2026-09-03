@@ -40,20 +40,8 @@ const DocumentByLine = ({
   const displayPublished = showPublished && Boolean(effective);
   return (
     <Container className={'documentByLine'}>
-      {displayPublished && (
-        <Container className={'info effective'}>
-          <FormattedMessage id="Published" defaultMessage="Published" />
-          : <FormattedDate date={effective} />
-        </Container>
-      )}
-      {displayModified && (
-        <Container className={'info modified'}>
-          <FormattedMessage id="Last modified" defaultMessage="Last modified" />
-          : <FormattedDate date={modified} />
-        </Container>
-      )}
       {displayAuthor && (
-        <Container className={'info author'}>
+        <p className={'info author'}>
           <FormattedMessage id="By" defaultMessage="By" />:{' '}
           {authors &&
             authors.map((author, i) => (
@@ -61,7 +49,19 @@ const DocumentByLine = ({
                 {author.fullname}
               </span>
             ))}
-        </Container>
+        </p>
+      )}
+      {displayPublished && (
+        <p className={'info effective'}>
+          <FormattedMessage id="Published" defaultMessage="Published" />
+          : <FormattedDate date={effective} />
+        </p>
+      )}
+      {displayModified && (
+        <p className={'info modified'}>
+          <FormattedMessage id="Last modified" defaultMessage="Last modified" />
+          : <FormattedDate date={modified} />
+        </p>
       )}
     </Container>
   );

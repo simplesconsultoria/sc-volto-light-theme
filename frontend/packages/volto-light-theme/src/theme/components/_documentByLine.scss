@@ -1,0 +1,20 @@
+.documentByLine {
+  .info {
+    @include add(size, xs);
+    @include add(height, s);
+    @include add(weight, normal);
+    display: inline-block;
+    &:not(:last-child)::after {
+      margin-right: 5px;
+      margin-left: 5px;
+      content: '-';
+    }
+    &.author {
+      .name {
+        &:not(:last-child)::after {
+          content: ', ';
+        }
+      }
+    }
+  }
+}
