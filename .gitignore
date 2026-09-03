@@ -3,3 +3,23 @@ node_modules
 /core
 /public
 *.mo
+
+# design-sync (Claude Design)
+# Ignore the working state; keep the durable inputs a re-sync needs. Everything
+# under .design-sync/ that is NOT ignored here is the sync's repo footprint:
+# sb-reference/, .cache/, learnings/ and nm-overlay/ are all regenerated.
+.design-sync/*
+!.design-sync/config.json
+!.design-sync/NOTES.md
+!.design-sync/conventions.md
+!.design-sync/tsconfig.ds.json
+!.design-sync/*.py
+!.design-sync/*.sh
+!.design-sync/previews/
+!.design-sync/overrides/
+
+# Staged converter scripts, generated bundle, and build products of the sync.
+.ds-sync/
+ds-bundle/
+frontend/packages/volto-light-theme/dist/
+frontend/packages/volto-light-theme/index.d.ts

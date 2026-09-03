@@ -1,0 +1,55 @@
+{
+  "pkg": "@simplesconsultoria/volto-light-theme",
+  "shape": "storybook",
+  "storybookConfigDir": "/Users/ericof/Projects/SimplesConsultoria/Code/sc-volto-light-theme/frontend/.storybook",
+  "storybookStatic": "/Users/ericof/Projects/SimplesConsultoria/Code/sc-volto-light-theme/.design-sync/sb-reference",
+  "entry": "/Users/ericof/Projects/SimplesConsultoria/Code/sc-volto-light-theme/frontend/packages/volto-light-theme/src/storybook/dsEntry.ts",
+  "srcDir": "frontend/packages/volto-light-theme/src",
+  "cssEntry": "dist/theme.css",
+  "provider": {
+    "component": "DsPreviewProvider"
+  },
+  "projectId": "f0a26637-18ca-4f24-80e7-8d196207efcc",
+  "titleMap": {
+    "Grid": null,
+    "Highlight": null,
+    "Navigation": null,
+    "QuoteBlock": null,
+    "ThemeForm": null,
+    "ThemeSwatches": null,
+    "ThemesList": null,
+    "ThemesToolbarActions": null,
+    "ThemesUI": null,
+    "Gallery": null,
+    "Inventory": null,
+    "DefaultView": null,
+    "Separator": null
+  },
+  "overrides": {
+    "HeroBlock": {
+      "cardMode": "column"
+    },
+    "MainImageBlock": {
+      "cardMode": "column"
+    },
+    "HeaderBarActions": {
+      "cardMode": "column"
+    },
+    "MenuItem": {
+      "cardMode": "column"
+    },
+    "SubMenu": {
+      "cardMode": "column"
+    },
+    "SubMenuItem": {
+      "cardMode": "column"
+    },
+    "SubMenuItems": {
+      "cardMode": "column"
+    },
+    "SubMenuSection": {
+      "cardMode": "column"
+    }
+  },
+  "tsconfig": "../../../.design-sync/tsconfig.ds.json"
+}

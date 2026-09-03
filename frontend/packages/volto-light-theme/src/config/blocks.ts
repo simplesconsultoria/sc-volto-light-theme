@@ -1,3 +1,4 @@
+import { createThemeDefinition } from './blockThemes';
 import type { ConfigType } from '@plone/registry';
 import type { BlockConfigBase } from '@plone/types';
 
@@ -43,11 +44,8 @@ declare module '@plone/types' {
 // By using a factory, adding a new theme in a downstream project is a
 // one-liner:  `createThemeDefinition('purple', 'Purple')`
 
-export interface ThemeDefinition {
-  style: Record<string, string>;
-  name: string;
-  label: string;
-}
+export type { ThemeDefinition } from './blockThemes';
+export { createThemeDefinition } from './blockThemes';
 
 /**
  * `themes` and `defaultTheme` are a kitconcept convention that Volto's own
@@ -60,44 +58,6 @@ declare module '@plone/types' {
     themes?: ThemeDefinition[];
     defaultTheme?: string;
   }
-}
-
-/**
- * Create a complete theme definition by mapping every `--theme-*` variable
- * to its `--block-theme-{name}-*` counterpart.
- *
- * @param name  — Machine name used as the CSS token root (e.g. `"default"`, `"brand"`).
- * @param label — Human-readable label shown in the editor color picker.
- */
-export function createThemeDefinition(
-  name: string,
-  label: string,
-): ThemeDefinition {
-  const v = (suffix: string) => `var(--block-theme-${name}-${suffix})`;
-  return {
-    style: {
-      // Ground
-      '--theme-color': v('bg'),
-      '--theme-foreground-color': v('text'),
-      '--theme-high-contrast-foreground-color': v('high-contrast'),
-      '--theme-low-contrast-foreground-color': v('low-contrast'),
-      '--theme-foreground-accent-color': v('accent-color'),
-      // High Ground
-      '--theme-high-contrast-color': v('high-bg'),
-      '--theme-top-foreground-color': v('top-text'),
-      '--theme-top-high-contrast-foreground-color': v('top-high-contrast'),
-      '--theme-top-low-contrast-foreground-color': v('top-low-contrast'),
-      '--theme-top-accent-color': v('top-accent-color'),
-      // Border
-      '--theme-border-color': v('border'),
-      '--theme-border-width': v('border-width'),
-      // Pattern (optional)
-      '--theme-pattern-image': v('pattern-image'),
-      '--theme-pattern-opacity': v('pattern-opacity'),
-    },
-    name,
-    label,
-  };
 }
 
 const customThemes: ThemeDefinition[] = [
