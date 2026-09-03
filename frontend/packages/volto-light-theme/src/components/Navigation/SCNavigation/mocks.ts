@@ -9,58 +9,54 @@ import type { NavigationItem } from './types';
  * kept. Reuse these fixtures instead of hand-rolling data in each story.
  */
 
-/** "Sobre Nós" — a section with two children, exercises the fat-menu path. */
-export const sobreNos: NavigationItem = {
-  title: 'Sobre Nós',
+/** "About Us" — a section with two children, exercises the fat-menu path. */
+export const aboutUs: NavigationItem = {
+  title: 'About Us',
   description:
-    'Conheça quem somos, nossa missão e as pessoas que constroem a organização.',
-  url: '/sobre-nos',
+    'Learn who we are, our mission and the people who build the organisation.',
+  url: '/about-us',
   items: [
     {
-      title: 'Missão',
-      description: 'Nossa missão e valores fundamentais.',
-      url: '/sobre-nos/missao',
+      title: 'Mission',
+      description: 'Our mission and core values.',
+      url: '/about-us/mission',
       items: [],
     },
     {
-      title: 'Equipe',
-      description: 'Conheça os membros da equipe.',
-      url: '/sobre-nos/equipe',
+      title: 'Team',
+      description: 'Meet the members of the team.',
+      url: '/about-us/team',
       items: [],
     },
   ],
 };
 
-/** "Nossas ações" — a single child, one of which has an empty description. */
-export const nossasAcoes: NavigationItem = {
-  title: 'Nossas ações',
-  description: 'Ações e projetos da organização.',
-  url: '/nossas-acoes',
+/** "Our Work" — a single child, whose description is empty. */
+export const ourWork: NavigationItem = {
+  title: 'Our Work',
+  description: 'Initiatives and projects run by the organisation.',
+  url: '/our-work',
   items: [
     {
-      title: 'Notícias',
+      title: 'News',
       description: '',
-      url: '/nossas-acoes/noticias',
+      url: '/our-work/news',
       items: [],
     },
   ],
 };
 
-/** "Contato" — a leaf item without children, renders as a plain link. */
-export const contato: NavigationItem = {
-  title: 'Contato',
+/** "Contact" — a leaf item without children, renders as a plain link. */
+export const contact: NavigationItem = {
+  title: 'Contact',
   description:
-    'Entre em contato conosco. Envie-nos uma mensagem identificando-se e explicando o assunto.',
-  url: '/contato',
+    'Get in touch with us. Send a message introducing yourself and explaining the subject.',
+  url: '/contact',
   items: [],
 };
 
 /** A single leaf child, handy for isolating SubMenuItem/SubMenuSection. */
-export const missao: NavigationItem = sobreNos.items![0];
+export const mission: NavigationItem = aboutUs.items![0];
 
 /** The full top-level navigation, as consumed by `Navigation`. */
-export const navigationItems: NavigationItem[] = [
-  sobreNos,
-  nossasAcoes,
-  contato,
-];
+export const navigationItems: NavigationItem[] = [aboutUs, ourWork, contact];

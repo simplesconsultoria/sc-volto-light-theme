@@ -21,13 +21,50 @@
  * when a non-colour setting arrives.
  */
 export type ThemeSettings = {
-  primary_color?: string;
-  primary_foreground_color?: string;
+  primary_color_light?: string;
+  primary_color_dark?: string;
+  primary_foreground_color_light?: string;
+  primary_foreground_color_dark?: string;
+  primary_low_foreground_color_light?: string;
+  primary_low_foreground_color_dark?: string;
+  primary_accent_color_light?: string;
+  primary_accent_color_dark?: string;
+
+  secondary_color_light?: string;
+  secondary_color_dark?: string;
+  secondary_foreground_color_light?: string;
+  secondary_foreground_color_dark?: string;
+  secondary_low_foreground_color_light?: string;
+  secondary_low_foreground_color_dark?: string;
+  secondary_accent_color_light?: string;
+  secondary_accent_color_dark?: string;
+
+  accent_color_light?: string;
+  accent_color_dark?: string;
+  accent_foreground_color_light?: string;
+  accent_foreground_color_dark?: string;
+  accent_low_foreground_color_light?: string;
+  accent_low_foreground_color_dark?: string;
+  accent_accent_color_light?: string;
+  accent_accent_color_dark?: string;
+
+  neutral_color_light?: string;
+  neutral_color_dark?: string;
+  neutral_foreground_color_light?: string;
+  neutral_foreground_color_dark?: string;
+  neutral_low_foreground_color_light?: string;
+  neutral_low_foreground_color_dark?: string;
+  neutral_accent_color_light?: string;
+  neutral_accent_color_dark?: string;
+
+  event_color_light?: string;
+  event_color_dark?: string;
+  file_color_light?: string;
+  file_color_dark?: string;
+  image_color_light?: string;
+  image_color_dark?: string;
+
   header_foreground_color?: string;
-  secondary_color?: string;
-  secondary_foreground_color?: string;
-  accent_color?: string;
-  accent_foreground_color?: string;
 };
 
 /**

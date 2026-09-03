@@ -1,3 +1,7 @@
 .storybook
 CHANGELOG.md
 README.md
+
+# Build output — the design-system export emits .d.ts under packages/*/dist/src/,
+# which the lint globs would otherwise pick up.
+packages/*/dist

@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 
-import speedSVG from '../../icons/speed.svg';
-import earSVG from '../../icons/ear.svg';
+import speedSVG from '@simplesconsultoria/volto-light-theme/icons/speed.svg';
+import earSVG from '@simplesconsultoria/volto-light-theme/icons/ear.svg';
 import {
   isSpeechSupported,
   ensureVoicesLoaded,
@@ -29,11 +29,11 @@ const TEXT_TARGET_SELECTOR =
 const messages = defineMessages({
   hoverReaderLabel: {
     id: 'accessibilityHoverReaderLabel',
-    defaultMessage: 'Leitura ao passar o mouse',
+    defaultMessage: 'Read on hover',
   },
   speedLabel: {
     id: 'accessibilitySpeedLabel',
-    defaultMessage: 'Velocidade do leitor',
+    defaultMessage: 'Reader speed',
   },
 });
 

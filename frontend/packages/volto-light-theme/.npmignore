@@ -1,1 +1,22 @@
 tsconfig.dev.json
+
+# npm ignores .gitignore entirely once this file exists, so build products have
+# to be named here too — the design-system export emits both (see
+# .design-sync/NOTES.md) and neither belongs in the published package.
+dist/
+index.d.ts
+build/
+
+# Stories, tests and their fixture assets. Consumed by Storybook and by the
+# Claude Design export; a project installing this package renders none of them.
+*.stories.tsx
+*.test.*
+
+# Story-support modules. They import the bundled photographs, which are excluded
+# above, so shipping them would publish broken imports — and no project renders
+# them anyway.
+src/storybook/
+**/fixtures.ts
+**/mocks.ts
+**/storyMocks.ts
+**/storyDecorators.tsx

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import cx from 'classnames';
 import config from '@plone/volto/registry';
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
@@ -12,14 +13,14 @@ interface TeaserTemplateProps {
   data?: any;
 }
 
-const formatDate = (dateString?: string): string => {
+const formatDate = (dateString: string | undefined, locale: string): string => {
   if (!dateString) return '';
   try {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return '';
     return date.getTime() === 0
       ? ''
-      : date.toLocaleDateString('pt-BR', {
+      : date.toLocaleDateString(locale, {
           day: '2-digit',
           month: '2-digit',
           year: 'numeric',
@@ -53,6 +54,7 @@ const TeaserTemplate: React.FC<TeaserTemplateProps & Record<string, any>> = ({
   align: alignProp,
   ...rest
 }) => {
+  const intl = useIntl();
   const data = rest.data || rest;
   const Image = config.getComponent('Image').component;
   const { openExternalLinkInNewTab } = config.settings;
@@ -70,6 +72,7 @@ const TeaserTemplate: React.FC<TeaserTemplateProps & Record<string, any>> = ({
       {items.map((item, index) => {
         const date = formatDate(
           item?.Date || item?.effective || item?.CreationDate || item?.created,
+          intl.locale,
         );
 
         const openLinkInNewTab =

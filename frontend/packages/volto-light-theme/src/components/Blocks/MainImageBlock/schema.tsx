@@ -6,48 +6,48 @@ import { defaultStylingSchema } from '../schema';
 
 const messages = defineMessages({
   mainImageBlock: {
-    id: 'Main Image Block',
-    defaultMessage: 'Bloco de Imagem Principal',
+    id: 'Main Image',
+    defaultMessage: 'Main Image',
   },
   title: {
     id: 'Title',
-    defaultMessage: 'Título',
+    defaultMessage: 'Title',
   },
   description: {
     id: 'Description',
-    defaultMessage: 'Descrição',
+    defaultMessage: 'Description',
   },
   altText: {
     id: 'Alt Text',
-    defaultMessage: 'Descrição Alternativa',
+    defaultMessage: 'Alt Text',
   },
   AltTextHint: {
     id: 'Alt text hint',
-    defaultMessage: 'Deixe em branco se a imagem for puramente decorativa',
+    defaultMessage: 'Leave empty if the image is purely decorative',
   },
   AltTextHintLinkText: {
     id: 'Alt text hint link text',
-    defaultMessage: 'Descreva o propósito da imagem',
+    defaultMessage: 'Describe the purpose of the image',
   },
   openLinkInNewTab: {
     id: 'Open in a new tab',
-    defaultMessage: 'Abrir em uma nova aba',
+    defaultMessage: 'Open in a new tab',
   },
   align: {
     id: 'Alignment',
-    defaultMessage: 'Alinhamento',
+    defaultMessage: 'Alignment',
   },
   size: {
     id: 'Image size',
-    defaultMessage: 'Tamanho',
+    defaultMessage: 'Image size',
   },
   blockWidth: {
     id: 'Block Width',
-    defaultMessage: 'Largura do bloco',
+    defaultMessage: 'Block Width',
   },
   styling: {
     id: 'Styling',
-    defaultMessage: 'Estilo',
+    defaultMessage: 'Styling',
   },
   linkSettings: {
     id: 'Link settings',

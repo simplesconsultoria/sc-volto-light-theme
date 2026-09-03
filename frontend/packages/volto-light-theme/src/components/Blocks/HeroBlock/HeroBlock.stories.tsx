@@ -3,6 +3,7 @@ import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import Wrapper from '@plone/volto/storybook';
 
 import View from './View';
+import heroImage from '../../../storybook/images/hero.jpg';
 
 const withWrapper: Decorator = (Story, context) => {
   return (
@@ -33,18 +34,18 @@ type Story = StoryObj<typeof meta>;
 const sampleData = {
   '@type': 'heroBlock',
   overwrite: true,
-  title: 'Isso é um Título de Destaque',
+  title: 'This is a Highlighted Title',
   description:
-    'Uma breve descrição sobre o assunto principal para engajar o leitor.',
-  headerText: 'Notícia',
-  footerText: 'Fonte oficial',
+    'A short description of the main topic, written to engage the reader.',
+  headerText: 'News',
+  footerText: 'Official source',
   button: true,
-  buttonText: 'Saiba mais',
-  url: 'https://picsum.photos/seed/hero/800/600',
+  buttonText: 'Read more',
+  url: heroImage,
   date: '2026-06-17T16:33:00-03:00',
   showDate: true,
-  tags: ['Brasil', 'Diracom'],
-  fileType: 'Artigo',
+  tags: ['Policy', 'Community'],
+  fileType: 'Article',
 };
 
 export const FlexLeft: Story = {
@@ -66,7 +67,7 @@ export const FlexRightFull: Story = {
       variation: 'flex',
       textSide: 'right',
       fullWidth: true,
-      url: null, // Sem imagem para testar o fullWidth
+      url: null, // no image, to exercise fullWidth
     },
   },
 };

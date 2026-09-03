@@ -3,17 +3,18 @@ import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import Wrapper from '@plone/volto/storybook';
 
 import Layout from './Layout';
+import mainImage from '../../../storybook/images/main-image.jpg';
 
 type StoryParams = {
   containerWidth?: number;
 };
 
-const SAMPLE_IMAGE = 'https://picsum.photos/seed/cm-uberlandia/1200/600';
+const SAMPLE_IMAGE = mainImage;
 
 const sampleImage = (
   <img
     src={SAMPLE_IMAGE}
-    alt="Plenário da Câmara Municipal"
+    alt="Council chamber during a public session"
     className="main-image"
     width={1200}
     height={600}
@@ -94,9 +95,9 @@ export const FullWithCaption: Story = {
   args: {
     align: 'full',
     size: 'l',
-    title: 'Sessão plenária acompanhada por dezenas de cidadãos',
+    title: 'Public session attended by dozens of citizens',
     description:
-      'A Câmara Municipal recebeu moradores para o debate sobre o orçamento de 2026.',
+      'The council welcomed residents for the debate on the 2026 budget.',
     image: sampleImage,
   },
 };
@@ -105,8 +106,8 @@ export const LeftSmall: Story = {
   args: {
     align: 'left',
     size: 's',
-    title: 'Notícia em destaque',
-    description: 'Resumo curto da notícia ao lado da imagem.',
+    title: 'Featured story',
+    description: 'A short summary shown beside the image.',
     image: sampleImage,
   },
 };
@@ -128,8 +129,8 @@ export const CenterWithOverlay: Story = {
   args: {
     align: 'center',
     size: 'l',
-    title: 'Imagem centralizada com legenda em overlay',
-    description: 'A descrição aparece sobreposta à parte inferior da imagem.',
+    title: 'Centred image with an overlaid caption',
+    description: 'The description sits over the lower edge of the image.',
     image: sampleImage,
   },
 };

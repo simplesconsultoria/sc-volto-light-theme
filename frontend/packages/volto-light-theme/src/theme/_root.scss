@@ -16,6 +16,7 @@
   // Brand colors
   --brand-color: #f4822c;
   --brand-color-dark: #b55e1c;
+  --brand-color-darker: #af5009;
 
   // Semantic colors
   --primary-color: light-dark(
@@ -49,7 +50,7 @@
   );
   --secondary-accent-color: light-dark(
     var(--secondary-accent-color-light, var(--brand-color)),
-    var(--secondary-accent-color-dark, var(--brand-color))
+    var(--secondary-accent-color-dark, var(--brand-color-dark))
   );
 
   --accent-color: light-dark(
@@ -82,7 +83,7 @@
     var(--neutral-low-foreground-color-dark, var(--gray-10))
   );
   --neutral-accent-color: light-dark(
-    var(--neutral-accent-color-light, var(--brand-color)),
+    var(--neutral-accent-color-light, var(--brand-color-darker)),
     var(--neutral-accent-color-dark, var(--brand-color))
   );
 
@@ -91,9 +92,21 @@
   // Content Types
   --news-item-color: var(--pure-black);
   --document-color: var(--accent-color);
-  --event-color: red;
-  --file-color: blue;
-  --image-color: green;
+  // Defaults are literals rather than palette entries: these three sit off the
+  // brand scale. A site theme overrides them through `--*-color-light` /
+  // `--*-color-dark`, the names `themeStyles.ts` derives from its settings.
+  --event-color: light-dark(
+    var(--event-color-light, #d32f2f),
+    var(--event-color-dark, #d32f2f)
+  );
+  --file-color: light-dark(
+    var(--file-color-light, #1976d2),
+    var(--file-color-dark, #1976d2)
+  );
+  --image-color: light-dark(
+    var(--image-color-light, #388e3c),
+    var(--image-color-dark, #388e3c)
+  );
 
   // Layout mappings
   --header-background: var(--primary-color);
@@ -122,27 +135,44 @@
   --font-body: system-ui, sans-serif;
 
   // Block theme: Default
+  // Ground
   --block-theme-default-bg: var(--primary-color);
   --block-theme-default-text: var(--primary-foreground-color);
+  --block-theme-default-high-contrast: var(--primary-foreground-color);
   --block-theme-default-low-contrast: var(--primary-low-foreground-color);
   --block-theme-default-accent-color: var(--primary-accent-color);
+  // High Ground
   --block-theme-default-high-bg: var(--neutral-color);
   --block-theme-default-top-text: var(--neutral-foreground-color);
+  --block-theme-default-top-high-contrast: var(--neutral-foreground-color);
   --block-theme-default-top-low-contrast: var(--neutral-low-foreground-color);
   --block-theme-default-top-accent-color: var(--neutral-accent-color);
+  // Border
   --block-theme-default-border: var(--accent-color);
   --block-theme-default-border-width: 4px 0 0;
+  // Pattern
+  --block-theme-default-pattern-image: none;
+  --block-theme-default-pattern-opacity: 0;
 
   // Block theme: Brand
+  // Ground
   --block-theme-brand-bg: var(--accent-color);
   --block-theme-brand-text: var(--accent-foreground-color);
+  --block-theme-brand-high-contrast: var(--accent-foreground-color);
   --block-theme-brand-low-contrast: var(--accent-low-foreground-color);
   --block-theme-brand-accent-color: var(--accent-accent-color);
+  // High Ground
   --block-theme-brand-high-bg: var(--primary-color);
   --block-theme-brand-top-text: var(--primary-foreground-color);
+  --block-theme-brand-top-high-contrast: var(--primary-foreground-color);
   --block-theme-brand-top-low-contrast: var(--primary-low-foreground-color);
   --block-theme-brand-top-accent-color: var(--primary-accent-color);
+  // Border
   --block-theme-brand-border: unset;
+  --block-theme-brand-border-width: 0;
+  // Pattern
+  --block-theme-brand-pattern-image: none;
+  --block-theme-brand-pattern-opacity: 0;
 
   // Links
   --link-color: var(--brand-color);
@@ -190,6 +220,11 @@
   --event-color: var(--text-high-contrast);
   --file-color: var(--text-high-contrast);
   --image-color: var(--text-high-contrast);
+
+  --block-theme-default-high-contrast: var(--text-high-contrast);
+  --block-theme-default-top-high-contrast: var(--text-high-contrast);
+  --block-theme-brand-high-contrast: var(--text-high-contrast);
+  --block-theme-brand-top-high-contrast: var(--text-high-contrast);
 
   --block-theme-default-border: var(--border-high-contrast);
   --block-theme-default-border-width: 3px;

@@ -9,8 +9,8 @@ type SubMenuSectionProps = {
 
 const messages = defineMessages({
   section: {
-    id: 'section',
-    defaultMessage: 'Seção',
+    id: 'Section',
+    defaultMessage: 'Section',
   },
 });
 

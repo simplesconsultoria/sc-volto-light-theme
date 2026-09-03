@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
 import cx from 'classnames';
 import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import config from '@plone/volto/registry';
 import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers/Url/Url';
+
+import { carouselMessages } from './messages';
 
 import leftSVG from '@plone/volto/icons/left-key.svg';
 import rightSVG from '@plone/volto/icons/right-key.svg';
@@ -39,10 +42,10 @@ const isValidDate = (dateString?: string): boolean => {
   }
 };
 
-const formatDate = (dateString?: string): string => {
+const formatDate = (dateString: string | undefined, locale: string): string => {
   if (!isValidDate(dateString)) return '';
   const date = new Date(dateString as string);
-  return date.toLocaleDateString('pt-BR', {
+  return date.toLocaleDateString(locale, {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
@@ -103,6 +106,7 @@ const CarouselTemplate: React.FC<
   carouselAutoPlay,
   carouselAutoPlayInterval,
 }) => {
+  const intl = useIntl();
   const slides = items.filter(Boolean);
   const PreviewImageComponent = config.getComponent('PreviewImage').component;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -180,7 +184,7 @@ const CarouselTemplate: React.FC<
       <div
         className="listing-carousel__viewport"
         aria-roledescription="carousel"
-        aria-label="Carrossel"
+        aria-label={intl.formatMessage(carouselMessages.carousel)}
         onFocusCapture={() => setIsPlaying(false)}
       >
         <div
@@ -200,7 +204,7 @@ const CarouselTemplate: React.FC<
               item?.effective,
               item?.created,
             ].find(isValidDate);
-            const date = formatDate(dateString);
+            const date = formatDate(dateString, intl.locale);
 
             const videoUrl = getLikelyVideoUrl(item);
             const playableEmbedUrl =
@@ -218,7 +222,7 @@ const CarouselTemplate: React.FC<
                         ? '?autoplay=0&mute=1&playsinline=1&rel=0&modestbranding=1'
                         : '?autoplay=0&muted=1&playsinline=1',
                     ].join('')}
-                    title={title || 'Vídeo'}
+                    title={title || intl.formatMessage(carouselMessages.video)}
                     loading={isActiveSlide ? 'eager' : 'lazy'}
                     sandbox="allow-scripts allow-presentation"
                     allowFullScreen
@@ -278,7 +282,7 @@ const CarouselTemplate: React.FC<
       {canNavigate && (
         <div
           className="listing-carousel__controls"
-          aria-label="Controles do carrossel"
+          aria-label={intl.formatMessage(carouselMessages.controls)}
         >
           <button
             type="button"
@@ -287,7 +291,7 @@ const CarouselTemplate: React.FC<
               'listing-carousel__arrow--prev',
             )}
             onClick={() => goTo(activeIndex - 1)}
-            aria-label="Anterior"
+            aria-label={intl.formatMessage(carouselMessages.previous)}
           >
             <Icon name={leftSVG} size="20px" />
           </button>
@@ -295,7 +299,7 @@ const CarouselTemplate: React.FC<
           <div
             className="listing-carousel__dots"
             role="tablist"
-            aria-label="Itens"
+            aria-label={intl.formatMessage(carouselMessages.items)}
           >
             {slides.map((item, index) => (
               <button
@@ -305,7 +309,9 @@ const CarouselTemplate: React.FC<
                   'is-active': index === activeIndex,
                 })}
                 onClick={() => goTo(index)}
-                aria-label={`Ir para item ${index + 1}`}
+                aria-label={intl.formatMessage(carouselMessages.goToItem, {
+                  index: index + 1,
+                })}
                 aria-current={index === activeIndex ? 'true' : undefined}
                 role="tab"
               />
@@ -320,9 +326,9 @@ const CarouselTemplate: React.FC<
                 'listing-carousel__toggle',
               )}
               onClick={() => setIsPlaying((prev) => !prev)}
-              aria-label={
-                isPlaying ? 'Pausar carrossel' : 'Reproduzir carrossel'
-              }
+              aria-label={intl.formatMessage(
+                isPlaying ? carouselMessages.pause : carouselMessages.play,
+              )}
               aria-pressed={isPlaying}
             >
               <Icon name={isPlaying ? pauseSVG : playSVG} size="20px" />
@@ -336,7 +342,7 @@ const CarouselTemplate: React.FC<
               'listing-carousel__arrow--next',
             )}
             onClick={() => goTo(activeIndex + 1)}
-            aria-label="Próximo"
+            aria-label={intl.formatMessage(carouselMessages.next)}
           >
             <Icon name={rightSVG} size="20px" />
           </button>

@@ -1,0 +1,246 @@
+<!-- @dsCard group="Colors" -->
+<!--
+  Block theme system — @simplesconsultoria/volto-light-theme
+  createThemeDefinition() in src/config/blocks.ts maps 14 semantic --theme-* properties
+  onto --block-theme-{name}-* tokens defined in src/theme/_root.scss.
+-->
+<meta charset="utf-8" />
+<title>Block themes</title>
+<style>
+  :root {
+    --ink: #16181d;
+    --ink-soft: #5b6270;
+    --rule: #e4e7ec;
+    --ground: #ffffff;
+    --warn: #8a5300;
+    --warn-bg: #fdf3e2;
+    --fail: #b3261e;
+    --fail-bg: #fdecea;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 32px 56px;
+    background: var(--ground);
+    color: var(--ink);
+    font: 400 14px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  h1 { margin: 0 0 6px; font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+  .lede { margin: 0 0 8px; max-width: 66ch; color: var(--ink-soft); }
+  h2 {
+    margin: 40px 0 14px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em; }
+
+  /* ---- layer legend ---- */
+  .layers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .layer {
+    padding: 13px 15px;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+  }
+  .layer b { display: block; margin-bottom: 3px; font-size: 13px; }
+  .layer span { color: var(--ink-soft); font-size: 12.5px; line-height: 1.5; }
+
+  /* ---- theme demos ---- */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  .demo { border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
+  .demo > .head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--rule);
+    background: #fafbfc;
+  }
+  .demo > .head b { font-size: 13px; }
+  .demo > .head span { color: var(--ink-soft); font-size: 12px; }
+  .demo > .head .mode {
+    margin-left: auto;
+    font: 600 10px/1 system-ui, sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  /* the rendered block */
+  .block { padding: 26px 24px 28px; }
+  .block .eyebrow {
+    margin-bottom: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .block h3 { margin: 0 0 8px; font-size: 21px; font-weight: 600; line-height: 1.25; }
+  .block p { margin: 0; font-size: 13.5px; line-height: 1.6; }
+  .card {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 8px;
+  }
+  .card .t { margin-bottom: 5px; font-size: 14px; font-weight: 600; }
+  .card .d { font-size: 12.5px; line-height: 1.55; }
+  .card .m { margin-top: 8px; font-size: 11.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+
+  /* ---- mapping table ---- */
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--rule); }
+  th {
+    font: 600 10.5px/1.4 system-ui, sans-serif;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  td code { font-size: 12px; }
+  tr.missing td { background: var(--fail-bg); }
+  tr.partial td { background: var(--warn-bg); }
+  .tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 999px;
+    font: 600 10px/1.6 system-ui, sans-serif;
+    letter-spacing: .03em;
+  }
+  .tag.no { background: #f7d4d1; color: var(--fail); }
+  .tag.part { background: #f6e3c2; color: var(--warn); }
+  .tag.ok { background: #dff0e4; color: #1c6b35; }
+  .group-cell { font-weight: 600; color: var(--ink-soft); font-size: 12px; }
+  footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+</style>
+
+<div class="wrap">
+  <h1>Block themes</h1>
+  <p class="lede">
+    Any block that calls <code>defaultStylingSchema</code> gets a
+    <code>theme</code> control. A theme is produced by
+    <code>createThemeDefinition(name, label)</code>, which maps 14 semantic
+    <code>--theme-*</code> properties onto <code>--block-theme-{name}-*</code> tokens.
+    Adding a third theme downstream is one line plus a matching token block.
+  </p>
+
+  <h2>The four layers</h2>
+  <div class="layers">
+    <div class="layer"><b>Ground</b><span>The block's own background and text — <code>bg</code>, <code>text</code>, <code>low-contrast</code>, <code>accent-color</code>.</span></div>
+    <div class="layer"><b>High Ground</b><span>Elevated elements inside the block: cards, chips, teasers — the <code>high-bg</code> and <code>top-*</code> tokens.</span></div>
+    <div class="layer"><b>Border</b><span>Optional edge — <code>border</code> and <code>border-width</code>.</span></div>
+    <div class="layer"><b>Pattern</b><span>Decorative overlay — <code>pattern-image</code>, <code>pattern-opacity</code>. Defined as <code>none</code>/<code>0</code>; not yet consumed.</span></div>
+  </div>
+
+  <h2>default &mdash; label &ldquo;Primary&rdquo;</h2>
+  <div class="grid">
+    <div class="demo">
+      <div class="head"><b>default</b><span>Ground = primary</span><span class="mode">Light</span></div>
+      <div class="block" style="background:#ffffff;color:#000000;border-top:4px solid #f4822c">
+        <div class="eyebrow" style="color:#b55e1c">Eyebrow &middot; accent</div>
+        <h3>Ground carries the block</h3>
+        <p style="color:#333333">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
+        <div class="card" style="background:#edeff0;color:#000000">
+          <div class="t">High ground card</div>
+          <div class="d" style="color:#333333">Elevated surfaces switch to the neutral family.</div>
+          <div class="m" style="color:#af5009">Top accent &middot; 4.58</div>
+        </div>
+      </div>
+    </div>
+    <div class="demo">
+      <div class="head"><b>default</b><span>Ground = primary</span><span class="mode">Dark</span></div>
+      <div class="block" style="background:#000000;color:#ffffff;border-top:4px solid #b55e1c">
+        <div class="eyebrow" style="color:#f4822c">Eyebrow &middot; accent</div>
+        <h3>Ground carries the block</h3>
+        <p style="color:#f8f8f8">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
+        <div class="card" style="background:#333333;color:#ffffff">
+          <div class="t">High ground card</div>
+          <div class="d" style="color:#e6e6e6">Elevated surfaces switch to the neutral family.</div>
+          <div class="m" style="color:#f4822c">Top accent &middot; 4.86</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>brand &mdash; label &ldquo;Brand&rdquo;</h2>
+  <div class="grid">
+    <div class="demo">
+      <div class="head"><b>brand</b><span>Ground = accent</span><span class="mode">Light</span></div>
+      <div class="block" style="background:#f4822c;color:#000000">
+        <div class="eyebrow" style="color:#000000">Eyebrow &middot; accent</div>
+        <h3>Ground carries the block</h3>
+        <p style="color:#333333">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
+        <div class="card" style="background:#ffffff;color:#000000">
+          <div class="t">High ground card</div>
+          <div class="d" style="color:#333333">Elevated surfaces invert back to the primary family.</div>
+          <div class="m" style="color:#b55e1c">Top accent &middot; 4.58</div>
+        </div>
+      </div>
+    </div>
+    <div class="demo">
+      <div class="head"><b>brand</b><span>Ground = accent</span><span class="mode">Dark</span></div>
+      <div class="block" style="background:#b55e1c;color:#ffffff">
+        <div class="eyebrow" style="color:#ffffff">Eyebrow &middot; accent</div>
+        <h3>Ground carries the block</h3>
+        <p style="color:#f8f8f8">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
+        <div class="card" style="background:#000000;color:#ffffff">
+          <div class="t">High ground card</div>
+          <div class="d" style="color:#f8f8f8">Elevated surfaces invert back to the primary family.</div>
+          <div class="m" style="color:#f4822c">Top accent &middot; 8.08</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="lede" style="margin-top:12px">
+    <code>brand</code> sets <code>border: unset</code> with <code>border-width: 0</code>,
+    so it renders edge-to-edge —
+    hence no top rule above, unlike <code>default</code>&rsquo;s <code>4px 0 0</code>.
+  </p>
+
+  <h2>Property mapping</h2>
+  <table>
+    <thead>
+      <tr><th>Layer</th><th>Semantic property</th><th>Token suffix</th><th>default</th><th>brand</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="group-cell">Ground</td><td><code>--theme-color</code></td><td><code>bg</code></td><td>primary</td><td>accent</td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-foreground-color</code></td><td><code>text</code></td><td>primary fg</td><td>accent fg</td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-high-contrast-foreground-color</code></td><td><code>high-contrast</code></td><td>primary fg</td><td>accent fg</td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-low-contrast-foreground-color</code></td><td><code>low-contrast</code></td><td>primary low</td><td>accent low</td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-foreground-accent-color</code></td><td><code>accent-color</code></td><td>primary acc</td><td>accent acc</td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell">High Ground</td><td><code>--theme-high-contrast-color</code></td><td><code>high-bg</code></td><td>neutral</td><td>primary</td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-top-foreground-color</code></td><td><code>top-text</code></td><td>neutral fg</td><td>primary fg</td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-top-high-contrast-foreground-color</code></td><td><code>top-high-contrast</code></td><td>neutral fg</td><td>primary fg</td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-top-low-contrast-foreground-color</code></td><td><code>top-low-contrast</code></td><td>neutral low</td><td>primary low</td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-top-accent-color</code></td><td><code>top-accent-color</code></td><td>neutral acc</td><td>primary acc</td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell">Border</td><td><code>--theme-border-color</code></td><td><code>border</code></td><td>accent</td><td><code>unset</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-border-width</code></td><td><code>border-width</code></td><td><code>4px 0 0</code></td><td><code>0</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr class="partial"><td class="group-cell">Pattern</td><td><code>--theme-pattern-image</code></td><td><code>pattern-image</code></td><td><code>none</code></td><td><code>none</code></td><td><span class="tag part">unused</span></td></tr>
+      <tr class="partial"><td class="group-cell"></td><td><code>--theme-pattern-opacity</code></td><td><code>pattern-opacity</code></td><td><code>0</code></td><td><code>0</code></td><td><span class="tag part">unused</span></td></tr>
+    </tbody>
+  </table>
+
+  <footer>
+    All 14 mapped properties resolve in both themes. Four of them did not, and the
+    failure was silent: a <code>var()</code> with no definition and no fallback is invalid
+    at computed-value time, so the whole declaration is dropped rather than degraded. That
+    took out six focus outlines in <code>_listing.scss</code> reading
+    <code>outline: 2px solid var(--theme-top-high-contrast-foreground-color)</code>,
+    leaving keyboard focus invisible on listing cards.
+    <code>src/theme/blockThemes.test.ts</code> now guards the contract.
+  </footer>
+</div>

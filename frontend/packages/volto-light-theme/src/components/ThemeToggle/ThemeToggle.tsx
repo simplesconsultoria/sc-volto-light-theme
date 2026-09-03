@@ -3,9 +3,9 @@ import { defineMessages, useIntl } from 'react-intl';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import Helmet from '@plone/volto/helpers/Helmet/Helmet';
 
-import contrastSVG from '../../icons/contrast.svg';
-import moonSVG from '../../icons/moon.svg';
-import sunSVG from '../../icons/sun.svg';
+import contrastSVG from '@simplesconsultoria/volto-light-theme/icons/contrast.svg';
+import moonSVG from '@simplesconsultoria/volto-light-theme/icons/moon.svg';
+import sunSVG from '@simplesconsultoria/volto-light-theme/icons/sun.svg';
 import {
   applyTheme,
   getAppliedTheme,
@@ -24,19 +24,19 @@ type ThemeOption = {
 const messages = defineMessages({
   toggleTheme: {
     id: 'toggleTheme',
-    defaultMessage: 'Alternar tema',
+    defaultMessage: 'Toggle theme',
   },
   lightTheme: {
     id: 'lightTheme',
-    defaultMessage: 'Claro',
+    defaultMessage: 'Light',
   },
   darkTheme: {
     id: 'darkTheme',
-    defaultMessage: 'Escuro',
+    defaultMessage: 'Dark',
   },
   highContrastTheme: {
     id: 'highContrastTheme',
-    defaultMessage: 'Alto contraste',
+    defaultMessage: 'High contrast',
   },
 });
 

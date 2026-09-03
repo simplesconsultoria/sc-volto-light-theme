@@ -15,9 +15,27 @@ const withStoredScale: Decorator = (Story, context) => {
   }
 
   return (
-    <div style={{ backgroundColor: '#f0f0f0', padding: '2rem' }}>
-      <Story />
-      <p style={{ marginTop: '2rem' }}>
+    <div style={{ background: 'var(--primary-color)', padding: '2rem' }}>
+      {/*
+        The controls are styled for the dark header bar — `_accessibilityControls.scss`
+        gives the buttons a light ground and expects `--secondary-color` behind
+        them. Rendered on a pale page they read as unstyled browser buttons, and
+        without the bar's flex row they wrap. This is the chain `HeaderBar` builds.
+      */}
+      <header className="header-wrapper">
+        <div className="header-bar-wrapper">
+          <div className="header-bar">
+            <div className="header-bar__inner">
+              <div className="header-bar__actions">
+                <Story />
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <p
+        style={{ marginTop: '2rem', color: 'var(--primary-foreground-color)' }}
+      >
         Hover over this text to test the hover reader! It will read the text out
         loud using window.speechSynthesis. You can also test the font size
         controls.

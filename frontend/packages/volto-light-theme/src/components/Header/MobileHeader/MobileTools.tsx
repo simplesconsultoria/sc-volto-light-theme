@@ -1,15 +1,24 @@
 import React, { useState, useRef, useCallback } from 'react';
+import { defineMessages, useIntl } from 'react-intl';
 import config from '@plone/volto/registry';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import moreIcon from '@plone/volto/icons/more.svg';
 import HeaderBarActions from '../../HeaderBar/HeaderBarActions';
 import useClickOutside from '../../../hooks/useClickOutside';
 
+const messages = defineMessages({
+  accessibilityOptions: {
+    id: 'Accessibility options',
+    defaultMessage: 'Accessibility options',
+  },
+});
+
 type MobileToolsProps = {
   token?: string | null;
 };
 
 const MobileTools: React.FC<MobileToolsProps> = ({ token }) => {
+  const intl = useIntl();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -18,7 +27,7 @@ const MobileTools: React.FC<MobileToolsProps> = ({ token }) => {
 
   const close = useCallback(() => setIsOpen(false), []);
 
-  // Fecha ao clicar fora ou pressionar Escape
+  // Close on outside click or Escape
   useClickOutside(dropdownRef, close, isOpen);
 
   return display ? (
@@ -27,7 +36,7 @@ const MobileTools: React.FC<MobileToolsProps> = ({ token }) => {
         type="button"
         className="mobile-tools-button"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Opções de Acessibilidade"
+        aria-label={intl.formatMessage(messages.accessibilityOptions)}
       >
         <Icon name={moreIcon} size="30px" />
       </button>

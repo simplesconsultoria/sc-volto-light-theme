@@ -74,7 +74,7 @@ body .block.search .search-wrapper {
     @include color-block-change-vertical-spacing();
   }
 }
-/* Seleciona os formulários, exceto se estiverem dentro do sidebar ou do schemaForm */
+/* Select forms, except those inside the sidebar or the schemaForm */
 .ui.form:not(#sidebar *, #sidebar, .block.schemaForm *, .block.schemaForm) {
   .ui.secondary.pointing.menu {
     .item {

@@ -35,7 +35,7 @@ const sampleSlateData = [
     type: 'p',
     children: [
       {
-        text: 'A comunicação é um direito humano fundamental. Sem ela, não há democracia plena nem exercício real da cidadania. Esta citação demonstra como o texto se comporta dentro do bloco, aplicando a fonte correta do Volto.',
+        text: 'Access to information is a fundamental right. Without it there is no full democracy and no real exercise of citizenship. This quotation shows how text behaves inside the block, with the theme typography applied.',
       },
     ],
   },
@@ -46,7 +46,7 @@ export const DefaultTransparent: Story = {
     data: {
       '@type': 'quoteBlock',
       value: sampleSlateData,
-      author: 'Especialista em Comunicação',
+      author: 'Communications Specialist',
       backgroundStyle: 'transparent',
     },
   },
@@ -57,7 +57,7 @@ export const FilledBackground: Story = {
     data: {
       '@type': 'quoteBlock',
       value: sampleSlateData,
-      author: 'Coletivo',
+      author: 'Collective',
       backgroundStyle: 'filled',
     },
   },

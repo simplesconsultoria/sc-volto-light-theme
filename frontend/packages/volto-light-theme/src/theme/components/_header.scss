@@ -12,14 +12,14 @@ body header.header-wrapper {
   container-type: inline-size;
 
   .header {
-    // Seção principal do Header
+    // Main header section
     .header-main {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1.5rem;
 
-      // Wrapper do Logo e Navegação
+      // Logo and navigation wrapper
       .logo-nav-wrapper {
         display: flex;
         min-width: 0;

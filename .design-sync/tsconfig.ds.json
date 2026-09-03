@@ -1,0 +1,30 @@
+/*
+  tsconfig for the Claude Design build only — never for the app or the tests.
+
+  The package's own tsconfig maps `@simplesconsultoria/volto-light-theme/*` to `./src/*`,
+  and esbuild honours that mapping ahead of the --node-modules overlay. Icon imports
+  therefore reached the real .svg files and were loaded as data URLs, which makes Volto's
+  Icon render an empty <svg>. Mapping the icons subpath at the generated JS twins puts the
+  {attributes, content} shape Icon reads back into the bundle.
+
+  Two traps, both silent:
+
+  - Write comments as a block like this one, NOT as a `"//"` key. The converter strips
+    comments with a regex that treats `"//":` as a line comment, mangling the JSON; it
+    then parses nothing and drops the paths mapping without saying so.
+  - The target must end in a bare `*`, never `*.js`. The plugin strips only a trailing
+    `*` and appends its own extension list, so `*.js` becomes a literal directory name,
+    the rule never matches, and the broader `/*` rule below silently wins — sending icon
+    imports back to the real .svg files.
+*/
+{
+  "extends": "../frontend/packages/volto-light-theme/tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@simplesconsultoria/volto-light-theme/icons/*": ["./.cache/sc-icons/*"],
+      "@simplesconsultoria/volto-light-theme/*": [
+        "../frontend/packages/volto-light-theme/src/*"
+      ]
+    }
+  }
+}

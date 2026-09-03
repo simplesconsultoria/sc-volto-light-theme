@@ -1,3 +1,5 @@
 node_modules
 build
-README.md
+# Root README only — a bare rule here also swallowed src/storybook/README.md and
+# public/images/README.md, both referenced by docs but never committed.
+/README.md

@@ -52,6 +52,12 @@
     <value key="neutral_low_foreground_color_dark">#e6e6e6</value>
     <value key="neutral_accent_color_light">#f4822c</value>
     <value key="neutral_accent_color_dark">#f4822c</value>
+    <value key="event_color_light">#d32f2f</value>
+    <value key="event_color_dark">#d32f2f</value>
+    <value key="file_color_light">#1976d2</value>
+    <value key="file_color_dark">#1976d2</value>
+    <value key="image_color_light">#388e3c</value>
+    <value key="image_color_dark">#388e3c</value>
   </records>
 
 </registry>

@@ -4,28 +4,24 @@ import { defaultStylingSchema } from '../schema';
 
 const messages = defineMessages({
   quoteBlock: {
-    id: 'quoteBlock',
-    defaultMessage: 'Bloco de Citação',
+    id: 'Quote',
+    defaultMessage: 'Quote',
   },
   author: {
-    id: 'quoteAuthor',
-    defaultMessage: 'Autor / Fonte',
+    id: 'Author / Source',
+    defaultMessage: 'Author / Source',
   },
   backgroundStyle: {
-    id: 'quoteBackgroundStyle',
-    defaultMessage: 'Estilo do fundo',
+    id: 'Background style',
+    defaultMessage: 'Background style',
   },
   backgroundTransparent: {
-    id: 'quoteBackgroundTransparent',
-    defaultMessage: 'Transparente',
+    id: 'Transparent',
+    defaultMessage: 'Transparent',
   },
   backgroundFilled: {
-    id: 'quoteBackgroundFilled',
-    defaultMessage: 'Preenchido',
-  },
-  styling: {
-    id: 'Styling',
-    defaultMessage: 'Estilo',
+    id: 'Filled',
+    defaultMessage: 'Filled',
   },
 });
 

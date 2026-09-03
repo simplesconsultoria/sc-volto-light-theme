@@ -1,0 +1,338 @@
+<!-- @dsCard group="Colors" -->
+<!--
+  Semantic colour palette — @simplesconsultoria/volto-light-theme
+  Generated from src/theme/_root.scss. Values are the shipped light-dark() fallbacks;
+  a site that configures the Themes control panel replaces them at runtime.
+-->
+<meta charset="utf-8" />
+<title>Colour palette</title>
+<style>
+  :root {
+    --ink: #16181d;
+    --ink-soft: #5b6270;
+    --rule: #e4e7ec;
+    --ground: #ffffff;
+    --card: #ffffff;
+    --fail: #b3261e;
+    --fail-bg: #fdecea;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 32px 56px;
+    background: var(--ground);
+    color: var(--ink);
+    font: 400 14px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  header { margin-bottom: 36px; }
+  h1 {
+    margin: 0 0 6px;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .lede { margin: 0; max-width: 62ch; color: var(--ink-soft); font-size: 14px; }
+  h2 {
+    margin: 40px 0 4px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  h2 + .note { margin: 0 0 18px; color: var(--ink-soft); font-size: 13px; }
+
+  /* ---- base ramp ---- */
+  .ramp {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .chip {
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--card);
+  }
+  .chip .fill { height: 58px; }
+  .chip .meta { padding: 8px 10px 10px; }
+  .chip code {
+    display: block;
+    font: 500 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: none;
+  }
+  .chip .hex {
+    margin-top: 3px;
+    color: var(--ink-soft);
+    font: 400 11px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+    text-transform: uppercase;
+  }
+
+  /* ---- semantic families ---- */
+  .families { display: grid; gap: 14px; margin-top: 18px; }
+  .family {
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .family > .name {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--rule);
+    background: #fafbfc;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .modes { display: grid; grid-template-columns: 1fr 1fr; }
+  .modes > div { padding: 18px; }
+  .modes > div + div { border-left: 1px solid var(--rule); }
+  .mode-label {
+    margin-bottom: 12px;
+    font: 600 10px/1 system-ui, sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .sample {
+    padding: 16px 18px;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+  }
+  .sample .body { font-size: 15px; font-weight: 500; }
+  .sample .low { margin-top: 5px; font-size: 13px; }
+  .sample .acc { margin-top: 5px; font-size: 13px; font-weight: 600; }
+  .rows {
+    margin-top: 12px;
+    display: grid;
+    gap: 4px;
+    font: 400 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--ink-soft);
+  }
+  .rows div { display: flex; align-items: center; gap: 7px; }
+  .dot {
+    width: 11px; height: 11px;
+    flex: none;
+    border: 1px solid rgba(0,0,0,.18);
+    border-radius: 3px;
+  }
+  .rows .hexv { margin-left: auto; text-transform: uppercase; }
+
+  .flag {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: var(--fail-bg);
+    color: var(--fail);
+    font: 600 10px/1.5 system-ui, sans-serif;
+    letter-spacing: 0.03em;
+    vertical-align: 1px;
+  }
+  footer {
+    margin-top: 44px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-soft);
+    font-size: 12px;
+  }
+  footer code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Colour palette</h1>
+    <p class="lede">
+      Four semantic families &times; four roles, each defined as a
+      <code>light-dark()</code> pair. Nothing in the package assigns the
+      <code>--*-light</code> / <code>--*-dark</code> override hooks, so the values below
+      are what ships; a site configures its own through the Themes control panel.
+    </p>
+  </header>
+
+  <h2>Base ramp</h2>
+  <p class="note">Raw values. Never referenced directly by components — always through a semantic token.</p>
+  <div class="ramp">
+    <div class="chip"><div class="fill" style="background:#ffffff;border-bottom:1px solid #e4e7ec"></div><div class="meta"><code>--pure-white</code><span class="hex">#ffffff</span></div></div>
+    <div class="chip"><div class="fill" style="background:#f8f8f8"></div><div class="meta"><code>--gray-02</code><span class="hex">#f8f8f8</span></div></div>
+    <div class="chip"><div class="fill" style="background:#edeff0"></div><div class="meta"><code>--gray-cool-05</code><span class="hex">#edeff0</span></div></div>
+    <div class="chip"><div class="fill" style="background:#e6e6e6"></div><div class="meta"><code>--gray-10</code><span class="hex">#e6e6e6</span></div></div>
+    <div class="chip"><div class="fill" style="background:#757575"></div><div class="meta"><code>--gray-50</code><span class="hex">#757575</span></div></div>
+    <div class="chip"><div class="fill" style="background:#333333"></div><div class="meta"><code>--gray-80</code><span class="hex">#333333</span></div></div>
+    <div class="chip"><div class="fill" style="background:#000000"></div><div class="meta"><code>--pure-black</code><span class="hex">#000000</span></div></div>
+    <div class="chip"><div class="fill" style="background:#f4822c"></div><div class="meta"><code>--brand-color</code><span class="hex">#f4822c</span></div></div>
+    <div class="chip"><div class="fill" style="background:#b55e1c"></div><div class="meta"><code>--brand-color-dark</code><span class="hex">#b55e1c</span></div></div>
+    <div class="chip"><div class="fill" style="background:#af5009"></div><div class="meta"><code>--brand-color-darker</code><span class="hex">#af5009</span></div></div>
+  </div>
+
+  <h2>Semantic families</h2>
+  <p class="note">
+    Each family pairs a ground with a foreground, a low-contrast foreground for secondary
+    text, and an accent. Ratios are WCAG 2.1 against the family ground.
+  </p>
+
+  <div class="families">
+
+    <div class="family">
+      <div class="name">primary &mdash; page surface</div>
+      <div class="modes">
+        <div>
+          <div class="mode-label">Light</div>
+          <div class="sample" style="background:#ffffff">
+            <div class="body" style="color:#000000">Foreground &middot; 21.0</div>
+            <div class="low" style="color:#333333">Low contrast &middot; 12.6</div>
+            <div class="acc" style="color:#b55e1c">Accent &middot; 4.58</div>
+          </div>
+          <div class="rows">
+            <div><span class="dot" style="background:#ffffff"></span>--primary-color<span class="hexv">#ffffff</span></div>
+            <div><span class="dot" style="background:#000000"></span>--primary-foreground-color<span class="hexv">#000000</span></div>
+            <div><span class="dot" style="background:#333333"></span>--primary-low-foreground-color<span class="hexv">#333333</span></div>
+            <div><span class="dot" style="background:#b55e1c"></span>--primary-accent-color<span class="hexv">#b55e1c</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="mode-label">Dark</div>
+          <div class="sample" style="background:#000000;border-color:#2a2a2a">
+            <div class="body" style="color:#ffffff">Foreground &middot; 21.0</div>
+            <div class="low" style="color:#f8f8f8">Low contrast &middot; 19.8</div>
+            <div class="acc" style="color:#f4822c">Accent &middot; 8.08</div>
+          </div>
+          <div class="rows">
+            <div><span class="dot" style="background:#000000"></span>--primary-color<span class="hexv">#000000</span></div>
+            <div><span class="dot" style="background:#ffffff"></span>--primary-foreground-color<span class="hexv">#ffffff</span></div>
+            <div><span class="dot" style="background:#f8f8f8"></span>--primary-low-foreground-color<span class="hexv">#f8f8f8</span></div>
+            <div><span class="dot" style="background:#f4822c"></span>--primary-accent-color<span class="hexv">#f4822c</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="family">
+      <div class="name">secondary &mdash; footer surface</div>
+      <div class="modes">
+        <div>
+          <div class="mode-label">Light</div>
+          <div class="sample" style="background:#000000;border-color:#2a2a2a">
+            <div class="body" style="color:#ffffff">Foreground &middot; 21.0</div>
+            <div class="low" style="color:#e6e6e6">Low contrast &middot; 16.8</div>
+            <div class="acc" style="color:#f4822c">Accent &middot; 8.08</div>
+          </div>
+          <div class="rows">
+            <div><span class="dot" style="background:#000000"></span>--secondary-color<span class="hexv">#000000</span></div>
+            <div><span class="dot" style="background:#ffffff"></span>--secondary-foreground-color<span class="hexv">#ffffff</span></div>
+            <div><span class="dot" style="background:#e6e6e6"></span>--secondary-low-foreground-color<span class="hexv">#e6e6e6</span></div>
+            <div><span class="dot" style="background:#f4822c"></span>--secondary-accent-color<span class="hexv">#f4822c</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="mode-label">Dark</div>
+          <div class="sample" style="background:#ffffff">
+            <div class="body" style="color:#000000">Foreground &middot; 21.0</div>
+            <div class="low" style="color:#333333">Low contrast &middot; 12.6</div>
+            <div class="acc" style="color:#b55e1c">Accent &middot; 4.58</div>
+          </div>
+          <div class="rows">
+            <div><span class="dot" style="background:#ffffff"></span>--secondary-color<span class="hexv">#ffffff</span></div>
+            <div><span class="dot" style="background:#000000"></span>--secondary-foreground-color<span class="hexv">#000000</span></div>
+            <div><span class="dot" style="background:#333333"></span>--secondary-low-foreground-color<span class="hexv">#333333</span></div>
+            <div><span class="dot" style="background:#b55e1c"></span>--secondary-accent-color<span class="hexv">#b55e1c</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="family">
+      <div class="name">accent &mdash; breadcrumbs, brand theme ground</div>
+      <div class="modes">
+        <div>
+          <div class="mode-label">Light</div>
+          <div class="sample" style="background:#f4822c;border-color:#d9721f">
+            <div class="body" style="color:#000000">Foreground &middot; 8.08</div>
+            <div class="low" style="color:#333333">Low contrast &middot; 4.86</div>
+            <div class="acc" style="color:#000000">Accent &middot; 8.08</div>
+          </div>
+          <div class="rows">
+            <div><span class="dot" style="background:#f4822c"></span>--accent-color<span class="hexv">#f4822c</span></div>
+            <div><span class="dot" style="background:#000000"></span>--accent-foreground-color<span class="hexv">#000000</span></div>
+            <div><span class="dot" style="background:#333333"></span>--accent-low-foreground-color<span class="hexv">#333333</span></div>
+            <div><span class="dot" style="background:#000000"></span>--accent-accent-color<span class="hexv">#000000</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="mode-label">Dark</div>
+          <div class="sample" style="background:#b55e1c;border-color:#9c5018">
+            <div class="body" style="color:#ffffff">Foreground &middot; 4.58</div>
+            <div class="low" style="color:#f8f8f8">Low contrast &middot; 4.31 <span class="flag">LARGE ONLY</span></div>
+            <div class="acc" style="color:#ffffff">Accent &middot; 4.58</div>
+          </div>
+          <div class="rows">
+            <div><span class="dot" style="background:#b55e1c"></span>--accent-color<span class="hexv">#b55e1c</span></div>
+            <div><span class="dot" style="background:#ffffff"></span>--accent-foreground-color<span class="hexv">#ffffff</span></div>
+            <div><span class="dot" style="background:#f8f8f8"></span>--accent-low-foreground-color<span class="hexv">#f8f8f8</span></div>
+            <div><span class="dot" style="background:#ffffff"></span>--accent-accent-color<span class="hexv">#ffffff</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="family">
+      <div class="name">neutral &mdash; elevated cards, default theme high ground</div>
+      <div class="modes">
+        <div>
+          <div class="mode-label">Light</div>
+          <div class="sample" style="background:#edeff0;border-color:#dcdfe1">
+            <div class="body" style="color:#000000">Foreground &middot; 18.2</div>
+            <div class="low" style="color:#333333">Low contrast &middot; 10.9</div>
+            <div class="acc" style="color:#af5009">Accent &middot; 4.58</div>
+          </div>
+          <div class="rows">
+            <div><span class="dot" style="background:#edeff0"></span>--neutral-color<span class="hexv">#edeff0</span></div>
+            <div><span class="dot" style="background:#000000"></span>--neutral-foreground-color<span class="hexv">#000000</span></div>
+            <div><span class="dot" style="background:#333333"></span>--neutral-low-foreground-color<span class="hexv">#333333</span></div>
+            <div><span class="dot" style="background:#af5009"></span>--neutral-accent-color<span class="hexv">#af5009</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="mode-label">Dark</div>
+          <div class="sample" style="background:#333333;border-color:#454545">
+            <div class="body" style="color:#ffffff">Foreground &middot; 12.6</div>
+            <div class="low" style="color:#e6e6e6">Low contrast &middot; 10.1</div>
+            <div class="acc" style="color:#f4822c">Accent &middot; 4.86</div>
+          </div>
+          <div class="rows">
+            <div><span class="dot" style="background:#333333"></span>--neutral-color<span class="hexv">#333333</span></div>
+            <div><span class="dot" style="background:#ffffff"></span>--neutral-foreground-color<span class="hexv">#ffffff</span></div>
+            <div><span class="dot" style="background:#e6e6e6"></span>--neutral-low-foreground-color<span class="hexv">#e6e6e6</span></div>
+            <div><span class="dot" style="background:#f4822c"></span>--neutral-accent-color<span class="hexv">#f4822c</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <h2>Links &amp; content types</h2>
+  <div class="ramp">
+    <div class="chip"><div class="fill" style="background:#f4822c"></div><div class="meta"><code>--link-color</code><span class="hex">#f4822c</span></div></div>
+    <div class="chip"><div class="fill" style="background:#b55e1c"></div><div class="meta"><code>--link-color-hover</code><span class="hex">#b55e1c</span></div></div>
+    <div class="chip"><div class="fill" style="background:#000000"></div><div class="meta"><code>--news-item-color</code><span class="hex">#000000</span></div></div>
+    <div class="chip"><div class="fill" style="background:#f4822c"></div><div class="meta"><code>--document-color</code><span class="hex">accent</span></div></div>
+    <div class="chip"><div class="fill" style="background:#d32f2f"></div><div class="meta"><code>--event-color</code><span class="hex">#d32f2f</span></div></div>
+    <div class="chip"><div class="fill" style="background:#1976d2"></div><div class="meta"><code>--file-color</code><span class="hex">#1976d2</span></div></div>
+    <div class="chip"><div class="fill" style="background:#388e3c"></div><div class="meta"><code>--image-color</code><span class="hex">#388e3c</span></div></div>
+  </div>
+
+  <footer>
+Every accent pairing now clears WCAG AA. The two that did not &mdash;
+    <code>--secondary-accent-color</code> in dark (2.60) and
+    <code>--neutral-accent-color</code> in light (2.25) &mdash; were the only accent
+    tokens carrying <code>#f4822c</code> in both modes. The first now swaps to
+    <code>--brand-color-dark</code>; the second needed a third shade,
+    <code>--brand-color-darker</code> (<code>#af5009</code>), because
+    <code>#b55e1c</code> reaches only 3.97 against <code>#edeff0</code>. Every value here
+    is a default that a site theme replaces.
+  </footer>
+</div>

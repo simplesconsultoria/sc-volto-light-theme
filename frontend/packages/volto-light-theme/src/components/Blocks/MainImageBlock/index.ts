@@ -16,7 +16,7 @@ export interface MainImageBlockData {
 
 const MainImageBlockInfo: BlockConfigBase = {
   id: 'mainImageBlock',
-  title: 'Imagem Principal',
+  title: 'Main Image',
   icon: imageSVG,
   group: 'media',
   view: MainImageBlockView,

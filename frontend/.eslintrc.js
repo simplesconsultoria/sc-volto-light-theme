@@ -17,6 +17,8 @@ const addonAliases = Object.keys(registry.packages).map((o) => [
 ]);
 
 module.exports = {
+  // Build output — see .prettierignore.
+  ignorePatterns: ['packages/*/dist'],
   extends: `${coreLocation}/packages/volto/.eslintrc`,
   rules: {
     'import/no-unresolved': 1,

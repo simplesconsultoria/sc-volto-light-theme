@@ -1,3 +1,4 @@
+import { createThemeDefinition } from './blockThemes';
 import type { ConfigType } from '@plone/registry';
 import type { BlockConfigBase } from '@plone/types';
 
@@ -33,7 +34,7 @@ declare module '@plone/types' {
 // Each theme maps semantic `--theme-*` CSS custom properties to concrete
 // `--block-theme-{name}-*` tokens defined in `_root.scss`.
 //
-// The structure follows a two-layer model:
+// The structure follows a four-layer model:
 //
 //   Ground          — the block's own background & text.
 //   High Ground     — elevated elements within the block (cards, chips, etc.).
@@ -41,13 +42,10 @@ declare module '@plone/types' {
 //   Pattern         — optional decorative background pattern / image.
 //
 // By using a factory, adding a new theme in a downstream project is a
-// one-liner:  `createThemeDefinition('purple', 'Roxo')`
+// one-liner:  `createThemeDefinition('purple', 'Purple')`
 
-export interface ThemeDefinition {
-  style: Record<string, string>;
-  name: string;
-  label: string;
-}
+export type { ThemeDefinition } from './blockThemes';
+export { createThemeDefinition } from './blockThemes';
 
 /**
  * `themes` and `defaultTheme` are a kitconcept convention that Volto's own
@@ -60,44 +58,6 @@ declare module '@plone/types' {
     themes?: ThemeDefinition[];
     defaultTheme?: string;
   }
-}
-
-/**
- * Create a complete theme definition by mapping every `--theme-*` variable
- * to its `--block-theme-{name}-*` counterpart.
- *
- * @param name  — Machine name used as the CSS token root (e.g. `"default"`, `"brand"`).
- * @param label — Human-readable label shown in the editor color picker.
- */
-export function createThemeDefinition(
-  name: string,
-  label: string,
-): ThemeDefinition {
-  const v = (suffix: string) => `var(--block-theme-${name}-${suffix})`;
-  return {
-    style: {
-      // Ground
-      '--theme-color': v('bg'),
-      '--theme-foreground-color': v('text'),
-      '--theme-high-contrast-foreground-color': v('high-contrast'),
-      '--theme-low-contrast-foreground-color': v('low-contrast'),
-      '--theme-foreground-accent-color': v('accent-color'),
-      // High Ground
-      '--theme-high-contrast-color': v('high-bg'),
-      '--theme-top-foreground-color': v('top-text'),
-      '--theme-top-high-contrast-foreground-color': v('top-high-contrast'),
-      '--theme-top-low-contrast-foreground-color': v('top-low-contrast'),
-      '--theme-top-accent-color': v('top-accent-color'),
-      // Border
-      '--theme-border-color': v('border'),
-      '--theme-border-width': v('border-width'),
-      // Pattern (optional — defaults to none/0 in _root.scss)
-      '--theme-pattern-image': v('pattern-image'),
-      '--theme-pattern-opacity': v('pattern-opacity'),
-    },
-    name,
-    label,
-  };
 }
 
 const customThemes: ThemeDefinition[] = [
@@ -192,7 +152,7 @@ export default function install(config: ConfigType) {
         ...variations,
         {
           id: 'carousel',
-          title: 'Carrossel',
+          title: 'Carousel',
           template: CarouselTemplate,
           schemaEnhancer: carouselSchemaEnhancer,
         },
@@ -206,7 +166,7 @@ export default function install(config: ConfigType) {
         ...variations,
         {
           id: 'mediaCarousel',
-          title: 'Carrossel de Mídia',
+          title: 'Media Carousel',
           template: MediaCarouselTemplate,
           schemaEnhancer: mediaCarouselSchemaEnhancer,
         },
@@ -218,7 +178,7 @@ export default function install(config: ConfigType) {
         ...variations,
         {
           id: 'teaser',
-          title: 'Destaque',
+          title: 'Highlight',
           template: TeaserTemplate,
           schemaEnhancer: teaserSchemaEnhancer,
         },

@@ -70,8 +70,8 @@ const MainImageBlockView: React.FC<MainImageBlockViewProps> = ({
     return isEditMode ? (
       <div className={cx('main-image-block', 'empty', className)} style={style}>
         <FormattedMessage
-          id="Nenhuma imagem de preview encontrada na página."
-          defaultMessage="Nenhuma imagem de preview encontrada na página. Adicione uma imagem de preview na página para exibir neste bloco."
+          id="No preview image found on this page."
+          defaultMessage="No preview image found on this page. Add a preview image to the page to display it in this block."
         />
       </div>
     ) : null;
