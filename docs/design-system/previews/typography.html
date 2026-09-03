@@ -111,13 +111,13 @@
 
   <h2>Scale</h2>
   <p class="note">
-    <code>$font-sizes</code> has 11 steps; <code>$line-heights</code> has 10.
-    <code>2xs</code> has no matching line-height.
+    <code>$font-sizes</code> and <code>$line-heights</code> both have 11 steps &mdash;
+    every size has a line-height.
   </p>
   <div class="scale">
-    <div class="step miss">
+    <div class="step">
       <div class="key">2xs</div>
-      <div class="num">0.75rem &middot; 12px<b>no line-height</b></div>
+      <div class="num">0.75rem &middot; 12px<b>0.875rem &middot; 14px</b></div>
       <div class="spec" style="font-size:12px;line-height:1.4">Grade labels and fine print</div>
     </div>
     <div class="step">
@@ -221,9 +221,10 @@
   </div>
 
   <footer>
-    <code>2xs</code> is the one real gap &mdash; it has a font-size but no line-height, so
-    <code>map-get($line-heights, 2xs)</code> returns null. <code>--custom-main-font</code>
-    has no consumer in this package but is read twice by upstream VLT, where it drives
-    <code>$page-font</code>. See <code>GAPS.md</code> &sect;2.6 and &sect;2.7.
+    <code>2xs</code> was the one real gap &mdash; a font-size with no line-height, so
+    <code>map-get($line-heights, 2xs)</code> returned null. It now has one.
+    <code>--custom-main-font</code> has no consumer in this package but is read twice by
+    upstream VLT, where it drives <code>$page-font</code>. Scale and heading rules:
+    <code>INVENTORY.md</code> &sect;6.
   </footer>
 </div>

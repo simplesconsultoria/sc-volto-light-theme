@@ -157,7 +157,7 @@
         <div class="card" style="background:#edeff0;color:#000000">
           <div class="t">High ground card</div>
           <div class="d" style="color:#333333">Elevated surfaces switch to the neutral family.</div>
-          <div class="m" style="color:#f4822c">Top accent &middot; 2.25</div>
+          <div class="m" style="color:#af5009">Top accent &middot; 4.58</div>
         </div>
       </div>
     </div>
@@ -235,11 +235,12 @@
   </table>
 
   <footer>
-    All 14 mapped properties now resolve in both themes. Four previously did not, silently dropping twelve declarations
-    across the SCSS therefore do not resolve &mdash; most importantly six focus outlines in
-    <code>_listing.scss</code> that read
-    <code>outline: 2px solid var(--theme-top-high-contrast-foreground-color)</code> with no
-    fallback, so keyboard focus is invisible on listing cards. See <code>GAPS.md</code>
-    &sect;1.
+    All 14 mapped properties resolve in both themes. Four of them did not, and the
+    failure was silent: a <code>var()</code> with no definition and no fallback is invalid
+    at computed-value time, so the whole declaration is dropped rather than degraded. That
+    took out six focus outlines in <code>_listing.scss</code> reading
+    <code>outline: 2px solid var(--theme-top-high-contrast-foreground-color)</code>,
+    leaving keyboard focus invisible on listing cards.
+    <code>src/theme/blockThemes.test.ts</code> now guards the contract.
   </footer>
 </div>

@@ -43,7 +43,7 @@ Four, registered in `src/config/blocks.ts`:
 | `heroBlock` | Hero Block | common | two variations (`flex`, `card`); dynamic schema; 30 `--theme-*` references — the most theme-sensitive block in the system |
 | `mainImageBlock` | Main Image | media | renders the content item's `preview_image_link`; **no colour tokens at all**, only container widths |
 | `quoteBlock` | Quote | text | Slate body; the only own block reading semantic tokens (`--accent-color`) directly as well as `--theme-*` |
-| `documentByline` | Byline | common | publication/modification dates and authors; **ships no stylesheet** — see GAPS §4.1 |
+| `documentByline` | Byline | common | publication/modification dates and authors; **ships no stylesheet** — see GAPS §2.1 |
 
 Full schemas in [INVENTORY.md](./INVENTORY.md) §1.
 
@@ -85,7 +85,7 @@ it is what a project extends.
   `top-high-contrast`, `top-low-contrast`, `top-accent-color`
 - **Border** — `border`, `border-width`
 - **Pattern** — `pattern-image`, `pattern-opacity`. Declared, defined as `none`/`0`, and
-  **consumed nowhere**. Implement or delete; see GAPS §2.4.
+  **consumed nowhere**. Implement or delete; see GAPS §1.2.
 
 Two themes ship: `default` (labelled "Primary") and `brand` ("Brand"). Adding a third
 downstream is one line plus a matching token block in `_root.scss`:
@@ -107,7 +107,7 @@ createThemeDefinition('purple', 'Purple')
 
 ### 4.1 Structure
 
-Nine base values feed a **4 × 4 semantic matrix** — `primary` / `secondary` / `accent` /
+Ten base values feed a **4 × 4 semantic matrix** — `primary` / `secondary` / `accent` /
 `neutral`, each with `color`, `foreground-color`, `low-foreground-color`,
 `accent-color`. Every semantic token is a `light-dark()` pair, so the system is
 dual-mode by construction.
@@ -144,20 +144,29 @@ Storybook's preview does reset `color-scheme` below `<html>`, so neither placeme
 works there — `withTheme` sets it in **both** places. On a real page the mode lives on
 `<html>` and the question never arises; it only bites when switching mode on a descendant.
 
-### 4.4 Known contrast failures
+### 4.4 Contrast
 
-Two pairings fail WCAG AA out of the box, both `#f4822c` on a near-white ground:
-`--neutral-accent-color` on `--neutral-color` in light (2.25), and
-`--secondary-accent-color` on `--secondary-color` in dark (2.60). Neither is fixed —
-see GAPS §1.3, which includes the numbers for the candidate fixes.
+Both AA failures the first audit found are now fixed. They were the two accent tokens
+that used `--brand-color` in *both* modes rather than swapping between the brand shades
+the way `--primary-accent-color` and `--accent-color` do:
+
+| token | mode | was | now |
+|---|---|---|---|
+| `--secondary-accent-color` | dark, on `#ffffff` | `#f4822c` — 2.60 **FAIL** | `#b55e1c` — 4.58 AA |
+| `--neutral-accent-color` | light, on `#edeff0` | `#f4822c` — 2.25 **FAIL** | `#af5009` — 4.58 AA |
+
+The second one is why `--brand-color-darker` (`#af5009`) exists: `#b55e1c` reaches only
+3.97 against `#edeff0`, which is AA-large at best.
+
+> Every ratio in this system is a **default**. A site that sets its own colours through
+> the Themes control panel replaces them, so the audit has to be re-run per project.
 
 ---
 
 ## 5. Typography
 
-Eleven steps in `$font-sizes`, ten in `$line-heights` (`2xs` has no line-height — GAPS
-§2.6). Declared in **rem** so the global `--font-scale` on `html` resizes text emitted by
-upstream mixins.
+Eleven steps in `$font-sizes`, and now eleven in `$line-heights` too. Declared in
+**rem** so the global `--font-scale` on `html` resizes text emitted by upstream mixins.
 
 The six scalar overrides (`$font-size`, `$heading1`, …) are exact px→rem conversions of
 upstream's `!default` values. That conversion is their entire purpose; they are not
@@ -195,10 +204,9 @@ looks like missing CSS rather than a missing wrapper:
 |---|---|
 | `_listing.scss` | `body .block.listing`, then `&.carousel` / `&.mediaCarousel` / … |
 | `_header.scss`, `_headerBar.scss`, `_mobileTools.scss` | `body header.header-wrapper` |
+| `_navigation.scss` | `#navigation.navigation` **and** `&.scNavigation` |
 | any themed block | needs `--theme-*` from a themed wrapper |
 | `_accessibilityControls.scss`, `_themeToggle.scss` | *unscoped* — but drawn for the dark bar, so they need the right **ground**, not the right ancestor |
-
-| `_navigation.scss` | `#navigation.navigation` **and** `&.scNavigation` |
 
 Anything rendering these outside a page — a story, a preview, a screenshot harness — has
 to reproduce the chain.
@@ -217,13 +225,21 @@ value is exactly what hides the mismatch.
 ## 8. Per-project overlay
 
 A project supplies colours through the Themes control panel, not by forking this package.
-The backend serves an `ISCVLTThemeDefinition` with seven fields — `primary_color`,
-`primary_foreground_color`, `header_foreground_color`, `secondary_color`,
-`secondary_foreground_color`, `accent_color`, `accent_foreground_color` — and
-`helpers/themeStyles.ts` maps each onto the custom property of the same name.
+The backend serves an `ISCVLTThemeDefinition` with **38 colour fields** — the four
+semantic families × four roles, plus the three content types — each of them a `_light` /
+`_dark` pair. `helpers/themeStyles.ts` maps every field onto the custom property of the
+same name, so `primary_color_light` becomes `--primary-color-light`: exactly the override
+hook `_root.scss` reads inside its `light-dark()`. A themed site therefore keeps both
+colour modes.
 
-> Those seven are written **flat**, not as `-light`/`-dark` pairs, so a themed site pins
-> them to one value in both colour modes. Whether that is intended is open — GAPS §2.2.
+The mapping is mechanical, so a colour added to the schema needs no frontend change — and
+`themeStyles.test.ts` now checks **both** ends of that contract: that the pinned field
+list still matches the schema, and that `_root.scss` actually reads every property the
+mapping derives. The second half is the one that was missing when the content-type
+colours were wired to `--event-color-override`, a property nothing writes.
+
+`--header-foreground-color` is the exception in the other direction: `_root.scss` reads
+it, but no field of `ISCVLTThemeDefinition` supplies it, so nothing can set it today.
 
 `Themes/fixtures.ts` holds three realistic records, and the Storybook toolbar can apply
 any of them to any story.
@@ -287,15 +303,13 @@ inlined, so they are the real component output rather than a reimplementation.
 ## 11. Open decisions
 
 Nothing below is a defect; each is a choice nobody has made. Full context in
-[GAPS.md](./GAPS.md) §7.
+[GAPS.md](./GAPS.md) §6.
 
 - Is `--brand-color: #f4822c` a deliberate default, or inherited from a client site?
-  It feeds `--accent-color`, all four link tokens, both block themes' accent slots, and
-  both contrast failures.
-- Should `--event-color: red`, `--file-color: blue`, `--image-color: green` stay as raw
-  CSS keywords? They are unthemed and visible on listing cards.
+  It feeds `--accent-color`, all four link tokens and both block themes' accent slots.
+- Should the content-type colours (`#d32f2f`, `#1976d2`, `#388e3c`) be brand-aligned?
+  They sit off the brand ramp and carry the same value in both colour modes.
 - Should `narrow` and `default` container widths differ?
-- What line-height should `2xs` have?
 - Should the `documentByline` block get a stylesheet?
 - Implement the Pattern layer, or delete it?
 - Translate `es` and `de`? Both are registered locales with empty catalogues; `pt_BR` is

@@ -25,7 +25,7 @@ Registered in `src/config/blocks.ts` → `installLocalBlocks()`. `[V 2026-09-01]
 | `quoteBlock` | `Quote` | `text` | `quote.svg` | 1 | `false` | `src/components/Blocks/QuoteBlock/index.ts` |
 
 All titles are English strings translated through `formatMessageWithFallback`, which uses
-the string itself as the message id. See GAPS §6.
+the string itself as the message id. See GAPS §5.
 
 ### 1.1 `documentByline`
 
@@ -216,8 +216,8 @@ Counted with `grep -rhoE 'var\(--theme-[a-z-]+'`. `[V 2026-09-01]`
 
 ## 5. Tokens
 
-`src/theme/_root.scss` — 221 lines. 95 custom-property definition sites across the
-package. `[V 2026-09-01]`
+`src/theme/_root.scss` — 256 lines. 116 custom-property definition sites across the
+package. `[V 2026-09-02]`
 
 **Nothing in this package assigns the `--*-color-light` / `--*-color-dark` override
 hooks.** They are populated at runtime from the backend Themes control panel
@@ -237,6 +237,7 @@ therefore the shipped defaults, and every value below is exactly resolvable.
 | `--gray-80` | `#333` |
 | `--brand-color` | `#f4822c` |
 | `--brand-color-dark` | `#b55e1c` |
+| `--brand-color-darker` | `#af5009` |
 
 ### 5.2 Semantic palette
 
@@ -251,7 +252,7 @@ Four families × four roles. Each is `light-dark(var(--x-light, FALLBACK), var(-
 | `--secondary-color` | `#000000` | `#ffffff` |
 | `--secondary-foreground-color` | `#ffffff` | `#000000` |
 | `--secondary-low-foreground-color` | `#e6e6e6` | `#333333` |
-| `--secondary-accent-color` | `#f4822c` | `#f4822c` |
+| `--secondary-accent-color` | `#f4822c` | `#b55e1c` |
 | `--accent-color` | `#f4822c` | `#b55e1c` |
 | `--accent-foreground-color` | `#000000` | `#ffffff` |
 | `--accent-low-foreground-color` | `#333333` | `#f8f8f8` |
@@ -259,7 +260,7 @@ Four families × four roles. Each is `light-dark(var(--x-light, FALLBACK), var(-
 | `--neutral-color` | `#edeff0` | `#333333` |
 | `--neutral-foreground-color` | `#000000` | `#ffffff` |
 | `--neutral-low-foreground-color` | `#333333` | `#e6e6e6` |
-| `--neutral-accent-color` | `#f4822c` | `#f4822c` |
+| `--neutral-accent-color` | `#af5009` | `#f4822c` |
 
 ### 5.3 Layout mappings
 
@@ -285,11 +286,14 @@ Four families × four roles. Each is `light-dark(var(--x-light, FALLBACK), var(-
 |---|---|
 | `--news-item-color` | `var(--pure-black)` |
 | `--document-color` | `var(--accent-color)` |
-| `--event-color` | `red` |
-| `--file-color` | `blue` |
-| `--image-color` | `green` |
+| `--event-color` | `light-dark(#d32f2f, #d32f2f)` |
+| `--file-color` | `light-dark(#1976d2, #1976d2)` |
+| `--image-color` | `light-dark(#388e3c, #388e3c)` |
 
-> The last three are CSS named colours, not tokens — see GAPS §2.1.
+> The last three are the only tokens whose default is a literal rather than a palette
+> entry — they sit off the brand ramp. Each reads `--<type>-color-light` /
+> `--<type>-color-dark` first, so a site theme can override them per colour mode; the
+> shipped defaults are the same value in both.
 
 ### 5.5 Links
 
@@ -345,11 +349,11 @@ underlines on links and `.card-summary .title`.
 ## 6. Type scale
 
 `src/theme/_variables.scss` — rem-based overrides of upstream VLT's typography tokens,
-so the global `--font-scale` on `html` resizes theme-mixin text. `[V 2026-09-01]`
+so the global `--font-scale` on `html` resizes theme-mixin text. `[V 2026-09-02]`
 
 | step | font-size | line-height |
 |---|---|---|
-| `2xs` | `0.75rem` | — |
+| `2xs` | `0.75rem` | `0.875rem` |
 | `xs` | `0.875rem` | `1rem` |
 | `s` | `1.125rem` | `1.125rem` |
 | `m` | `1.3125rem` | `1.5rem` |
@@ -361,13 +365,13 @@ so the global `--font-scale` on `html` resizes theme-mixin text. `[V 2026-09-01]
 | `5xl` | `3rem` | `3.5rem` |
 | `6xl` | `5rem` | `5.5rem` |
 
-`$font-sizes` has 11 steps, `$line-heights` has 10 — `2xs` has no matching line-height.
+`$font-sizes` and `$line-heights` both have 11 steps; every size has a line-height.
 
 Scalar overrides: `$font-size: 1.125rem`, `$line-height: 1.5rem`, `$heading1: 3.75rem`,
 `$heading2: 1.875rem`, `$heading3: 1.5rem`, `$block-title-h2: 2.625rem`.
 
 > `$heading1` (`3.75rem`) does not correspond to any `$font-sizes` step, and the actual
-> `h1.documentFirstHeading` rule uses `5xl` (`3rem`) instead. `2xs` having no line-height is GAPS §3.2.
+> `h1.documentFirstHeading` rule uses `5xl` (`3rem`) instead.
 
 ### 6.1 Heading rules
 

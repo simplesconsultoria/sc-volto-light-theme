@@ -165,6 +165,7 @@
     <div class="chip"><div class="fill" style="background:#000000"></div><div class="meta"><code>--pure-black</code><span class="hex">#000000</span></div></div>
     <div class="chip"><div class="fill" style="background:#f4822c"></div><div class="meta"><code>--brand-color</code><span class="hex">#f4822c</span></div></div>
     <div class="chip"><div class="fill" style="background:#b55e1c"></div><div class="meta"><code>--brand-color-dark</code><span class="hex">#b55e1c</span></div></div>
+    <div class="chip"><div class="fill" style="background:#af5009"></div><div class="meta"><code>--brand-color-darker</code><span class="hex">#af5009</span></div></div>
   </div>
 
   <h2>Semantic families</h2>
@@ -231,13 +232,13 @@
           <div class="sample" style="background:#ffffff">
             <div class="body" style="color:#000000">Foreground &middot; 21.0</div>
             <div class="low" style="color:#333333">Low contrast &middot; 12.6</div>
-            <div class="acc" style="color:#f4822c">Accent &middot; 2.60 <span class="flag">FAILS AA</span></div>
+            <div class="acc" style="color:#b55e1c">Accent &middot; 4.58</div>
           </div>
           <div class="rows">
             <div><span class="dot" style="background:#ffffff"></span>--secondary-color<span class="hexv">#ffffff</span></div>
             <div><span class="dot" style="background:#000000"></span>--secondary-foreground-color<span class="hexv">#000000</span></div>
             <div><span class="dot" style="background:#333333"></span>--secondary-low-foreground-color<span class="hexv">#333333</span></div>
-            <div><span class="dot" style="background:#f4822c"></span>--secondary-accent-color<span class="hexv">#f4822c</span></div>
+            <div><span class="dot" style="background:#b55e1c"></span>--secondary-accent-color<span class="hexv">#b55e1c</span></div>
           </div>
         </div>
       </div>
@@ -285,13 +286,13 @@
           <div class="sample" style="background:#edeff0;border-color:#dcdfe1">
             <div class="body" style="color:#000000">Foreground &middot; 18.2</div>
             <div class="low" style="color:#333333">Low contrast &middot; 10.9</div>
-            <div class="acc" style="color:#f4822c">Accent &middot; 2.25 <span class="flag">FAILS AA</span></div>
+            <div class="acc" style="color:#af5009">Accent &middot; 4.58</div>
           </div>
           <div class="rows">
             <div><span class="dot" style="background:#edeff0"></span>--neutral-color<span class="hexv">#edeff0</span></div>
             <div><span class="dot" style="background:#000000"></span>--neutral-foreground-color<span class="hexv">#000000</span></div>
             <div><span class="dot" style="background:#333333"></span>--neutral-low-foreground-color<span class="hexv">#333333</span></div>
-            <div><span class="dot" style="background:#f4822c"></span>--neutral-accent-color<span class="hexv">#f4822c</span></div>
+            <div><span class="dot" style="background:#af5009"></span>--neutral-accent-color<span class="hexv">#af5009</span></div>
           </div>
         </div>
         <div>
@@ -319,16 +320,19 @@
     <div class="chip"><div class="fill" style="background:#b55e1c"></div><div class="meta"><code>--link-color-hover</code><span class="hex">#b55e1c</span></div></div>
     <div class="chip"><div class="fill" style="background:#000000"></div><div class="meta"><code>--news-item-color</code><span class="hex">#000000</span></div></div>
     <div class="chip"><div class="fill" style="background:#f4822c"></div><div class="meta"><code>--document-color</code><span class="hex">accent</span></div></div>
-    <div class="chip"><div class="fill" style="background:red"></div><div class="meta"><code>--event-color</code><span class="hex">red</span></div></div>
-    <div class="chip"><div class="fill" style="background:blue"></div><div class="meta"><code>--file-color</code><span class="hex">blue</span></div></div>
-    <div class="chip"><div class="fill" style="background:green"></div><div class="meta"><code>--image-color</code><span class="hex">green</span></div></div>
+    <div class="chip"><div class="fill" style="background:#d32f2f"></div><div class="meta"><code>--event-color</code><span class="hex">#d32f2f</span></div></div>
+    <div class="chip"><div class="fill" style="background:#1976d2"></div><div class="meta"><code>--file-color</code><span class="hex">#1976d2</span></div></div>
+    <div class="chip"><div class="fill" style="background:#388e3c"></div><div class="meta"><code>--image-color</code><span class="hex">#388e3c</span></div></div>
   </div>
 
   <footer>
-    Two accent pairings fail WCAG AA out of the box, both <code>#f4822c</code> on a
-    near-white ground. <code>--secondary-accent-color</code> and
-    <code>--neutral-accent-color</code> are the only accent tokens that do not swap value
-    between modes; making them swap the way <code>--primary-accent-color</code> does would
-    resolve both. See <code>GAPS.md</code> &sect;3.3.
+Every accent pairing now clears WCAG AA. The two that did not &mdash;
+    <code>--secondary-accent-color</code> in dark (2.60) and
+    <code>--neutral-accent-color</code> in light (2.25) &mdash; were the only accent
+    tokens carrying <code>#f4822c</code> in both modes. The first now swaps to
+    <code>--brand-color-dark</code>; the second needed a third shade,
+    <code>--brand-color-darker</code> (<code>#af5009</code>), because
+    <code>#b55e1c</code> reaches only 3.97 against <code>#edeff0</code>. Every value here
+    is a default that a site theme replaces.
   </footer>
 </div>

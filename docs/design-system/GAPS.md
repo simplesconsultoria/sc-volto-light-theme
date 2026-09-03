@@ -7,7 +7,7 @@ Resolved items are not kept here. This document should answer "what is wrong now
 list of past fixes gets in the way of that; the history is in the changelog and in git.
 
 Every entry was verified against source or measured in a browser. Where the fix is a
-judgment call rather than a correction, it says so — those are collected in §5.
+judgment call rather than a correction, it says so — those are collected in §6.
 
 Companions: [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) for how the system works,
 [INVENTORY.md](./INVENTORY.md) for the exhaustive tables.
@@ -51,7 +51,18 @@ Visible in the `Public/Views/Default View` stories.
 
 ---
 
-## 3. Storybook coverage
+## 3. Layout
+
+### 3.1 `narrow` and `default` container widths are identical
+
+Both are `940px !important`, while `--layout-container-width` is `1440px`. The
+`blockWidth` widget offers `narrow`, `default`, `layout` and `full` as distinct choices,
+but two produce the same result. All three also carry `!important`, which blocks a
+downstream override without another `!important`.
+
+---
+
+## 4. Storybook coverage
 
 All 42 registered blocks render without error. Eleven still show an **empty state** for
 want of sample data:
@@ -63,7 +74,7 @@ want of sample data:
 | `separator` | nothing; a horizontal rule legitimately has no text, and its five dedicated stories confirm it renders |
 | `followUsBlock` | has data and does not error, but was never confirmed to paint visible links |
 
-### 3.1 Not verified
+### 4.1 Not verified
 
 - The block preview pages under `previews/` were generated from a Storybook capture whose
   pipeline lives **outside the repo**, so nobody else can regenerate them. Either commit
@@ -75,7 +86,7 @@ want of sample data:
 
 ---
 
-## 4. Translation coverage
+## 5. Translation coverage
 
 `pnpm i18n` extracts **147 messages** (the `.pot` reports 148 including its header).
 
@@ -91,14 +102,17 @@ Unlike the date formatters, that is arguably deliberate, so it was left alone.
 
 ---
 
-## 5. Open decisions — need a human
+## 6. Open decisions — need a human
 
 Nothing here is a defect; each is a choice nobody has made.
 
 | # | question | why it matters |
 |---|---|---|
+| — | Is `--brand-color: #f4822c` a deliberate default, or inherited from a client site? | It feeds `--accent-color`, all four link tokens and both block themes' accent slots. It no longer gates a contrast failure — those are fixed — but it still decides what the theme looks like before a project touches it. |
+| — | Should the content-type colours be brand-aligned? | `#d32f2f`, `#1976d2` and `#388e3c` are off the brand ramp and carry the same value in both colour modes. They resolve correctly and a site theme can now override them, so this is taste, not a defect. |
+| — | Should `narrow` and `default` container widths differ (§3.1)? | Two of the four `blockWidth` choices are indistinguishable. |
 | — | Implement or delete the Pattern layer (§1.2)? | Its tokens resolve but nothing consumes them. |
 | — | Should `documentByline` get a stylesheet, and at what width (§2.1)? | It renders flush to the viewport edge on a page. |
-| H14 | Translate `es` and `de` (§4)? | Both are registered locales with empty catalogues. |
-| — | Replace placeholder imagery and sample copy with assets of known provenance (§3.1)? | Affects all 42 blocks, not only the ones with fixtures. |
-| — | Is the Claude Design export still a goal? | Decides whether `previews/` earns its keep — see §3.1. |
+| H14 | Translate `es` and `de` (§5)? | Both are registered locales with empty catalogues. |
+| — | Replace placeholder imagery and sample copy with assets of known provenance (§4.1)? | Affects all 42 blocks, not only the ones with fixtures. |
+| — | Is the Claude Design export still a goal? | Decides whether `previews/` earns its keep — see §4.1. |
