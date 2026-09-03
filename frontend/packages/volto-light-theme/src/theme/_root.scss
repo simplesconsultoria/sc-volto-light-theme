@@ -92,9 +92,21 @@
   // Content Types
   --news-item-color: var(--pure-black);
   --document-color: var(--accent-color);
-  --event-color: var(--event-color-override, #d32f2f);
-  --file-color: var(--file-color-override, #1976d2);
-  --image-color: var(--image-color-override, #388e3c);
+  // Defaults are literals rather than palette entries: these three sit off the
+  // brand scale. A site theme overrides them through `--*-color-light` /
+  // `--*-color-dark`, the names `themeStyles.ts` derives from its settings.
+  --event-color: light-dark(
+    var(--event-color-light, #d32f2f),
+    var(--event-color-dark, #d32f2f)
+  );
+  --file-color: light-dark(
+    var(--file-color-light, #1976d2),
+    var(--file-color-dark, #1976d2)
+  );
+  --image-color: light-dark(
+    var(--image-color-light, #388e3c),
+    var(--image-color-dark, #388e3c)
+  );
 
   // Layout mappings
   --header-background: var(--primary-color);

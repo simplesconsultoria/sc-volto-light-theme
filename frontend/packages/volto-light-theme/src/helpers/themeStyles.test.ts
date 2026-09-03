@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import fs from 'node:fs';
+import path from 'node:path';
 import {
   cssVariableFor,
   isSafeCssValue,
@@ -15,23 +17,45 @@ const serialized = (partial: Partial<SerializedTheme>): SerializedTheme =>
   partial as SerializedTheme;
 
 /**
- * Every style-bearing field of `ISCVLTThemeDefinition`, i.e. what
- * `theme_settings()` returns. Pinned here so a field added on the backend
- * without a matching token shows up as a failure rather than a silent no-op.
+ * Every colour field of `ISCVLTThemeDefinition`, i.e. what `theme_settings()`
+ * returns. Pinned here so a field added on the backend without a matching
+ * token shows up as a failure rather than a silent no-op; the tests in
+ * "stylesheet contract" below check this list against the schema itself and
+ * against the properties `_root.scss` actually reads.
  */
 const BACKEND_SETTING_FIELDS = [
   'primary_color_light',
   'primary_color_dark',
   'primary_foreground_color_light',
   'primary_foreground_color_dark',
+  'primary_low_foreground_color_light',
+  'primary_low_foreground_color_dark',
+  'primary_accent_color_light',
+  'primary_accent_color_dark',
   'secondary_color_light',
   'secondary_color_dark',
   'secondary_foreground_color_light',
   'secondary_foreground_color_dark',
+  'secondary_low_foreground_color_light',
+  'secondary_low_foreground_color_dark',
+  'secondary_accent_color_light',
+  'secondary_accent_color_dark',
   'accent_color_light',
   'accent_color_dark',
   'accent_foreground_color_light',
   'accent_foreground_color_dark',
+  'accent_low_foreground_color_light',
+  'accent_low_foreground_color_dark',
+  'accent_accent_color_light',
+  'accent_accent_color_dark',
+  'neutral_color_light',
+  'neutral_color_dark',
+  'neutral_foreground_color_light',
+  'neutral_foreground_color_dark',
+  'neutral_low_foreground_color_light',
+  'neutral_low_foreground_color_dark',
+  'neutral_accent_color_light',
+  'neutral_accent_color_dark',
   'event_color_light',
   'event_color_dark',
   'file_color_light',
@@ -57,6 +81,68 @@ describe('cssVariableFor', () => {
       expect(cssVariableFor(field)).toBe(`--${field.replace(/_/g, '-')}`);
     }
   });
+});
+
+/**
+ * The two ends of the contract this file only ever checked in the middle.
+ *
+ * `cssVariableFor` deriving `--event-color-light` from `event_color_light` is
+ * worth nothing if no stylesheet reads that property. When `_root.scss` read
+ * `--event-color-override` instead, every test here still passed and the
+ * control panel's content-type colours did nothing at all.
+ */
+describe('stylesheet contract', () => {
+  const ROOT_SCSS = fs.readFileSync(
+    path.join(__dirname, '..', 'theme', '_root.scss'),
+    'utf8',
+  );
+
+  /** Written as a regex so wrapping a long `light-dark()` still matches. */
+  const isRead = (token: string) =>
+    new RegExp(`var\\(\\s*${token}\\s*[,)]`).test(ROOT_SCSS);
+
+  it('has _root.scss read the property every backend field derives', () => {
+    const unread = BACKEND_SETTING_FIELDS.filter(
+      (field) => !isRead(cssVariableFor(field)),
+    );
+
+    expect(
+      unread,
+      `_root.scss reads no such custom property, so setting ` +
+        `${unread.join(', ')} in the themes control panel changes nothing`,
+    ).toEqual([]);
+  });
+
+  const SCHEMA = path.join(
+    __dirname,
+    '..',
+    '..',
+    '..',
+    '..',
+    '..',
+    'backend',
+    'src',
+    'sc',
+    'voltolighttheme',
+    'interfaces.py',
+  );
+
+  it.skipIf(!fs.existsSync(SCHEMA))(
+    'pins exactly the colour fields the backend schema declares',
+    () => {
+      const declared = [
+        ...fs
+          .readFileSync(SCHEMA, 'utf8')
+          .matchAll(/^ {4}(\w+) = fields\.Color\(/gm),
+      ].map((m) => m[1]);
+
+      expect(
+        declared.length,
+        'no Color fields found in interfaces.py',
+      ).toBeGreaterThan(0);
+      expect([...BACKEND_SETTING_FIELDS].sort()).toEqual(declared.sort());
+    },
+  );
 });
 
 describe('themeCustomProperties', () => {
