@@ -9,6 +9,13 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a6 (2026-09-04)
+
+
+### New features:
+
+- Added `event_color`, `file_color` and `image_color` (with `_light` and `_dark` variants) to the `ISCVLTThemeDefinition` schema and updated `default` and `initial` registry profiles, allowing site themes to control content-type colors directly from the themes control panel. @humanaice 
+
 ## 1.0.0a5 (2026-08-24)
 
 

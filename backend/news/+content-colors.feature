@@ -1,1 +1,0 @@
-Added `event_color`, `file_color` and `image_color` (with `_light` and `_dark` variants) to the `ISCVLTThemeDefinition` schema and updated `default` and `initial` registry profiles, allowing site themes to control content-type colors directly from the themes control panel. @humanaice
