@@ -31,7 +31,7 @@ dependencies = [
     "plone.api",
     "plone.restapi",
     "plone.volto",
-    "kitconcept.voltolighttheme==8.0.0a28",
+    "kitconcept.voltolighttheme==8.0.0",
     "plonegovbr.socialmedia==3.0.0a0",
 ]
 
