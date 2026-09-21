@@ -39,7 +39,7 @@ $quote-padding-vertical: $spacing-medium;
     background-color: color-mix(
       in srgb,
       var(--theme-high-contrast-color, var(--accent-color)) 70%,
-      var(--theme-color, var(--primary-color))
+      transparent
     );
   }
 

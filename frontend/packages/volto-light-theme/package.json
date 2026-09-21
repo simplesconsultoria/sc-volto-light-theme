@@ -55,7 +55,7 @@
     "@kitconcept/volto-heading-block": "^2.5.0",
     "@kitconcept/volto-highlight-block": "^5.0.0-alpha.2",
     "@kitconcept/volto-introduction-block": "^1.4.1",
-    "@kitconcept/volto-light-theme": "8.0.0-alpha.31",
+    "@kitconcept/volto-light-theme": "8.0.0",
     "@kitconcept/volto-logos-block": "^4.0.0-alpha.1",
     "@kitconcept/volto-separator-block": "^5.0.0-alpha.0",
     "@kitconcept/volto-slider-block": "^7.0.0-alpha.1",

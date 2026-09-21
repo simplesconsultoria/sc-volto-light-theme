@@ -1426,8 +1426,8 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@kitconcept/volto-light-theme':
-        specifier: 8.0.0-alpha.31
-        version: 8.0.0-alpha.31(classnames@2.5.1)(embla-carousel@8.6.0)(lodash@4.18.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react-redux@8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react-router-dom@5.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 8.0.0
+        version: 8.0.0(classnames@2.5.1)(embla-carousel@8.6.0)(lodash@4.18.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react-redux@8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react-router-dom@5.2.0(react@18.2.0))(react@18.2.0)
       '@kitconcept/volto-logos-block':
         specifier: ^4.0.0-alpha.1
         version: 4.0.0-alpha.1(classnames@2.5.1)(embla-carousel@8.6.0)(lodash@4.18.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react-redux@8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react-router-dom@5.2.0(react@18.2.0))(react@18.2.0)
@@ -3361,8 +3361,8 @@ packages:
       react: ^18.2.0
       react-dom: ^18.2.0
 
-  '@kitconcept/volto-light-theme@8.0.0-alpha.22':
-    resolution: {integrity: sha512-hO5jz/glJDk7Fy2H/qfuvbZHbgbNs/DK0beUqyWVEQqBjjViZ5bqAv/P0vrqwKBtleCSrDFLRzR3uu85I0uXlw==}
+  '@kitconcept/volto-light-theme@8.0.0':
+    resolution: {integrity: sha512-R2m+EUN5lKmaVhnI+JqOE7XRe5pV3FPSHV+pLFLJN81Py/LROKAKlNu0Ze+05zY9vQ2BKGYCRR+pQRM2xNxxzQ==}
     peerDependencies:
       classnames: ^2.5.1
       lodash: 4.17.21
@@ -3372,8 +3372,8 @@ packages:
       react-redux: ^8.1.2
       react-router-dom: ^5.2.0
 
-  '@kitconcept/volto-light-theme@8.0.0-alpha.31':
-    resolution: {integrity: sha512-m2QZ2yS9MYEQ9g4CX6i4dIoNgpXw5aRtQeKZCoo5C4scodlBjHzeA5f1w43CxIzDgb19DLpL5gcwf7TCo7CZ3A==}
+  '@kitconcept/volto-light-theme@8.0.0-alpha.22':
+    resolution: {integrity: sha512-hO5jz/glJDk7Fy2H/qfuvbZHbgbNs/DK0beUqyWVEQqBjjViZ5bqAv/P0vrqwKBtleCSrDFLRzR3uu85I0uXlw==}
     peerDependencies:
       classnames: ^2.5.1
       lodash: 4.17.21
@@ -13383,7 +13383,7 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@kitconcept/volto-light-theme@8.0.0-alpha.22(classnames@2.5.1)(embla-carousel@8.6.0)(lodash@4.18.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react-redux@8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react-router-dom@5.2.0(react@18.2.0))(react@18.2.0)':
+  '@kitconcept/volto-light-theme@8.0.0(classnames@2.5.1)(embla-carousel@8.6.0)(lodash@4.18.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react-redux@8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react-router-dom@5.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@dnd-kit/core': 6.0.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@dnd-kit/sortable': 7.0.2(@dnd-kit/core@6.0.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
@@ -13406,7 +13406,7 @@ snapshots:
     transitivePeerDependencies:
       - embla-carousel
 
-  '@kitconcept/volto-light-theme@8.0.0-alpha.31(classnames@2.5.1)(embla-carousel@8.6.0)(lodash@4.18.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react-redux@8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react-router-dom@5.2.0(react@18.2.0))(react@18.2.0)':
+  '@kitconcept/volto-light-theme@8.0.0-alpha.22(classnames@2.5.1)(embla-carousel@8.6.0)(lodash@4.18.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react-redux@8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react-router-dom@5.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@dnd-kit/core': 6.0.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@dnd-kit/sortable': 7.0.2(@dnd-kit/core@6.0.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
