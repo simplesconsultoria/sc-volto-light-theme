@@ -31,7 +31,7 @@
   }
 }
 
-.block.gridBlock {
+@mixin compact-carousel {
   .block.carousel {
     overflow: hidden;
     width: 100%;
@@ -88,5 +88,19 @@
         );
       }
     }
+  }
+}
+
+:is(
+    .block.gridBlock:not(.one),
+    .block.custom-grid:not(.layout-1),
+    .grid-items:not(.one)
+  ) {
+  @include compact-carousel;
+}
+
+@media only screen and (max-width: 768px) {
+  :is(.block.gridBlock.one, .block.custom-grid.layout-1, .grid-items.one) {
+    @include compact-carousel;
   }
 }

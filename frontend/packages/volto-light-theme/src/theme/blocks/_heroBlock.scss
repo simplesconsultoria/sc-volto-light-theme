@@ -20,6 +20,9 @@ $hero-card-overlap: 60px;
   margin-left: 0 !important;
   background-color: var(--theme-color, transparent);
   color: var(--theme-foreground-color, inherit);
+
+  // Container type para permitir que fontes reajam à largura da coluna
+  container-type: inline-size;
 }
 
 .hero-block-container {
@@ -114,6 +117,10 @@ $hero-card-overlap: 60px;
         1rem + 2vw,
         map-get($line-heights, 3xl)
       );
+      @container (max-width: 600px) {
+        font-size: map-get($font-sizes, xl);
+        line-height: map-get($line-heights, xl);
+      }
     }
     &.is-h3 {
       @include text-heading-h3();
@@ -127,6 +134,10 @@ $hero-card-overlap: 60px;
         1rem + 1.5vw,
         map-get($line-heights, 2xl)
       );
+      @container (max-width: 600px) {
+        font-size: map-get($font-sizes, l);
+        line-height: map-get($line-heights, l);
+      }
     }
     &.is-p {
       @include body-text();
@@ -140,6 +151,10 @@ $hero-card-overlap: 60px;
         1rem + 1vw,
         map-get($line-heights, xl)
       );
+      @container (max-width: 600px) {
+        font-size: map-get($font-sizes, m);
+        line-height: map-get($line-heights, m);
+      }
     }
   }
 
@@ -149,6 +164,11 @@ $hero-card-overlap: 60px;
     hyphens: none;
     word-break: keep-all;
     @include body-text();
+
+    @container (max-width: 600px) {
+      font-size: map-get($font-sizes, s);
+      line-height: map-get($line-heights, s);
+    }
   }
 
   .hero-footer-text {
@@ -439,8 +459,7 @@ $hero-card-overlap: 60px;
 }
 
 // Support for HeroBlock inside Grid
-.gridBlock,
-.grid-items {
+@mixin compact-hero {
   .hero-block-container,
   .hero-block {
     width: 100% !important;
@@ -471,6 +490,20 @@ $hero-card-overlap: 60px;
 
   .hero-block.text-right .hero-flex-inner {
     flex-direction: column;
+  }
+}
+
+:is(
+    .block.gridBlock:not(.one),
+    .block.custom-grid:not(.layout-1),
+    .grid-items:not(.one)
+  ) {
+  @include compact-hero;
+}
+
+@media only screen and (max-width: 768px) {
+  :is(.block.gridBlock.one, .block.custom-grid.layout-1, .grid-items.one) {
+    @include compact-hero;
   }
 }
 

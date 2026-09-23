@@ -6,6 +6,9 @@ import DocumentByLineInfo from '../components/Blocks/DocumentByLine';
 import MainImageBlockInfo from '../components/Blocks/MainImageBlock';
 import HeroBlockInfo from '../components/Blocks/HeroBlock';
 import QuoteBlockInfo from '../components/Blocks/QuoteBlock';
+import { CustomGridSchema } from '../components/Blocks/CustomGrid/Schema';
+import CustomGridView from '../components/Blocks/CustomGrid/View';
+import CustomGridEdit from '../components/Blocks/CustomGrid/Edit';
 import CarouselTemplate from '../components/Blocks/Listing/CarouselTemplate';
 import MediaCarouselTemplate from '../components/Blocks/Listing/MediaCarouselTemplate';
 import GridTemplate from '../components/Blocks/Listing/GridTemplate';
@@ -24,6 +27,7 @@ declare module '@plone/types' {
     mainImageBlock: BlockConfigBase;
     quoteBlock: BlockConfigBase;
     heroBlock: BlockConfigBase;
+    customGrid: BlockConfigBase;
   }
 }
 
@@ -74,6 +78,21 @@ function installLocalBlocks(config: ConfigType) {
   config.blocks.blocksConfig.mainImageBlock = MainImageBlockInfo;
   config.blocks.blocksConfig.heroBlock = HeroBlockInfo;
   config.blocks.blocksConfig.quoteBlock = QuoteBlockInfo;
+
+  config.blocks.blocksConfig.customGrid = {
+    id: 'customGrid',
+    title: 'Custom Grid',
+    icon: '', // can be added if needed
+    group: 'common',
+    view: CustomGridView,
+    edit: CustomGridEdit,
+    schema: CustomGridSchema,
+    blockSchema: CustomGridSchema,
+    blockHasOwnFocusManagement: true,
+    restricted: false,
+    mostUsed: true,
+    sidebarTab: 1,
+  };
   return config;
 }
 
