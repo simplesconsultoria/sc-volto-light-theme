@@ -1447,8 +1447,8 @@ importers:
         specifier: workspace:*
         version: link:../../core/packages/components
       '@plonegovbr/volto-social-media':
-        specifier: ^3.0.0-alpha.0
-        version: 3.0.0-alpha.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: ^3.0.0
+        version: 3.0.0(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react-redux@8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -3655,11 +3655,13 @@ packages:
       react-dom:
         optional: true
 
-  '@plonegovbr/volto-social-media@3.0.0-alpha.0':
-    resolution: {integrity: sha512-n8QTrerWjYcUAwG5yT2YOZuEplWTceoGpvEvqP4fw0PjxVvjnAjvA3YSor+vzDRQl0Ag+7fElLLFA6QIyPlvLw==}
+  '@plonegovbr/volto-social-media@3.0.0':
+    resolution: {integrity: sha512-zhlJjfkBjwwOvVbwM3yn/Zw4YFHYVSIu7CR9oZE2zkQWaeLGzsVSfc0RtGyUMKwtCCcW8YogQNgwLdaY911e2w==}
     peerDependencies:
-      react: 18.2.0
-      react-dom: 18.2.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      react-intl: ^3.12.1
+      react-redux: ^8.1.2
 
   '@pmmmwh/react-refresh-webpack-plugin@0.5.17':
     resolution: {integrity: sha512-tXDyE1/jzFsHXjhRZQ3hMl0IVhYe5qula43LDWIhVfjp9G/nT5OQY5AORVOrkEGAUltBJOfOWeETbmhm6kHhuQ==}
@@ -13818,11 +13820,14 @@ snapshots:
     optionalDependencies:
       react-dom: 18.2.0(react@18.2.0)
 
-  '@plonegovbr/volto-social-media@3.0.0-alpha.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@plonegovbr/volto-social-media@3.0.0(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react-redux@8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react@18.2.0)':
     dependencies:
-      '@plone/components': 4.0.0-alpha.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@plone/components': 4.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      classnames: 2.5.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+      react-intl: 3.12.1(@types/react@18.3.31)(react@18.2.0)
+      react-redux: 8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1)
 
   '@pmmmwh/react-refresh-webpack-plugin@0.5.17(react-refresh@0.14.2)(type-fest@2.19.0)(webpack-dev-server@5.2.6(tslib@2.8.1)(webpack@5.105.4(esbuild@0.25.12)))(webpack-hot-middleware@2.26.1)(webpack@5.105.4(esbuild@0.25.12))':
     dependencies:
