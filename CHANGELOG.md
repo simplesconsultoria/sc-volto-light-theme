@@ -7,6 +7,34 @@
 -->
 
 <!-- towncrier release notes start -->
+## 1.0.0a7 (2026-09-23)
+
+### Backend
+
+
+#### Internal:
+
+- Upgraded `plonegovbr.socialmedia` to 3.0.0 and relaxed the `kitconcept.voltolighttheme` and `plonegovbr.socialmedia` pins to minimum versions (`>=8.0.0` and `>=3.0.0`), so downstream projects can install newer releases without conflicts. @ericof [#25](https://github.com/simplesconsultoria/sc-volto-light-theme/issues/25)
+- Atualização do vlt para 8.0.0. @humanaice. 
+
+
+
+### Frontend
+
+#### Internal
+
+- Upgraded `@plonegovbr/volto-social-media` to 3.0.0. @ericof [#25](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/25)
+- Atualização do vlt para 8.0.0. @humanaice. 
+
+
+
+### Project
+
+No significant changes.
+
+
+
+
 ## 1.0.0a6 (2026-09-04)
 
 ### Backend

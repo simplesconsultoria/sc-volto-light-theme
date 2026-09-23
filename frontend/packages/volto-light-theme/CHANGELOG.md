@@ -8,6 +8,13 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0-alpha.7 (2026-09-23)
+
+### Internal
+
+- Upgraded `@plonegovbr/volto-social-media` to 3.0.0. @ericof [#25](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/25)
+- Atualização do vlt para 8.0.0. @humanaice. 
+
 ## 1.0.0-alpha.6 (2026-09-04)
 
 ### Feature

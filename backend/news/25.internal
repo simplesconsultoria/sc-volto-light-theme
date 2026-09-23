@@ -1,1 +1,0 @@
-Upgraded `plonegovbr.socialmedia` to 3.0.0 and relaxed the `kitconcept.voltolighttheme` and `plonegovbr.socialmedia` pins to minimum versions (`>=8.0.0` and `>=3.0.0`), so downstream projects can install newer releases without conflicts. @ericof
