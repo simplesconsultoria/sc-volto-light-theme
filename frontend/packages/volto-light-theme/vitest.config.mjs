@@ -41,6 +41,10 @@ const addonAliases = {
     __dirname,
     '../../core/packages/volto/node_modules/react-popper',
   ),
+  '@testing-library/jest-dom': path.resolve(
+    __dirname,
+    '../../core/packages/volto/node_modules/@testing-library/jest-dom',
+  ),
 };
 
 export default defineConfig({
