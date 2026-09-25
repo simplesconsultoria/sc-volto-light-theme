@@ -8,6 +8,18 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0-alpha.8 (2026-09-25)
+
+### Feature
+
+- Added a new Custom Grid block to replace standard grid layouts, featuring theme selections per column. @humanaice 
+- Enhanced the Colophon footer slot with two configurable text areas (left and right). Also automatically centers content if only one side is filled. @humanaice 
+- Updated the Events Template listing to dynamically fetch and display the location of the event. @humanaice 
+
+### Internal
+
+- Removed unused `uuid` dependency (replaced by `crypto.randomUUID()`), stabilized test suites fixing Semantic UI and Vitest alias issues, added new Storybooks, and synced with `.design-sync` for Cloudesign integration. @humanaice 
+
 ## 1.0.0-alpha.7 (2026-09-23)
 
 ### Internal

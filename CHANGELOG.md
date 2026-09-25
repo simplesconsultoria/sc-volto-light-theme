@@ -7,6 +7,40 @@
 -->
 
 <!-- towncrier release notes start -->
+## 1.0.0a8 (2026-09-25)
+
+### Backend
+
+
+#### Internal:
+
+- Added `footer_colophon_right_text` field to the `IFooterSettings` behavior. @humanaice 
+
+
+
+### Frontend
+
+#### Feature
+
+- Added a new Custom Grid block to replace standard grid layouts, featuring theme selections per column. @humanaice 
+- Enhanced the Colophon footer slot with two configurable text areas (left and right). Also automatically centers content if only one side is filled. @humanaice 
+- Updated the Events Template listing to dynamically fetch and display the location of the event. @humanaice 
+
+#### Internal
+
+- Removed unused `uuid` dependency (replaced by `crypto.randomUUID()`), stabilized test suites fixing Semantic UI and Vitest alias issues, added new Storybooks, and synced with `.design-sync` for Cloudesign integration. @humanaice 
+
+
+
+### Project
+
+
+#### Internal
+
+- Added `EventMetadata`, `EventsTemplate`, `Colophon`, and `SimpleColorPickerWidget` components to `.design-sync/config.json`. @humanaice 
+
+
+
 ## 1.0.0a7 (2026-09-23)
 
 ### Backend

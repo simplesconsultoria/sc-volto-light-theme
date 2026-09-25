@@ -9,6 +9,13 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a8 (2026-09-25)
+
+
+### Internal:
+
+- Added `footer_colophon_right_text` field to the `IFooterSettings` behavior. @humanaice 
+
 ## 1.0.0a7 (2026-09-23)
 
 
