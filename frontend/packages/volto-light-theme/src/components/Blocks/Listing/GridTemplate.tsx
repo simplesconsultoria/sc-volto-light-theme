@@ -14,6 +14,7 @@ export interface GridTemplateProps {
   linkHref?: any[];
   isEditMode?: boolean;
   gridColumns?: number;
+  data?: any;
 }
 
 const GridItemBody = ({
@@ -49,6 +50,7 @@ const GridTemplate: React.FC<GridTemplateProps> = ({
   linkHref,
   isEditMode,
   gridColumns,
+  data,
 }) => {
   let link: React.ReactNode = null;
   const href = linkHref?.[0]?.['@id'] || '';
@@ -84,9 +86,15 @@ const GridTemplate: React.FC<GridTemplateProps> = ({
               dependencies: [item['@type']],
             }).component || DefaultSummary;
 
-          let showLink = !Summary.hideLink && !isEditMode;
+          let showLink =
+            !Summary.hideLink &&
+            !isEditMode &&
+            !!(item['@id'] || item.href || item.url);
           if (item['@type'] === 'Person' && hideProfileLinks !== undefined) {
-            showLink = !hideProfileLinks && !isEditMode;
+            showLink =
+              !hideProfileLinks &&
+              !isEditMode &&
+              !!(item['@id'] || item.href || item.url);
           }
 
           const borderColor = getContentTypeColor(

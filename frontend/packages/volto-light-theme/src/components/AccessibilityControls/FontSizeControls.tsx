@@ -50,6 +50,7 @@ const FontSizeControls: React.FC = () => {
         disabled={!canDecrease}
         title={intl.formatMessage(messages.decreaseFontSize)}
         aria-label={intl.formatMessage(messages.decreaseFontSize)}
+        suppressHydrationWarning
       >
         A-
       </button>
@@ -67,6 +68,7 @@ const FontSizeControls: React.FC = () => {
         disabled={!canIncrease}
         title={intl.formatMessage(messages.increaseFontSize)}
         aria-label={intl.formatMessage(messages.increaseFontSize)}
+        suppressHydrationWarning
       >
         A+
       </button>

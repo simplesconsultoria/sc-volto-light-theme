@@ -1,0 +1,436 @@
+// ===============================================================
+// Styles for volto-custom-grid
+//
+// Layout grid uses CSS Grid with fractional units to match the
+// proportions declared in the layout string (e.g. '2-1' = 2fr 1fr).
+// Responsive: columns stack below 768px, with intermediate steps
+// at 768px and 1024px for 3+ column layouts.
+// ===============================================================
+
+// ===============================================================
+// 1. Estrutura do Bloco (Volto BlockWrapper)
+// O Volto por padrão injeta a classe `.block.customGrid` no
+// container mais externo. Nós removemos max-width e margin dele
+// para permitir que o background-color sangre até as bordas.
+// ===============================================================
+.block.customGrid {
+  max-width: unset !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  // container-type garante que o @container interno funcione
+  container-type: inline-size;
+}
+
+// ===============================================================
+// 2. Container Interno da Grid
+// ===============================================================
+.custom-grid {
+  display: grid;
+  gap: 1rem;
+
+  // Larguras do Container (usando mixins do sc-volto-light-theme)
+  &.has--block-width--narrow,
+  &[class*='has--block-width--var(--narrow-container-width)']:not(
+      :where(.custom-grid-edit *)
+    ) {
+    @include narrow-container-width();
+    @include adjustMarginsToContainer($narrow-container-width);
+  }
+
+  &.has--block-width--default,
+  &[class*='has--block-width--var(--default-container-width)']:not(
+      :where(.custom-grid-edit *)
+    ) {
+    @include default-container-width();
+    @include adjustMarginsToContainer($default-container-width);
+  }
+
+  &.has--block-width--layout,
+  &[class*='has--block-width--var(--layout-container-width)']:not(
+      :where(.custom-grid-edit *)
+    ) {
+    @include layout-container-width();
+    @include adjustMarginsToContainer($layout-container-width);
+  }
+
+  &.has--block-width--unset,
+  &.has--block-width--full {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  // Comportamentos de Layout (CSS Grid)
+  &.layout-1 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  &.layout-1-1 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+  &.layout-1-4 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 4fr);
+    }
+  }
+  &.layout-4-1 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 1fr);
+    }
+  }
+  &.layout-1-2 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+  }
+  &.layout-2-1 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+  }
+  &.layout-2-3 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    }
+  }
+  &.layout-3-2 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+  }
+
+  &.layout-1-1-1 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+  &.layout-2-1-1 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    @media (min-width: 1024px) {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+  &.layout-1-2-1 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    @media (min-width: 1024px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+    }
+  }
+  &.layout-1-1-2 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    @media (min-width: 1024px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr);
+    }
+  }
+
+  &.layout-1-1-1-1 {
+    grid-template-columns: minmax(0, 1fr);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    @media (min-width: 1024px) {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(
+          0,
+          1fr
+        );
+    }
+  }
+}
+
+// ===============================================================
+// 3. Colunas
+// ===============================================================
+.custom-grid-column {
+  display: flex;
+  min-height: 60px;
+  flex-direction: column;
+
+  container-type: inline-size;
+  word-break: break-word;
+
+  // Integração com sc-vlt theme system
+  &.has-theme {
+    padding: 1rem;
+    border-radius: 4px;
+    background-color: var(--theme-color, transparent);
+    color: var(--theme-foreground-color, inherit);
+  }
+}
+
+// ===============================================================
+// 4. Modo de Edição
+// ===============================================================
+#page-edit .custom-grid-edit {
+  position: relative;
+
+  .custom-grid-settings-btn {
+    position: absolute;
+    z-index: 100;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    color: #444;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: #f0f0f0;
+      color: #000;
+    }
+  }
+
+  .custom-grid-column {
+    position: relative;
+    min-height: 80px;
+    padding: 0.5rem 2.2rem;
+    border: 1px dashed #b8c6c8;
+    transition: border-color 0.15s ease;
+
+    &:hover,
+    &.is-focused {
+      border-color: #007eb1;
+      box-shadow: 0 0 0 1px #007eb1;
+    }
+
+    &.has-theme {
+      // Retain the visual border indicator during edit, even with themes
+      border: 1px dashed var(--theme-foreground-color, #b8c6c8);
+    }
+
+    .custom-grid-empty-placeholder {
+      display: flex;
+      width: 100%;
+      min-height: 120px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      background-color: #e5f1f4;
+
+      .placeholder-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        p {
+          margin: 0;
+          color: #555;
+          font-size: 14px;
+        }
+
+        .add-block-btn {
+          border-radius: 50% !important;
+          margin: 0 !important;
+          background: #fff !important;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+        }
+      }
+    }
+
+    .blocks-form {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+
+      fieldset.invisible {
+        width: 100% !important;
+        min-width: 100% !important;
+
+        > div {
+          width: 100% !important;
+        }
+      }
+
+      [class*='block-editor-'] {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+
+        .block-slate,
+        .slate-editor,
+        .block-slate .slate-editor,
+        [data-slate-editor='true'] {
+          display: block !important;
+          width: 100% !important;
+          min-width: 100% !important;
+          @container (max-width: 700px) {
+            margin: 0;
+          }
+        }
+
+        .ui.drag.block.inner {
+          width: 100% !important;
+          margin-right: 0 !important;
+          margin-left: 0 !important;
+        }
+        .block.selected::before,
+        .block.multiSelected::before {
+          right: -5px !important;
+          left: -5px !important;
+        }
+        .delete-button {
+          z-index: 20;
+          right: -25px !important;
+        }
+        .drag.handle.wrapper {
+          z-index: 20;
+          left: -30px !important;
+          margin-left: 0 !important;
+        }
+      }
+      .block.multiSelected::before {
+        border: 2px solid rgba(120, 192, 215, 0.75) !important;
+        background-color: transparent !important;
+        pointer-events: none !important;
+      }
+    }
+  }
+}
+
+// ===============================================================
+// 5. Seletor de Layout
+// ===============================================================
+.custom-grid-layout-selector {
+  padding: 1.5rem;
+  border: 2px dashed #b8c6c8;
+  border-radius: 6px;
+  background: #f3f5f6;
+  text-align: center;
+
+  h4 {
+    margin: 0 0 1rem;
+    color: #555;
+    font-size: 1rem;
+  }
+
+  .layout-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .layout-option {
+    display: flex;
+    min-width: 80px;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    gap: 0.5rem;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+
+    &:hover {
+      border-color: #007eb1;
+      box-shadow: 0 2px 8px rgba(0, 126, 177, 0.15);
+    }
+
+    .layout-preview {
+      display: flex;
+      width: 60px;
+      height: 36px;
+      gap: 3px;
+
+      .layout-preview-col {
+        min-width: 0;
+        border-radius: 2px;
+        background: #b8c6c8;
+      }
+    }
+
+    .layout-label {
+      color: #555;
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+  }
+}
+
+// ===============================================================
+// 6. Contenção e Alturas Iguais
+// - Herda estilos do gridBlock nativo via @extend
+// - CSS Grid distribui altura igual entre colunas (stretch)
+// - Chain flex interna propaga a altura até os blocos visuais.
+// ===============================================================
+.block.custom-grid {
+  // Herda magicamente todos os ajustes finos (backgrounds, margens, etc)
+  // que o VLT original destina a blocos internos do .gridBlock
+  @extend .gridBlock;
+
+  align-items: stretch;
+
+  > .custom-grid-column {
+    display: flex;
+    // Propaga a altura do CSS Grid para os filhos
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    // Remove max-width e margens de blocos contidos
+    > .blocks-group-wrapper {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      flex-grow: 1;
+
+      > .block {
+        // Remove margens laterais e max-width dos blocos internos
+        max-width: 100% !important;
+
+        // Impede que os blocos sejam esmagados verticalmente se faltar espaço na coluna
+        flex-shrink: 0;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+
+        // Se houver mais de um bloco na coluna, não devem forçar 100% de altura
+        // pois isso esmagaria os blocos vizinhos. Devem usar altura natural.
+        &:not(:only-child) {
+          height: auto !important;
+        }
+      }
+    }
+
+    // O HeroBlock possui um container interno que tenta forçar largura standalone,
+    // precisamos resetá-lo quando dentro de uma coluna do custom grid.
+    .hero-block-container {
+      max-width: 100% !important;
+      margin: 0 !important;
+    }
+  }
+}

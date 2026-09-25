@@ -20,6 +20,9 @@ $hero-card-overlap: 60px;
   margin-left: 0 !important;
   background-color: var(--theme-color, transparent);
   color: var(--theme-foreground-color, inherit);
+
+  // Container type para permitir que fontes reajam à largura da coluna
+  container-type: inline-size;
 }
 
 .hero-block-container {
@@ -46,6 +49,24 @@ $hero-card-overlap: 60px;
     max-width: 100% !important;
     margin-right: auto !important;
     margin-left: auto !important;
+  }
+
+  &.has--full-width-image {
+    position: relative;
+    right: 50%;
+    left: 50%;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-right: -50vw !important;
+    margin-left: -50vw !important;
+
+    // Maintain content centered
+    .hero-flex-inner {
+      @include layout-container-width();
+      @include adjustMarginsToContainer($layout-container-width);
+      margin-right: auto !important;
+      margin-left: auto !important;
+    }
   }
 }
 
@@ -114,6 +135,10 @@ $hero-card-overlap: 60px;
         1rem + 2vw,
         map-get($line-heights, 3xl)
       );
+      @container (max-width: 600px) {
+        font-size: map-get($font-sizes, xl);
+        line-height: map-get($line-heights, xl);
+      }
     }
     &.is-h3 {
       @include text-heading-h3();
@@ -127,6 +152,10 @@ $hero-card-overlap: 60px;
         1rem + 1.5vw,
         map-get($line-heights, 2xl)
       );
+      @container (max-width: 600px) {
+        font-size: map-get($font-sizes, l);
+        line-height: map-get($line-heights, l);
+      }
     }
     &.is-p {
       @include body-text();
@@ -140,6 +169,10 @@ $hero-card-overlap: 60px;
         1rem + 1vw,
         map-get($line-heights, xl)
       );
+      @container (max-width: 600px) {
+        font-size: map-get($font-sizes, m);
+        line-height: map-get($line-heights, m);
+      }
     }
   }
 
@@ -149,6 +182,11 @@ $hero-card-overlap: 60px;
     hyphens: none;
     word-break: keep-all;
     @include body-text();
+
+    @container (max-width: 600px) {
+      font-size: map-get($font-sizes, s);
+      line-height: map-get($line-heights, s);
+    }
   }
 
   .hero-footer-text {
@@ -164,8 +202,6 @@ $hero-card-overlap: 60px;
     width: fit-content;
     padding: 0.625rem 1.75rem;
     border: 2px transparent solid;
-    background: var(--theme-high-contrast-color);
-    color: var(--theme-top-foreground-color);
     cursor: pointer;
     letter-spacing: 0.04em;
     text-decoration: none;
@@ -178,20 +214,61 @@ $hero-card-overlap: 60px;
     @include add(size, xs);
 
     .hero-button.item {
-      color: var(--theme-top-foreground-color);
       @include body-text-bold();
       @include add(size, xs);
       letter-spacing: 0.04em;
       text-decoration: none;
       text-transform: uppercase;
     }
-    &:hover,
-    &:focus-visible {
+
+    &.theme-full {
+      background: var(--theme-high-contrast-color);
+      color: var(--theme-top-foreground-color);
+      .hero-button.item {
+        color: var(--theme-top-foreground-color);
+      }
+      &:hover,
+      &:focus-visible {
+        border: 2px solid var(--theme-high-contrast-color);
+        background-color: var(--theme-top-foreground-color);
+        color: var(--theme-high-contrast-color);
+        .hero-button.item {
+          color: var(--theme-high-contrast-color);
+        }
+      }
+    }
+
+    &.theme-outline {
       border: 2px solid var(--theme-high-contrast-color);
-      background-color: var(--theme-top-foreground-color);
+      background: transparent;
       color: var(--theme-high-contrast-color);
       .hero-button.item {
         color: var(--theme-high-contrast-color);
+      }
+      &:hover,
+      &:focus-visible {
+        background-color: var(--theme-high-contrast-color);
+        color: var(--theme-color, var(--primary-foreground-color, #fff));
+        .hero-button.item {
+          color: var(--theme-color, var(--primary-foreground-color, #fff));
+        }
+      }
+    }
+
+    &.theme-danger {
+      background: #e74c3c;
+      color: #fff;
+      .hero-button.item {
+        color: #fff;
+      }
+      &:hover,
+      &:focus-visible {
+        border-color: #e74c3c;
+        background: transparent;
+        color: #e74c3c;
+        .hero-button.item {
+          color: #e74c3c;
+        }
       }
     }
   }
@@ -288,10 +365,10 @@ $hero-card-overlap: 60px;
       .hero-flex-content .hero-header {
         display: flex;
         flex-direction: column;
-        align-items: end;
+        align-items: flex-start;
       }
       .hero-flex-content {
-        text-align: right;
+        text-align: left;
       }
 
       @media only screen and (max-width: $largest-mobile-screen) {
@@ -318,6 +395,30 @@ $hero-card-overlap: 60px;
     .hero-image {
       position: relative;
       z-index: 1;
+    }
+  }
+
+  &.image-fit-cover {
+    .hero-flex-inner {
+      align-items: stretch;
+    }
+    .hero-flex-image-wrapper {
+      display: flex;
+      flex-direction: column;
+
+      .hero-image {
+        display: flex;
+        flex: 1 1 auto;
+
+        img {
+          height: 100%;
+          min-height: 300px; // ensure some minimum height
+        }
+      }
+
+      .hero-decorative-square {
+        display: none;
+      }
     }
   }
 
@@ -439,8 +540,7 @@ $hero-card-overlap: 60px;
 }
 
 // Support for HeroBlock inside Grid
-.gridBlock,
-.grid-items {
+@mixin compact-hero {
   .hero-block-container,
   .hero-block {
     width: 100% !important;
@@ -471,6 +571,20 @@ $hero-card-overlap: 60px;
 
   .hero-block.text-right .hero-flex-inner {
     flex-direction: column;
+  }
+}
+
+:is(
+    .block.gridBlock:not(.one),
+    .block.custom-grid:not(.layout-1),
+    .grid-items:not(.one)
+  ) {
+  @include compact-hero;
+}
+
+@media only screen and (max-width: 768px) {
+  :is(.block.gridBlock.one, .block.custom-grid.layout-1, .grid-items.one) {
+    @include compact-hero;
   }
 }
 

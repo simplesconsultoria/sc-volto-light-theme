@@ -33,6 +33,18 @@ const addonAliases = {
     __dirname,
     '../../core/packages/volto/node_modules/react-redux',
   ),
+  'semantic-ui-react': path.resolve(
+    __dirname,
+    '../../core/packages/volto/node_modules/semantic-ui-react',
+  ),
+  'react-popper': path.resolve(
+    __dirname,
+    '../../core/packages/volto/node_modules/react-popper',
+  ),
+  '@testing-library/jest-dom': path.resolve(
+    __dirname,
+    '../../core/packages/volto/node_modules/@testing-library/jest-dom',
+  ),
 };
 
 export default defineConfig({

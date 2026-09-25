@@ -10,9 +10,11 @@ export interface HeroBlockData {
   preview_image?: Array<ObjectBrowserItem>;
   image_field?: string;
   image_scales?: Record<string, any>;
-  button?: boolean;
-  buttonLink?: Array<ObjectBrowserItem>;
-  buttonText?: string;
+  buttons?: Array<{
+    buttonText: string;
+    buttonLink: Array<ObjectBrowserItem>;
+    theme?: string;
+  }>;
   fullWidth?: boolean;
   imageSize?: string;
   hideImage?: boolean;

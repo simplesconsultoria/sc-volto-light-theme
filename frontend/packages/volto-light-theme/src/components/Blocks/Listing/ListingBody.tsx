@@ -146,6 +146,18 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
 
   const HeadlineTag = data.headlineTag || 'h2';
 
+  let rawBlockWidth = data.blockWidth || data.styles?.['blockWidth:noprefix'];
+  if (typeof rawBlockWidth === 'object' && rawBlockWidth !== null) {
+    rawBlockWidth =
+      rawBlockWidth.value ||
+      rawBlockWidth.id ||
+      Object.values(rawBlockWidth)[0];
+  }
+  const blockWidthClass =
+    rawBlockWidth && typeof rawBlockWidth === 'string'
+      ? `has--block-width--${rawBlockWidth}`
+      : 'has--block-width--layout';
+
   return (
     <>
       {(data.headline || data.headlineButtonText) && (
@@ -159,7 +171,7 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
       )}
       <SlotRenderer name="aboveListingItems" content={content} data={data} />
       {listingItems?.length > 0 && ListingBodyTemplate ? (
-        <div ref={listingRef}>
+        <div ref={listingRef} className={cx('listing-body', blockWidthClass)}>
           <ListingBodyTemplate
             items={listingItems}
             isEditMode={isEditMode}
@@ -239,7 +251,10 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
           )}
         </div>
       ) : isEditMode ? (
-        <div className="listing message" ref={listingRef}>
+        <div
+          className={cx('listing message', blockWidthClass)}
+          ref={listingRef}
+        >
           {isFolderContentsListing && (
             <FormattedMessage
               id="No items found in this container."
@@ -256,7 +271,7 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
           </Dimmer>
         </div>
       ) : (
-        <div className="emptyListing">
+        <div className={cx('emptyListing', blockWidthClass)}>
           {hasLoaded && NoResults && (
             <NoResults isEditMode={isEditMode} {...data} />
           )}

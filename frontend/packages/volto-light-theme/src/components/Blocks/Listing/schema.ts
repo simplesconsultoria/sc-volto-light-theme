@@ -1,6 +1,8 @@
 import { defineMessages } from 'react-intl';
 import type { IntlShape } from '@plone/types/src/i18n';
 
+import config from '@plone/volto/registry';
+
 const messages = defineMessages({
   carousel: {
     id: 'Carousel',
@@ -58,6 +60,10 @@ const messages = defineMessages({
     defaultMessage: 'Center bottom',
   },
   positionRightBottom: { id: 'Right bottom', defaultMessage: 'Right bottom' },
+  blockWidth: {
+    id: 'Block Width',
+    defaultMessage: 'Block Width',
+  },
 });
 
 const objectPositionChoices = (intl: IntlShape) => [
@@ -277,6 +283,18 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
     if (defaultFieldset && !defaultFieldset.fields.includes('gridColumns')) {
       defaultFieldset.fields.push('gridColumns');
     }
+  }
+
+  // We add blockWidth to the main schema (like in CustomGrid and HeroBlock)
+  schema.properties.blockWidth = {
+    widget: 'blockWidth',
+    title: intl.formatMessage(messages.blockWidth),
+    default: 'layout',
+    filterActions: ['narrow', 'default', 'layout', 'full'],
+    actions: config.blocks?.widths || [],
+  };
+  if (defaultFieldset && !defaultFieldset.fields.includes('blockWidth')) {
+    defaultFieldset.fields.unshift('blockWidth');
   }
 
   return schema;

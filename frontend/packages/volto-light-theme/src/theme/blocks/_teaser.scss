@@ -26,11 +26,11 @@ body #page-edit [class^='block-editor-'] > .block .teaser,
   }
 }
 
-.block.gridBlock {
+@mixin compact-teaser {
   body #page-edit [class^='block-editor-'] .block .teaser,
   .block.teaser {
     .card {
-      border: solid var(--theme-border-color);
+      border: solid var(--cardBorderColor, var(--theme-border-color));
       border-width: var(--theme-border-width);
 
       .card-inner {
@@ -73,5 +73,19 @@ body #page-edit [class^='block-editor-'] > .block .teaser,
         var(--theme-top-foreground-color)
       ) !important;
     }
+  }
+}
+
+:is(
+    .block.gridBlock:not(.one),
+    .block.custom-grid:not(.layout-1),
+    .grid-items:not(.one)
+  ) {
+  @include compact-teaser;
+}
+
+@media only screen and (max-width: 768px) {
+  :is(.block.gridBlock.one, .block.custom-grid.layout-1, .grid-items.one) {
+    @include compact-teaser;
   }
 }
