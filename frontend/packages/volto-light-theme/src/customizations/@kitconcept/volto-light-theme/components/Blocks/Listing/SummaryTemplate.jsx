@@ -1,0 +1,98 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
+import Card from '@kitconcept/volto-light-theme/primitives/Card/Card';
+import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers/Url/Url';
+import config from '@plone/volto/registry';
+import DefaultSummary from '@kitconcept/volto-light-theme/components/Summary/DefaultSummary';
+import cx from 'classnames';
+
+const SummaryTemplate = ({ items, linkTitle, linkHref, isEditMode }) => {
+  const site = useSelector((state) => state.site?.data);
+  const showProfileLinks = site?.['kitconcept.clickable_profile_links'];
+  let link = null;
+  let href = linkHref?.[0]?.['@id'] || '';
+  const PreviewImageComponent = config.getComponent('PreviewImage').component;
+  if (isInternalURL(href)) {
+    link = (
+      <ConditionalLink to={flattenToAppURL(href)} condition={!isEditMode}>
+        {linkTitle || href}
+      </ConditionalLink>
+    );
+  } else if (href) {
+    link = <a href={href}>{linkTitle || href}</a>;
+  }
+
+  return (
+    <>
+      <ul className="items">
+        {items.map((item) => {
+          const CustomItemBodyTemplate = config.getComponent({
+            name: 'SummaryListingItemTemplate',
+            dependencies: [item['@type']],
+          }).component;
+          const Summary =
+            config.getComponent({
+              name: 'Summary',
+              dependencies: [item['@type']],
+            }).component || DefaultSummary;
+          let showLink =
+            !Summary.hideLink &&
+            !isEditMode &&
+            !!(item['@id'] || item.href || item.url);
+          if (item['@type'] === 'Person' && showProfileLinks !== undefined) {
+            showLink =
+              showProfileLinks &&
+              !isEditMode &&
+              !!(item['@id'] || item.href || item.url);
+          }
+          const placeholderSrc =
+            config.settings.placeholderImages?.[item['@type']];
+          const ItemBodyTemplate = (props) =>
+            CustomItemBodyTemplate ? (
+              <CustomItemBodyTemplate item={item} />
+            ) : (
+              <>
+                <Card.Image
+                  item={item}
+                  showPlaceholderImage={true}
+                  placeholderSrc={placeholderSrc}
+                  imageComponent={PreviewImageComponent}
+                  sizes={`(max-width: ${config.settings.layout.tabletBreakpoint}px) 100vw, 220px`}
+                />
+                <Card.Summary
+                  a11yLabelId={props.a11yLabelId}
+                  LinkToItem={props.LinkToItem}
+                >
+                  <Summary item={item} />
+                </Card.Summary>
+              </>
+            );
+          return (
+            <li
+              className={cx('listing-item has--align--left', {
+                [`${item['@type']?.toLowerCase()}-listing`]: item['@type'],
+              })}
+              key={item['@id']}
+            >
+              <Card item={showLink ? item : null}>
+                <ItemBodyTemplate item={item} />
+              </Card>
+            </li>
+          );
+        })}
+      </ul>
+
+      {link && <div className="footer">{link}</div>}
+    </>
+  );
+};
+
+SummaryTemplate.propTypes = {
+  items: PropTypes.arrayOf(PropTypes.any).isRequired,
+  linkMore: PropTypes.any,
+  isEditMode: PropTypes.bool,
+};
+
+export default SummaryTemplate;
