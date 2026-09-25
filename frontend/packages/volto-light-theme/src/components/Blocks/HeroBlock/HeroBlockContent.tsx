@@ -11,7 +11,7 @@ interface HeroBlockContentProps {
     displayTitle: string;
     displayDescription: string;
     date: string | null;
-    buttonLink: string;
+    defaultHref: string;
     TitleTag: keyof JSX.IntrinsicElements;
   };
 }
@@ -19,7 +19,13 @@ interface HeroBlockContentProps {
 const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
   data,
   isEditMode,
-  contentData: { displayTitle, displayDescription, date, buttonLink, TitleTag },
+  contentData: {
+    displayTitle,
+    displayDescription,
+    date,
+    defaultHref,
+    TitleTag,
+  },
 }) => {
   return (
     <>
@@ -53,26 +59,42 @@ const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
         <p className="hero-description">{displayDescription}</p>
       )}
 
-      {data.button &&
-        (data.buttonText || 'Saiba mais') &&
-        (isEditMode ? (
-          <div className="hero-cta">
-            <span className="hero-button item" aria-hidden="true">
-              {data.buttonText || 'Saiba mais'}
-            </span>
-          </div>
-        ) : (
-          <ConditionalLink
-            condition={!!buttonLink}
-            href={buttonLink}
-            className="hero-cta"
-            aria-label={`${data.buttonText || 'Saiba mais'} sobre ${displayTitle}`}
-          >
-            <span className="hero-button item">
-              {data.buttonText || 'Saiba mais'}
-            </span>
-          </ConditionalLink>
-        ))}
+      {data.buttons && data.buttons.length > 0 && (
+        <div
+          className="hero-cta-group"
+          style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
+        >
+          {data.buttons.map((btn, index) => {
+            const btnLink = btn.buttonLink?.[0]?.['@id'] || defaultHref;
+            const btnText = btn.buttonText || 'Saiba mais';
+            const themeClass = btn.theme
+              ? `theme-${btn.theme}`
+              : 'theme-primary';
+
+            if (isEditMode) {
+              return (
+                <div key={index} className={cx('hero-cta', themeClass)}>
+                  <span className="hero-button item" aria-hidden="true">
+                    {btnText}
+                  </span>
+                </div>
+              );
+            }
+
+            return (
+              <ConditionalLink
+                key={index}
+                condition={!!btnLink}
+                href={btnLink}
+                className={cx('hero-cta', themeClass)}
+                aria-label={`${btnText} sobre ${displayTitle}`}
+              >
+                <span className="hero-button item">{btnText}</span>
+              </ConditionalLink>
+            );
+          })}
+        </div>
+      )}
 
       {data.footerText && <p className="hero-footer-text">{data.footerText}</p>}
 

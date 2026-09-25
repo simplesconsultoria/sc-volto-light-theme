@@ -66,6 +66,7 @@ const MediaCarouselTemplate: React.FC<
   carouselObjectPosition,
   carouselAutoPlay,
   carouselAutoPlayInterval,
+  data,
 }) => {
   const intl = useIntl();
   const slides = items.filter(Boolean);

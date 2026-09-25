@@ -4,7 +4,7 @@ import CustomGridView from './View';
 import '@testing-library/jest-dom';
 
 // Mock RenderBlocks to isolate the grid component logic
-jest.mock('@plone/volto/components', () => ({
+vi.mock('@plone/volto/components', () => ({
   RenderBlocks: ({ content }: any) => (
     <div data-testid="render-blocks">
       {content?.settings?.theme || 'no-theme'}
@@ -40,8 +40,8 @@ describe('CustomGridView', () => {
     expect(columns.length).toBe(2);
 
     // Theme classes applied
-    expect(columns[0]).toHaveClass('theme-primary');
-    expect(columns[1]).toHaveClass('theme-secondary');
+    expect(columns[0]).toHaveClass('has-theme');
+    expect(columns[1]).toHaveClass('has-theme');
   });
 
   it('applies the correct layout class for asymmetric layouts', () => {

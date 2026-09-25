@@ -7,6 +7,8 @@ import installSlots from './config/slots';
 import installReducers from './config/reducers';
 import installRoutes from './config/routes';
 
+import SimpleColorPickerWidget from './components/Widgets/SimpleColorPickerWidget';
+
 /**
  * Block and variation titles are plain strings in the block configuration, and
  * Volto translates them with `formatMessageWithFallback`, which uses the string
@@ -38,6 +40,8 @@ function applyConfig(config: ConfigType) {
   installSlots(config);
   installReducers(config);
   installRoutes(config);
+
+  config.widgets.widget.style_simple_color = SimpleColorPickerWidget;
 
   return config;
 }

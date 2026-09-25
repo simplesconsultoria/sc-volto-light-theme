@@ -1,6 +1,7 @@
 import { createThemeDefinition } from './blockThemes';
 import type { ConfigType } from '@plone/registry';
 import type { BlockConfigBase } from '@plone/types';
+import { addStyling } from '@plone/volto/helpers/Extensions/withBlockSchemaEnhancer';
 
 import DocumentByLineInfo from '../components/Blocks/DocumentByLine';
 import MainImageBlockInfo from '../components/Blocks/MainImageBlock';
@@ -13,6 +14,14 @@ import CarouselTemplate from '../components/Blocks/Listing/CarouselTemplate';
 import MediaCarouselTemplate from '../components/Blocks/Listing/MediaCarouselTemplate';
 import GridTemplate from '../components/Blocks/Listing/GridTemplate';
 import TeaserTemplate from '../components/Blocks/Listing/TeaserTemplate';
+import EventsTemplate from '../components/Blocks/Listing/EventsTemplate';
+import {
+  EventMetadataView,
+  EventMetadataEdit,
+} from '../components/Blocks/EventMetadata';
+import { EventMetadataSchema } from '../components/Blocks/EventMetadata/schema';
+import SeparatorView from '../components/Blocks/Separator/View';
+import SeparatorEdit from '../components/Blocks/Separator/Edit';
 import {
   carouselSchemaEnhancer,
   mediaCarouselSchemaEnhancer,
@@ -93,6 +102,26 @@ function installLocalBlocks(config: ConfigType) {
     mostUsed: true,
     sidebarTab: 1,
   };
+
+  config.blocks.blocksConfig.eventMetadata = {
+    id: 'eventMetadata',
+    title: 'Event Metadata',
+    icon: '',
+    group: 'common',
+    view: EventMetadataView,
+    edit: EventMetadataEdit,
+    schema: EventMetadataSchema,
+    blockSchema: EventMetadataSchema,
+    restricted: false,
+    mostUsed: false,
+    sidebarTab: 1,
+  };
+
+  if (config.blocks.blocksConfig.separator) {
+    config.blocks.blocksConfig.separator.view = SeparatorView;
+    config.blocks.blocksConfig.separator.edit = SeparatorEdit;
+  }
+
   return config;
 }
 
@@ -141,11 +170,70 @@ function installContentTypeColors(config: ConfigType) {
   return config;
 }
 
+function injectCardBorderColor(config: ConfigType) {
+  const blocksToEnhance = ['listing', 'teaser', 'slider', 'carousel'];
+
+  blocksToEnhance.forEach((blockId) => {
+    const applyToBlock = (blockConfig: any) => {
+      if (!blockConfig) return;
+
+      const prevEnhancer = blockConfig.schemaEnhancer;
+      blockConfig.schemaEnhancer = (args: any) => {
+        let schema = prevEnhancer ? prevEnhancer(args) : args.schema;
+
+        // Force addStyling so that schema.properties.styles.schema is available
+        addStyling({ schema, intl: args.intl });
+
+        // Inject into Volto's internal styles schema
+        if (schema?.properties?.styles?.schema) {
+          const stylesSchema = schema.properties.styles.schema;
+
+          stylesSchema.properties['--cardBorderColor'] = {
+            widget: 'style_simple_color',
+            title: args.intl.formatMessage({
+              id: 'Border color',
+              defaultMessage: 'Border color',
+            }),
+            default: '',
+          };
+
+          const defaultFieldset = stylesSchema.fieldsets.find(
+            (f: any) => f.id === 'default',
+          );
+          if (
+            defaultFieldset &&
+            !defaultFieldset.fields.includes('--cardBorderColor')
+          ) {
+            defaultFieldset.fields.push('--cardBorderColor');
+          }
+        }
+
+        return schema;
+      };
+    };
+
+    // Apply to standard blocks
+    applyToBlock((config.blocks.blocksConfig as any)[blockId]);
+
+    // Apply to gridBlock inner blocks if gridBlock exists
+    const gridBlock = (config.blocks.blocksConfig as any).gridBlock;
+    if (
+      gridBlock &&
+      gridBlock.blocksConfig &&
+      gridBlock.blocksConfig[blockId]
+    ) {
+      applyToBlock(gridBlock.blocksConfig[blockId]);
+    }
+  });
+  return config;
+}
+
 export default function install(config: ConfigType) {
   installLocalBlocks(config);
   installThemes(config);
   installGridBlock(config);
   installContentTypeColors(config);
+  injectCardBorderColor(config);
 
   // Listing: add a media carousel variation and override GridTemplate
   if ((config.blocks.blocksConfig as any).listing?.variations) {
@@ -200,6 +288,17 @@ export default function install(config: ConfigType) {
           title: 'Highlight',
           template: TeaserTemplate,
           schemaEnhancer: teaserSchemaEnhancer,
+        },
+      ];
+    }
+    const hasEvents = variations.some((v: any) => v.id === 'events');
+    if (!hasEvents) {
+      variations = [
+        ...variations,
+        {
+          id: 'events',
+          title: 'Eventos',
+          template: EventsTemplate,
         },
       ];
     }

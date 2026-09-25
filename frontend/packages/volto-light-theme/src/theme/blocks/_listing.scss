@@ -43,11 +43,11 @@ body .block.listing,
     .listing-item.person-listing {
       .card {
         height: 100%;
-        border: solid var(--theme-border-color);
+        border: solid var(--cardBorderColor, var(--theme-border-color));
         border-width: var(--theme-border-width);
         border-top-color: var(
-          --content-type-border-color,
-          var(--theme-border-color)
+          --cardBorderColor,
+          var(--content-type-border-color, var(--theme-border-color))
         );
         background-color: var(--theme-high-contrast-color);
 
@@ -130,7 +130,7 @@ body .block.listing,
         overflow: hidden;
         min-width: 0;
         flex-direction: column;
-        border: 2px solid var(--theme-border-color);
+        border: 2px solid var(--cardBorderColor, var(--theme-border-color));
       }
 
       &__track {
@@ -332,7 +332,7 @@ body .block.listing,
 
       &__arrow,
       &__toggle {
-        border: 2px solid var(--theme-border-color);
+        border: 2px solid var(--cardBorderColor, var(--theme-border-color));
         background: var(--theme-high-contrast-color);
         color: var(--theme-top-foreground-color);
 
@@ -631,4 +631,212 @@ body .block.listing,
 #page-document .blocks-group-wrapper > .block.listing.mediaCarousel {
   @include default-container-width();
   @include adjustMarginsToContainer($default-container-width);
+}
+
+#page-document
+  .blocks-group-wrapper
+  > .block.listing:not(.carousel):not(.mediaCarousel) {
+  position: relative;
+  max-width: 100% !important;
+
+  .listing-body {
+    &.has--block-width--narrow,
+    &[class*='has--block-width--var(--narrow-container-width)'] {
+      @include narrow-container-width();
+      @include adjustMarginsToContainer($narrow-container-width);
+      max-width: var(--narrow-container-width) !important;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    &.has--block-width--default,
+    &[class*='has--block-width--var(--default-container-width)'] {
+      @include default-container-width();
+      @include adjustMarginsToContainer($default-container-width);
+      max-width: var(--default-container-width) !important;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    &.has--block-width--layout,
+    &[class*='has--block-width--var(--layout-container-width)'] {
+      @include layout-container-width();
+      @include adjustMarginsToContainer($layout-container-width);
+      max-width: var(--layout-container-width) !important;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    &.has--block-width--unset,
+    &.has--block-width--full {
+      max-width: 100% !important;
+      padding-right: 0;
+      padding-left: 0;
+    }
+  }
+}
+
+// Override global blocks constraints for listing block children
+#page-document .blocks-group-wrapper > .block.listing {
+  &.grid,
+  .listing-item,
+  .emptyListing,
+  .image-gallery {
+    max-width: unset !important;
+    margin-right: unset !important;
+    margin-left: unset !important;
+  }
+}
+
+// Events Listing Styles
+.block.listing {
+  .events-listing-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: $spacing-large 0;
+
+    .events-listing {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .event-listing-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--theme-top-foreground-color);
+      gap: 1.5rem;
+      transition: background-color 0.2s ease;
+
+      &:first-child {
+        border-top: 1px solid var(--theme-top-foreground-color);
+      }
+
+      .event-date-block {
+        display: flex;
+        width: 80px;
+        flex-direction: column;
+        flex-shrink: 0;
+        align-items: flex-start;
+        justify-content: center;
+        padding-left: 1rem;
+        border-left: 4px solid var(--theme-top-accent-color);
+        color: var(--theme-top-foreground-color);
+
+        .event-day {
+          color: var(--theme-top-foreground-color);
+          font-size: 2rem;
+          font-weight: 800;
+          line-height: 1.1;
+        }
+
+        .event-month {
+          margin-top: 2px;
+          color: var(--theme-top-foreground-color);
+          font-size: 0.9rem;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+      }
+
+      .event-content {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: center;
+
+        .event-title {
+          margin: 0 0 0.25rem 0;
+          color: var(--theme-top-foreground-color);
+          font-size: 1.25rem;
+          font-weight: 700;
+          line-height: 1.3;
+          transition: color 0.2s ease;
+
+          &:hover {
+            color: var(--theme-top-accent-color);
+          }
+        }
+
+        .event-description {
+          display: -webkit-box;
+          overflow: hidden;
+          margin-bottom: 0;
+          -webkit-box-orient: vertical;
+          color: var(--theme-top-low-contrast-foreground-color);
+          font-size: 0.95rem;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+          line-height: 1.5;
+        }
+      }
+
+      .event-actions {
+        display: flex;
+        min-width: 120px;
+        align-items: center;
+        justify-content: flex-end;
+
+        .event-label {
+          display: inline-block;
+          padding: 0.35rem 1rem;
+          background: var(--theme-top-accent-color);
+          color: var(--theme-color);
+          font-size: 0.8rem;
+          font-weight: 600;
+        }
+      }
+
+      @media (max-width: 640px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+
+        .event-date-block {
+          width: 100%;
+          flex-direction: row;
+          align-items: baseline;
+          padding-bottom: 0.5rem;
+          padding-left: 0;
+          border-bottom: 4px solid var(--theme-top-accent-color);
+          border-left: none;
+          gap: 0.5rem;
+
+          .event-day {
+            font-size: 1.5rem;
+          }
+
+          .event-month {
+            margin-top: 0;
+            font-size: 1rem;
+          }
+        }
+
+        .event-actions {
+          width: 100%;
+          justify-content: flex-start;
+        }
+      }
+    }
+
+    .listing-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1rem;
+
+      a {
+        display: inline-flex;
+        align-items: center;
+        color: var(--theme-top-accent-color);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
 }

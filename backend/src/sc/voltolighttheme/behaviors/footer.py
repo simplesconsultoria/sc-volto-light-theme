@@ -67,6 +67,7 @@ class IFooterSettings(model.Schema):
         fields=[
             "footer_links",
             "footer_colophon_text",
+            "footer_colophon_right_text",
         ],
     )
 
@@ -177,6 +178,25 @@ class IFooterSettings(model.Schema):
             }
         ],
         required=False,
+    )
+
+    directives.widget(
+        "footer_colophon_right_text",
+        frontendOptions={
+            "widget": "slate_richtext",
+        },
+    )
+
+    footer_colophon_right_text = JSONField(
+        title=_("Footer colophon right text"),
+        description=_(
+            "help_footer_colophon_right_text",
+            default="The text that shows in the right side of the footer colophon.",
+        ),
+        schema=OBJECT_LIST,
+        default=None,
+        required=False,
+        missing_value=None,
     )
 
     footer_brand_slogan = TextLine(
@@ -294,6 +314,7 @@ class IFooterSettings(model.Schema):
         footer_brand_message="sc.voltolighttheme.footer_settings.view",
         footer_brand_slogan="sc.voltolighttheme.footer_settings.view",
         footer_colophon_text="sc.voltolighttheme.footer_settings.view",
+        footer_colophon_right_text="sc.voltolighttheme.footer_settings.view",
         footer_column_left_header="sc.voltolighttheme.footer_settings.view",
         footer_column_left="sc.voltolighttheme.footer_settings.view",
         footer_column_middle_header="sc.voltolighttheme.footer_settings.view",
@@ -311,6 +332,7 @@ class IFooterSettings(model.Schema):
         footer_brand_message="sc.voltolighttheme.footer_settings.edit",
         footer_brand_slogan="sc.voltolighttheme.footer_settings.edit",
         footer_colophon_text="sc.voltolighttheme.footer_settings.edit",
+        footer_colophon_right_text="sc.voltolighttheme.footer_settings.edit",
         footer_column_left_header="sc.voltolighttheme.footer_settings.edit",
         footer_column_left="sc.voltolighttheme.footer_settings.edit",
         footer_column_middle_header="sc.voltolighttheme.footer_settings.edit",

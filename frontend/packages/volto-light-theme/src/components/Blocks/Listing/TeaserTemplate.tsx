@@ -67,7 +67,13 @@ const TeaserTemplate: React.FC<TeaserTemplateProps & Record<string, any>> = ({
         data?.styles?.theme || 'default',
         { [`has--align--${align}`]: align },
       )}
-      style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
+      style={
+        {
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2rem',
+        } as React.CSSProperties
+      }
     >
       {items.map((item, index) => {
         const date = formatDate(
@@ -86,7 +92,11 @@ const TeaserTemplate: React.FC<TeaserTemplateProps & Record<string, any>> = ({
               })}
             >
               <Card
-                item={!isEditMode ? item : null}
+                item={
+                  !isEditMode && !!(item['@id'] || item.href || item.url)
+                    ? item
+                    : null
+                }
                 openLinkInNewTab={openLinkInNewTab}
               >
                 <Card.Image item={item} imageComponent={Image} />

@@ -1,12 +1,19 @@
 import type { ConfigType } from '@plone/registry';
 
 import PostFooter from '../components/Footer/PostFooter';
+import Colophon from '../components/Footer/slots/Colophon';
 
 function footerSlots(config: ConfigType) {
   config.registerSlotComponent({
     slot: 'postFooter',
     name: 'PostFooterFollowUsLogoAndLinks',
     component: PostFooter,
+  });
+
+  config.registerSlotComponent({
+    name: 'Colophon',
+    slot: 'postFooter',
+    component: Colophon,
   });
 }
 

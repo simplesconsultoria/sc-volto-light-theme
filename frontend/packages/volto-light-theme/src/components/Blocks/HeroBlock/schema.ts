@@ -106,6 +106,14 @@ const messages = defineMessages({
     id: 'Button text description',
     defaultMessage: 'The text shown inside the button (e.g. "Read more").',
   },
+  buttons: {
+    id: 'Buttons',
+    defaultMessage: 'Buttons',
+  },
+  buttonTheme: {
+    id: 'Button Theme',
+    defaultMessage: 'Button Theme',
+  },
   layout: {
     id: 'Layout',
     defaultMessage: 'Layout',
@@ -174,6 +182,10 @@ const messages = defineMessages({
     id: 'File type description',
     defaultMessage: 'E.g. PDF, Report, Article',
   },
+  fullWidthImage: {
+    id: 'Full width image',
+    defaultMessage: 'Full width image (touches edges)',
+  },
 });
 
 interface HeroSchemaProps {
@@ -185,11 +197,46 @@ interface HeroSchemaProps {
 
 const layoutFields = [
   'blockWidth',
+  'fullWidthImage',
   'textSide',
   'imageSize',
   'fullWidth',
   'titleTag',
 ];
+
+const ButtonSchema = (intl: IntlShape) => ({
+  title: intl.formatMessage(messages.button),
+  fieldsets: [
+    {
+      id: 'default',
+      title: 'Default',
+      fields: ['buttonText', 'buttonLink', 'theme'],
+    },
+  ],
+  properties: {
+    buttonText: {
+      title: intl.formatMessage(messages.buttonText),
+      description: intl.formatMessage(messages.buttonTextDescription),
+      type: 'string',
+    },
+    buttonLink: {
+      title: intl.formatMessage(messages.buttonLink),
+      widget: 'object_browser',
+      allowExternals: true,
+      mode: 'link',
+    },
+    theme: {
+      title: intl.formatMessage(messages.buttonTheme),
+      type: 'string',
+      choices: [
+        ['full', 'Full'],
+        ['outline', 'Outline'],
+      ],
+      default: 'full',
+    },
+  },
+  required: ['buttonText', 'buttonLink'],
+});
 
 export function HeroBlockSchema(props: HeroSchemaProps): any {
   const { intl } = props;
@@ -234,7 +281,7 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
       {
         id: 'cta',
         title: intl.formatMessage(messages.cta),
-        fields: ['button', 'buttonLink', 'buttonText'],
+        fields: ['buttons'],
       },
       {
         id: 'layout',
@@ -309,20 +356,10 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
         default: 'cover',
         description: intl.formatMessage(messages.imageFitDescription),
       },
-      button: {
-        title: intl.formatMessage(messages.button),
-        type: 'boolean',
-      },
-      buttonLink: {
-        title: intl.formatMessage(messages.buttonLink),
-        widget: 'object_browser',
-        allowExternals: true,
-        mode: 'link',
-      },
-      buttonText: {
-        title: intl.formatMessage(messages.buttonText),
-        description: intl.formatMessage(messages.buttonTextDescription),
-        type: 'string',
+      buttons: {
+        title: intl.formatMessage(messages.buttons),
+        widget: 'object_list',
+        schema: ButtonSchema(intl),
       },
       fullWidth: {
         title: intl.formatMessage(messages.fullWidth),
@@ -360,6 +397,11 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
         ],
         default: 'h2',
         description: intl.formatMessage(messages.titleTagDescription),
+      },
+      fullWidthImage: {
+        title: intl.formatMessage(messages.fullWidthImage),
+        type: 'boolean',
+        default: false,
       },
       textSide: {
         title: intl.formatMessage(messages.textSide),

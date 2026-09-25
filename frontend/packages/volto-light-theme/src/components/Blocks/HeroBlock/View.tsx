@@ -80,7 +80,9 @@ const HeroBlockView: React.FC<HeroBlockViewProps> = (props) => {
   return (
     <BlockWrapper {...(props as any)}>
       <div
-        className={cx('hero-block-container', typeHref, blockWidthClass)}
+        className={cx('hero-block-container', typeHref, blockWidthClass, {
+          'has--full-width-image': data.fullWidthImage && variation === 'flex',
+        })}
         style={finalStyle}
       >
         {variation === 'card' ? (

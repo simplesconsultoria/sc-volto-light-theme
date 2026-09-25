@@ -9,6 +9,10 @@ const messages = defineMessages({
     id: 'Background color',
     defaultMessage: 'Background color',
   },
+  borderColor: {
+    id: 'Border color',
+    defaultMessage: 'Border color',
+  },
 });
 
 interface StylingSchemaProps {
@@ -37,6 +41,7 @@ export const defaultStylingSchema = ({
   schema.fieldsets[stylingIndex].fields = [
     ...schema.fieldsets[stylingIndex].fields,
     'theme',
+    '--cardBorderColor',
   ];
 
   schema.properties = schema.properties || {};
@@ -45,6 +50,12 @@ export const defaultStylingSchema = ({
     title: intl.formatMessage(messages.backgroundColor),
     themes: Array.isArray(themes) ? themes : [],
     default: defaultTheme,
+  };
+
+  schema.properties['--cardBorderColor'] = {
+    widget: 'style_simple_color',
+    title: intl.formatMessage(messages.borderColor),
+    default: '',
   };
 
   return schema;

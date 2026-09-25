@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
 import cx from 'classnames';
-import { v4 as uuid } from 'uuid';
 import { defineMessages, useIntl } from 'react-intl';
 import { Segment, Button } from 'semantic-ui-react';
 import {
@@ -127,7 +126,7 @@ const buildColumnsForLayout = (layoutId: string) => {
   const blocks: Record<string, any> = {};
   const items: string[] = [];
   for (let i = 0; i < numCols; i++) {
-    const id = uuid();
+    const id = crypto.randomUUID();
     blocks[id] = generateEmptyColumn();
     items.push(id);
   }
@@ -470,7 +469,7 @@ const CustomGridEdit = (props: any) => {
               {colData?.blocks_layout?.items?.length === 0 ? (
                 <EmptyColumnPlaceholder
                   onAddBlock={(type: string) => {
-                    const newId = uuid();
+                    const newId = crypto.randomUUID();
                     const colTheme = colData?.settings?.theme;
                     onChangeBlock(block, {
                       ...data,

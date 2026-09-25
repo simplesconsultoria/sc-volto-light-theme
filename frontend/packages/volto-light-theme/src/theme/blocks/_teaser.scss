@@ -30,7 +30,7 @@ body #page-edit [class^='block-editor-'] > .block .teaser,
   body #page-edit [class^='block-editor-'] .block .teaser,
   .block.teaser {
     .card {
-      border: solid var(--theme-border-color);
+      border: solid var(--cardBorderColor, var(--theme-border-color));
       border-width: var(--theme-border-width);
 
       .card-inner {

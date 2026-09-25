@@ -23,7 +23,11 @@
     "Gallery": null,
     "Inventory": null,
     "DefaultView": null,
-    "Separator": null
+    "Separator": null,
+    "EventMetadata": null,
+    "EventsTemplate": null,
+    "Colophon": null,
+    "SimpleColorPickerWidget": null
   },
   "overrides": {
     "HeroBlock": {

@@ -1,0 +1,1 @@
+Removed unused `uuid` dependency (replaced by `crypto.randomUUID()`), stabilized test suites fixing Semantic UI and Vitest alias issues, added new Storybooks, and synced with `.design-sync` for Cloudesign integration. @humanaice

@@ -60,7 +60,7 @@ export function useHeroBlockContent({
     const imageFit = data.imageFit || 'cover';
     const imageSize = data.imageSize || '50%';
 
-    const buttonLink = data.buttonLink?.[0]?.['@id'] || hrefItem?.['@id'] || '';
+    const defaultHref = hrefItem?.['@id'] || '';
 
     const TitleTag = (data.titleTag ||
       defaultTitleTag) as keyof JSX.IntrinsicElements;
@@ -81,7 +81,7 @@ export function useHeroBlockContent({
       textSide,
       imageFit,
       imageSize,
-      buttonLink,
+      defaultHref,
       TitleTag,
       imageInfo,
       hasImage,
