@@ -36,7 +36,7 @@ const withWrapper: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Blocks/Grid',
+  title: 'Blocks/Grid',
   component: Grid,
   decorators: [withWrapper],
   parameters: { layout: 'fullscreen' },

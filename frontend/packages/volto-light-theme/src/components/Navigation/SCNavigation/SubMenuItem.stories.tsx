@@ -31,7 +31,7 @@ const withPanel: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Navigation/SubMenuItem',
+  title: 'Navigation/SubMenuItem',
   component: SubMenuItem,
   decorators: [withPanel],
   parameters: { layout: 'fullscreen' },

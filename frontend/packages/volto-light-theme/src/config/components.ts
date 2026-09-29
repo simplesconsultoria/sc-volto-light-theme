@@ -30,7 +30,10 @@ function registerComponents(config: ConfigType) {
   config.components.MobileHeader = { component: MobileHeader };
   config.components.HeaderBar = { component: HeaderBar };
   config.components.DropdownMenu = { component: DropdownMenu };
-  config.settings.scvlt.headerBar.quickLinks = [];
+  // Inicializa quickLinks vazio se scvlt ja estiver configurado
+  if (config.settings.scvlt?.headerBar) {
+    config.settings.scvlt.headerBar.quickLinks = [];
+  }
 }
 
 export default function install(config: ConfigType) {

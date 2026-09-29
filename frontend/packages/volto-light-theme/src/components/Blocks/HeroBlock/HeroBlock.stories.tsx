@@ -16,7 +16,7 @@ const withWrapper: Decorator = (Story, context) => {
 };
 
 const meta = {
-  title: 'Public/Blocks/HeroBlock',
+  title: 'Blocks/HeroBlock',
   component: View,
   decorators: [withWrapper],
   parameters: {

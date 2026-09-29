@@ -30,8 +30,14 @@ body #page-edit [class^='block-editor-'] > .block .teaser,
   body #page-edit [class^='block-editor-'] .block .teaser,
   .block.teaser {
     .card {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
       border: solid var(--cardBorderColor, var(--theme-border-color));
-      border-width: var(--theme-border-width);
+      border-width: var(
+        --cardBorderWidth,
+        var(--theme-border-width)
+      ) !important;
 
       .card-inner {
         padding: 0;
@@ -57,7 +63,7 @@ body #page-edit [class^='block-editor-'] > .block .teaser,
         }
       }
 
-      &:hover {
+      &:not(.no-link):hover {
         background-color: color-mix(
           in srgb,
           var(--theme-high-contrast-color) 80%,
@@ -66,12 +72,20 @@ body #page-edit [class^='block-editor-'] > .block .teaser,
       }
     }
 
-    &:hover {
+    &:not(:has(.no-link)):hover {
       background-color: color-mix(
         in srgb,
         var(--theme-high-contrast-color) 80%,
         var(--theme-top-foreground-color)
       ) !important;
+    }
+
+    // Se o card não tem link, garante que não tenha ponteiro clicável
+    &:has(.no-link) {
+      cursor: default;
+      .card {
+        cursor: default;
+      }
     }
   }
 }

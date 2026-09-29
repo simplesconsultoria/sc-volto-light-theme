@@ -4,7 +4,23 @@ import Colophon from './Colophon';
 import { Provider } from 'react-intl-redux';
 import configureStore from 'redux-mock-store';
 
+import config from '@plone/volto/registry';
+
 const mockStore = configureStore();
+
+// Mock the slate_richtext widget config so it doesn't crash in Storybook
+config.widgets = {
+  ...config.widgets,
+  views: {
+    ...config.widgets?.views,
+    widget: {
+      ...config.widgets?.views?.widget,
+      slate_richtext: ({ value }: any) => (
+        <div className="slate-mock">{JSON.stringify(value)}</div>
+      ),
+    },
+  },
+};
 
 /**
  * Colophon component for the footer slot.
@@ -18,6 +34,10 @@ export default {
 const Template: StoryFn = (args) => {
   const store = mockStore({
     intl: { locale: 'en', messages: {} },
+    form: { global: {} },
+    site: { data: {} },
+    navroot: { data: {} },
+    content: { data: {} },
   });
   return (
     <Provider store={store}>

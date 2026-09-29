@@ -44,21 +44,44 @@ $hero-card-overlap: 60px;
     @include layout-container-width();
     @include adjustMarginsToContainer($layout-container-width);
   }
-  &.has--block-width--unset {
-    width: calc(100% - 40px) !important;
-    max-width: 100% !important;
-    margin-right: auto !important;
-    margin-left: auto !important;
+  &.has--block-width--unset,
+  &.has--block-width--full {
+    // Apenas a variação flex se expande para tocar as laterais da página
+    &:has(.hero-flex) {
+      width: 100%;
+      max-width: 100%;
+      padding-right: 0;
+      padding-left: 0;
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    .hero-flex.text-right .hero-flex-content {
+      padding-right: max(2rem, calc(50% - var(--layout-container-width)));
+    }
+    .hero-flex:not(.text-right) .hero-flex-content {
+      padding-left: max(2rem, calc(50% - var(--layout-container-width)));
+    }
+
+    /* Mobile: imagem full-width, texto com padding */
+    @media only screen and (max-width: $largest-mobile-screen) {
+      .hero-flex-content {
+        padding: $spacing-medium !important;
+      }
+      .hero-flex-image-wrapper {
+        width: 100%;
+      }
+    }
   }
 
   &.has--full-width-image {
     position: relative;
-    right: 50%;
-    left: 50%;
-    width: 100vw !important;
-    max-width: 100vw !important;
-    margin-right: -50vw !important;
-    margin-left: -50vw !important;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    margin-right: 0;
+    margin-left: 0;
 
     // Maintain content centered
     .hero-flex-inner {

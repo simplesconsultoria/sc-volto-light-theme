@@ -25,6 +25,22 @@ body {
   padding-top: $spacing-small;
 }
 
+#footer {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--footer-foreground, #ffffff) !important;
+  }
+}
+
+:root {
+  --social-network-icon-color-main: var(--footer-foreground, #ffffff);
+  --social-network-icon-color-hover: var(--footer-foreground, #ffffff);
+}
+
 #page-document .blocks-group-wrapper > .block.schemaForm {
   @include default-container-width();
   @include adjustMarginsToContainer($default-container-width);
@@ -116,4 +132,55 @@ body .block.search .search-wrapper {
   a {
     color: var(--primary-foreground-color);
   }
+}
+
+.contenttype-event {
+  .blocks-group-wrapper + .blocks-group-wrapper {
+    @include color-block-change-vertical-spacing();
+  }
+
+  #page-document .dates {
+    @include default-container-width();
+    @include adjustMarginsToContainer($default-container-width);
+    @include day-with-head-title-separator();
+
+    margin-top: $spacing-medium;
+    margin-bottom: $spacing-medium;
+    color: var(--primary-foreground-color);
+    .day {
+      @include body-text-bold();
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    @container (max-width: #{$tablet-breakpoint} ) {
+      .day,
+      .head-title {
+        font-size: 14px;
+        line-height: 18px;
+      }
+    }
+
+    @container (max-width: #{$largest-mobile-screen} ) {
+      margin-bottom: $spacing-small;
+    }
+
+    & + .blocks-group-wrapper h1.documentFirstHeading {
+      padding-top: 0;
+    }
+  }
+
+  // First block of the page has no top padding, only if previous block has same background color
+  // eg: when it's different than default.
+  &:first-child:has(> :first-child.previous--has--same--backgroundColor) {
+    padding-top: 0;
+  }
+}
+
+.ui.basic.segment.content-area {
+  container-type: inline-size;
+}
+
+#page-document .blocks-group-wrapper:last-child {
+  margin-bottom: 0 !important;
 }

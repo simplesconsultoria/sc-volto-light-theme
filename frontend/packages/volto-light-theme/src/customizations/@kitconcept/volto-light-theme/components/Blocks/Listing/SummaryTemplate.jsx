@@ -8,12 +8,38 @@ import config from '@plone/volto/registry';
 import DefaultSummary from '@kitconcept/volto-light-theme/components/Summary/DefaultSummary';
 import cx from 'classnames';
 
+const ItemBodyTemplate = ({
+  item,
+  CustomItemBodyTemplate,
+  Summary,
+  a11yLabelId,
+  LinkToItem,
+}) => {
+  const placeholderSrc = config.settings.placeholderImages?.[item['@type']];
+  const PreviewImageComponent = config.getComponent('PreviewImage').component;
+  return CustomItemBodyTemplate ? (
+    <CustomItemBodyTemplate item={item} />
+  ) : (
+    <>
+      <Card.Image
+        item={item}
+        showPlaceholderImage={true}
+        placeholderSrc={placeholderSrc}
+        imageComponent={PreviewImageComponent}
+        sizes={`(max-width: ${config.settings.layout.tabletBreakpoint}px) 100vw, 220px`}
+      />
+      <Card.Summary a11yLabelId={a11yLabelId} LinkToItem={LinkToItem}>
+        <Summary item={item} />
+      </Card.Summary>
+    </>
+  );
+};
+
 const SummaryTemplate = ({ items, linkTitle, linkHref, isEditMode }) => {
   const site = useSelector((state) => state.site?.data);
   const showProfileLinks = site?.['kitconcept.clickable_profile_links'];
   let link = null;
   let href = linkHref?.[0]?.['@id'] || '';
-  const PreviewImageComponent = config.getComponent('PreviewImage').component;
   if (isInternalURL(href)) {
     link = (
       <ConditionalLink to={flattenToAppURL(href)} condition={!isEditMode}>
@@ -47,28 +73,6 @@ const SummaryTemplate = ({ items, linkTitle, linkHref, isEditMode }) => {
               !isEditMode &&
               !!(item['@id'] || item.href || item.url);
           }
-          const placeholderSrc =
-            config.settings.placeholderImages?.[item['@type']];
-          const ItemBodyTemplate = (props) =>
-            CustomItemBodyTemplate ? (
-              <CustomItemBodyTemplate item={item} />
-            ) : (
-              <>
-                <Card.Image
-                  item={item}
-                  showPlaceholderImage={true}
-                  placeholderSrc={placeholderSrc}
-                  imageComponent={PreviewImageComponent}
-                  sizes={`(max-width: ${config.settings.layout.tabletBreakpoint}px) 100vw, 220px`}
-                />
-                <Card.Summary
-                  a11yLabelId={props.a11yLabelId}
-                  LinkToItem={props.LinkToItem}
-                >
-                  <Summary item={item} />
-                </Card.Summary>
-              </>
-            );
           return (
             <li
               className={cx('listing-item has--align--left', {
@@ -77,7 +81,11 @@ const SummaryTemplate = ({ items, linkTitle, linkHref, isEditMode }) => {
               key={item['@id']}
             >
               <Card item={showLink ? item : null}>
-                <ItemBodyTemplate item={item} />
+                <ItemBodyTemplate
+                  item={item}
+                  CustomItemBodyTemplate={CustomItemBodyTemplate}
+                  Summary={Summary}
+                />
               </Card>
             </li>
           );

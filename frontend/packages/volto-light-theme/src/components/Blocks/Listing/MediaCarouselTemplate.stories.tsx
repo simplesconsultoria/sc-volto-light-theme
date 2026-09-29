@@ -22,7 +22,7 @@ const withWrapper: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Blocks/Listing/Media Carousel',
+  title: 'Blocks/Listing/Media Carousel',
   component: MediaCarouselTemplate,
   decorators: [withWrapper],
   parameters: { layout: 'fullscreen' },

@@ -245,15 +245,16 @@ const CustomGridEdit = (props: any) => {
     [focusedColumn],
   );
 
-  // Clear focused state when grid loses selection
-  React.useEffect(() => {
+  const [prevSelected, setPrevSelected] = React.useState(selected);
+  if (selected !== prevSelected) {
+    setPrevSelected(selected);
     if (!selected) {
       setFocusedColumn(null);
       setActiveColumn(null);
       setColSelections({});
       setMultiSelected([]);
     }
-  }, [selected]);
+  }
 
   // Handles field changes on blocks inside a column (with batched state for slate)
   const handleChangeColumnData = useCallback(
@@ -450,6 +451,7 @@ const CustomGridEdit = (props: any) => {
           return (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
             <div
+              role="presentation"
               key={colId}
               className={cx('custom-grid-column', 'block-column', colTheme, {
                 'is-focused': selected && focusedColumn === colId,

@@ -45,7 +45,7 @@ const DocumentByLine = ({
           <FormattedMessage id="By" defaultMessage="By" />:{' '}
           {authors &&
             authors.map((author, i) => (
-              <span className={'name'} key={i}>
+              <span className={'name'} key={author.fullname || i}>
                 {author.fullname}
               </span>
             ))}

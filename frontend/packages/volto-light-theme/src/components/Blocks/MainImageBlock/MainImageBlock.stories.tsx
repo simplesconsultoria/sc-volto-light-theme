@@ -54,7 +54,7 @@ const withWrapper: Decorator = (Story, context) => {
 };
 
 const meta = {
-  title: 'Public/Blocks/MainImageBlock',
+  title: 'Blocks/MainImageBlock',
   component: Layout,
   decorators: [withWrapper],
   parameters: {

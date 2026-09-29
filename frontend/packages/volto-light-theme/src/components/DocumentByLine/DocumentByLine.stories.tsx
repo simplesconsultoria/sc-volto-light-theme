@@ -26,7 +26,7 @@ const sampleContent = {
 } as Content;
 
 const meta = {
-  title: 'Public/DocumentByLine',
+  title: 'Components/DocumentByLine',
   component: DocumentByLine,
   decorators: [withWrapper],
   parameters: {

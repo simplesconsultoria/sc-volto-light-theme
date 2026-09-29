@@ -31,7 +31,7 @@ const withNavigation: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Navigation/Navigation',
+  title: 'Navigation/Navigation',
   component: SCNavigation,
   decorators: [withNavigation],
   parameters: { layout: 'fullscreen', fullBleed: true },

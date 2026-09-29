@@ -1,0 +1,61 @@
+// =============================================================================
+// Listing Headline Wrapper
+// Barra superior do bloco listing com titulo e botao de acao.
+// Responsivo: empilha em mobile.
+// =============================================================================
+
+.listing-headline-wrapper {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-right: auto !important;
+  margin-bottom: 1.5rem;
+
+  margin-left: auto !important;
+  gap: 1rem;
+  &.has--block-width--narrow {
+    @include narrow-container-width();
+    max-width: var(--narrow-container-width) !important;
+  }
+  &.has--block-width--default {
+    @include default-container-width();
+    max-width: var(--default-container-width) !important;
+  }
+  &.has--block-width--layout {
+    @include layout-container-width();
+    max-width: var(--layout-container-width) !important;
+  }
+  &.has--block-width--full,
+  &.has--block-width--unset {
+    @include layout-container-width(); // Default padding
+    max-width: 100% !important;
+  }
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headline,
+  .headline h2.headline {
+    margin: 0 !important;
+  }
+  .ui.button.primary.listing-headline-button {
+    padding: 0;
+    background-color: unset;
+    color: var(--theme-foreground-accent-color);
+
+    .button-content {
+      border: var(--theme-border-color) var(--theme-border-width) solid;
+      background-color: var(--theme-color);
+      color: var(--theme-foreground-accent-color);
+      @include body-text-bold();
+      &:hover {
+        color: color-mix(
+          in srgb,
+          var(--theme-foreground-accent-color) 80%,
+          var(--theme-color)
+        ) !important;
+      }
+    }
+  }
+}

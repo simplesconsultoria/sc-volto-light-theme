@@ -22,7 +22,7 @@ const withWrapper: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Blocks/Listing/Highlight',
+  title: 'Blocks/Listing/Highlight',
   component: TeaserTemplate,
   decorators: [withWrapper],
   parameters: { layout: 'fullscreen' },

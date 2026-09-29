@@ -12,7 +12,7 @@ const SeparatorEdit = (props: any) => {
       {
         id: 'default',
         title: 'Default',
-        fields: ['color', 'thickness'],
+        fields: ['color', 'thickness', 'width', 'alignment', 'blockWidth'],
       },
     ],
     properties: {
@@ -24,6 +24,31 @@ const SeparatorEdit = (props: any) => {
         title: 'Thickness (px)',
         type: 'number',
         default: 1,
+      },
+      // Controle de largura do separador (linha)
+      width: {
+        title: 'Width',
+        type: 'string',
+        default: '100%',
+        choices: [
+          ['100%', 'Full (100%)'],
+          ['75%', '75%'],
+          ['50%', '50%'],
+          ['25%', '25%'],
+        ],
+      },
+      // Alinhamento horizontal do separador (linha)
+      alignment: {
+        title: 'Alignment',
+        widget: 'align',
+        actions: ['left', 'center', 'right'],
+        default: 'center',
+      },
+      // Largura do bloco em si (wrapper)
+      blockWidth: {
+        title: 'Block Width',
+        widget: 'blockWidth',
+        default: 'default',
       },
     },
     required: [],

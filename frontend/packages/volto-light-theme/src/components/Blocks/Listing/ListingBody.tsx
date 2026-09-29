@@ -31,6 +31,7 @@ export interface HeadlineProps {
   listingItems?: any[];
   isEditMode?: boolean;
   style?: React.CSSProperties;
+  className?: string;
 }
 
 const Headline: React.FC<HeadlineProps> = ({
@@ -40,6 +41,7 @@ const Headline: React.FC<HeadlineProps> = ({
   listingItems,
   isEditMode,
   style,
+  className,
 }) => {
   let attr: any = { id };
   const slug = Slugger.slug(data.headline || '');
@@ -52,7 +54,7 @@ const Headline: React.FC<HeadlineProps> = ({
   const buttonLink = data.headlineButtonLink?.[0]?.['@id'] || '';
 
   return (
-    <div className="listing-headline-wrapper">
+    <div className={cx('listing-headline-wrapper', className)}>
       <LinkedHeadline
         mode={!isEditMode ? 'view' : undefined}
         attributes={attr}
@@ -146,17 +148,35 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
 
   const HeadlineTag = data.headlineTag || 'h2';
 
-  let rawBlockWidth = data.blockWidth || data.styles?.['blockWidth:noprefix'];
+  let rawBlockWidth =
+    data.blockWidth ||
+    data.styles?.blockWidth ||
+    data.styles?.['blockWidth:noprefix'];
+
+  // Extrai o valor caso esteja encapsulado num objeto (vindo do ButtonsWidget)
   if (typeof rawBlockWidth === 'object' && rawBlockWidth !== null) {
     rawBlockWidth =
+      rawBlockWidth['--block-width'] ||
       rawBlockWidth.value ||
       rawBlockWidth.id ||
       Object.values(rawBlockWidth)[0];
   }
+
+  // Faz o mapeamento das variáveis CSS para a string correspondente ('narrow', 'full', etc.)
+  if (typeof rawBlockWidth === 'string') {
+    if (rawBlockWidth === 'unset') rawBlockWidth = 'full';
+    else if (rawBlockWidth === 'var(--layout-container-width)')
+      rawBlockWidth = 'layout';
+    else if (rawBlockWidth === 'var(--narrow-container-width)')
+      rawBlockWidth = 'narrow';
+    else if (rawBlockWidth === 'var(--default-container-width)')
+      rawBlockWidth = 'default';
+  }
+
   const blockWidthClass =
     rawBlockWidth && typeof rawBlockWidth === 'string'
       ? `has--block-width--${rawBlockWidth}`
-      : 'has--block-width--layout';
+      : 'has--block-width--default';
 
   return (
     <>
@@ -167,6 +187,7 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
           listingItems={listingItems}
           data={data}
           isEditMode={isEditMode}
+          className={blockWidthClass}
         />
       )}
       <SlotRenderer name="aboveListingItems" content={content} data={data} />

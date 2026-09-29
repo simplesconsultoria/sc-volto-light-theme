@@ -44,6 +44,8 @@ Four, registered in `src/config/blocks.ts`:
 | `mainImageBlock` | Main Image | media | renders the content item's `preview_image_link`; **no colour tokens at all**, only container widths |
 | `quoteBlock` | Quote | text | Slate body; the only own block reading semantic tokens (`--accent-color`) directly as well as `--theme-*` |
 | `documentByline` | Byline | common | publication/modification dates and authors; **ships no stylesheet** — see GAPS §2.1 |
+| `customGrid` | Custom Grid | common | a CSS grid-based block supporting custom fractional layouts and themes per column |
+| `eventMetadata` | Event Metadata | common | metadata for events (date, location, contact, link) |
 
 Full schemas in [INVENTORY.md](./INVENTORY.md) §1.
 
@@ -56,6 +58,7 @@ Three added, two overridden — `src/config/blocks.ts` → `install()`:
 | `carousel` | Carousel | added |
 | `mediaCarousel` | Media Carousel | added |
 | `teaser` | Highlight | added |
+| `events` | Eventos | added |
 | `grid` | *(upstream)* | template replaced with `GridTemplate` |
 | `imageGallery` | *(upstream)* | template replaced with `GridTemplate` |
 

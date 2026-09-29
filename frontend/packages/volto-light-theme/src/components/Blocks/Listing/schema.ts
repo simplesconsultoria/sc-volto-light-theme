@@ -289,7 +289,7 @@ export const listingSchemaEnhancer = ({ schema, formData, intl }) => {
   schema.properties.blockWidth = {
     widget: 'blockWidth',
     title: intl.formatMessage(messages.blockWidth),
-    default: 'layout',
+    default: 'default',
     filterActions: ['narrow', 'default', 'layout', 'full'],
     actions: config.blocks?.widths || [],
   };
