@@ -8,6 +8,14 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0-alpha.9 (2026-09-30)
+
+### Internal
+
+- Expand Storybook library with comprehensive stories for Navigation (HeaderBar, SCNavigation), DocumentByLine, AccessibilityControls, and multiple block layouts (Carousel, Grid, Teaser). @humanaice 
+- Implement and fix unit tests for components such as MainImageBlock, Separator, and blockThemes configurations to ensure robust rendering and correct behavior. @humanaice 
+- Refactor core UI components and block templates, standardizing SCSS variables and classes, resolving ESLint warnings, and enhancing overall visual consistency. @humanaice 
+
 ## 1.0.0-alpha.8 (2026-09-25)
 
 ### Feature
