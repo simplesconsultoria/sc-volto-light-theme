@@ -7,6 +7,30 @@
 -->
 
 <!-- towncrier release notes start -->
+## 1.0.0a10 (2026-09-30)
+
+### Backend
+
+No significant changes.
+
+
+
+
+### Frontend
+
+#### Internal
+
+- Fixed minor css mistakes from footer, listing, heroblock and others, plus fixed accordion not letting you chosemore listing variations.@humanaice 
+
+
+
+### Project
+
+No significant changes.
+
+
+
+
 ## 1.0.0a9 (2026-09-30)
 
 ### Backend
