@@ -15,15 +15,15 @@
   gap: 1rem;
   &.has--block-width--narrow {
     @include narrow-container-width();
-    max-width: var(--narrow-container-width) !important;
+    @include adjustMarginsToContainer($narrow-container-width);
   }
   &.has--block-width--default {
     @include default-container-width();
-    max-width: var(--default-container-width) !important;
+    @include adjustMarginsToContainer($default-container-width);
   }
   &.has--block-width--layout {
     @include layout-container-width();
-    max-width: var(--layout-container-width) !important;
+    @include adjustMarginsToContainer($layout-container-width);
   }
   &.has--block-width--full,
   &.has--block-width--unset {

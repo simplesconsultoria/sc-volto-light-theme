@@ -159,6 +159,7 @@ function installLocalBlocks(config: ConfigType) {
     };
   }
 
+  syncContainerBlocks(config);
   return config;
 }
 
@@ -195,6 +196,31 @@ function installGridBlock(config: ConfigType) {
         ];
       });
     }
+
+    const prevGridEnhancer = gridBlock.schemaEnhancer;
+    gridBlock.schemaEnhancer = (args: any) => {
+      const schema = prevGridEnhancer ? prevGridEnhancer(args) : args.schema;
+      addStyling({ schema, intl: args.intl });
+
+      const defaultFieldset = schema.fieldsets?.find(
+        (f: any) => f.id === 'default',
+      );
+
+      schema.properties.blockWidth = {
+        widget: 'blockWidth',
+        title: args.intl.formatMessage({
+          id: 'Block Width',
+          defaultMessage: 'Block Width',
+        }),
+        default: 'default',
+        filterActions: ['narrow', 'default', 'layout', 'full'],
+        actions: config.blocks?.widths || [],
+      };
+      if (defaultFieldset && !defaultFieldset.fields.includes('blockWidth')) {
+        defaultFieldset.fields.unshift('blockWidth');
+      }
+      return schema;
+    };
   }
   return config;
 }
@@ -214,7 +240,7 @@ function injectCardBorderColor(config: ConfigType) {
     'teaser',
     'slider',
     'carousel',
-    'quote',
+    'quoteBlock',
     'eventMetadata',
   ];
 
@@ -297,12 +323,41 @@ function injectCardBorderColor(config: ConfigType) {
   return config;
 }
 
+function syncContainerBlocks(config: ConfigType) {
+  // Sync the updated listing (and other blocks) to containers like accordion
+  const blocksToSync = [
+    'listing',
+    'quoteBlock',
+    'slider',
+    'carousel',
+    'teaser',
+    'eventMetadata',
+  ];
+  const containers = ['accordion', 'tabs_block', 'columnsBlock'];
+
+  containers.forEach((containerId) => {
+    const container = (config.blocks.blocksConfig as any)[containerId];
+    if (container && container.blocksConfig) {
+      blocksToSync.forEach((blockId) => {
+        if ((config.blocks.blocksConfig as any)[blockId]) {
+          container.blocksConfig[blockId] = (config.blocks.blocksConfig as any)[
+            blockId
+          ];
+        }
+      });
+    }
+  });
+  return config;
+}
+
 export default function install(config: ConfigType) {
   installLocalBlocks(config);
   installThemes(config);
   installGridBlock(config);
   installContentTypeColors(config);
   injectCardBorderColor(config);
+
+  // Sync containers AFTER we modified the global listing/quote block variations
 
   // Listing: add a media carousel variation and override GridTemplate
   if ((config.blocks.blocksConfig as any).listing?.variations) {

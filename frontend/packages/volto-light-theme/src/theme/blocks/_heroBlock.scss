@@ -642,3 +642,19 @@ $hero-card-overlap: 60px;
     }
   }
 }
+
+.hero-flex-inner {
+  .hero-cta.theme-outline {
+    border-color: var(--theme-foreground-color);
+    span.hero-button.item {
+      color: var(--theme-foreground-color);
+    }
+    &:hover {
+      border-color: var(--theme-color);
+      background-color: var(--theme-foreground-color);
+      span.hero-button.item {
+        color: var(--theme-color);
+      }
+    }
+  }
+}

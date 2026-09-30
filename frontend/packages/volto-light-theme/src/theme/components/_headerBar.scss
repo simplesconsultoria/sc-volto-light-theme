@@ -216,3 +216,15 @@ body header.header-wrapper {
     max-width: 220px !important;
   }
 }
+
+// Sobrescreve a cor dos icones sociais no header bar para
+// usar a cor do foreground secundario (branco sobre fundo azul escuro)
+body header.header-wrapper .header-bar-wrapper .header-bar__social {
+  .social-networks .social-network.icon {
+    color: var(--secondary-foreground-color);
+  }
+}
+
+.header-bar__social-mobile .social-networks {
+  flex-wrap: wrap;
+}
