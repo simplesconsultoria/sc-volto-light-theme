@@ -7,15 +7,34 @@ export const SimpleColorPickerWidget = (props: any) => {
 
   return (
     <FormFieldWrapper {...props} className="simple-color-picker">
-      <ColorPicker
-        label={title}
-        value={value || '#000000'}
-        onChange={(val: any) => {
-          const hexString =
-            typeof val === 'string' ? val : val?.toString('hex');
-          onChange(id, hexString === '' ? undefined : hexString);
-        }}
-      />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <ColorPicker
+          label={title}
+          value={value || '#000000'}
+          onChange={(val: any) => {
+            const hexString =
+              typeof val === 'string' ? val : val?.toString('hex');
+            onChange(id, hexString === '' ? undefined : hexString);
+          }}
+        />
+        {value && (
+          <button
+            type="button"
+            onClick={() => onChange(id, undefined)}
+            style={{
+              background: 'transparent',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              padding: '2px 8px',
+              cursor: 'pointer',
+              fontSize: '12px',
+            }}
+            title="Remover cor"
+          >
+            Limpar
+          </button>
+        )}
+      </div>
     </FormFieldWrapper>
   );
 };

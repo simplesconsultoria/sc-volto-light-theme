@@ -26,7 +26,13 @@ $quote-padding-vertical: $spacing-medium;
     $quote-padding-left;
   border: none;
   border-left: $quote-border-width solid
-    var(--theme-high-contrast-color, var(--accent-color));
+    var(
+      --cardBorderColor,
+      var(
+        --theme-border-color,
+        var(--theme-high-contrast-color, var(--accent-color))
+      )
+    );
   margin: 0;
 
   // Transparent background (default)
@@ -38,7 +44,11 @@ $quote-padding-vertical: $spacing-medium;
   &.bg-filled {
     background-color: color-mix(
       in srgb,
-      var(--theme-high-contrast-color, var(--accent-color)) 70%,
+      var(
+          --cardBorderColor,
+          var(--theme-high-contrast-color, var(--accent-color))
+        )
+        70%,
       transparent
     );
   }
@@ -90,4 +100,26 @@ $quote-padding-vertical: $spacing-medium;
       }
     }
   }
+}
+
+// Suporte a alinhamento de texto no bloco Introduction (via styles.align)
+.has--align--center.block-editor-introduction .block.introduction,
+.has--block-alignment--center.block-editor-introduction .block.introduction,
+body .block.introduction.has--align--center,
+body .block.introduction.has--block-alignment--center {
+  text-align: center;
+}
+
+.has--align--right.block-editor-introduction .block.introduction,
+.has--block-alignment--right.block-editor-introduction .block.introduction,
+body .block.introduction.has--align--right,
+body .block.introduction.has--block-alignment--right {
+  text-align: right;
+}
+
+.has--align--left.block-editor-introduction .block.introduction,
+.has--block-alignment--left.block-editor-introduction .block.introduction,
+body .block.introduction.has--align--left,
+body .block.introduction.has--block-alignment--left {
+  text-align: left;
 }

@@ -22,7 +22,7 @@ const withThemePreference: Decorator = (Story, context) => {
 };
 
 const meta = {
-  title: 'Public/ThemeToggle',
+  title: 'Components/ThemeToggle',
   component: ThemeToggle,
   decorators: [withThemePreference],
   parameters: {

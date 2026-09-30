@@ -1,11 +1,29 @@
 import React from 'react';
 import cx from 'classnames';
+import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
 
 const EventMetadataView = (props: any) => {
   const { data, properties, className } = props;
-  const blockWidth = data?.blockWidth || 'default';
+  let blockWidth = data?.blockWidth || 'default';
+  if (typeof blockWidth === 'object' && blockWidth !== null) {
+    const val =
+      (blockWidth as any)['--block-width'] ||
+      (blockWidth as any).value ||
+      (blockWidth as any).id ||
+      Object.values(blockWidth)[0];
+
+    if (val === 'unset') blockWidth = 'full';
+    else if (val === 'var(--layout-container-width)') blockWidth = 'layout';
+    else if (val === 'var(--narrow-container-width)') blockWidth = 'narrow';
+    else if (val === 'var(--default-container-width)') blockWidth = 'default';
+    else blockWidth = val;
+  }
+
   const themeClass = data?.theme ? `bg-${data.theme}` : 'bg-slate';
-  const alignClass = data?.align ? `align-${data.align}` : 'align-left';
+
+  const cleanClassName = (className || '')
+    .replace(/has--block-width--[\w-]+/g, '')
+    .trim();
 
   // Properties usually contains the current context data (Event data)
   const item = properties || {};
@@ -26,102 +44,91 @@ const EventMetadataView = (props: any) => {
       })
     : '';
 
-  const location = item.location || 'Local a confirmar';
-  const contactName = item.contact_name || 'Organização';
-  const contactEmail = item.contact_email;
+  const end = item.end || item.ExpirationDate;
+  const endDate = end ? new Date(end) : null;
+  const isSameDay =
+    startDate && endDate
+      ? startDate.toDateString() === endDate.toDateString()
+      : false;
+
+  const endTimeFormatted = endDate
+    ? endDate.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    : '';
+  const endDateFormatted = endDate
+    ? endDate.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      })
+    : '';
+
+  // Use data overrides from block config, fallback to context item
+  const location = data?.location || item.location || 'Local a confirmar';
+
+  const getEventLink = () => {
+    if (data?.eventUrl) {
+      if (Array.isArray(data.eventUrl) && data.eventUrl.length > 0) {
+        return data.eventUrl[0]['@id'];
+      }
+      return data.eventUrl;
+    }
+    return item.event_url;
+  };
+  const eventLink = getEventLink();
+  const eventLinkLabel = data?.eventUrlLabel || 'Transmissão online';
+
+  const contactName = data?.contactName || item.contact_name || 'Organização';
+  const contactEmail = data?.contactEmail || item.contact_email;
+  const price = data?.price || item.price || 'Gratuita';
 
   const eventUrl = item['@id'] || '';
 
   return (
     <div
-      className={cx('block eventMetadata', className, themeClass, alignClass, {
-        [`has--block-width--${blockWidth}`]: blockWidth,
+      className={cx('block eventMetadata', cleanClassName, themeClass, {
+        [`has--block-width--${blockWidth}`]: blockWidth !== 'default',
+        'has--block-width--default': blockWidth === 'default',
       })}
     >
-      <div
-        className="event-metadata-inner"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '1rem',
-          padding: '2rem',
-          backgroundColor: '#f0f8fb',
-        }}
-      >
+      <div className="event-metadata-inner">
         <div className="metadata-col">
-          <h4
-            style={{
-              textTransform: 'uppercase',
-              fontSize: '0.8rem',
-              color: '#666',
-            }}
-          >
-            Quando
-          </h4>
-          <p style={{ fontWeight: 'bold', margin: '0.2rem 0' }}>
-            {dateFormatted}
-          </p>
-          <p style={{ margin: 0, color: '#666', fontSize: '0.9rem' }}>
-            {timeFormatted} (BRT)
+          <h4>Quando</h4>
+          <p>{dateFormatted}</p>
+          <p>
+            {timeFormatted}
+            {endDate &&
+              (isSameDay
+                ? ` – ${endTimeFormatted}`
+                : ` – ${endDateFormatted} ${endTimeFormatted}`)}{' '}
+            (BRT)
           </p>
         </div>
         <div className="metadata-col">
-          <h4
-            style={{
-              textTransform: 'uppercase',
-              fontSize: '0.8rem',
-              color: '#666',
-            }}
-          >
-            Onde
-          </h4>
-          <p style={{ fontWeight: 'bold', margin: '0.2rem 0' }}>{location}</p>
-          {item.event_url && (
-            <a
-              href={item.event_url}
-              target="_blank"
-              rel="noreferrer"
-              style={{ fontSize: '0.9rem' }}
-            >
-              Transmissão online
-            </a>
-          )}
+          <h4>Onde</h4>
+          <p>{location}</p>
+          {(eventLink || data?.eventUrlLabel) &&
+            (eventLink ? (
+              <UniversalLink href={eventLink}>{eventLinkLabel}</UniversalLink>
+            ) : (
+              <span>{eventLinkLabel}</span>
+            ))}
         </div>
         <div className="metadata-col">
-          <h4
-            style={{
-              textTransform: 'uppercase',
-              fontSize: '0.8rem',
-              color: '#666',
-            }}
-          >
-            Organização
-          </h4>
-          <p style={{ fontWeight: 'bold', margin: '0.2rem 0' }}>
-            {contactName}
-          </p>
+          <h4>Organização</h4>
+          <p>{contactName}</p>
           {contactEmail && (
-            <a href={`mailto:${contactEmail}`} style={{ fontSize: '0.9rem' }}>
-              {contactEmail}
-            </a>
+            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
           )}
         </div>
         <div className="metadata-col">
-          <h4
-            style={{
-              textTransform: 'uppercase',
-              fontSize: '0.8rem',
-              color: '#666',
-            }}
-          >
-            Participação
-          </h4>
-          <p style={{ fontWeight: 'bold', margin: '0.2rem 0' }}>
-            {item.price || 'Gratuita'}
-          </p>
-          <a href={`${eventUrl}/@@ical`} style={{ fontSize: '0.9rem' }}>
-            Adicionar ao calendário (iCal)
-          </a>
+          <h4>Participação</h4>
+          <p>{price}</p>
+          {eventUrl && (
+            <a href={`${eventUrl}/@@ical`}>Adicionar ao calendário (iCal)</a>
+          )}
         </div>
       </div>
     </div>

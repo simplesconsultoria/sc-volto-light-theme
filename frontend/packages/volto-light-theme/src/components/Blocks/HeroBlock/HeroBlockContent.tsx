@@ -73,7 +73,10 @@ const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
 
             if (isEditMode) {
               return (
-                <div key={index} className={cx('hero-cta', themeClass)}>
+                <div
+                  key={btnText + String(btnLink)}
+                  className={cx('hero-cta', themeClass)}
+                >
                   <span className="hero-button item" aria-hidden="true">
                     {btnText}
                   </span>
@@ -83,7 +86,7 @@ const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
 
             return (
               <ConditionalLink
-                key={index}
+                key={btnText + String(btnLink)}
                 condition={!!btnLink}
                 href={btnLink}
                 className={cx('hero-cta', themeClass)}

@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import cx from 'classnames';
 import { useSelector } from 'react-redux';
 import type { GetSiteResponse } from '@plone/types';
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
@@ -60,7 +61,11 @@ const TeaserDefaultTemplate = (props) => {
   const placeholderSrc = config.settings.placeholderImages?.[href['@type']];
 
   return (
-    <Card item={showLink ? href : null} openLinkInNewTab={openLinkInNewTab}>
+    <Card
+      className={cx({ 'no-link': !showLink })}
+      item={showLink ? href : null}
+      openLinkInNewTab={openLinkInNewTab}
+    >
       <Card.Image
         src={url && !image?.image_field ? url : undefined}
         item={!data.overwrite ? href : { ...href, ...localOverrides }}

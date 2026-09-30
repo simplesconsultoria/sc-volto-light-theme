@@ -48,7 +48,7 @@ const withNavigation: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Navigation/SubMenu',
+  title: 'Navigation/SubMenu',
   component: SubMenu,
   decorators: [withNavigation],
   parameters: { layout: 'fullscreen', fullBleed: true },

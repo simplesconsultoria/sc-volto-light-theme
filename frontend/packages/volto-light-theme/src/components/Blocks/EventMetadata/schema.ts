@@ -1,4 +1,5 @@
 import { defineMessages } from 'react-intl';
+import config from '@plone/volto/registry';
 
 const messages = defineMessages({
   eventMetadata: {
@@ -8,10 +9,6 @@ const messages = defineMessages({
   blockWidth: {
     id: 'Block Width',
     defaultMessage: 'Block Width',
-  },
-  align: {
-    id: 'Alignment',
-    defaultMessage: 'Alignment',
   },
   theme: {
     id: 'Theme',
@@ -25,28 +22,55 @@ export const EventMetadataSchema = ({ intl }: any) => ({
     {
       id: 'default',
       title: 'Default',
-      fields: [],
+      fields: [
+        'location',
+        'eventUrl',
+        'eventUrlLabel',
+        'contactName',
+        'contactEmail',
+        'price',
+      ],
     },
     {
       id: 'styling',
       title: 'Styling',
-      fields: ['blockWidth', 'align', 'theme'],
+      fields: ['blockWidth', 'theme'],
     },
   ],
   properties: {
+    location: {
+      title: 'Location (override)',
+      type: 'string',
+    },
+    eventUrl: {
+      title: 'Event URL (override)',
+      widget: 'url',
+    },
+    eventUrlLabel: {
+      title: 'Event URL Label (override)',
+      type: 'string',
+    },
+    contactName: {
+      title: 'Contact Name (override)',
+      type: 'string',
+    },
+    contactEmail: {
+      title: 'Contact Email (override)',
+      type: 'string',
+    },
+    price: {
+      title: 'Price/Participation (override)',
+      type: 'string',
+    },
     blockWidth: {
       title: intl.formatMessage(messages.blockWidth),
       widget: 'blockWidth',
       default: 'layout',
     },
-    align: {
-      title: intl.formatMessage(messages.align),
-      widget: 'align',
-      default: 'left',
-    },
     theme: {
       title: intl.formatMessage(messages.theme),
       widget: 'color_picker',
+      themes: config.blocks.themes,
       default: 'slate',
     },
   },

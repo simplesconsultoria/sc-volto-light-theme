@@ -23,6 +23,8 @@ Registered in `src/config/blocks.ts` → `installLocalBlocks()`. `[V 2026-09-01]
 | `mainImageBlock` | `Main Image` | `media` | `image.svg` | 1 | only when the content item has `preview_image_link` | `src/components/Blocks/MainImageBlock/index.ts` |
 | `heroBlock` | `Hero Block` | `common` | `presentation.svg` | 1 | `false` | `src/components/Blocks/HeroBlock/index.ts` |
 | `quoteBlock` | `Quote` | `text` | `quote.svg` | 1 | `false` | `src/components/Blocks/QuoteBlock/index.ts` |
+| `customGrid` | `Custom Grid` | `common` | `columns.svg` | 1 | `false` | `src/components/Blocks/CustomGrid/index.ts` |
+| `eventMetadata` | `Event Metadata` | `common` | `calendar.svg` | 1 | `false` | `src/components/Blocks/EventMetadata/index.ts` |
 
 All titles are English strings translated through `formatMessageWithFallback`, which uses
 the string itself as the message id. See GAPS §5.
@@ -118,6 +120,19 @@ Schema: `src/components/Blocks/QuoteBlock/schema.ts`. `blockHasOwnFocusManagemen
 
 `required: []`.
 
+### 1.5 `customGrid`
+
+Schema: `src/components/Blocks/CustomGrid/Schema.ts`
+
+| field | type | default | required |
+|---|---|---|---|
+| `layout` | `string` | `1-1` | no |
+| `styles.blockWidth:noprefix` | `blockWidth` | `layout` | no |
+
+### 1.6 `eventMetadata`
+
+No schema (pulls data automatically from the context properties).
+
 ---
 
 ## 2. Listing variations
@@ -131,6 +146,7 @@ Installed in `src/config/blocks.ts` → `install()`. `[V 2026-09-01]`
 | `carousel` | `Carousel` | `CarouselTemplate` | `carouselSchemaEnhancer` | **added** |
 | `mediaCarousel` | `Media Carousel` | `MediaCarouselTemplate` | `mediaCarouselSchemaEnhancer` | **added** |
 | `teaser` | `Highlight` | `TeaserTemplate` | `teaserSchemaEnhancer` | **added** |
+| `events` | `Eventos` | `EventsTemplate` | *(none)* | **added** |
 
 All three additions are guarded by an `id` existence check, so re-running `install()` is
 idempotent. The `listing` block's own `schemaEnhancer` is wrapped so

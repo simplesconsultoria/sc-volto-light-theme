@@ -1,0 +1,72 @@
+// =============================================================================
+// Listing Grid Variation
+// Card layout em grid para itens do listing, com suporte a person-listing.
+// Cores de borda via --cardBorderColor e --content-type-border-color.
+// =============================================================================
+
+&.grid {
+  .listing-item,
+  .listing-item.person-listing {
+    .card {
+      height: 100%;
+      border: solid var(--cardBorderColor, var(--theme-border-color));
+      border-width: var(
+        --cardBorderWidth,
+        var(--theme-border-width)
+      ) !important;
+      border-top-color: var(
+        --cardBorderColor,
+        var(--content-type-border-color, var(--theme-border-color))
+      );
+      background-color: var(--theme-high-contrast-color);
+
+      .card-inner {
+        padding: 0 !important;
+
+        .card-summary {
+          @container (max-width: #{$largest-mobile-screen}) {
+            padding-top: $spacing-medium !important;
+          }
+
+          padding: $spacing-medium $spacing-small $spacing-medium $spacing-small !important;
+
+          .title {
+            color: var(--theme-top-foreground-color);
+          }
+
+          .description,
+          .headline span,
+          .headline time {
+            color: var(--theme-top-low-contrast-foreground-color);
+          }
+
+          .summary-room-phone {
+            color: var(--theme-top-low-contrast-foreground-color);
+            &:empty {
+              display: none;
+            }
+          }
+        }
+      }
+
+      &:hover {
+        background-color: color-mix(
+          in srgb,
+          var(--theme-high-contrast-color) 80%,
+          var(--theme-top-foreground-color)
+        );
+      }
+    }
+  }
+
+  .listing-item.person-listing {
+    .card-inner {
+      display: flex;
+      flex-direction: column;
+      padding: 0 $spacing-small;
+      .image-wrapper {
+        margin-top: $spacing-small;
+      }
+    }
+  }
+}

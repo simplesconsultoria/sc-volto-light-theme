@@ -82,7 +82,13 @@ const MainImageBlockView: React.FC<MainImageBlockViewProps> = ({
       align={data.align as MainImageAlign | undefined}
       size={data.size as MainImageSize | undefined}
       title={data.title}
-      description={data.description}
+      description={
+        data.description ||
+        (pageContent as any)?.preview_caption_link ||
+        (pageContent as any)?.preview_caption ||
+        (pageContent as any)?.image_caption ||
+        ''
+      }
       className={className}
       style={mergedStyle}
       image={

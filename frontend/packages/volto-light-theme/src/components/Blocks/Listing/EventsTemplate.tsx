@@ -80,6 +80,13 @@ const EventsTemplate = ({
                 .toUpperCase()
             : '';
 
+          const end = item.end || item.ExpirationDate;
+          const endDate = end ? new Date(end) : null;
+          const isSameDay =
+            startDate && endDate
+              ? startDate.toDateString() === endDate.toDateString()
+              : false;
+
           // Determine event type/label (could be Type, Subject, etc. For now let's use Type or custom tag)
           const eventType =
             item['@type'] === 'Event'
@@ -91,6 +98,17 @@ const EventsTemplate = ({
               <div className="event-date-block">
                 <div className="event-day">{day}</div>
                 <div className="event-month">{month}</div>
+                {endDate && !isSameDay && (
+                  <div
+                    className="event-end-date"
+                    style={{ fontSize: '0.8rem', marginTop: '4px' }}
+                  >
+                    – {endDate.getDate()}{' '}
+                    {endDate
+                      .toLocaleString('pt-BR', { month: 'short' })
+                      .toUpperCase()}
+                  </div>
+                )}
               </div>
               <div className="event-content">
                 <ConditionalLink item={item} condition={!isEditMode}>
@@ -137,6 +155,16 @@ const EventsTemplate = ({
                           hour: '2-digit',
                           minute: '2-digit',
                         })}
+                        {endDate && (
+                          <span>
+                            {' '}
+                            –{' '}
+                            {endDate.toLocaleTimeString('pt-BR', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </span>
+                        )}
                       </span>
                     )}
                     <EventLocation item={item} />

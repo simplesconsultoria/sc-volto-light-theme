@@ -30,7 +30,7 @@ const withPage: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Views/Default View',
+  title: 'Views/Default View',
   component: DefaultView,
   decorators: [withPage],
   parameters: { layout: 'fullscreen', fullBleed: true },

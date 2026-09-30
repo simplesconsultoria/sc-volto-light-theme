@@ -161,7 +161,7 @@ const withWrapper: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Blocks/Inventory',
+  title: 'Blocks/Inventory',
   component: BlocksInventory,
   decorators: [withWrapper],
   parameters: { layout: 'fullscreen', fullBleed: true },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import Helmet from '@plone/volto/helpers/Helmet/Helmet';
@@ -14,6 +14,8 @@ import {
   type ThemeName,
 } from '../../utils/preferences';
 import { savePreference } from '../../utils/storage';
+
+import { useSyncExternalStore } from 'react';
 
 type ThemeOption = {
   value: ThemeName;
@@ -40,16 +42,22 @@ const messages = defineMessages({
   },
 });
 
+const emptySubscribe = () => () => {};
+
 const ThemeToggle: React.FC = () => {
   const intl = useIntl();
-  const [theme, setTheme] = useState<ThemeName>('light');
-  const [mounted, setMounted] = useState(false);
+  const [theme, setTheme] = useState<ThemeName>(() => {
+    if (typeof window !== 'undefined') {
+      return getAppliedTheme() ?? resolveThemePreference();
+    }
+    return 'light';
+  });
 
-  useEffect(() => {
-    const actualTheme = getAppliedTheme() ?? resolveThemePreference();
-    setTheme(actualTheme);
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 
   const selectTheme = (themeToApply: ThemeName) => {
     if (themeToApply !== theme) {

@@ -134,7 +134,14 @@
         }
 
         button {
+          border: var(--theme-foreground-color) 1px solid;
+          background-color: var(--theme-high-contrast-color);
           color: var(--theme-top-foreground-color);
+          &:hover {
+            border: var(--theme-top-foreground-color) 1px solid;
+            background-color: var(--theme-foreground-color);
+            color: var(--theme-high-contrast-color);
+          }
         }
       }
     }

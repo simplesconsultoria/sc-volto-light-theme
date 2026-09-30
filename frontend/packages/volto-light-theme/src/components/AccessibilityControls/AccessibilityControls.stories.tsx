@@ -45,7 +45,7 @@ const withStoredScale: Decorator = (Story, context) => {
 };
 
 const meta = {
-  title: 'Public/Header/AccessibilityControls',
+  title: 'Header/AccessibilityControls',
   component: AccessibilityControls,
   decorators: [withStoredScale],
   parameters: {

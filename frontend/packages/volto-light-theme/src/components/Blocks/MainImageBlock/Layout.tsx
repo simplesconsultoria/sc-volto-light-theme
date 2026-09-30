@@ -69,7 +69,7 @@ const Layout: React.FC<LayoutProps> = ({
             {description && (
               <div className="description">
                 {description.split('\n').map((line, index) => (
-                  <p key={index}>{line || '\u00A0'}</p>
+                  <p key={`line-${index}`}>{line || '\u00A0'}</p>
                 ))}
               </div>
             )}

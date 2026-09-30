@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-} from 'react';
+import React, { useRef, useState, useMemo, useCallback } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { defineMessages, useIntl } from 'react-intl';
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
@@ -84,11 +78,13 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
   });
 
   // Fecha dropdown quando sai do estado colapsado (ex: resize da janela)
-  useEffect(() => {
+  const [prevShouldCollapse, setPrevShouldCollapse] = useState(shouldCollapse);
+  if (shouldCollapse !== prevShouldCollapse) {
+    setPrevShouldCollapse(shouldCollapse);
     if (!shouldCollapse) {
       closeMenu();
     }
-  }, [shouldCollapse, closeMenu]);
+  }
 
   // Fecha ao clicar fora do trigger e do menu, ou ao pressionar Escape
   const extraRefs = useMemo(() => [menuRef], []);

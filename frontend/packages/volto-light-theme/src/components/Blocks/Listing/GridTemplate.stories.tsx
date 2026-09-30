@@ -22,7 +22,7 @@ const withWrapper: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Blocks/Listing/Grid',
+  title: 'Blocks/Listing/Grid',
   component: GridTemplate,
   decorators: [withWrapper],
   parameters: { layout: 'fullscreen' },

@@ -24,7 +24,7 @@ const withMenu: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Navigation/MenuItem',
+  title: 'Navigation/MenuItem',
   component: MenuItem,
   decorators: [withMenu],
   parameters: { layout: 'fullscreen' },

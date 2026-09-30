@@ -2,6 +2,8 @@ import { createThemeDefinition } from './blockThemes';
 import type { ConfigType } from '@plone/registry';
 import type { BlockConfigBase } from '@plone/types';
 import { addStyling } from '@plone/volto/helpers/Extensions/withBlockSchemaEnhancer';
+import calendarSVG from '@plone/volto/icons/calendar.svg';
+import appsSVG from '@plone/volto/icons/apps.svg';
 
 import DocumentByLineInfo from '../components/Blocks/DocumentByLine';
 import MainImageBlockInfo from '../components/Blocks/MainImageBlock';
@@ -91,7 +93,7 @@ function installLocalBlocks(config: ConfigType) {
   config.blocks.blocksConfig.customGrid = {
     id: 'customGrid',
     title: 'Custom Grid',
-    icon: '', // can be added if needed
+    icon: appsSVG,
     group: 'common',
     view: CustomGridView,
     edit: CustomGridEdit,
@@ -106,7 +108,7 @@ function installLocalBlocks(config: ConfigType) {
   config.blocks.blocksConfig.eventMetadata = {
     id: 'eventMetadata',
     title: 'Event Metadata',
-    icon: '',
+    icon: calendarSVG,
     group: 'common',
     view: EventMetadataView,
     edit: EventMetadataEdit,
@@ -120,6 +122,41 @@ function installLocalBlocks(config: ConfigType) {
   if (config.blocks.blocksConfig.separator) {
     config.blocks.blocksConfig.separator.view = SeparatorView;
     config.blocks.blocksConfig.separator.edit = SeparatorEdit;
+
+    // Substitui o schemaEnhancer para remover as opções do add-on e deixar só o styling base (background color/theme)
+    config.blocks.blocksConfig.separator.schemaEnhancer = (args: any) => {
+      addStyling({ schema: args.schema, intl: args.intl });
+      return args.schema;
+    };
+  }
+
+  if (config.blocks.blocksConfig.introduction) {
+    const prevEnhancer = config.blocks.blocksConfig.introduction.schemaEnhancer;
+    config.blocks.blocksConfig.introduction.schemaEnhancer = (args: any) => {
+      let schema = prevEnhancer ? prevEnhancer(args) : args.schema;
+      addStyling({ schema, intl: args.intl });
+
+      // Inject align in styling
+      if (schema?.properties?.styles?.schema) {
+        const stylesSchema = schema.properties.styles.schema;
+        if (!stylesSchema.properties.align) {
+          stylesSchema.properties.align = {
+            widget: 'align',
+            title: args.intl.formatMessage({
+              id: 'Alignment',
+              defaultMessage: 'Alignment',
+            }),
+          };
+          const defaultFieldset = stylesSchema.fieldsets.find(
+            (f: any) => f.id === 'default',
+          );
+          if (defaultFieldset && !defaultFieldset.fields.includes('align')) {
+            defaultFieldset.fields.push('align');
+          }
+        }
+      }
+      return schema;
+    };
   }
 
   return config;
@@ -171,7 +208,15 @@ function installContentTypeColors(config: ConfigType) {
 }
 
 function injectCardBorderColor(config: ConfigType) {
-  const blocksToEnhance = ['listing', 'teaser', 'slider', 'carousel'];
+  // Aplica somente para os blocos solicitados
+  const blocksToEnhance = [
+    'listing',
+    'teaser',
+    'slider',
+    'carousel',
+    'quote',
+    'eventMetadata',
+  ];
 
   blocksToEnhance.forEach((blockId) => {
     const applyToBlock = (blockConfig: any) => {
@@ -197,14 +242,38 @@ function injectCardBorderColor(config: ConfigType) {
             default: '',
           };
 
+          const blocksWithBorderWidth = [
+            'listing',
+            'teaser',
+            'slider',
+            'carousel',
+          ];
+          if (blocksWithBorderWidth.includes(blockId)) {
+            stylesSchema.properties['--cardBorderWidth'] = {
+              title: 'Estilo da Borda',
+              description: 'Permite forçar um tipo de borda diferente do tema',
+              choices: [
+                ['', 'Padrão do Tema'],
+                ['1px', 'Completa (Full)'],
+                ['3px 0px 0px 0px', 'Apenas no Topo (Top)'],
+                ['0px', 'Nenhuma Borda'],
+              ],
+            };
+          }
+
           const defaultFieldset = stylesSchema.fieldsets.find(
             (f: any) => f.id === 'default',
           );
-          if (
-            defaultFieldset &&
-            !defaultFieldset.fields.includes('--cardBorderColor')
-          ) {
-            defaultFieldset.fields.push('--cardBorderColor');
+          if (defaultFieldset) {
+            if (!defaultFieldset.fields.includes('--cardBorderColor')) {
+              defaultFieldset.fields.push('--cardBorderColor');
+            }
+            if (
+              blocksWithBorderWidth.includes(blockId) &&
+              !defaultFieldset.fields.includes('--cardBorderWidth')
+            ) {
+              defaultFieldset.fields.push('--cardBorderWidth');
+            }
           }
         }
 

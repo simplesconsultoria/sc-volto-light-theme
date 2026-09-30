@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
-import cx from 'classnames';
-import Icon from '@plone/volto/components/theme/Icon/Icon';
 import config from '@plone/volto/registry';
 
-import leftSVG from '@plone/volto/icons/left-key.svg';
-import rightSVG from '@plone/volto/icons/right-key.svg';
-import playSVG from '@plone/volto/icons/play.svg';
-import pauseSVG from '@plone/volto/icons/pause.svg';
-
 import { carouselMessages } from './messages';
+import CarouselControls from './CarouselControls';
 
 type ListingItem = Record<string, any>;
 
@@ -94,9 +88,12 @@ const MediaCarouselTemplate: React.FC<
     carouselAutoPlay && !isEditMode && canNavigate && !prefersReducedMotion;
   const [isPlaying, setIsPlaying] = useState(canAutoPlay);
 
-  useEffect(() => {
+  const [prevCanAutoPlay, setPrevCanAutoPlay] = useState(canAutoPlay);
+
+  if (canAutoPlay !== prevCanAutoPlay) {
+    setPrevCanAutoPlay(canAutoPlay);
     setIsPlaying(canAutoPlay);
-  }, [canAutoPlay]);
+  }
 
   const goTo = (nextIndex: number) => {
     if (count <= 0) return;
@@ -195,75 +192,15 @@ const MediaCarouselTemplate: React.FC<
         </div>
       </div>
 
-      {canNavigate && (
-        <div
-          className="listing-carousel__controls"
-          aria-label={intl.formatMessage(carouselMessages.controls)}
-        >
-          <button
-            type="button"
-            className={cx(
-              'listing-carousel__arrow',
-              'listing-carousel__arrow--prev',
-            )}
-            onClick={() => goTo(activeIndex - 1)}
-            aria-label={intl.formatMessage(carouselMessages.previous)}
-          >
-            <Icon name={leftSVG} size="20px" />
-          </button>
-
-          <div
-            className="listing-carousel__dots"
-            role="tablist"
-            aria-label={intl.formatMessage(carouselMessages.items)}
-          >
-            {slides.map((item, index) => (
-              <button
-                key={item['@id']}
-                type="button"
-                className={cx('listing-carousel__dot', {
-                  'is-active': index === activeIndex,
-                })}
-                onClick={() => goTo(index)}
-                aria-label={intl.formatMessage(carouselMessages.goToItem, {
-                  index: index + 1,
-                })}
-                aria-current={index === activeIndex ? 'true' : undefined}
-                role="tab"
-              />
-            ))}
-          </div>
-
-          {canAutoPlay && (
-            <button
-              type="button"
-              className={cx(
-                'listing-carousel__arrow',
-                'listing-carousel__toggle',
-              )}
-              onClick={() => setIsPlaying((prev) => !prev)}
-              aria-label={intl.formatMessage(
-                isPlaying ? carouselMessages.pause : carouselMessages.play,
-              )}
-              aria-pressed={isPlaying}
-            >
-              <Icon name={isPlaying ? pauseSVG : playSVG} size="20px" />
-            </button>
-          )}
-
-          <button
-            type="button"
-            className={cx(
-              'listing-carousel__arrow',
-              'listing-carousel__arrow--next',
-            )}
-            onClick={() => goTo(activeIndex + 1)}
-            aria-label={intl.formatMessage(carouselMessages.next)}
-          >
-            <Icon name={rightSVG} size="20px" />
-          </button>
-        </div>
-      )}
+      <CarouselControls
+        canNavigate={canNavigate}
+        canAutoPlay={!!canAutoPlay}
+        isPlaying={isPlaying}
+        activeIndex={activeIndex}
+        slides={slides}
+        goTo={goTo}
+        setIsPlaying={setIsPlaying}
+      />
     </div>
   );
 };

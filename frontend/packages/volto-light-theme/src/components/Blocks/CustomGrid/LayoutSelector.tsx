@@ -52,7 +52,7 @@ const LayoutSelector = ({
               {/* Visual representation of the layout proportions */}
               {variant.id.split('-').map((weight, i) => (
                 <div
-                  key={i}
+                  key={`${i}-${weight}`}
                   className="layout-preview-col"
                   style={{ flex: parseInt(weight, 10) }}
                 />

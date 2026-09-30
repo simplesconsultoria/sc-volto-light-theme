@@ -171,7 +171,7 @@ const withGallery: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Blocks/Gallery',
+  title: 'Blocks/Gallery',
   component: Gallery,
   decorators: [withGallery],
   parameters: { layout: 'fullscreen', fullBleed: true },

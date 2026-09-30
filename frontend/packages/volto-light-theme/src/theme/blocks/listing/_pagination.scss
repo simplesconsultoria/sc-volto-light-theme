@@ -1,0 +1,81 @@
+// =============================================================================
+// Listing Pagination
+// Controles de paginacao desktop e mobile para o bloco listing.
+// Desktop usa layout horizontal; mobile usa layout empilhado.
+// Cores respondem ao tema via --theme-* tokens.
+// =============================================================================
+
+.pagination-wrapper {
+  display: flex !important;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+  padding: 0 1rem;
+  -webkit-overflow-scrolling: touch;
+
+  .ui.pagination.desktop-pagination.menu {
+    display: flex;
+    min-height: unset;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @media (max-width: $largest-mobile-screen) {
+      display: none !important;
+    }
+  }
+
+  .ui.pagination.mobile-pagination.menu {
+    display: none;
+    min-height: unset;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @media (max-width: $largest-mobile-screen) {
+      display: flex !important;
+    }
+  }
+
+  .ui.pagination.menu {
+    a.item {
+      display: flex;
+      border: 1px solid var(--theme-top-foreground-color) !important;
+      background-color: var(--theme-high-contrast-color);
+      color: var(--theme-top-foreground-color) !important;
+
+      &.active {
+        background-color: var(--theme-foreground-color) !important;
+        color: var(--theme-color) !important;
+      }
+
+      &:hover:not(.active, .disabled) {
+        background-color: color-mix(
+          in srgb,
+          var(--theme-high-contrast-color) 80%,
+          var(--theme-top-foreground-color)
+        ) !important;
+      }
+
+      &.disabled {
+        background-color: color-mix(
+          in srgb,
+          var(--theme-high-contrast-color) 40%,
+          var(--theme-top-foreground-color)
+        ) !important;
+        color: var(--theme-high-contrast-color) !important;
+      }
+
+      &:focus,
+      &:focus-visible {
+        outline: 2px solid var(--theme-top-high-contrast-foreground-color);
+        outline-offset: 3px;
+      }
+    }
+
+    .total {
+      margin-top: 0rem !important;
+      color: var(--theme-low-contrast-foreground-color);
+      text-align: center;
+    }
+  }
+}

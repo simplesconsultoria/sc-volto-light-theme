@@ -32,7 +32,7 @@ const withWrapper: Decorator = (Story) => (
 );
 
 const meta = {
-  title: 'Public/Blocks/Separator',
+  title: 'Blocks/Separator',
   component: Separator,
   decorators: [withWrapper],
   parameters: { layout: 'fullscreen' },

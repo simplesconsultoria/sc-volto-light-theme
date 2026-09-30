@@ -84,7 +84,11 @@ const ThemesToolbarActions = ({
           title={intl.formatMessage(messages.add)}
         />
       </Button>
-      <a className="item" href={backHref}>
+      <a
+        className="item"
+        href={backHref}
+        aria-label={intl.formatMessage(messages.back)}
+      >
         <Icon
           name={backSVG}
           className="circled"

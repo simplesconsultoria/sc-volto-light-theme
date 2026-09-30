@@ -113,12 +113,21 @@ describe('block theme token contract', () => {
     ).toEqual([]);
   });
 
-  it('keeps the focus outlines in _listing.scss resolvable', () => {
+  it('keeps the focus outlines in listing styles resolvable', () => {
     // The specific regression: these six had no fallback, so an undefined
     // token removed the outline entirely rather than degrading it.
-    const listing = readTheme(path.join('blocks', '_listing.scss'));
+    // Listing styles are split across blocks/listing/*.scss sub-files.
+    const listingDir = path.join(THEME_DIR, 'blocks', 'listing');
+    let combined = readTheme(path.join('blocks', '_listing.scss'));
+    if (fs.existsSync(listingDir)) {
+      for (const f of fs.readdirSync(listingDir)) {
+        if (f.endsWith('.scss')) {
+          combined += fs.readFileSync(path.join(listingDir, f), 'utf8');
+        }
+      }
+    }
     const outlines = [
-      ...listing.matchAll(/outline:[^;]*var\((--theme-[a-z-]+)\)/g),
+      ...combined.matchAll(/outline:[^;]*var\((--theme-[a-z-]+)\)/g),
     ].map((m) => m[1]);
 
     expect(outlines.length).toBeGreaterThan(0);
