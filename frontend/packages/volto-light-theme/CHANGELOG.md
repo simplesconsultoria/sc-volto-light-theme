@@ -8,6 +8,12 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0-alpha.11 (2026-10-02)
+
+### Bugfix
+
+- Remove casestudy styles from our frontend. @ericof 
+
 ## 1.0.0-alpha.10 (2026-09-30)
 
 ### Internal
