@@ -9,6 +9,13 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a12 (2026-10-21)
+
+
+### Bug fixes:
+
+- Added the missing Brazilian Portuguese translations for the theme, header and footer settings, the profiles and the theme registry, and made the Natal theme description an English message. @ericof [#31](https://github.com/simplesconsultoria/sc-volto-light-theme/issues/31)
+
 ## 1.0.0a11 (2026-10-02)
 
 No significant changes.

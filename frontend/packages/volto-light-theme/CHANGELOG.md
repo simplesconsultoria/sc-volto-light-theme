@@ -8,6 +8,12 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0-alpha.12 (2026-10-21)
+
+### Bugfix
+
+- Translated the Custom Grid, Hero Block and Event Metadata messages into Brazilian Portuguese, and translated "Hero Block" as "Bloco Hero". @ericof [#31](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/31)
+
 ## 1.0.0-alpha.11 (2026-10-02)
 
 ### Bugfix

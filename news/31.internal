@@ -1,1 +1,0 @@
-CI now fails when the backend or frontend translation catalogs are out of sync with the source. @ericof

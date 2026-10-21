@@ -7,6 +7,34 @@
 -->
 
 <!-- towncrier release notes start -->
+## 1.0.0a12 (2026-10-21)
+
+### Backend
+
+
+#### Bug fixes:
+
+- Added the missing Brazilian Portuguese translations for the theme, header and footer settings, the profiles and the theme registry, and made the Natal theme description an English message. @ericof [#31](https://github.com/simplesconsultoria/sc-volto-light-theme/issues/31)
+
+
+
+### Frontend
+
+#### Bugfix
+
+- Translated the Custom Grid, Hero Block and Event Metadata messages into Brazilian Portuguese, and translated "Hero Block" as "Bloco Hero". @ericof [#31](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/31)
+
+
+
+### Project
+
+
+#### Internal
+
+- CI now fails when the backend or frontend translation catalogs are out of sync with the source. @ericof [#31](https://github.com/simplesconsultoria/sc-volto-light-theme/pull/31)
+
+
+
 ## 1.0.0a11 (2026-10-02)
 
 ### Backend
