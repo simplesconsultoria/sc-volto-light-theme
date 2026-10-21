@@ -39,7 +39,7 @@ export const natalTheme: ThemeItem = {
   '@id': 'http://localhost:8080/Plone/@controlpanels/themes/natal',
   id: 'natal',
   name: 'Natal',
-  description: 'Um tema festivo com tipografia Inter e bordas arredondadas.',
+  description: 'A festive theme with Inter typography and rounded borders.',
   primary_color_light: '#d32f2f',
   primary_foreground_color_light: '#ffffff',
   header_foreground_color: '#ffffff',

@@ -90,14 +90,26 @@ msgid "Background style"
 msgstr ""
 
 #. Default: "Block Width"
+#: components/Blocks/EventMetadata/schema
 #: components/Blocks/HeroBlock/schema
+#: components/Blocks/Listing/schema
 #: components/Blocks/MainImageBlock/schema
 msgid "Block Width"
+msgstr ""
+
+#. Default: "Border color"
+#: components/Blocks/schema
+msgid "Border color"
 msgstr ""
 
 #. Default: "Brand"
 #: index
 msgid "Brand"
+msgstr ""
+
+#. Default: "Button Theme"
+#: components/Blocks/HeroBlock/schema
+msgid "Button Theme"
 msgstr ""
 
 #. Default: "Button link"
@@ -113,6 +125,11 @@ msgstr ""
 #. Default: "The text shown inside the button (e.g. \"Read more\")."
 #: components/Blocks/HeroBlock/schema
 msgid "Button text description"
+msgstr ""
+
+#. Default: "Buttons"
+#: components/Blocks/HeroBlock/schema
+msgid "Buttons"
 msgstr ""
 
 #. Default: "By"
@@ -168,6 +185,11 @@ msgstr ""
 msgid "Changes saved"
 msgstr ""
 
+#. Default: "Clear column style"
+#: components/Blocks/CustomGrid/Edit
+msgid "Clear column style"
+msgstr ""
+
 #. Default: "Close menu"
 #: components/Navigation/SCNavigation/SubMenu
 msgid "Close menu"
@@ -176,6 +198,16 @@ msgstr ""
 #. Default: "Colours"
 #: components/Controlpanels/Themes/messages
 msgid "Colours"
+msgstr ""
+
+#. Default: "Column"
+#: components/Blocks/CustomGrid/Schema
+msgid "Column"
+msgstr ""
+
+#. Default: "Column Settings"
+#: components/Blocks/CustomGrid/Edit
+msgid "Column Settings"
 msgstr ""
 
 #. Default: "Contain"
@@ -196,6 +228,16 @@ msgstr ""
 #. Default: "Criteria"
 #: components/Widgets/QuerystringWidget
 msgid "Criteria"
+msgstr ""
+
+#. Default: "Custom Grid"
+#: components/Blocks/CustomGrid/Schema
+msgid "Custom Grid"
+msgstr ""
+
+#. Default: "Default"
+#: components/Blocks/CustomGrid/Schema
+msgid "Default"
 msgstr ""
 
 #. Default: "Delete"
@@ -229,6 +271,11 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+#. Default: "Edit parent grid block"
+#: components/Blocks/CustomGrid/Edit
+msgid "Edit parent grid block"
+msgstr ""
+
 #. Default: "This is a Hero Block. Add an item in the sidebar to fill it automatically."
 #: components/Blocks/HeroBlock/useHeroBlockContent
 msgid "Empty hero block placeholder"
@@ -237,6 +284,11 @@ msgstr ""
 #. Default: "Error"
 #: components/Controlpanels/Themes/messages
 msgid "Error"
+msgstr ""
+
+#. Default: "Event Metadata"
+#: components/Blocks/EventMetadata/schema
+msgid "Event Metadata"
 msgstr ""
 
 #. Default: "File type"
@@ -279,9 +331,19 @@ msgstr ""
 msgid "Full width description"
 msgstr ""
 
+#. Default: "Full width image (touches edges)"
+#: components/Blocks/HeroBlock/schema
+msgid "Full width image"
+msgstr ""
+
 #. Default: "Go to item {index}"
 #: components/Blocks/Listing/messages
 msgid "Go to item {index}"
+msgstr ""
+
+#. Default: "Grey"
+#: components/Blocks/CustomGrid/Schema
+msgid "Grey"
 msgstr ""
 
 #. Default: "Header text"
@@ -406,6 +468,7 @@ msgid "Last modified"
 msgstr ""
 
 #. Default: "Layout"
+#: components/Blocks/CustomGrid/Schema
 #: components/Blocks/HeroBlock/schema
 msgid "Layout"
 msgstr ""
@@ -553,6 +616,7 @@ msgid "Previous Page"
 msgstr ""
 
 #. Default: "Primary"
+#: components/Blocks/CustomGrid/Schema
 #: index
 msgid "Primary"
 msgstr ""
@@ -603,6 +667,11 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#. Default: "Secondary"
+#: components/Blocks/CustomGrid/Schema
+msgid "Secondary"
+msgstr ""
+
 #. Default: "Section"
 #: components/Navigation/SCNavigation/SubMenuSection
 msgid "Section"
@@ -611,6 +680,11 @@ msgstr ""
 #. Default: "Select a highlighted item"
 #: components/Blocks/HeroBlock/useHeroBlockContent
 msgid "Select a highlighted item"
+msgstr ""
+
+#. Default: "Select layout"
+#: components/Blocks/CustomGrid/LayoutSelector
+msgid "Select layout"
 msgstr ""
 
 #. Default: "Show author"
@@ -653,9 +727,20 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
+#. Default: "Tertiary"
+#: components/Blocks/CustomGrid/Schema
+msgid "Tertiary"
+msgstr ""
+
 #. Default: "Text side"
 #: components/Blocks/HeroBlock/schema
 msgid "Text side"
+msgstr ""
+
+#. Default: "Theme"
+#: components/Blocks/CustomGrid/Schema
+#: components/Blocks/EventMetadata/schema
+msgid "Theme"
 msgstr ""
 
 #. Default: "Theme deleted"
@@ -669,6 +754,7 @@ msgid "Themes"
 msgstr ""
 
 #. Default: "Title"
+#: components/Blocks/CustomGrid/Schema
 #: components/Blocks/HeroBlock/schema
 #: components/Blocks/MainImageBlock/schema
 msgid "Title"

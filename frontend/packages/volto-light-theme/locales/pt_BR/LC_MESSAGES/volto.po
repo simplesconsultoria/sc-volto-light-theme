@@ -88,15 +88,27 @@ msgid "Background style"
 msgstr "Estilo do fundo"
 
 #. Default: "Block Width"
+#: components/Blocks/EventMetadata/schema
 #: components/Blocks/HeroBlock/schema
+#: components/Blocks/Listing/schema
 #: components/Blocks/MainImageBlock/schema
 msgid "Block Width"
 msgstr "Largura do bloco"
+
+#. Default: "Border color"
+#: components/Blocks/schema
+msgid "Border color"
+msgstr "Cor da borda"
 
 #. Default: "Brand"
 #: index
 msgid "Brand"
 msgstr "Marca"
+
+#. Default: "Button Theme"
+#: components/Blocks/HeroBlock/schema
+msgid "Button Theme"
+msgstr "Tema do botão"
 
 #. Default: "Button link"
 #: components/Blocks/HeroBlock/schema
@@ -112,6 +124,11 @@ msgstr "Texto do botão"
 #: components/Blocks/HeroBlock/schema
 msgid "Button text description"
 msgstr "O texto exibido dentro do botão (ex.: \"Saiba mais\")."
+
+#. Default: "Buttons"
+#: components/Blocks/HeroBlock/schema
+msgid "Buttons"
+msgstr "Botões"
 
 #. Default: "By"
 #: components/DocumentByLine/DocumentByLine
@@ -166,6 +183,11 @@ msgstr "Topo centro"
 msgid "Changes saved"
 msgstr "Alterações salvas"
 
+#. Default: "Clear column style"
+#: components/Blocks/CustomGrid/Edit
+msgid "Clear column style"
+msgstr "Limpar estilo da coluna"
+
 #. Default: "Close menu"
 #: components/Navigation/SCNavigation/SubMenu
 msgid "Close menu"
@@ -175,6 +197,16 @@ msgstr "Fechar menu"
 #: components/Controlpanels/Themes/messages
 msgid "Colours"
 msgstr "Cores"
+
+#. Default: "Column"
+#: components/Blocks/CustomGrid/Schema
+msgid "Column"
+msgstr "Coluna"
+
+#. Default: "Column Settings"
+#: components/Blocks/CustomGrid/Edit
+msgid "Column Settings"
+msgstr "Configurações da coluna"
 
 #. Default: "Contain"
 #: components/Blocks/HeroBlock/schema
@@ -195,6 +227,16 @@ msgstr "Preencher"
 #: components/Widgets/QuerystringWidget
 msgid "Criteria"
 msgstr "Critérios"
+
+#. Default: "Custom Grid"
+#: components/Blocks/CustomGrid/Schema
+msgid "Custom Grid"
+msgstr "Grade personalizada"
+
+#. Default: "Default"
+#: components/Blocks/CustomGrid/Schema
+msgid "Default"
+msgstr "Padrão"
 
 #. Default: "Delete"
 #: components/Controlpanels/Themes/messages
@@ -227,15 +269,25 @@ msgstr "Cópia de {name}"
 msgid "Edit"
 msgstr "Editar"
 
+#. Default: "Edit parent grid block"
+#: components/Blocks/CustomGrid/Edit
+msgid "Edit parent grid block"
+msgstr "Editar o bloco de grade pai"
+
 #. Default: "This is a Hero Block. Add an item in the sidebar to fill it automatically."
 #: components/Blocks/HeroBlock/useHeroBlockContent
 msgid "Empty hero block placeholder"
-msgstr "Este é um Hero Block. Adicione um item no menu lateral para preenchê-lo automaticamente."
+msgstr "Este é um Bloco Hero. Adicione um item no menu lateral para preenchê-lo automaticamente."
 
 #. Default: "Error"
 #: components/Controlpanels/Themes/messages
 msgid "Error"
 msgstr "Erro"
+
+#. Default: "Event Metadata"
+#: components/Blocks/EventMetadata/schema
+msgid "Event Metadata"
+msgstr "Metadados do evento"
 
 #. Default: "File type"
 #: components/Blocks/HeroBlock/schema
@@ -277,10 +329,20 @@ msgstr "Largura total"
 msgid "Full width description"
 msgstr "Permite que o texto ocupe todo o bloco quando não há imagem a exibir."
 
+#. Default: "Full width image (touches edges)"
+#: components/Blocks/HeroBlock/schema
+msgid "Full width image"
+msgstr "Imagem em largura total (encosta nas bordas)"
+
 #. Default: "Go to item {index}"
 #: components/Blocks/Listing/messages
 msgid "Go to item {index}"
 msgstr "Ir para o item {index}"
+
+#. Default: "Grey"
+#: components/Blocks/CustomGrid/Schema
+msgid "Grey"
+msgstr "Cinza"
 
 #. Default: "Header text"
 #: components/Blocks/HeroBlock/schema
@@ -311,7 +373,7 @@ msgstr "Altura (px)"
 #: components/Blocks/HeroBlock/schema
 #: index
 msgid "Hero Block"
-msgstr "Hero Block"
+msgstr "Bloco Hero"
 
 #. Default: "Explanatory text or summary displayed below the title."
 #: components/Blocks/HeroBlock/schema
@@ -404,6 +466,7 @@ msgid "Last modified"
 msgstr "Última modificação"
 
 #. Default: "Layout"
+#: components/Blocks/CustomGrid/Schema
 #: components/Blocks/HeroBlock/schema
 msgid "Layout"
 msgstr "Layout"
@@ -551,6 +614,7 @@ msgid "Previous Page"
 msgstr "Página anterior"
 
 #. Default: "Primary"
+#: components/Blocks/CustomGrid/Schema
 #: index
 msgid "Primary"
 msgstr "Primária"
@@ -601,6 +665,11 @@ msgstr "Topo direito"
 msgid "Save"
 msgstr "Salvar"
 
+#. Default: "Secondary"
+#: components/Blocks/CustomGrid/Schema
+msgid "Secondary"
+msgstr "Secundária"
+
 #. Default: "Section"
 #: components/Navigation/SCNavigation/SubMenuSection
 msgid "Section"
@@ -610,6 +679,11 @@ msgstr "Seção"
 #: components/Blocks/HeroBlock/useHeroBlockContent
 msgid "Select a highlighted item"
 msgstr "Selecione um item de destaque"
+
+#. Default: "Select layout"
+#: components/Blocks/CustomGrid/LayoutSelector
+msgid "Select layout"
+msgstr "Selecione o layout"
 
 #. Default: "Show author"
 #: components/Blocks/DocumentByLine/schema
@@ -651,10 +725,21 @@ msgstr "Estilo"
 msgid "Tags"
 msgstr "Tags"
 
+#. Default: "Tertiary"
+#: components/Blocks/CustomGrid/Schema
+msgid "Tertiary"
+msgstr "Terciária"
+
 #. Default: "Text side"
 #: components/Blocks/HeroBlock/schema
 msgid "Text side"
 msgstr "Lado do texto"
+
+#. Default: "Theme"
+#: components/Blocks/CustomGrid/Schema
+#: components/Blocks/EventMetadata/schema
+msgid "Theme"
+msgstr "Tema"
 
 #. Default: "Theme deleted"
 #: components/Controlpanels/Themes/messages
@@ -667,6 +752,7 @@ msgid "Themes"
 msgstr "Temas"
 
 #. Default: "Title"
+#: components/Blocks/CustomGrid/Schema
 #: components/Blocks/HeroBlock/schema
 #: components/Blocks/MainImageBlock/schema
 msgid "Title"
