@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-05-25 17:12+0000\n"
+"POT-Creation-Date: 2026-10-21 13:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -10,6 +10,519 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 "Language-Code: pt_BR\n"
-"Language-Name: English\n"
+"Language-Name: Português (Brasil)\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: DOMAIN\n"
+"Domain: sc.voltolighttheme\n"
+
+#: sc/voltolighttheme/profiles/initial/registry/sc.voltolighttheme.themes.xml
+msgid "A festive theme with Inter typography and rounded borders."
+msgstr "Um tema festivo com tipografia Inter e bordas arredondadas."
+
+#: sc/voltolighttheme/interfaces.py:60
+msgid "Accent Colors"
+msgstr "Cores de destaque"
+
+#: sc/voltolighttheme/behaviors/footer.py:212
+msgid "Brand message"
+msgstr "Mensagem da marca"
+
+#: sc/voltolighttheme/behaviors/footer.py:203
+msgid "Brand slogan"
+msgstr "Slogan da marca"
+
+#: sc/voltolighttheme/interfaces.py:89
+msgid "Content Types Colors"
+msgstr "Cores dos tipos de conteúdo"
+
+#: sc/voltolighttheme/profiles.zcml:30
+msgid "Create example content to showcase this addon."
+msgstr "Cria conteúdo de exemplo para demonstrar este complemento."
+
+#: sc/voltolighttheme/profiles/default/registry/sc.voltolighttheme.themes.xml
+msgid "Default"
+msgstr "Padrão"
+
+#: sc/voltolighttheme/behaviors/footer.py:233
+msgid "Footer address"
+msgstr "Rodapé: Endereço"
+
+#: sc/voltolighttheme/behaviors/footer.py:191
+msgid "Footer colophon right text"
+msgstr "Rodapé: Texto à direita do colofão"
+
+#: sc/voltolighttheme/behaviors/footer.py:149
+msgid "Footer colophon text"
+msgstr "Rodapé: Colofão"
+
+#: sc/voltolighttheme/behaviors/footer.py:254
+msgid "Footer column left"
+msgstr "Rodapé: Coluna da esquerda"
+
+#: sc/voltolighttheme/behaviors/footer.py:242
+msgid "Footer column left header"
+msgstr "Rodapé: Cabeçalho da coluna da esquerda"
+
+#: sc/voltolighttheme/behaviors/footer.py:278
+msgid "Footer column middle"
+msgstr "Rodapé: Coluna do meio"
+
+#: sc/voltolighttheme/behaviors/footer.py:266
+msgid "Footer column middle header"
+msgstr "Rodapé: Cabeçalho da coluna do meio"
+
+#: sc/voltolighttheme/behaviors/footer.py:302
+msgid "Footer column right"
+msgstr "Rodapé: Coluna da direita"
+
+#: sc/voltolighttheme/behaviors/footer.py:290
+msgid "Footer column right header"
+msgstr "Rodapé: Cabeçalho da coluna da direita"
+
+#: sc/voltolighttheme/behaviors/configure.zcml:42
+msgid "Footer configuration for sites/subsites"
+msgstr "Configuração do rodapé para sites/subsites"
+
+#: sc/voltolighttheme/behaviors/footer.py:135
+msgid "Footer links"
+msgstr "Rodapé: Links"
+
+#: sc/voltolighttheme/behaviors/footer.py:82
+msgid "Footer logos"
+msgstr "Rodapé: Logos"
+
+#: sc/voltolighttheme/behaviors/footer.py:109
+msgid "Footer logos container width"
+msgstr "Rodapé: Largura do container de logos"
+
+#: sc/voltolighttheme/behaviors/footer.py:122
+msgid "Footer logos size"
+msgstr "Rodapé: Tamanho dos logos"
+
+#: sc/voltolighttheme/behaviors/footer.py:20
+msgid "Footer: Brand"
+msgstr "Rodapé: Marca"
+
+#: sc/voltolighttheme/behaviors/footer.py:41
+msgid "Footer: Left column"
+msgstr "Rodapé: Coluna da esquerda"
+
+#: sc/voltolighttheme/behaviors/footer.py:31
+msgid "Footer: Logos"
+msgstr "Rodapé: Logos"
+
+#: sc/voltolighttheme/behaviors/footer.py:49
+msgid "Footer: Middle column"
+msgstr "Rodapé: Coluna do meio"
+
+#: sc/voltolighttheme/behaviors/footer.py:57
+msgid "Footer: Right column"
+msgstr "Rodapé: Coluna da direita"
+
+#: sc/voltolighttheme/behaviors/footer.py:66
+msgid "Footer: Settings"
+msgstr "Rodapé: Configurações"
+
+#: sc/voltolighttheme/behaviors/configure.zcml:34
+msgid "Header configuration for intranet sites"
+msgstr "Configuração do cabeçalho para sites de intranet"
+
+#: sc/voltolighttheme/behaviors/configure.zcml:27
+msgid "Header configuration for sites/subsites"
+msgstr "Configuração do cabeçalho para sites/subsites"
+
+#: sc/voltolighttheme/behaviors/header.py:20
+msgid "Header settings"
+msgstr "Configurações do cabeçalho"
+
+#: sc/voltolighttheme/profiles/initial/registry/sc.voltolighttheme.themes.xml
+msgid "Natal"
+msgstr "Natal"
+
+#: sc/voltolighttheme/interfaces.py:75
+msgid "Neutral Colors"
+msgstr "Cores neutras"
+
+#: sc/voltolighttheme/profiles.zcml:13
+msgid "Opinionated enhancements for @kitconcept/volto-light-theme"
+msgstr "Melhorias opinativas para o @kitconcept/volto-light-theme"
+
+#: sc/voltolighttheme/interfaces.py:30
+msgid "Primary Colors"
+msgstr "Cores primárias"
+
+#: sc/voltolighttheme/interfaces.py:45
+msgid "Secondary Colors"
+msgstr "Cores secundárias"
+
+#: sc/voltolighttheme/behaviors/configure.zcml:49
+msgid "Select one of the named themes for a site or section"
+msgstr "Selecione um dos temas cadastrados para um site ou seção"
+
+#: sc/voltolighttheme/behaviors/configure.zcml:34
+msgid "Set of fields to customize intranet sites"
+msgstr "Conjunto de campos para personalizar sites de intranet"
+
+#: sc/voltolighttheme/behaviors/configure.zcml:42
+msgid "Set of fields to customize sc.voltolighttheme's distributions sites and subsites"
+msgstr "Conjunto de campos para personalizar sites e subsites das distribuições do sc.voltolighttheme"
+
+#: sc/voltolighttheme/behaviors/configure.zcml:27
+msgid "Set of fields to customize sites and subsites"
+msgstr "Conjunto de campos para personalizar sites e subsites"
+
+#: sc/voltolighttheme/profiles.zcml:21
+msgid "Settings used by Intranet sites."
+msgstr "Configurações usadas por sites de intranet."
+
+#: sc/voltolighttheme/profiles.zcml:30
+msgid "Simples Consultoria VLT: Example content"
+msgstr "Simples Consultoria VLT: Conteúdo de exemplo"
+
+#: sc/voltolighttheme/profiles.zcml:13
+msgid "Simples Consultoria VLT: Install"
+msgstr "Simples Consultoria VLT: Instalação"
+
+#: sc/voltolighttheme/profiles.zcml:21
+msgid "Simples Consultoria VLT: Intranet"
+msgstr "Simples Consultoria VLT: Intranet"
+
+#: sc/voltolighttheme/profiles.zcml:38
+msgid "Simples Consultoria VLT: Uninstall"
+msgstr "Simples Consultoria VLT: Desinstalação"
+
+#: sc/voltolighttheme/behaviors/header.py:55
+msgid "Site Actions"
+msgstr "Ações do site"
+
+#: sc/voltolighttheme/behaviors/footer.py:204
+msgid "The brand slogan that appears below the footer logo in the first footer column."
+msgstr "O slogan da marca que aparece abaixo do logo do rodapé na primeira coluna do rodapé."
+
+#: sc/voltolighttheme/behaviors/footer.py:234
+msgid "The footer address that appears below the footer logo in the first footer column."
+msgstr "O endereço do rodapé que aparece abaixo do logo do rodapé na primeira coluna do rodapé."
+
+#: sc/voltolighttheme/behaviors/footer.py:213
+msgid "The footer brand message that appears below the footer slogan in the first footer column."
+msgstr "A mensagem da marca que aparece abaixo do slogan na primeira coluna do rodapé."
+
+#: sc/voltolighttheme/behaviors/footer.py:255
+msgid "The left-most column appearing after the address column. It can contain a list of links."
+msgstr "A coluna mais à esquerda que aparece após a coluna de endereço. Pode conter uma lista de links."
+
+#: sc/voltolighttheme/behaviors/footer.py:279
+msgid "The middle column appearing between the left and the right columns. It can contain a list of links."
+msgstr "A coluna do meio que aparece entre as colunas esquerda e direita. Pode conter uma lista de links."
+
+#: sc/voltolighttheme/behaviors/footer.py:303
+msgid "The right-most column appearing after the middle column. It can contain a list of links."
+msgstr "A coluna mais à direita que aparece após a coluna do meio. Pode conter uma lista de links."
+
+#: sc/voltolighttheme/profiles/default/registry/sc.voltolighttheme.themes.xml
+msgid "The theme shipped with sc.voltolighttheme."
+msgstr "O tema distribuído com o sc.voltolighttheme."
+
+#: sc/voltolighttheme/behaviors/theme.py:27
+msgid "Theme"
+msgstr "Tema"
+
+#: sc/voltolighttheme/behaviors/configure.zcml:49
+msgid "Theme selection"
+msgstr "Seleção de tema"
+
+#: sc/voltolighttheme/fields/color.py:16
+msgid "This is not a valid color."
+msgstr "Esta não é uma cor válida."
+
+#: sc/voltolighttheme/interfaces.py:24
+msgid "Typography"
+msgstr "Tipografia"
+
+#: sc/voltolighttheme/profiles.zcml:38
+msgid "Uninstall Simples Consultoria VLT setup."
+msgstr "Desinstalar a configuração do Simples Consultoria VLT."
+
+#. Default: "If your site has an intranet header, it will show in the right side of the header."
+#: sc/voltolighttheme/behaviors/header.py:107
+msgid "help_complementary_logo"
+msgstr "Caso seu site tenha um cabeçalho de intranet, ele será exibido no lado direito do cabeçalho."
+
+#. Default: "If enabled, the fat menu will be shown."
+#: sc/voltolighttheme/behaviors/header.py:39
+msgid "help_enable_fat_menu"
+msgstr "Caso ativado, o menu expandido será exibido."
+
+#. Default: "The text that shows in the right side of the footer colophon."
+#: sc/voltolighttheme/behaviors/footer.py:192
+msgid "help_footer_colophon_right_text"
+msgstr "O texto que é exibido no lado direito do colofão do rodapé."
+
+#. Default: "The text that shows in the footer colophon."
+#: sc/voltolighttheme/behaviors/footer.py:150
+msgid "help_footer_colophon_text"
+msgstr "O texto que é exibido no colofão do rodapé."
+
+#. Default: "The footer has a main logo located in the lower left side, above the address. In case that the footer has a dark  background, you can set this inversed logo to ensure it plays well with the background color. If not set, the main site logo will be used."
+#: sc/voltolighttheme/behaviors/footer.py:222
+msgid "help_footer_logo"
+msgstr "O rodapé tem um logo principal no lado inferior esquerdo, acima do endereço. Caso o rodapé tenha um fundo escuro, você pode definir este logo invertido para garantir que ele combine com a cor de fundo. Se não for definido, será usado o logo principal do site."
+
+#. Default: "If enabled, the intranet header will be shown."
+#: sc/voltolighttheme/behaviors/header.py:117
+msgid "help_has_intranet_header"
+msgstr "Caso ativado, o cabeçalho de intranet será exibido."
+
+#. Default: "The site actions are the links that show in the top right side of the header."
+#: sc/voltolighttheme/behaviors/header.py:56
+msgid "help_header_actions"
+msgstr "As ações do site são os links que aparecem no canto superior direito do cabeçalho."
+
+#. Default: "The colored pill at the top left of the header."
+#: sc/voltolighttheme/behaviors/header.py:127
+msgid "help_intranet_flag"
+msgstr "A etiqueta colorida no canto superior esquerdo do cabeçalho."
+
+#. Default: "If the site or subsite has a logo, please upload it here."
+#: sc/voltolighttheme/behaviors/header.py:30
+msgid "help_site_logo"
+msgstr "Caso o site ou subsite tenha um logo, faça o upload aqui."
+
+#. Default: "The theme applied to this site or section."
+#: sc/voltolighttheme/behaviors/theme.py:33
+msgid "help_theme"
+msgstr "O tema aplicado a este site ou seção."
+
+#. Default: "Accent Accent Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:280
+msgid "label_accent_accent_color_dark"
+msgstr "Destaque: cor de realce (tema escuro)"
+
+#. Default: "Accent Accent Color (Light)"
+#: sc/voltolighttheme/interfaces.py:274
+msgid "label_accent_accent_color_light"
+msgstr "Destaque: cor de realce (tema claro)"
+
+#. Default: "Accent Background Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:242
+msgid "label_accent_color_dark"
+msgstr "Destaque: cor de fundo (tema escuro)"
+
+#. Default: "Accent Background Color (Light)"
+#: sc/voltolighttheme/interfaces.py:238
+msgid "label_accent_color_light"
+msgstr "Destaque: cor de fundo (tema claro)"
+
+#. Default: "Accent Foreground Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:253
+msgid "label_accent_foreground_color_dark"
+msgstr "Destaque: cor do texto (tema escuro)"
+
+#. Default: "Accent Foreground Color (Light)"
+#: sc/voltolighttheme/interfaces.py:246
+msgid "label_accent_foreground_color_light"
+msgstr "Destaque: cor do texto (tema claro)"
+
+#. Default: "Accent Low Foreground Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:267
+msgid "label_accent_low_foreground_color_dark"
+msgstr "Destaque: cor do texto atenuado (tema escuro)"
+
+#. Default: "Accent Low Foreground Color (Light)"
+#: sc/voltolighttheme/interfaces.py:260
+msgid "label_accent_low_foreground_color_light"
+msgstr "Destaque: cor do texto atenuado (tema claro)"
+
+#. Default: "Complementary Logo"
+#: sc/voltolighttheme/behaviors/header.py:106
+msgid "label_complementary_logo"
+msgstr "Logo complementar"
+
+#. Default: "Enable Fat Menu"
+#: sc/voltolighttheme/behaviors/header.py:38
+msgid "label_enable_fat_menu"
+msgstr "Habilitar menu expandido"
+
+#. Default: "Event Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:338
+msgid "label_event_color_dark"
+msgstr "Cor de eventos (tema escuro)"
+
+#. Default: "Event Color (Light)"
+#: sc/voltolighttheme/interfaces.py:334
+msgid "label_event_color_light"
+msgstr "Cor de eventos (tema claro)"
+
+#. Default: "File Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:346
+msgid "label_file_color_dark"
+msgstr "Cor de arquivos (tema escuro)"
+
+#. Default: "File Color (Light)"
+#: sc/voltolighttheme/interfaces.py:342
+msgid "label_file_color_light"
+msgstr "Cor de arquivos (tema claro)"
+
+#. Default: "Primary Font Family"
+#: sc/voltolighttheme/interfaces.py:113
+msgid "label_font_family_primary"
+msgstr "Família tipográfica primária"
+
+#. Default: "Secondary Font Family"
+#: sc/voltolighttheme/interfaces.py:124
+msgid "label_font_family_secondary"
+msgstr "Família tipográfica secundária"
+
+#. Default: "Footer Logo"
+#: sc/voltolighttheme/behaviors/footer.py:221
+msgid "label_footer_logo"
+msgstr "Rodapé: Logo"
+
+#. Default: "Enable Intranet Header"
+#: sc/voltolighttheme/behaviors/header.py:116
+msgid "label_has_intranet_header"
+msgstr "Habilitar cabeçalho de intranet"
+
+#. Default: "Image Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:354
+msgid "label_image_color_dark"
+msgstr "Cor de imagens (tema escuro)"
+
+#. Default: "Image Color (Light)"
+#: sc/voltolighttheme/interfaces.py:350
+msgid "label_image_color_light"
+msgstr "Cor de imagens (tema claro)"
+
+#. Default: "Site Flag"
+#: sc/voltolighttheme/behaviors/header.py:126
+msgid "label_intranet_flag"
+msgstr "Indicação do site"
+
+#. Default: "Neutral Accent Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:328
+msgid "label_neutral_accent_color_dark"
+msgstr "Neutra: cor de realce (tema escuro)"
+
+#. Default: "Neutral Accent Color (Light)"
+#: sc/voltolighttheme/interfaces.py:322
+msgid "label_neutral_accent_color_light"
+msgstr "Neutra: cor de realce (tema claro)"
+
+#. Default: "Neutral Background Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:290
+msgid "label_neutral_color_dark"
+msgstr "Neutra: cor de fundo (tema escuro)"
+
+#. Default: "Neutral Background Color (Light)"
+#: sc/voltolighttheme/interfaces.py:284
+msgid "label_neutral_color_light"
+msgstr "Neutra: cor de fundo (tema claro)"
+
+#. Default: "Neutral Foreground Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:301
+msgid "label_neutral_foreground_color_dark"
+msgstr "Neutra: cor do texto (tema escuro)"
+
+#. Default: "Neutral Foreground Color (Light)"
+#: sc/voltolighttheme/interfaces.py:294
+msgid "label_neutral_foreground_color_light"
+msgstr "Neutra: cor do texto (tema claro)"
+
+#. Default: "Neutral Low Foreground Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:315
+msgid "label_neutral_low_foreground_color_dark"
+msgstr "Neutra: cor do texto atenuado (tema escuro)"
+
+#. Default: "Neutral Low Foreground Color (Light)"
+#: sc/voltolighttheme/interfaces.py:308
+msgid "label_neutral_low_foreground_color_light"
+msgstr "Neutra: cor do texto atenuado (tema claro)"
+
+#. Default: "Primary Accent Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:179
+msgid "label_primary_accent_color_dark"
+msgstr "Primária: cor de realce (tema escuro)"
+
+#. Default: "Primary Accent Color (Light)"
+#: sc/voltolighttheme/interfaces.py:173
+msgid "label_primary_accent_color_light"
+msgstr "Primária: cor de realce (tema claro)"
+
+#. Default: "Primary Background Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:141
+msgid "label_primary_color_dark"
+msgstr "Primária: cor de fundo (tema escuro)"
+
+#. Default: "Primary Background Color (Light)"
+#: sc/voltolighttheme/interfaces.py:135
+msgid "label_primary_color_light"
+msgstr "Primária: cor de fundo (tema claro)"
+
+#. Default: "Primary Foreground Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:152
+msgid "label_primary_foreground_color_dark"
+msgstr "Primária: cor do texto (tema escuro)"
+
+#. Default: "Primary Foreground Color (Light)"
+#: sc/voltolighttheme/interfaces.py:145
+msgid "label_primary_foreground_color_light"
+msgstr "Primária: cor do texto (tema claro)"
+
+#. Default: "Primary Low Foreground Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:166
+msgid "label_primary_low_foreground_color_dark"
+msgstr "Primária: cor do texto atenuado (tema escuro)"
+
+#. Default: "Primary Low Foreground Color (Light)"
+#: sc/voltolighttheme/interfaces.py:159
+msgid "label_primary_low_foreground_color_light"
+msgstr "Primária: cor do texto atenuado (tema claro)"
+
+#. Default: "Secondary Accent Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:232
+msgid "label_secondary_accent_color_dark"
+msgstr "Secundária: cor de realce (tema escuro)"
+
+#. Default: "Secondary Accent Color (Light)"
+#: sc/voltolighttheme/interfaces.py:225
+msgid "label_secondary_accent_color_light"
+msgstr "Secundária: cor de realce (tema claro)"
+
+#. Default: "Secondary Background Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:191
+msgid "label_secondary_color_dark"
+msgstr "Secundária: cor de fundo (tema escuro)"
+
+#. Default: "Secondary Background Color (Light)"
+#: sc/voltolighttheme/interfaces.py:185
+msgid "label_secondary_color_light"
+msgstr "Secundária: cor de fundo (tema claro)"
+
+#. Default: "Secondary Foreground Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:204
+msgid "label_secondary_foreground_color_dark"
+msgstr "Secundária: cor do texto (tema escuro)"
+
+#. Default: "Secondary Foreground Color (Light)"
+#: sc/voltolighttheme/interfaces.py:197
+msgid "label_secondary_foreground_color_light"
+msgstr "Secundária: cor do texto (tema claro)"
+
+#. Default: "Secondary Low Foreground Color (Dark)"
+#: sc/voltolighttheme/interfaces.py:218
+msgid "label_secondary_low_foreground_color_dark"
+msgstr "Secundária: cor do texto atenuado (tema escuro)"
+
+#. Default: "Secondary Low Foreground Color (Light)"
+#: sc/voltolighttheme/interfaces.py:211
+msgid "label_secondary_low_foreground_color_light"
+msgstr "Secundária: cor do texto atenuado (tema claro)"
+
+#. Default: "Site Logo"
+#: sc/voltolighttheme/behaviors/header.py:29
+msgid "label_site_logo"
+msgstr "Logo do site"
+
+#. Default: "Theme"
+#: sc/voltolighttheme/behaviors/theme.py:32
+msgid "label_theme"
+msgstr "Tema"

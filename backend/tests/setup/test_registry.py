@@ -102,7 +102,7 @@ class TestRegistryThemeSettingsInitial:
             (
                 "natal",
                 "description",
-                "Um tema festivo com tipografia Inter e bordas arredondadas.",
+                "A festive theme with Inter typography and rounded borders.",
             ),
             ("natal", "font_family_primary", "Inter, sans-serif"),
             ("natal", "font_family_secondary", "Inter, sans-serif"),

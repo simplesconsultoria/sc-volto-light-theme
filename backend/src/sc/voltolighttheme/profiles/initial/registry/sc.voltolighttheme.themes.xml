@@ -11,7 +11,7 @@
     >Natal</value>
     <value key="description"
            i18n:translate=""
-    >Um tema festivo com tipografia Inter e bordas arredondadas.</value>
+    >A festive theme with Inter typography and rounded borders.</value>
     <value key="font_family_primary">Inter, sans-serif</value>
     <value key="font_family_secondary">Inter, sans-serif</value>
     <value key="primary_color_light">#d32f2f</value>

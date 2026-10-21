@@ -37,10 +37,32 @@ jobs:
 
   i18n:
     name: "Frontend: i18n"
-    uses: plone/meta/.github/workflows/frontend-i18n.yml@2.x
-    with:
-      node-version: ${{ inputs.node-version }}
-      working-directory: ${{ inputs.working-directory }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup uv
+        uses: plone/meta/.github/actions/setup_uv@2.x
+        with:
+          working-directory: ${{ inputs.working-directory }}
+
+      - name: Setup codebase
+        uses: plone/meta/.github/actions/setup_frontend@2.x
+        with:
+          node-version: ${{ inputs.node-version }}
+          working-directory: ${{ inputs.working-directory }}
+
+      # plone/meta's frontend-i18n workflow only runs `make i18n`;
+      # this also fails when the committed catalogs are out of sync.
+      - name: Check i18n catalogs are in sync
+        shell: bash
+        run: make ci-i18n
 
   unit:
     name: "Frontend: Unit tests"
