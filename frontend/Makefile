@@ -25,6 +25,7 @@ DOCKER_IMAGE=plone/server-dev:${PLONE_VERSION}
 DOCKER_IMAGE_ACCEPTANCE=plone/server-acceptance:${PLONE_VERSION}
 
 ADDON_NAME := $(shell echo '$(REPOSITORY_SETTINGS)' | jq -r '.frontend.name')
+LOCALES_FOLDER := $(shell echo '$(REPOSITORY_SETTINGS)' | jq -r '.frontend.path')/locales
 IMAGE_NAME_PREFIX := $(shell echo '$(REPOSITORY_SETTINGS)' | jq -r '.container_images_prefix')
 IMAGE_TAG=latest
 IMAGE_NAME=$(IMAGE_NAME_PREFIX)-frontend:$(IMAGE_TAG)
@@ -82,7 +83,7 @@ i18n: ## Sync i18n
 
 .PHONY: ci-i18n
 ci-i18n: ## Check if i18n is not synced
-	pnpm --filter $(ADDON_NAME) i18n && git diff -G'^[^\"POT]' --exit-code
+	pnpm --filter $(ADDON_NAME) i18n && git diff -G'^[^\"POT]' --exit-code -- $(LOCALES_FOLDER)
 
 .PHONY: format
 format: ## Format codebase

@@ -32,6 +32,7 @@ SEED=$(shell date +%Y%m%d%H%M%S)
 PLONE_SITE_ID=Plone
 BACKEND_FOLDER=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 EXAMPLE_CONTENT_FOLDER := $(shell echo '$(REPOSITORY_SETTINGS)' | jq -r '.backend.code_path')/setuphandlers/examplecontent
+LOCALES_FOLDER := $(shell echo '$(REPOSITORY_SETTINGS)' | jq -r '.backend.code_path')/locales
 PACKAGE_NAME := $(shell echo '$(REPOSITORY_SETTINGS)' | jq -r '.backend.name')
 
 VENV_FOLDER=$(BACKEND_FOLDER)/.venv
@@ -145,6 +146,10 @@ format: ## Check and fix code base according to Plone standards
 i18n: $(VENV_FOLDER) ## Update locales
 	@echo "$(GREEN)==> Updating locales$(RESET)"
 	@$(BIN_FOLDER)/python -m $(PACKAGE_NAME).locales
+
+.PHONY: ci-i18n
+ci-i18n: i18n ## Check if i18n is not synced
+	@git diff -G'^[^\"POT]' --exit-code -- $(LOCALES_FOLDER)
 
 # Tests
 .PHONY: test
