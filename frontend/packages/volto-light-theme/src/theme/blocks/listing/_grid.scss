@@ -19,6 +19,7 @@
         var(--content-type-border-color, var(--theme-border-color))
       );
       background-color: var(--theme-high-contrast-color);
+      font-family: var(--colorgroup-front-font, inherit);
 
       .card-inner {
         padding: 0 !important;
@@ -32,6 +33,7 @@
 
           .title {
             color: var(--theme-top-foreground-color);
+            font-family: var(--colorgroup-front-font, inherit);
           }
 
           .description,

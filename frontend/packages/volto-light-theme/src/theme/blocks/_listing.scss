@@ -7,6 +7,10 @@
 body .block.listing,
 #page-edit .block-editor-listing .block.listing,
 .block.search {
+  background-color: var(--theme-color, transparent);
+  color: var(--theme-foreground-color, inherit);
+  font-family: var(--colorgroup-back-font, inherit);
+
   @import 'listing/headline';
   @import 'listing/grid';
   @import 'listing/carousel';

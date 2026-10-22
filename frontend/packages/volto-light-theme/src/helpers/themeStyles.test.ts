@@ -128,19 +128,16 @@ describe('stylesheet contract', () => {
   );
 
   it.skipIf(!fs.existsSync(SCHEMA))(
-    'pins exactly the colour fields the backend schema declares',
+    'pins exactly the fields the backend schema declares',
     () => {
+      const content = fs.readFileSync(SCHEMA, 'utf8');
       const declared = [
-        ...fs
-          .readFileSync(SCHEMA, 'utf8')
-          .matchAll(/^ {4}(\w+) = fields\.Color\(/gm),
+        ...content.matchAll(/^ {4}(\w+) = (?:schema\.|JSONField)/gm),
       ].map((m) => m[1]);
 
-      expect(
-        declared.length,
-        'no Color fields found in interfaces.py',
-      ).toBeGreaterThan(0);
-      expect([...BACKEND_SETTING_FIELDS].sort()).toEqual(declared.sort());
+      expect(declared.sort()).toEqual(
+        ['name', 'description', 'color_groups', 'block_themes'].sort(),
+      );
     },
   );
 });
@@ -378,6 +375,47 @@ describe('themeStyleSheet', () => {
 
   it('is empty when every value is rejected', () => {
     expect(themeStyleSheet(settings({ primary_color_light: 'red' }))).toBe('');
+  });
+
+  it('bridges color_groups to site-wide semantic tokens', () => {
+    const css = themeStyleSheet(
+      settings({
+        color_groups: {
+          primary: {
+            id: 'primary',
+            name: 'Primary',
+            font_family: 'Inter, sans-serif',
+            background_color_light: '#ffffff',
+            background_color_dark: '#0d2317',
+            text_color_light: '#143d24',
+            text_color_dark: '#f0f7f2',
+            subtext_color_light: '#436650',
+            subtext_color_dark: '#a3c4b0',
+            accent_color_light: '#c41e3a',
+            accent_color_dark: '#ea4335',
+          },
+          secondary: {
+            id: 'secondary',
+            name: 'Secondary',
+            background_color_light: '#165b33',
+            background_color_dark: '#071a10',
+            text_color_light: '#ffffff',
+            text_color_dark: '#ffffff',
+            subtext_color_light: '#d1e7dd',
+            subtext_color_dark: '#c0d6c8',
+            accent_color_light: '#f8b229',
+            accent_color_dark: '#f8b229',
+          },
+        },
+      }),
+    );
+    expect(css).toContain('--colorgroup-primary-bg: light-dark(#ffffff, #0d2317);');
+    expect(css).toContain('--primary-color: light-dark(#ffffff, #0d2317);');
+    expect(css).toContain('--primary-foreground-color: light-dark(#143d24, #f0f7f2);');
+    expect(css).toContain('--secondary-color: light-dark(#165b33, #071a10);');
+    expect(css).toContain('--header-background: var(--primary-color);');
+    expect(css).toContain('--footer-background: var(--secondary-color);');
+    expect(css).toContain('--font-sans: Inter, sans-serif;');
   });
 });
 

@@ -134,12 +134,10 @@ const buildColumnsForLayout = (layoutId: string) => {
 };
 
 // ========================================================================
-// Theme Resolution Logic
-// ========================================================================
-export interface ThemeDefinition {
-  name: string;
-  style: React.CSSProperties;
-}
+import {
+  resolveBlockTheme,
+  type ThemeDefinition,
+} from '../../../config/blockThemes';
 
 function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
   const blockThemes = blockType
@@ -149,20 +147,6 @@ function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
   return (blockThemes ||
     (config.blocks as any)?.themes ||
     []) as ThemeDefinition[];
-}
-
-function resolveThemeStyle(
-  theme: unknown,
-  themeDefinitions: ThemeDefinition[],
-): React.CSSProperties {
-  if (!theme) return {};
-  if (typeof theme === 'string') {
-    return themeDefinitions.find((t) => t.name === theme)?.style ?? {};
-  }
-  if (typeof theme === 'object') {
-    return theme as React.CSSProperties;
-  }
-  return {};
 }
 
 const CustomGridEdit = (props: any) => {
@@ -441,12 +425,25 @@ const CustomGridEdit = (props: any) => {
           const blockType = data?.['@type'] as string | undefined;
           const themeDefinitions = getThemeDefinitions(blockType);
           const colThemeValue = colData?.settings?.theme;
-          const colThemeStyle = resolveThemeStyle(
-            colThemeValue,
+          const colBack = colData?.settings?.backColorGroup;
+          const colFront = colData?.settings?.frontColorGroup;
+          const colResolved = resolveBlockTheme({
+            theme:
+              typeof colThemeValue === 'string' ? colThemeValue : undefined,
+            backColorGroup: colBack,
+            frontColorGroup: colFront,
             themeDefinitions,
-          );
+          });
 
-          const colTheme = cx({ 'has-theme': !!colThemeValue });
+          const colThemeStyle =
+            typeof colThemeValue === 'object' && colThemeValue !== null
+              ? (colThemeValue as React.CSSProperties)
+              : colResolved.style;
+
+          const colTheme = cx(
+            { 'has-theme': !!colThemeValue },
+            colResolved.className,
+          );
 
           return (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions

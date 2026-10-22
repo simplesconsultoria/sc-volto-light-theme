@@ -8,10 +8,10 @@ import config from '@plone/volto/registry';
 // Theme Resolution Logic (padronizado com o HeroBlock)
 // ========================================================================
 
-export interface ThemeDefinition {
-  name: string;
-  style: React.CSSProperties;
-}
+import {
+  resolveBlockTheme,
+  type ThemeDefinition,
+} from '../../../config/blockThemes';
 
 function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
   const blockThemes = blockType
@@ -21,20 +21,6 @@ function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
   return (blockThemes ||
     (config.blocks as any)?.themes ||
     []) as ThemeDefinition[];
-}
-
-function resolveThemeStyle(
-  theme: unknown,
-  themeDefinitions: ThemeDefinition[],
-): React.CSSProperties {
-  if (!theme) return {};
-  if (typeof theme === 'string') {
-    return themeDefinitions.find((t) => t.name === theme)?.style ?? {};
-  }
-  if (typeof theme === 'object') {
-    return theme as React.CSSProperties;
-  }
-  return {};
 }
 
 // ========================================================================
@@ -75,7 +61,20 @@ const CustomGridView = (props: any) => {
   const blockType = data?.['@type'] as string | undefined;
   const themeDefinitions = getThemeDefinitions(blockType);
   const themeValue = data?.theme ?? data?.styles?.theme;
-  const themeStyle = resolveThemeStyle(themeValue, themeDefinitions);
+  const backColorGroup = data?.backColorGroup ?? data?.styles?.backColorGroup;
+  const frontColorGroup = data?.frontColorGroup ?? data?.styles?.frontColorGroup;
+
+  const resolved = resolveBlockTheme({
+    theme: typeof themeValue === 'string' ? themeValue : undefined,
+    backColorGroup,
+    frontColorGroup,
+    themeDefinitions,
+  });
+
+  const themeStyle =
+    typeof themeValue === 'object' && themeValue !== null
+      ? (themeValue as React.CSSProperties)
+      : resolved.style;
 
   const mergedStyle: React.CSSProperties = {
     ...(style || {}),
@@ -127,12 +126,24 @@ const CustomGridView = (props: any) => {
 
           // Theme resolution for the Column
           const colThemeValue = safeColData.settings?.theme;
-          const colThemeStyle = resolveThemeStyle(
-            colThemeValue,
+          const colBack = safeColData.settings?.backColorGroup;
+          const colFront = safeColData.settings?.frontColorGroup;
+          const colResolved = resolveBlockTheme({
+            theme: typeof colThemeValue === 'string' ? colThemeValue : undefined,
+            backColorGroup: colBack,
+            frontColorGroup: colFront,
             themeDefinitions,
-          );
+          });
 
-          const colThemeClass = cx({ 'has-theme': !!colThemeValue });
+          const colThemeStyle =
+            typeof colThemeValue === 'object' && colThemeValue !== null
+              ? (colThemeValue as React.CSSProperties)
+              : colResolved.style;
+
+          const colThemeClass = cx(
+            { 'has-theme': !!colThemeValue },
+            colResolved.className,
+          );
 
           return (
             <CustomGridColumn

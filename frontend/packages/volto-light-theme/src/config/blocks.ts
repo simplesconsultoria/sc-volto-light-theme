@@ -1,4 +1,4 @@
-import { createThemeDefinition } from './blockThemes';
+import { createThemeDefinition, type ThemeDefinition } from './blockThemes';
 import type { ConfigType } from '@plone/registry';
 import type { BlockConfigBase } from '@plone/types';
 import { addStyling } from '@plone/volto/helpers/Extensions/withBlockSchemaEnhancer';
@@ -75,10 +75,66 @@ declare module '@plone/types' {
   }
 }
 
+const baseColorGroups = ['primary', 'secondary', 'accent', 'neutral'];
+export function createCustomThemeDefinition(
+  back: string,
+  front: string,
+): ThemeDefinition {
+  const name = `custom-${back}-${front}`;
+  const label = `Custom (${back} / ${front})`;
+  return {
+    name,
+    label,
+    style: {
+      '--theme-color': `var(--colorgroup-${back}-bg, var(--${back}-color, var(--primary-color)))`,
+      '--theme-foreground-color': `var(--colorgroup-${back}-text, var(--${back}-foreground-color, var(--primary-foreground-color)))`,
+      '--theme-high-contrast-foreground-color': `var(--colorgroup-${back}-text, var(--${back}-foreground-color, var(--primary-foreground-color)))`,
+      '--theme-low-contrast-foreground-color': `var(--colorgroup-${back}-subtext, var(--${back}-low-foreground-color, var(--primary-low-foreground-color)))`,
+      '--theme-foreground-accent-color': `var(--colorgroup-${back}-accent, var(--${back}-accent-color, var(--primary-accent-color)))`,
+      '--colorgroup-back-font': `var(--colorgroup-${back}-font-family, inherit)`,
+
+      '--theme-high-contrast-color': `var(--colorgroup-${front}-bg, var(--${front}-color, var(--neutral-color)))`,
+      '--theme-top-foreground-color': `var(--colorgroup-${front}-text, var(--${front}-foreground-color, var(--neutral-foreground-color)))`,
+      '--theme-top-high-contrast-foreground-color': `var(--colorgroup-${front}-text, var(--${front}-foreground-color, var(--neutral-foreground-color)))`,
+      '--theme-top-low-contrast-foreground-color': `var(--colorgroup-${front}-subtext, var(--${front}-low-foreground-color, var(--neutral-low-foreground-color)))`,
+      '--theme-top-accent-color': `var(--colorgroup-${front}-accent, var(--${front}-accent-color, var(--neutral-accent-color)))`,
+      '--colorgroup-front-font': `var(--colorgroup-${front}-font-family, inherit)`,
+      '--theme-border-color': `var(--colorgroup-${back}-accent, var(--accent-color))`,
+      '--theme-border-width': '0',
+      '--theme-pattern-image': 'none',
+      '--theme-pattern-opacity': '0',
+    },
+  };
+}
+
+const generatedCustomThemes: ThemeDefinition[] = [];
+for (const back of baseColorGroups) {
+  for (const front of baseColorGroups) {
+    generatedCustomThemes.push(createCustomThemeDefinition(back, front));
+  }
+}
+
 const customThemes: ThemeDefinition[] = [
   createThemeDefinition('default', 'Primary'),
+  createThemeDefinition('alternative', 'Alternative'),
   createThemeDefinition('brand', 'Brand'),
+  ...generatedCustomThemes,
 ];
+
+const originalThemesFind = customThemes.find.bind(customThemes);
+customThemes.find = function (predicate: any, thisArg?: any) {
+  const result = originalThemesFind(predicate, thisArg);
+  if (result) return result;
+  for (const b of baseColorGroups) {
+    for (const f of baseColorGroups) {
+      const candidate = createCustomThemeDefinition(b, f);
+      if (predicate.call(thisArg, candidate)) {
+        return candidate;
+      }
+    }
+  }
+  return undefined;
+};
 
 // =============================================================================
 // Installers
@@ -255,9 +311,38 @@ function injectCardBorderColor(config: ConfigType) {
         // Force addStyling so that schema.properties.styles.schema is available
         addStyling({ schema, intl: args.intl });
 
+        // Ensure theme is configured on root schema with block_theme_widget
+        schema.properties = schema.properties || {};
+        schema.properties.theme = {
+          widget: 'block_theme_widget',
+          title: 'Tema do Bloco',
+          default: 'default',
+        };
+
+        // Remove legacy backgroundColor from root schema and ensure styling fieldset order
+        delete schema.properties.backgroundColor;
+        if (schema.fieldsets) {
+          const stylingFieldset = schema.fieldsets.find(
+            (f: any) => f.id === 'styling',
+          );
+          if (stylingFieldset) {
+            stylingFieldset.fields = [
+              ...stylingFieldset.fields.filter(
+                (f: string) => f !== 'backgroundColor' && f !== 'theme' && f !== 'styles',
+              ),
+              'theme',
+              'styles',
+            ];
+          }
+        }
+
         // Inject into Volto's internal styles schema
         if (schema?.properties?.styles?.schema) {
           const stylesSchema = schema.properties.styles.schema;
+
+          // Remove any duplicate theme or backgroundColor from stylesSchema
+          delete stylesSchema.properties.theme;
+          delete stylesSchema.properties.backgroundColor;
 
           stylesSchema.properties['--cardBorderColor'] = {
             widget: 'style_simple_color',
@@ -287,10 +372,13 @@ function injectCardBorderColor(config: ConfigType) {
             };
           }
 
-          const defaultFieldset = stylesSchema.fieldsets.find(
+          const defaultFieldset = stylesSchema.fieldsets?.find(
             (f: any) => f.id === 'default',
           );
           if (defaultFieldset) {
+            defaultFieldset.fields = defaultFieldset.fields.filter(
+              (f: string) => f !== 'theme' && f !== 'backgroundColor',
+            );
             if (!defaultFieldset.fields.includes('--cardBorderColor')) {
               defaultFieldset.fields.push('--cardBorderColor');
             }

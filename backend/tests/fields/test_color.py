@@ -19,6 +19,13 @@ import pytest
 PREFIX = "sc.voltolighttheme.theme.test-theme"
 
 
+from plone.supermodel import model
+
+
+class IDummyColorSchema(model.Schema):
+    color = Color(title="Color", required=False)
+
+
 class TestColorPersistence:
     @pytest.fixture(autouse=True)
     def _setup(self, integration):
@@ -47,27 +54,27 @@ class TestColorPersistence:
         with pytest.raises(InvalidColor):
             field.validate("not-a-color")
 
-    def test_register_theme_interface(self):
+    def test_register_color_interface(self):
         """The call that used to raise TypeError."""
-        self.registry.registerInterface(ISCVLTThemeDefinition, prefix=PREFIX)
-        assert f"{PREFIX}.primary_color_light" in self.registry.records
+        self.registry.registerInterface(IDummyColorSchema, prefix=PREFIX)
+        assert f"{PREFIX}.color" in self.registry.records
 
     def test_color_value_round_trips(self):
-        self.registry.registerInterface(ISCVLTThemeDefinition, prefix=PREFIX)
-        self.registry[f"{PREFIX}.primary_color_light"] = "#0a4a7a"
-        assert self.registry[f"{PREFIX}.primary_color_light"] == "#0a4a7a"
+        self.registry.registerInterface(IDummyColorSchema, prefix=PREFIX)
+        self.registry[f"{PREFIX}.color"] = "#0a4a7a"
+        assert self.registry[f"{PREFIX}.color"] == "#0a4a7a"
 
     def test_registry_rejects_an_invalid_color(self):
-        self.registry.registerInterface(ISCVLTThemeDefinition, prefix=PREFIX)
+        self.registry.registerInterface(IDummyColorSchema, prefix=PREFIX)
         with pytest.raises(InvalidColor):
-            self.registry[f"{PREFIX}.primary_color_light"] = "banana"
+            self.registry[f"{PREFIX}.color"] = "banana"
 
     def test_every_theme_field_is_registered(self):
         self.registry.registerInterface(ISCVLTThemeDefinition, prefix=PREFIX)
         for name in (
             "name",
             "description",
-            "primary_color_light",
-            "accent_color_light",
+            "color_groups",
+            "block_themes",
         ):
             assert f"{PREFIX}.{name}" in self.registry.records

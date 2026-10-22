@@ -65,6 +65,37 @@ export type ThemeSettings = {
   image_color_dark?: string;
 
   header_foreground_color?: string;
+  color_groups?: Record<string, ColorGroup>;
+  block_themes?: Record<string, BlockTheme>;
+};
+
+/**
+ * A ColorGroup defines a cohesive set of 4 colors (with light and dark mode variants)
+ * and a font family. Used for both back (ground) and front (cards/chips) block areas.
+ */
+export type ColorGroup = {
+  id: string;
+  name: string;
+  font_family?: string;
+  background_color_light: string;
+  background_color_dark: string;
+  text_color_light: string;
+  text_color_dark: string;
+  subtext_color_light: string;
+  subtext_color_dark: string;
+  accent_color_light: string;
+  accent_color_dark: string;
+};
+
+/**
+ * A BlockTheme is a preset pairing of a back ColorGroup and a front ColorGroup,
+ * allowing instant consistent styling across blocks.
+ */
+export type BlockTheme = {
+  id: string;
+  name: string;
+  back_color_group: string;
+  front_color_group: string;
 };
 
 /**
@@ -77,6 +108,8 @@ export type ThemeSettings = {
 export type SiteTheme = ThemeSettings & {
   name?: string;
   description?: string;
+  color_groups?: Record<string, ColorGroup>;
+  block_themes?: Record<string, BlockTheme>;
 };
 
 /**

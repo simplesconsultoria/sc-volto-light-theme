@@ -6,12 +6,24 @@ import type { JSONSchema } from '@plone/types/src/config/';
 
 const messages = defineMessages({
   backgroundColor: {
-    id: 'Background color',
-    defaultMessage: 'Background color',
+    id: 'Theme Preset',
+    defaultMessage: 'Theme Preset',
   },
   borderColor: {
     id: 'Border color',
     defaultMessage: 'Border color',
+  },
+  backColorGroup: {
+    id: 'Área de Trás (Color Group)',
+    defaultMessage: 'Área de Trás (Color Group)',
+  },
+  frontColorGroup: {
+    id: 'Área da Frente (Color Group)',
+    defaultMessage: 'Área da Frente (Color Group)',
+  },
+  defaultFromTheme: {
+    id: 'Padrão do Tema',
+    defaultMessage: 'Padrão do Tema',
   },
 });
 
@@ -39,16 +51,27 @@ export const defaultStylingSchema = ({
   if (stylingIndex === -1 || !schema.fieldsets[stylingIndex]) return schema;
 
   schema.fieldsets[stylingIndex].fields = [
-    ...schema.fieldsets[stylingIndex].fields,
+    ...schema.fieldsets[stylingIndex].fields.filter(
+      (f) =>
+        f !== 'backColorGroup' &&
+        f !== 'frontColorGroup' &&
+        f !== 'theme' &&
+        f !== 'backgroundColor',
+    ),
     'theme',
   ];
 
+  delete schema.properties.backgroundColor;
+  if (schema.properties?.styles?.schema) {
+    delete schema.properties.styles.schema.properties.backgroundColor;
+    delete schema.properties.styles.schema.properties.theme;
+  }
+
   schema.properties = schema.properties || {};
   schema.properties.theme = {
-    widget: 'color_picker',
-    title: intl.formatMessage(messages.backgroundColor),
-    themes: Array.isArray(themes) ? themes : [],
-    default: defaultTheme,
+    widget: 'block_theme_widget',
+    title: 'Tema do Bloco',
+    default: defaultTheme || 'default',
   };
 
   return schema;

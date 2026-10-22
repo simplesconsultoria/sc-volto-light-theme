@@ -24,7 +24,7 @@ import { createThemeDefinition } from '../config/blocks';
 const THEME_DIR = __dirname;
 
 /** The themes registered in `config/blocks.ts`. */
-const THEMES = ['default', 'brand'];
+const THEMES = ['default', 'alternative', 'brand'];
 
 function readTheme(file: string): string {
   return fs.readFileSync(path.join(THEME_DIR, file), 'utf8');

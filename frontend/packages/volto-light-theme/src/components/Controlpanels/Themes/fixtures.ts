@@ -7,6 +7,13 @@
  */
 import type { JsonSchema, ThemeItem } from '../../../types/theme';
 
+import {
+  DEFAULT_COLOR_GROUPS,
+  DEFAULT_BLOCK_THEMES,
+  NATAL_COLOR_GROUPS,
+  NATAL_BLOCK_THEMES,
+} from '../../../config/blockThemes';
+
 export const defaultTheme: ThemeItem = {
   '@id': 'http://localhost:8080/Plone/@controlpanels/themes/default',
   id: 'default',
@@ -19,6 +26,8 @@ export const defaultTheme: ThemeItem = {
   secondary_foreground_color_light: '#ffffff',
   accent_color_light: '#f4822c',
   accent_foreground_color_light: '#000000',
+  color_groups: DEFAULT_COLOR_GROUPS,
+  block_themes: DEFAULT_BLOCK_THEMES,
 };
 
 export const corporateTheme: ThemeItem = {
@@ -33,6 +42,8 @@ export const corporateTheme: ThemeItem = {
   secondary_foreground_color_light: '#ffffff',
   accent_color_light: '#4a90d9',
   accent_foreground_color_light: '#000000',
+  color_groups: DEFAULT_COLOR_GROUPS,
+  block_themes: DEFAULT_BLOCK_THEMES,
 };
 
 export const natalTheme: ThemeItem = {
@@ -40,13 +51,15 @@ export const natalTheme: ThemeItem = {
   id: 'natal',
   name: 'Natal',
   description: 'A festive theme with Inter typography and rounded borders.',
-  primary_color_light: '#d32f2f',
-  primary_foreground_color_light: '#ffffff',
-  header_foreground_color: '#ffffff',
-  secondary_color_light: '#2e7d32',
+  primary_color_light: '#ffffff',
+  primary_foreground_color_light: '#143d24',
+  header_foreground_color: '#143d24',
+  secondary_color_light: '#165b33',
   secondary_foreground_color_light: '#ffffff',
-  accent_color_light: '#fbc02d',
-  accent_foreground_color_light: '#000000',
+  accent_color_light: '#c41e3a',
+  accent_foreground_color_light: '#f8b229',
+  color_groups: NATAL_COLOR_GROUPS,
+  block_themes: NATAL_BLOCK_THEMES,
 };
 
 export const themes: ThemeItem[] = [defaultTheme, corporateTheme, natalTheme];

@@ -18,46 +18,8 @@
     <value key="description"
            i18n:translate=""
     >The theme shipped with sc.voltolighttheme.</value>
-    <value key="font_family_primary">Inter, sans-serif</value>
-    <value key="font_family_secondary">Inter, sans-serif</value>
-    <value key="primary_color_light">#ffffff</value>
-    <value key="primary_color_dark">#000000</value>
-    <value key="primary_foreground_color_light">#000000</value>
-    <value key="primary_foreground_color_dark">#ffffff</value>
-    <value key="primary_low_foreground_color_light">#333333</value>
-    <value key="primary_low_foreground_color_dark">#f8f8f8</value>
-    <value key="primary_accent_color_light">#b55e1c</value>
-    <value key="primary_accent_color_dark">#f4822c</value>
-    <value key="secondary_color_light">#000000</value>
-    <value key="secondary_color_dark">#ffffff</value>
-    <value key="secondary_foreground_color_light">#ffffff</value>
-    <value key="secondary_foreground_color_dark">#000000</value>
-    <value key="secondary_low_foreground_color_light">#e6e6e6</value>
-    <value key="secondary_low_foreground_color_dark">#333333</value>
-    <value key="secondary_accent_color_light">#f4822c</value>
-    <value key="secondary_accent_color_dark">#f4822c</value>
-    <value key="accent_color_light">#f4822c</value>
-    <value key="accent_color_dark">#b55e1c</value>
-    <value key="accent_foreground_color_light">#000000</value>
-    <value key="accent_foreground_color_dark">#ffffff</value>
-    <value key="accent_low_foreground_color_light">#333333</value>
-    <value key="accent_low_foreground_color_dark">#f8f8f8</value>
-    <value key="accent_accent_color_light">#000000</value>
-    <value key="accent_accent_color_dark">#ffffff</value>
-    <value key="neutral_color_light">#edeff0</value>
-    <value key="neutral_color_dark">#333333</value>
-    <value key="neutral_foreground_color_light">#000000</value>
-    <value key="neutral_foreground_color_dark">#ffffff</value>
-    <value key="neutral_low_foreground_color_light">#333333</value>
-    <value key="neutral_low_foreground_color_dark">#e6e6e6</value>
-    <value key="neutral_accent_color_light">#f4822c</value>
-    <value key="neutral_accent_color_dark">#f4822c</value>
-    <value key="event_color_light">#d32f2f</value>
-    <value key="event_color_dark">#d32f2f</value>
-    <value key="file_color_light">#1976d2</value>
-    <value key="file_color_dark">#1976d2</value>
-    <value key="image_color_light">#388e3c</value>
-    <value key="image_color_dark">#388e3c</value>
+    <value key="color_groups">{"primary": {"id": "primary", "name": "Primary", "font_family": "Inter, sans-serif", "background_color_light": "#ffffff", "background_color_dark": "#000000", "text_color_light": "#000000", "text_color_dark": "#ffffff", "subtext_color_light": "#333333", "subtext_color_dark": "#f8f8f8", "accent_color_light": "#b55e1c", "accent_color_dark": "#f4822c"}, "secondary": {"id": "secondary", "name": "Secondary", "font_family": "Inter, sans-serif", "background_color_light": "#000000", "background_color_dark": "#ffffff", "text_color_light": "#ffffff", "text_color_dark": "#000000", "subtext_color_light": "#e6e6e6", "subtext_color_dark": "#333333", "accent_color_light": "#f4822c", "accent_color_dark": "#f4822c"}, "accent": {"id": "accent", "name": "Accent", "font_family": "Inter, sans-serif", "background_color_light": "#f4822c", "background_color_dark": "#b55e1c", "text_color_light": "#000000", "text_color_dark": "#ffffff", "subtext_color_light": "#333333", "subtext_color_dark": "#f8f8f8", "accent_color_light": "#000000", "accent_color_dark": "#ffffff"}, "neutral": {"id": "neutral", "name": "Neutral", "font_family": "Inter, sans-serif", "background_color_light": "#edeff0", "background_color_dark": "#333333", "text_color_light": "#000000", "text_color_dark": "#ffffff", "subtext_color_light": "#333333", "subtext_color_dark": "#e6e6e6", "accent_color_light": "#f4822c", "accent_color_dark": "#f4822c"}}</value>
+    <value key="block_themes">{"default": {"id": "default", "name": "Primary", "back_color_group": "primary", "front_color_group": "neutral"}, "alternative": {"id": "alternative", "name": "Alternative", "back_color_group": "accent", "front_color_group": "primary"}}</value>
   </records>
 
 </registry>

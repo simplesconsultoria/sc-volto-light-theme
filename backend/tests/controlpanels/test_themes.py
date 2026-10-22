@@ -48,13 +48,13 @@ class TestListing:
     def test_schema_carries_the_theme_fields(self):
         properties = self.data["schema"]["properties"]
         assert "name" in properties
-        assert "primary_color_light" in properties
-        assert "font_family_primary" in properties
-        assert "neutral_accent_color_dark" in properties
+        assert "description" in properties
+        assert "color_groups" in properties
+        assert "block_themes" in properties
 
-    def test_color_fields_use_the_color_picker_widget(self):
-        primary = self.data["schema"]["properties"]["primary_color_light"]
-        assert primary.get("widget") == "colorPicker"
+    def test_color_groups_field_in_schema(self):
+        color_groups = self.data["schema"]["properties"]["color_groups"]
+        assert "title" in color_groups
 
     def test_listing_returns_the_default_theme(self):
         ids = [item["id"] for item in self.data["items"]]
@@ -70,7 +70,7 @@ class TestListing:
     def test_each_item_carries_its_values(self):
         item = next(i for i in self.data["items"] if i["id"] == themes.DEFAULT_THEME_ID)
         assert item["name"] == "Default"
-        assert item["primary_color_light"] == "#ffffff"
+        assert "color_groups" in item
 
     def test_panel_is_listed_among_the_controlpanels(self):
         response = self.api.get("/@controlpanels")
@@ -90,7 +90,8 @@ class TestGet:
 
     def test_get_returns_the_values(self):
         response = self.api.get(f"{PANEL}/{themes.DEFAULT_THEME_ID}")
-        assert response.json()["primary_color_light"] == "#ffffff"
+        assert response.json()["name"] == "Default"
+        assert "color_groups" in response.json()
 
     def test_get_a_missing_theme_is_404(self):
         response = self.api.get(f"{PANEL}/not-here")
@@ -115,11 +116,11 @@ class TestAdd:
         response = self.api.post(PANEL, json={"id": "corporate"})
         assert response.headers["Location"].endswith(f"{PANEL}/corporate")
 
-    def test_create_stores_the_colors(self):
+    def test_create_stores_the_description(self):
         response = self.api.post(
-            PANEL, json={"id": "corporate", "primary_color_light": "#123456"}
+            PANEL, json={"id": "corporate", "description": "Corporate theme"}
         )
-        assert response.json()["primary_color_light"] == "#123456"
+        assert response.json()["description"] == "Corporate theme"
 
     def test_created_theme_is_readable(self):
         self.api.post(PANEL, json={"id": "corporate", "name": "Corporate"})
@@ -153,27 +154,27 @@ class TestUpdate:
             json={
                 "id": "corporate",
                 "name": "Corporate",
-                "primary_color_light": "#123456",
+                "description": "Initial description",
             },
         )
         transaction.commit()
 
     def test_update_a_field(self):
         response = self.api.patch(
-            f"{PANEL}/corporate", json={"primary_color_light": "#abcdef"}
+            f"{PANEL}/corporate", json={"description": "Updated"}
         )
         assert response.status_code in (200, 204)
 
     def test_update_is_persisted(self):
-        self.api.patch(f"{PANEL}/corporate", json={"primary_color_light": "#abcdef"})
+        self.api.patch(f"{PANEL}/corporate", json={"description": "Updated"})
         transaction.commit()
         assert (
-            self.api.get(f"{PANEL}/corporate").json()["primary_color_light"]
-            == "#abcdef"
+            self.api.get(f"{PANEL}/corporate").json()["description"]
+            == "Updated"
         )
 
     def test_update_is_partial(self):
-        self.api.patch(f"{PANEL}/corporate", json={"primary_color_light": "#abcdef"})
+        self.api.patch(f"{PANEL}/corporate", json={"description": "Updated"})
         transaction.commit()
         assert self.api.get(f"{PANEL}/corporate").json()["name"] == "Corporate"
 
@@ -194,12 +195,12 @@ class TestUpdate:
     def test_editing_the_default_theme_is_persisted(self):
         self.api.patch(
             f"{PANEL}/{themes.DEFAULT_THEME_ID}",
-            json={"name": "Renamed", "primary_color_light": "#abcdef"},
+            json={"name": "Renamed", "description": "Updated default"},
         )
         transaction.commit()
         data = self.api.get(f"{PANEL}/{themes.DEFAULT_THEME_ID}").json()
         assert data["name"] == "Renamed"
-        assert data["primary_color_light"] == "#abcdef"
+        assert data["description"] == "Updated default"
 
     def test_update_a_missing_theme_is_404(self):
         response = self.api.patch(f"{PANEL}/not-here", json={"name": "X"})
@@ -253,3 +254,59 @@ class TestPermissions:
     def test_anonymous_cannot_create_a_theme(self):
         response = self.anon.post(PANEL, json={"id": "sneaky"})
         assert response.status_code in (401, 403, 404)
+
+
+class TestColorGroupsAndBlockThemesControlpanel:
+    @pytest.fixture(autouse=True)
+    def _setup(self, portal, api):
+        self.api = api
+        self.api.post(
+            PANEL,
+            json={
+                "id": "festive",
+                "name": "Festive",
+            },
+        )
+        transaction.commit()
+
+    def test_get_theme_includes_color_groups_and_block_themes(self):
+        response = self.api.get(f"{PANEL}/{themes.DEFAULT_THEME_ID}")
+        assert response.status_code == 200
+        data = response.json()
+        assert "color_groups" in data
+        assert "primary" in data["color_groups"]
+        assert "block_themes" in data
+        assert "default" in data["block_themes"]
+
+    def test_patch_new_color_group_syncs_across_themes(self):
+        # Add new color group 'dourado' to festive
+        festive_groups = self.api.get(f"{PANEL}/festive").json()["color_groups"]
+        festive_groups["dourado"] = {
+            "id": "dourado",
+            "name": "Dourado",
+            "background_color_light": "#ffd700",
+            "background_color_dark": "#b8860b",
+            "text_color_light": "#000000",
+            "text_color_dark": "#ffffff",
+            "subtext_color_light": "#333333",
+            "subtext_color_dark": "#cccccc",
+            "accent_color_light": "#ff8c00",
+            "accent_color_dark": "#ff8c00",
+        }
+        patch_res = self.api.patch(
+            f"{PANEL}/festive",
+            json={"color_groups": festive_groups},
+        )
+        assert patch_res.status_code in (200, 204)
+        transaction.commit()
+
+        # Festive now has 'dourado' with its custom background
+        festive_updated = self.api.get(f"{PANEL}/festive").json()
+        assert festive_updated["color_groups"]["dourado"]["background_color_light"] == "#ffd700"
+
+        # Default theme must automatically have 'dourado' synced with defaults
+        default_updated = self.api.get(f"{PANEL}/{themes.DEFAULT_THEME_ID}").json()
+        assert "dourado" in default_updated["color_groups"]
+        assert default_updated["color_groups"]["dourado"]["name"] == "Dourado"
+        assert default_updated["color_groups"]["dourado"]["background_color_light"] == "#ffffff"
+

@@ -106,6 +106,55 @@ describe('editSchema', () => {
     // A theme cannot be renamed: the id is part of the registry record name.
     expect(editSchema(schema).properties.id).toBeUndefined();
   });
+
+  it('strips legacy color and typography fields from properties and fieldsets', () => {
+    const schemaWithLegacy: JsonSchema = {
+      type: 'object',
+      properties: {
+        name: { title: 'Theme name', type: 'string' },
+        description: { title: 'Theme description', type: 'string' },
+        font_family_primary: { title: 'Primary Font', type: 'string' },
+        primary_color_light: { title: 'Primary Color Light', type: 'string' },
+        secondary_color_dark: { title: 'Secondary Color Dark', type: 'string' },
+        color_groups: { title: 'Color Groups' },
+        block_themes: { title: 'Block Themes' },
+      },
+      fieldsets: [
+        {
+          id: 'default',
+          title: 'Default',
+          fields: [
+            'name',
+            'description',
+            'font_family_primary',
+            'primary_color_light',
+            'secondary_color_dark',
+          ],
+        },
+        {
+          id: 'colorgroups',
+          title: 'Color Groups',
+          fields: ['color_groups'],
+        },
+        {
+          id: 'blockthemes',
+          title: 'Block Themes',
+          fields: ['block_themes'],
+        },
+      ],
+    };
+
+    const enhanced = editSchema(schemaWithLegacy);
+    expect(enhanced.properties.font_family_primary).toBeUndefined();
+    expect(enhanced.properties.primary_color_light).toBeUndefined();
+    expect(enhanced.properties.secondary_color_dark).toBeUndefined();
+    expect(enhanced.properties.name).toBeDefined();
+    expect(enhanced.properties.color_groups.widget).toBe('color_groups_widget');
+    expect(enhanced.properties.block_themes.widget).toBe('block_themes_widget');
+
+    const defaultFs = enhanced.fieldsets?.find((f) => f.id === 'default');
+    expect(defaultFs?.fields).toEqual(['name', 'description']);
+  });
 });
 
 describe('addSchema', () => {

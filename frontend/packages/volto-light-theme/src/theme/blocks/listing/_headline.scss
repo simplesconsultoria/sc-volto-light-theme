@@ -8,10 +8,8 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-right: auto !important;
   margin-bottom: 1.5rem;
 
-  margin-left: auto !important;
   gap: 1rem;
   &.has--block-width--narrow {
     @include narrow-container-width();
@@ -38,6 +36,8 @@
   .headline,
   .headline h2.headline {
     margin: 0 !important;
+    color: var(--theme-foreground-color, inherit);
+    font-family: var(--colorgroup-back-font, inherit);
   }
   .ui.button.primary.listing-headline-button {
     padding: 0;

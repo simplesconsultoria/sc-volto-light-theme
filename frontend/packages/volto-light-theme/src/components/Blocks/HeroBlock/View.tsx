@@ -4,7 +4,10 @@ import config from '@plone/volto/registry';
 import { BlockWrapper } from '@kitconcept/volto-bm3-compat';
 import FlexView from './FlexView';
 import CardView from './CardView';
-import type { ThemeDefinition } from '../../../config/blocks';
+import {
+  resolveBlockTheme,
+  type ThemeDefinition,
+} from '../../../config/blockThemes';
 
 function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
   const blockThemes = blockType
@@ -14,20 +17,6 @@ function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
   return (blockThemes ||
     (config.blocks as any)?.themes ||
     []) as ThemeDefinition[];
-}
-
-function resolveThemeStyle(
-  theme: unknown,
-  themeDefinitions: ThemeDefinition[],
-): React.CSSProperties {
-  if (!theme) return {};
-  if (typeof theme === 'string') {
-    return themeDefinitions.find((t) => t.name === theme)?.style ?? {};
-  }
-  if (typeof theme === 'object') {
-    return theme as React.CSSProperties;
-  }
-  return {};
 }
 
 interface HeroBlockViewProps {
@@ -43,7 +32,21 @@ const HeroBlockView: React.FC<HeroBlockViewProps> = (props) => {
   const blockType = data?.['@type'] as string | undefined;
   const themeDefinitions = getThemeDefinitions(blockType);
   const themeValue = data?.theme ?? data?.styles?.theme;
-  const themeStyle = resolveThemeStyle(themeValue, themeDefinitions);
+  const backColorGroup = data?.backColorGroup ?? data?.styles?.backColorGroup;
+  const frontColorGroup = data?.frontColorGroup ?? data?.styles?.frontColorGroup;
+
+  const resolved = resolveBlockTheme({
+    theme: typeof themeValue === 'string' ? themeValue : undefined,
+    backColorGroup,
+    frontColorGroup,
+    themeDefinitions,
+  });
+
+  const themeStyle =
+    typeof themeValue === 'object' && themeValue !== null
+      ? (themeValue as React.CSSProperties)
+      : resolved.style;
+
   const mergedStyle: React.CSSProperties = {
     ...(style || {}),
     ...themeStyle,
@@ -80,9 +83,16 @@ const HeroBlockView: React.FC<HeroBlockViewProps> = (props) => {
   return (
     <BlockWrapper {...(props as any)}>
       <div
-        className={cx('hero-block-container', typeHref, blockWidthClass, {
-          'has--full-width-image': data.fullWidthImage && variation === 'flex',
-        })}
+        className={cx(
+          'hero-block-container',
+          typeHref,
+          blockWidthClass,
+          resolved.className,
+          {
+            'has--full-width-image':
+              data.fullWidthImage && variation === 'flex',
+          },
+        )}
         style={finalStyle}
       >
         {variation === 'card' ? (

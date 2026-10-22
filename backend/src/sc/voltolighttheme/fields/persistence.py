@@ -1,6 +1,8 @@
 from plone.registry.field import DisallowedProperty
+from plone.registry.field import JSONField as PersistentJSONField
 from plone.registry.field import StubbornProperty
 from plone.registry.interfaces import IPersistentField
+from plone.schema.jsonfield import IJSONField
 from sc.voltolighttheme.fields.color import IColor
 from sc.voltolighttheme.fields.color import PersistentColor
 from zope.component import adapter
@@ -34,3 +36,24 @@ def color_persistent_field_adapter(context):
         key: value for key, value in context.__dict__.items() if key not in ignored
     })
     return instance
+
+
+@implementer(IPersistentField)
+@adapter(IJSONField)
+def json_persistent_field_adapter(context):
+    """Turn a :class:`~plone.schema.JSONField` into a persistent registry field.
+
+    :param context: the JSON field to convert.
+    :returns: an equivalent :class:`PersistentJSONField`.
+    """
+    if IPersistentField.providedBy(context):
+        return context
+
+    ignored = list(DisallowedProperty.uses + StubbornProperty.uses)
+
+    instance = PersistentJSONField.__new__(PersistentJSONField)
+    instance.__dict__.update({
+        key: value for key, value in context.__dict__.items() if key not in ignored
+    })
+    return instance
+

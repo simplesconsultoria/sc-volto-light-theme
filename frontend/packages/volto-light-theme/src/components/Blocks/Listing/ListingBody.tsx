@@ -9,6 +9,7 @@ import config from '@plone/volto/registry';
 import withQuerystringResults from '@plone/volto/components/manage/Blocks/Listing/withQuerystringResults';
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
 import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
+import { resolveBlockTheme } from '../../../config/blockThemes';
 
 const EMPTY_DATA = {};
 const EMPTY_ITEMS: any[] = [];
@@ -178,8 +179,47 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
       ? `has--block-width--${rawBlockWidth}`
       : 'has--block-width--default';
 
+  const rawTheme = data.theme || data.styles?.theme || 'default';
+  const theme =
+    typeof rawTheme === 'object' && rawTheme !== null
+      ? (rawTheme as any).theme || 'default'
+      : rawTheme || 'default';
+
+  let customBack: string | undefined;
+  let customFront: string | undefined;
+  if (typeof theme === 'string' && theme.startsWith('custom-')) {
+    const parts = theme.split('-');
+    customBack = parts[1];
+    customFront = parts[2];
+  }
+
+  const backColorGroup =
+    customBack ||
+    (typeof rawTheme === 'object' && rawTheme !== null
+      ? (rawTheme as any).backColorGroup
+      : undefined) ||
+    data.backColorGroup ||
+    data.styles?.backColorGroup;
+
+  const frontColorGroup =
+    customFront ||
+    (typeof rawTheme === 'object' && rawTheme !== null
+      ? (rawTheme as any).frontColorGroup
+      : undefined) ||
+    data.frontColorGroup ||
+    data.styles?.frontColorGroup;
+  const { style: blockThemeStyle, className: blockThemeClass } =
+    resolveBlockTheme({
+      theme,
+      backColorGroup,
+      frontColorGroup,
+    });
+
   return (
-    <>
+    <div
+      className={cx('listing-block-container', blockThemeClass)}
+      style={blockThemeStyle}
+    >
       {(data.headline || data.headlineButtonText) && (
         <Headline
           headlineTag={HeadlineTag}
@@ -303,7 +343,7 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
           </Dimmer>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

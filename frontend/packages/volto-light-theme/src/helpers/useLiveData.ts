@@ -18,6 +18,14 @@ type FormState = {
   };
 };
 
+type RootState = {
+  navroot?: {
+    data?: {
+      navroot: Content;
+    };
+  };
+};
+
 const DEFAULT_HEADER_BEHAVIOR = 'sc.voltolighttheme.siteheader';
 const FOOTER_BEHAVIOR = 'sc.voltolighttheme.footer';
 
@@ -49,6 +57,10 @@ export function useLiveData<T>(
   const errorContext = useSelector((state: FormState) => state.errorContext);
   const context = content ?? errorContext;
 
+  const navRoot = useSelector(
+    (state: RootState) => state.navroot?.data?.navroot,
+  );
+
   const location = useLocation();
   const addMode = location?.pathname?.endsWith('/add');
 
@@ -71,10 +83,15 @@ export function useLiveData<T>(
       ?.data?.[field];
 
   const current = mappedBehavior
-    ? ((inheritedValue(storeInherit) ?? inheritedValue(contentInherit)) as T)
-    : ((context as unknown as Record<string, unknown> | undefined)?.[
-        field
-      ] as T);
+    ? ((inheritedValue(storeInherit) ??
+        inheritedValue(contentInherit) ??
+        (navRoot as unknown as Record<string, unknown> | undefined)?.[
+          field
+        ]) as T)
+    : (((context as unknown as Record<string, unknown> | undefined)?.[field] ??
+        (navRoot as unknown as Record<string, unknown> | undefined)?.[
+          field
+        ]) as T);
 
   const formData = useSelector<FormState, T>(
     (state) => state.form.global?.[field],

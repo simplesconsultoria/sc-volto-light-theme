@@ -35,7 +35,9 @@ class TestThemeFieldSerializer:
 
     def test_theme_serializes_to_its_colors(self):
         value = self.api.get("/site").json()["theme"]["value"]
-        assert value["primary_color_light"] == "#123456"
+        assert "color_groups" in value
+        assert "block_themes" in value
+        assert "primary" in value["color_groups"]
 
     def test_the_value_carries_no_metadata(self):
         # `name` is already the `title`, and every key of `value` becomes a CSS
@@ -54,12 +56,18 @@ class TestThemeFieldSerializer:
         }
 
     def test_theme_reflects_a_registry_update(self):
+        color_groups = dict(themes.get_theme_color_groups("corporate", registry=self.registry))
+        color_groups["primary"] = dict(color_groups["primary"])
+        color_groups["primary"]["background_color_light"] = "#abcdef"
         themes.update_theme(
-            "corporate", {"primary_color_light": "#abcdef"}, registry=self.registry
+            "corporate", {"color_groups": color_groups}, registry=self.registry
         )
         transaction.commit()
         data = self.api.get("/site").json()
-        assert data["theme"]["value"]["primary_color_light"] == "#abcdef"
+        assert (
+            data["theme"]["value"]["color_groups"]["primary"]["background_color_light"]
+            == "#abcdef"
+        )
 
     def test_an_unset_theme_serializes_to_none(self):
         api.content.create(container=self.portal, type="DummyType", id="plain")
@@ -129,21 +137,19 @@ class TestThemeFieldRoundTrip:
         assert self.api.get("/site").json()["theme"] is None
 
 
+from sc.voltolighttheme.fields import Color
+from sc.voltolighttheme.serializers.fields import ColorJsonSchemaProvider
+
+
 class TestColorJsonSchemaProvider:
     """`Color` fields must reach Volto as a colour picker."""
 
-    @pytest.fixture(autouse=True)
-    def _setup(self, themed_portal, theme_registry, manager_request):
-        self.api = manager_request
-
     def test_color_fields_use_the_color_picker_widget(self):
-        schema = self.api.get("/@controlpanels/themes").json()["schema"]
-        assert schema["properties"]["primary_color_light"]["widget"] == "colorPicker"
+        field = Color()
+        provider = ColorJsonSchemaProvider(field, None, None)
+        assert provider.get_widget() == "colorPicker"
 
     def test_color_fields_declare_the_color_factory(self):
-        schema = self.api.get("/@controlpanels/themes").json()["schema"]
-        assert schema["properties"]["primary_color_light"]["factory"] == "Color"
-
-    def test_non_color_fields_are_untouched(self):
-        schema = self.api.get("/@controlpanels/themes").json()["schema"]
-        assert schema["properties"]["name"].get("widget") != "colorPicker"
+        field = Color()
+        provider = ColorJsonSchemaProvider(field, None, None)
+        assert provider.get_factory() == "Color"

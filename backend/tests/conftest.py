@@ -130,7 +130,7 @@ def themed_portal(functional_portal, portal_factory):
     """
     themes.create_theme(
         "corporate",
-        {"name": "Corporate", "primary_color_light": "#123456"},
+        {"name": "Corporate", "description": "Corporate theme"},
     )
     return portal_factory(
         behavior=f"{PACKAGE_NAME}.themeselector",
