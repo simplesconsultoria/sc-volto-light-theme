@@ -23,7 +23,7 @@ const MainImageBlockInfo: BlockConfigBase = {
   edit: MainImageBlockEdit,
   blockSchema: MainImageSchema,
   restricted: ({ properties }) =>
-    !properties.hasOwnProperty('preview_image_link'),
+    !properties?.hasOwnProperty('preview_image_link'),
   mostUsed: false,
   sidebarTab: 1,
   blockHasOwnFocusManagement: false,

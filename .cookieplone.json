@@ -6,7 +6,7 @@
     "email": "contato@simplesconsultoria.com.br",
     "use_prerelease_versions": false,
     "plone_version": "6.2.1",
-    "volto_version": "19.1.5",
+    "volto_version": "19.6.1",
     "python_package_name": "sc.voltolighttheme",
     "npm_package_name": "@simplesconsultoria/volto-light-theme",
     "github_organization": "simplesconsultoria",
