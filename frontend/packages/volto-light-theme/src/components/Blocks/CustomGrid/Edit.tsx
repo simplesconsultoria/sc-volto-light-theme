@@ -20,8 +20,9 @@ import clearSVG from '@plone/volto/icons/clear.svg';
 import settingsSVG from '@plone/volto/icons/settings.svg';
 import addBlockSVG from '@plone/volto/icons/circle-plus.svg';
 
-import { CustomGridSchema, ColumnSchema } from './Schema';
+import { ColumnSchema } from './Schema';
 import LayoutSelector from './LayoutSelector';
+import CustomGridDataForm from './Data';
 
 import config from '@plone/volto/registry';
 
@@ -636,11 +637,9 @@ const CustomGridEdit = (props: any) => {
               />
             </>
           ) : (
-            <BlockDataForm
-              schema={CustomGridSchema({ intl })}
-              title="Custom Grid"
+            <CustomGridDataForm
+              {...props}
               onChangeField={handleLayoutChangeFromSidebar}
-              formData={data}
             />
           )}
         </SidebarPortal>

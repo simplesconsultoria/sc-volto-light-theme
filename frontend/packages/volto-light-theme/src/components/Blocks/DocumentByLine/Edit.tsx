@@ -16,17 +16,13 @@ interface DocumentByLineBlockEditProps {
 const DocumentByLineBlockEdit: React.FC<DocumentByLineBlockEditProps> = (
   props,
 ) => {
-  const { data, onChangeBlock, block, selected } = props;
+  const { selected } = props;
 
   return (
     <>
       <DocumentByLineBlockView {...props} isEditMode={true} />
       <SidebarPortal selected={selected}>
-        <DocumentByLineBlockDataForm
-          data={data}
-          block={block}
-          onChangeBlock={onChangeBlock}
-        />
+        <DocumentByLineBlockDataForm {...props} />
       </SidebarPortal>
     </>
   );
