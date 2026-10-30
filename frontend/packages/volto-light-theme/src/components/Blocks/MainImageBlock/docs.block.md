@@ -4,7 +4,7 @@ block: mainImageBlock
 
 Shows the preview image of the content item as the main image of the page, with an optional title, description and link.
 
-The block offers the image of the content item, so it stores no image. It is offered only on content items that have a `preview_image_link` property.
+The block offers the image of the content item, so it stores no image. It is offered only on content items whose `preview_image_link` is set, and not on items where it is empty or null.
 
 ### Fields
 

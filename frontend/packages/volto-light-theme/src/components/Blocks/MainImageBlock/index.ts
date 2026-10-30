@@ -22,8 +22,12 @@ const MainImageBlockInfo: BlockConfigBase = {
   view: MainImageBlockView,
   edit: MainImageBlockEdit,
   blockSchema: MainImageSchema,
-  restricted: ({ properties }) =>
-    !properties?.hasOwnProperty('preview_image_link'),
+  restricted: ({ properties }) => {
+    // Plone serializes every item with a `preview_image_link` key, so check
+    // for a link that is set rather than for the key.
+    const link = properties?.preview_image_link;
+    return !(Array.isArray(link) ? link.length > 0 : Boolean(link));
+  },
   mostUsed: false,
   sidebarTab: 1,
   blockHasOwnFocusManagement: false,
