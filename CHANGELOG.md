@@ -7,6 +7,36 @@
 -->
 
 <!-- towncrier release notes start -->
+## 1.0.0a14 (2026-10-30)
+
+### Backend
+
+
+#### Internal:
+
+- Upgraded `kitconcept.voltolighttheme` to 8.1.2. @ericof [#37](https://github.com/simplesconsultoria/sc-volto-light-theme/issues/37)
+
+
+
+### Frontend
+
+#### Bugfix
+
+- Added the accessible label to the mobile pagination of the Listing block, as already done on desktop. @ericof [#37](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/37)
+
+#### Internal
+
+- Upgraded `@kitconcept/volto-light-theme` to 8.1.2, `@eeacms/volto-accordion-block` to 13.1.1, `@plone-collective/volto-image-editor` to 1.2.0, `@kitconcept/volto-social-blocks` to 1.1.0, and the other `@kitconcept` block add-ons to their latest releases, moving seven of them from alpha to final versions. The Event Calendar block stays available, but upstream no longer offers it as a Listing block variation. @ericof [#37](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/37)
+
+
+
+### Project
+
+No significant changes.
+
+
+
+
 ## 1.0.0a13 (2026-10-30)
 
 ### Backend
