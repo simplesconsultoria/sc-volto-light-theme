@@ -147,6 +147,14 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
     : config.blocks?.blocksConfig['listing']?.noResultsComponent;
 
   const HeadlineTag = data.headlineTag || 'h2';
+  const paginationLabel =
+    totalPages > 1
+      ? data.headline
+        ? intl.formatMessage(messages.PaginationNavigationFor, {
+            headline: data.headline,
+          })
+        : intl.formatMessage(messages.PaginationNavigation)
+      : undefined;
 
   let rawBlockWidth =
     data.blockWidth ||
@@ -203,13 +211,7 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
           {totalPages > 1 && (
             <div className="pagination-wrapper">
               <Pagination
-                aria-label={
-                  data.headline
-                    ? intl.formatMessage(messages.PaginationNavigationFor, {
-                        headline: data.headline,
-                      })
-                    : intl.formatMessage(messages.PaginationNavigation)
-                }
+                aria-label={paginationLabel}
                 className="desktop-pagination"
                 activePage={currentPage}
                 totalPages={totalPages}
@@ -245,6 +247,7 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
                 }}
               />
               <Pagination
+                aria-label={paginationLabel}
                 className="mobile-pagination"
                 activePage={currentPage}
                 totalPages={totalPages}
