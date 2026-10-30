@@ -8,6 +8,16 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0-alpha.13 (2026-10-30)
+
+### Feature
+
+- Added documentation for the blocks of the add-on (Hero, Main Image, Quote, Byline, Custom Grid and Event Metadata), served by the `@blocks-schema` endpoint, so agents can write their data correctly. The sidebar forms of these blocks now read their schema from the block configuration. @ericof [#33](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/33)
+
+### Internal
+
+- Upgraded `@plonegovbr/volto-social-media` to 3.1.0. @ericof [#35](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/35)
+
 ## 1.0.0-alpha.12 (2026-10-21)
 
 ### Bugfix

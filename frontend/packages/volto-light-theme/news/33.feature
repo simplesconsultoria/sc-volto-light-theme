@@ -1,1 +1,0 @@
-Added documentation for the blocks of the add-on (Hero, Main Image, Quote, Byline, Custom Grid and Event Metadata), served by the `@blocks-schema` endpoint, so agents can write their data correctly. The sidebar forms of these blocks now read their schema from the block configuration. @ericof
