@@ -50,42 +50,138 @@
 }
 
 #page-document {
-  .blocks-group-wrapper > .block.image {
-    &.align.right img {
-      margin-right: max(
-        1rem,
-        calc(50vw - #{$default-container-width} / 2)
-      ) !important;
-    }
-    &.align.left img {
-      margin-left: max(
-        1rem,
-        calc(50vw - #{$default-container-width} / 2)
-      ) !important;
+  .blocks-group-wrapper > .block.image,
+  .blocks-group-wrapper > .block.mainImageBlock,
+  .blocks-group-wrapper > .main-image-block {
+    &.align.left,
+    &.has--block-alignment--left {
+      @media only screen and (min-width: #{$largest-mobile-screen + 1px}) {
+        figure {
+          @include floated-figure('left');
+        }
+      }
     }
 
+    &.align.right,
+    &.has--block-alignment--right {
+      @media only screen and (min-width: #{$largest-mobile-screen + 1px}) {
+        figure {
+          @include floated-figure('right');
+        }
+      }
+    }
+
+    figure {
+      max-width: 100%;
+      box-sizing: border-box;
+
+      img {
+        max-width: 100% !important;
+        height: auto;
+        box-sizing: border-box;
+      }
+    }
+
+    // Default container margins
+    @include adjustMarginsToContainer($layout-container-width);
+
     &.has--block-width--narrow {
+      @include narrow-container-width();
       max-width: var(--narrow-container-width) !important;
-      margin-right: auto !important;
-      margin-left: auto !important;
+      @include adjustMarginsToContainer($narrow-container-width);
     }
 
     &.has--block-width--default {
+      @include default-container-width();
       max-width: var(--default-container-width) !important;
-      margin-right: auto !important;
-      margin-left: auto !important;
+      @include adjustMarginsToContainer($default-container-width);
     }
 
     &.has--block-width--layout {
+      @include layout-container-width();
       max-width: var(--layout-container-width) !important;
-      margin-right: auto !important;
-      margin-left: auto !important;
+      @include adjustMarginsToContainer($layout-container-width);
     }
 
     &.has--block-width--full {
       max-width: 100% !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    @media only screen and (max-width: #{$largest-mobile-screen}) {
+      &.align.left,
+      &.align.right,
+      &.has--block-alignment--left,
+      &.has--block-alignment--right {
+        height: auto !important;
+        margin-top: $spacing-large !important;
+        margin-bottom: $spacing-large !important;
+        clear: both !important;
+        float: none !important;
+        text-align: center !important;
+
+        figure {
+          width: 100% !important;
+          max-width: 100% !important;
+          margin-right: auto !important;
+          margin-bottom: $spacing-small !important;
+          margin-left: auto !important;
+          clear: both !important;
+          float: none !important;
+          text-align: center !important;
+
+          img {
+            display: block !important;
+            margin-right: auto !important;
+            margin-left: auto !important;
+            float: none !important;
+          }
+
+          figcaption {
+            text-align: center !important;
+          }
+        }
+      }
+
+      &:not(.has--block-width--full) {
+        width: auto !important;
+        max-width: calc(
+          100% - 2 * #{$horizontal-space-small-screens}
+        ) !important;
+        margin-right: $horizontal-space-small-screens !important;
+        margin-left: $horizontal-space-small-screens !important;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Main Image dentro de containers estruturais (CustomGrid, GridBlock, Accordion)
+// =============================================================================
+.custom-grid-column,
+.block.gridBlock .column,
+.column,
+.accordion-block .content {
+  .block.mainImageBlock,
+  .main-image-block {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+
+    figure {
+      width: 100% !important;
+      max-width: 100% !important;
       margin-right: auto !important;
       margin-left: auto !important;
+      float: none !important;
+
+      img {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto;
+      }
     }
   }
 }

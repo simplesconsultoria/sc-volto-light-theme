@@ -56,7 +56,9 @@ class TestThemeFieldSerializer:
         }
 
     def test_theme_reflects_a_registry_update(self):
-        color_groups = dict(themes.get_theme_color_groups("corporate", registry=self.registry))
+        color_groups = dict(
+            themes.get_theme_color_groups("corporate", registry=self.registry)
+        )
         color_groups["primary"] = dict(color_groups["primary"])
         color_groups["primary"]["background_color_light"] = "#abcdef"
         themes.update_theme(

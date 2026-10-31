@@ -1,0 +1,228 @@
+// =============================================================================
+// Search Block Theme, Borders and Width Integration — sc-volto-light-theme
+// =============================================================================
+
+.block.search,
+#page-edit .block-editor-search .block.search,
+#page-document .blocks-group-wrapper > .block.search {
+  background-color: var(--theme-color, transparent);
+  color: var(--theme-foreground-color, inherit);
+  font-family: var(--colorgroup-back-font, inherit);
+
+  // Explicit block width enforcement
+  &.has--block-width--narrow {
+    @include apply-narrow-width;
+  }
+
+  &.has--block-width--default {
+    @include apply-default-width;
+  }
+
+  &.has--block-width--layout {
+    @include apply-layout-width;
+  }
+
+  &.has--block-width--full {
+    @include apply-full-width;
+  }
+
+  // Facets
+  .facets {
+    h2,
+    h3,
+    .headline {
+      color: var(--theme-foreground-color, inherit) !important;
+      font-family: var(--colorgroup-back-font, inherit) !important;
+    }
+
+    .ui.checkbox label {
+      color: var(--theme-foreground-color, inherit) !important;
+    }
+  }
+
+  // Search Results Count & Details
+  .search-details {
+    color: var(--theme-foreground-color, inherit) !important;
+
+    .number {
+      color: var(
+        --theme-foreground-accent-color,
+        var(--primary-accent-color)
+      ) !important;
+    }
+
+    .label {
+      color: var(--theme-low-contrast-foreground-color, inherit) !important;
+    }
+  }
+
+  // Search Input
+  .search-input {
+    background-color: var(
+      --theme-high-contrast-color,
+      var(--colorgroup-front-bg, #f2f2f2)
+    ) !important;
+    color: var(
+      --theme-top-foreground-color,
+      var(--colorgroup-front-text, inherit)
+    ) !important;
+
+    .ui.input {
+      background-color: transparent !important;
+
+      input {
+        color: var(
+          --theme-top-foreground-color,
+          var(--colorgroup-front-text, inherit)
+        ) !important;
+
+        &::placeholder {
+          color: var(
+            --theme-top-low-contrast-foreground-color,
+            rgba(0, 0, 0, 0.6)
+          ) !important;
+        }
+      }
+    }
+
+    .search-input-live-icon-button svg {
+      color: var(
+        --theme-top-accent-color,
+        var(--theme-foreground-accent-color, inherit)
+      ) !important;
+      fill: var(
+        --theme-top-accent-color,
+        var(--theme-foreground-accent-color, inherit)
+      ) !important;
+    }
+  }
+
+  // Sort dropdown
+  .sort-on-wrapper {
+    .search-sort-wrapper {
+      button {
+        border-color: var(
+          --theme-border-color,
+          var(--theme-foreground-color, #000)
+        ) !important;
+        background-color: var(
+          --theme-high-contrast-color,
+          var(--colorgroup-front-bg, transparent)
+        ) !important;
+        color: var(--theme-top-foreground-color, inherit) !important;
+
+        svg {
+          fill: var(--theme-top-foreground-color, currentColor) !important;
+        }
+      }
+
+      .search-sort-on {
+        border-color: var(
+          --theme-border-color,
+          var(--theme-foreground-color, #000)
+        ) !important;
+        background-color: var(
+          --theme-high-contrast-color,
+          var(--colorgroup-front-bg, transparent)
+        ) !important;
+        color: var(--theme-top-foreground-color, inherit) !important;
+
+        .react-select__control {
+          background-color: transparent !important;
+          color: var(--theme-top-foreground-color, inherit) !important;
+
+          .react-select__single-value {
+            color: var(--theme-top-foreground-color, inherit) !important;
+          }
+
+          svg {
+            fill: var(--theme-top-foreground-color, currentColor) !important;
+          }
+        }
+      }
+    }
+  }
+
+  // Listing body and cards inside search
+  .listing-block-container {
+    background-color: transparent !important;
+  }
+
+  // Width containment inside Search Block
+  .searchBlock-facets.ui.grid {
+    width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+
+    > .row {
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+
+      > .column {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+      }
+    }
+  }
+
+  // Cards inside Search Block
+  .listing-item .card,
+  .card {
+    border: solid
+      var(--cardBorderColor, var(--theme-border-color, currentColor));
+    border-width: var(
+      --cardBorderWidth,
+      var(--theme-border-width, 0)
+    ) !important;
+    border-color: var(
+      --cardBorderColor,
+      var(--theme-border-color, currentColor)
+    ) !important;
+    background-color: var(--theme-high-contrast-color, #fff) !important;
+
+    .title {
+      color: var(--theme-top-foreground-color, inherit) !important;
+    }
+
+    .description,
+    p {
+      color: var(--theme-top-low-contrast-foreground-color, inherit) !important;
+    }
+  }
+
+  // Card Borders inside Search Block when customized via BorderWidget
+  &[style*='--cardBorderColor'],
+  .listing-block-container[style*='--cardBorderColor'],
+  &[style*='--cardBorderWidth'],
+  .listing-block-container[style*='--cardBorderWidth'] {
+    .listing-item .card,
+    .card {
+      border: solid
+        var(--cardBorderColor, var(--theme-border-color, currentColor)) !important;
+      border-width: var(
+        --cardBorderWidth,
+        var(--theme-border-width, 0)
+      ) !important;
+      border-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, currentColor)
+      ) !important;
+      border-top-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, currentColor)
+      ) !important;
+      border-right-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, currentColor)
+      ) !important;
+      border-bottom-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, currentColor)
+      ) !important;
+      border-left-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, currentColor)
+      ) !important;
+    }
+  }
+}

@@ -409,9 +409,13 @@ describe('themeStyleSheet', () => {
         },
       }),
     );
-    expect(css).toContain('--colorgroup-primary-bg: light-dark(#ffffff, #0d2317);');
+    expect(css).toContain(
+      '--colorgroup-primary-bg: light-dark(#ffffff, #0d2317);',
+    );
     expect(css).toContain('--primary-color: light-dark(#ffffff, #0d2317);');
-    expect(css).toContain('--primary-foreground-color: light-dark(#143d24, #f0f7f2);');
+    expect(css).toContain(
+      '--primary-foreground-color: light-dark(#143d24, #f0f7f2);',
+    );
     expect(css).toContain('--secondary-color: light-dark(#165b33, #071a10);');
     expect(css).toContain('--header-background: var(--primary-color);');
     expect(css).toContain('--footer-background: var(--secondary-color);');

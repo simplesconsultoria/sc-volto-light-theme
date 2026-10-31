@@ -101,25 +101,29 @@ export function colorGroupCustomProperties(
   const props: Record<string, string> = {};
 
   if (cg.background_color_light && cg.background_color_dark) {
-    props[`${prefix}-bg`] = `light-dark(${cg.background_color_light.trim()}, ${cg.background_color_dark.trim()})`;
+    props[`${prefix}-bg`] =
+      `light-dark(${cg.background_color_light.trim()}, ${cg.background_color_dark.trim()})`;
   } else if (cg.background_color_light) {
     props[`${prefix}-bg`] = cg.background_color_light.trim();
   }
 
   if (cg.text_color_light && cg.text_color_dark) {
-    props[`${prefix}-text`] = `light-dark(${cg.text_color_light.trim()}, ${cg.text_color_dark.trim()})`;
+    props[`${prefix}-text`] =
+      `light-dark(${cg.text_color_light.trim()}, ${cg.text_color_dark.trim()})`;
   } else if (cg.text_color_light) {
     props[`${prefix}-text`] = cg.text_color_light.trim();
   }
 
   if (cg.subtext_color_light && cg.subtext_color_dark) {
-    props[`${prefix}-subtext`] = `light-dark(${cg.subtext_color_light.trim()}, ${cg.subtext_color_dark.trim()})`;
+    props[`${prefix}-subtext`] =
+      `light-dark(${cg.subtext_color_light.trim()}, ${cg.subtext_color_dark.trim()})`;
   } else if (cg.subtext_color_light) {
     props[`${prefix}-subtext`] = cg.subtext_color_light.trim();
   }
 
   if (cg.accent_color_light && cg.accent_color_dark) {
-    props[`${prefix}-accent`] = `light-dark(${cg.accent_color_light.trim()}, ${cg.accent_color_dark.trim()})`;
+    props[`${prefix}-accent`] =
+      `light-dark(${cg.accent_color_light.trim()}, ${cg.accent_color_dark.trim()})`;
   } else if (cg.accent_color_light) {
     props[`${prefix}-accent`] = cg.accent_color_light.trim();
   }
@@ -242,49 +246,63 @@ export function themeStyleSheet(
       if (!g) return;
 
       if (g.background_color_light) {
-        properties[`--${tokenName}-color-light`] = g.background_color_light.trim();
+        properties[`--${tokenName}-color-light`] =
+          g.background_color_light.trim();
       }
       if (g.background_color_dark) {
-        properties[`--${tokenName}-color-dark`] = g.background_color_dark.trim();
+        properties[`--${tokenName}-color-dark`] =
+          g.background_color_dark.trim();
       }
       if (g.background_color_light && g.background_color_dark) {
-        properties[`--${tokenName}-color`] = `light-dark(${g.background_color_light.trim()}, ${g.background_color_dark.trim()})`;
+        properties[`--${tokenName}-color`] =
+          `light-dark(${g.background_color_light.trim()}, ${g.background_color_dark.trim()})`;
       } else if (g.background_color_light) {
         properties[`--${tokenName}-color`] = g.background_color_light.trim();
       }
 
       if (g.text_color_light) {
-        properties[`--${tokenName}-foreground-color-light`] = g.text_color_light.trim();
+        properties[`--${tokenName}-foreground-color-light`] =
+          g.text_color_light.trim();
       }
       if (g.text_color_dark) {
-        properties[`--${tokenName}-foreground-color-dark`] = g.text_color_dark.trim();
+        properties[`--${tokenName}-foreground-color-dark`] =
+          g.text_color_dark.trim();
       }
       if (g.text_color_light && g.text_color_dark) {
-        properties[`--${tokenName}-foreground-color`] = `light-dark(${g.text_color_light.trim()}, ${g.text_color_dark.trim()})`;
+        properties[`--${tokenName}-foreground-color`] =
+          `light-dark(${g.text_color_light.trim()}, ${g.text_color_dark.trim()})`;
       } else if (g.text_color_light) {
-        properties[`--${tokenName}-foreground-color`] = g.text_color_light.trim();
+        properties[`--${tokenName}-foreground-color`] =
+          g.text_color_light.trim();
       }
 
       if (g.subtext_color_light) {
-        properties[`--${tokenName}-low-foreground-color-light`] = g.subtext_color_light.trim();
+        properties[`--${tokenName}-low-foreground-color-light`] =
+          g.subtext_color_light.trim();
       }
       if (g.subtext_color_dark) {
-        properties[`--${tokenName}-low-foreground-color-dark`] = g.subtext_color_dark.trim();
+        properties[`--${tokenName}-low-foreground-color-dark`] =
+          g.subtext_color_dark.trim();
       }
       if (g.subtext_color_light && g.subtext_color_dark) {
-        properties[`--${tokenName}-low-foreground-color`] = `light-dark(${g.subtext_color_light.trim()}, ${g.subtext_color_dark.trim()})`;
+        properties[`--${tokenName}-low-foreground-color`] =
+          `light-dark(${g.subtext_color_light.trim()}, ${g.subtext_color_dark.trim()})`;
       } else if (g.subtext_color_light) {
-        properties[`--${tokenName}-low-foreground-color`] = g.subtext_color_light.trim();
+        properties[`--${tokenName}-low-foreground-color`] =
+          g.subtext_color_light.trim();
       }
 
       if (g.accent_color_light) {
-        properties[`--${tokenName}-accent-color-light`] = g.accent_color_light.trim();
+        properties[`--${tokenName}-accent-color-light`] =
+          g.accent_color_light.trim();
       }
       if (g.accent_color_dark) {
-        properties[`--${tokenName}-accent-color-dark`] = g.accent_color_dark.trim();
+        properties[`--${tokenName}-accent-color-dark`] =
+          g.accent_color_dark.trim();
       }
       if (g.accent_color_light && g.accent_color_dark) {
-        properties[`--${tokenName}-accent-color`] = `light-dark(${g.accent_color_light.trim()}, ${g.accent_color_dark.trim()})`;
+        properties[`--${tokenName}-accent-color`] =
+          `light-dark(${g.accent_color_light.trim()}, ${g.accent_color_dark.trim()})`;
       } else if (g.accent_color_light) {
         properties[`--${tokenName}-accent-color`] = g.accent_color_light.trim();
       }
@@ -343,4 +361,3 @@ export function themeStyleSheet(
 
   return [rootRule, utilities].filter(Boolean).join('\n');
 }
-

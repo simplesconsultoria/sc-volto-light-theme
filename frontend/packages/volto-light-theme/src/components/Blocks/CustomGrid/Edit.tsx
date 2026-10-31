@@ -25,6 +25,12 @@ import LayoutSelector from './LayoutSelector';
 
 import config from '@plone/volto/registry';
 
+// ========================================================================
+import {
+  resolveBlockTheme,
+  type ThemeDefinition,
+} from '../../../config/blockThemes';
+
 const messages = defineMessages({
   editParent: {
     id: 'Edit parent grid block',
@@ -132,12 +138,6 @@ const buildColumnsForLayout = (layoutId: string) => {
   }
   return { blocks, blocks_layout: { items } };
 };
-
-// ========================================================================
-import {
-  resolveBlockTheme,
-  type ThemeDefinition,
-} from '../../../config/blockThemes';
 
 function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
   const blockThemes = blockType
@@ -272,23 +272,30 @@ const CustomGridEdit = (props: any) => {
     [block, data, onChangeBlock, onChangeField],
   );
 
-  // Updates a column-level setting (e.g. theme)
-  const handleColSettingsChange = useCallback(
-    (id: string, value: any) => {
+  // Updates column settings from BlockThemeWidget or full form updates
+  const handleColSettingsBlockChange = useCallback(
+    (_colBlockId: string, updatedSettings: any) => {
       if (!activeColumn) return;
       const coldata = data.data;
       const targetColumn = coldata.blocks?.[activeColumn];
       let newBlocks = targetColumn?.blocks ? { ...targetColumn.blocks } : {};
 
-      // Propagate theme to all blocks inside the column
-      if (id === 'theme') {
+      const newTheme = updatedSettings?.theme;
+      const newBack = updatedSettings?.backColorGroup;
+      const newFront = updatedSettings?.frontColorGroup;
+
+      if (newTheme !== undefined) {
         Object.keys(newBlocks).forEach((blockId) => {
           newBlocks[blockId] = {
             ...newBlocks[blockId],
-            theme: value,
+            theme: newTheme,
+            backColorGroup: newBack,
+            frontColorGroup: newFront,
             styles: {
               ...(newBlocks[blockId].styles || {}),
-              theme: value,
+              theme: newTheme,
+              backColorGroup: newBack,
+              frontColorGroup: newFront,
             },
           };
         });
@@ -300,6 +307,17 @@ const CustomGridEdit = (props: any) => {
         blocksState.current[activeColumn].blocks = newBlocks;
       }
 
+      const nextSettings = {
+        ...targetColumn?.settings,
+        ...updatedSettings,
+      };
+
+      if (!newTheme) {
+        delete nextSettings.theme;
+        delete nextSettings.backColorGroup;
+        delete nextSettings.frontColorGroup;
+      }
+
       onChangeBlock(block, {
         ...data,
         data: {
@@ -309,16 +327,39 @@ const CustomGridEdit = (props: any) => {
             [activeColumn]: {
               ...targetColumn,
               blocks: newBlocks,
-              settings: {
-                ...targetColumn?.settings,
-                [id]: value,
-              },
+              settings: nextSettings,
             },
           },
         },
       });
     },
     [activeColumn, block, data, onChangeBlock],
+  );
+
+  // Updates a column-level setting (e.g. theme)
+  const handleColSettingsChange = useCallback(
+    (id: string, value: any) => {
+      if (!activeColumn) return;
+      let extra: Record<string, any> = {};
+      if (id === 'theme') {
+        if (typeof value === 'string' && value.startsWith('custom-')) {
+          const parts = value.split('-');
+          extra.backColorGroup = parts[1];
+          extra.frontColorGroup = parts[2];
+        } else if (value === 'default') {
+          extra.backColorGroup = 'primary';
+          extra.frontColorGroup = 'neutral';
+        } else if (value === 'alternative') {
+          extra.backColorGroup = 'accent';
+          extra.frontColorGroup = 'primary';
+        }
+      }
+      handleColSettingsBlockChange(activeColumn, {
+        [id]: value,
+        ...extra,
+      });
+    },
+    [activeColumn, handleColSettingsBlockChange],
   );
 
   // Opens the grid-level sidebar settings
@@ -427,22 +468,26 @@ const CustomGridEdit = (props: any) => {
           const colThemeValue = colData?.settings?.theme;
           const colBack = colData?.settings?.backColorGroup;
           const colFront = colData?.settings?.frontColorGroup;
-          const colResolved = resolveBlockTheme({
-            theme:
-              typeof colThemeValue === 'string' ? colThemeValue : undefined,
-            backColorGroup: colBack,
-            frontColorGroup: colFront,
-            themeDefinitions,
-          });
+          const hasColTheme = Boolean(colThemeValue);
+          const colResolved = hasColTheme
+            ? resolveBlockTheme({
+                theme:
+                  typeof colThemeValue === 'string' ? colThemeValue : undefined,
+                backColorGroup: colBack,
+                frontColorGroup: colFront,
+                themeDefinitions,
+              })
+            : null;
 
-          const colThemeStyle =
-            typeof colThemeValue === 'object' && colThemeValue !== null
+          const colThemeStyle = hasColTheme
+            ? typeof colThemeValue === 'object' && colThemeValue !== null
               ? (colThemeValue as React.CSSProperties)
-              : colResolved.style;
+              : colResolved?.style
+            : undefined;
 
           const colTheme = cx(
-            { 'has-theme': !!colThemeValue },
-            colResolved.className,
+            hasColTheme && 'has-theme',
+            colResolved?.className,
           );
 
           return (
@@ -470,6 +515,8 @@ const CustomGridEdit = (props: any) => {
                   onAddBlock={(type: string) => {
                     const newId = crypto.randomUUID();
                     const colTheme = colData?.settings?.theme;
+                    const colBack = colData?.settings?.backColorGroup;
+                    const colFront = colData?.settings?.frontColorGroup;
                     onChangeBlock(block, {
                       ...data,
                       data: {
@@ -484,7 +531,13 @@ const CustomGridEdit = (props: any) => {
                                 ...(colTheme
                                   ? {
                                       theme: colTheme,
-                                      styles: { theme: colTheme },
+                                      backColorGroup: colBack,
+                                      frontColorGroup: colFront,
+                                      styles: {
+                                        theme: colTheme,
+                                        backColorGroup: colBack,
+                                        frontColorGroup: colFront,
+                                      },
                                     }
                                   : {}),
                               },
@@ -507,6 +560,7 @@ const CustomGridEdit = (props: any) => {
                   manage={manage}
                   metadata={metadata}
                   isMainForm={false}
+                  isContainer={true}
                   stopPropagation={!!selectedBlock}
                   properties={{
                     ...metadata,
@@ -600,12 +654,15 @@ const CustomGridEdit = (props: any) => {
       {Object.keys(colSelections).length === 0 && selected && (
         <SidebarPortal selected={selected}>
           {activeColumn ? (
-            <>
+            <div className="custom-grid-sidebar-column">
               <Segment
+                className="custom-grid-sidebar-header"
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
+                  padding: '14px 18px',
+                  marginBottom: '16px',
                 }}
               >
                 <Button onClick={openGridSettings}>
@@ -613,11 +670,23 @@ const CustomGridEdit = (props: any) => {
                   {intl.formatMessage(messages.editParent)}
                 </Button>
                 <button
-                  onClick={() => handleColSettingsChange('theme', '')}
+                  onClick={() => {
+                    handleColSettingsBlockChange(activeColumn, {
+                      theme: '',
+                      backColorGroup: undefined,
+                      frontColorGroup: undefined,
+                      styles: {},
+                    });
+                  }}
                   style={{
                     cursor: 'pointer',
                     background: 'transparent',
                     border: 'none',
+                    padding: '6px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '4px',
                   }}
                   title={intl.formatMessage(messages.clearStyle)}
                   type="button"
@@ -629,9 +698,11 @@ const CustomGridEdit = (props: any) => {
                 schema={ColumnSchema(intl)}
                 title={intl.formatMessage(messages.labelColumnSettings)}
                 onChangeField={handleColSettingsChange}
+                onChangeBlock={handleColSettingsBlockChange}
+                block={activeColumn}
                 formData={data?.data?.blocks?.[activeColumn]?.settings || {}}
               />
-            </>
+            </div>
           ) : (
             <BlockDataForm
               schema={CustomGridSchema({ intl })}

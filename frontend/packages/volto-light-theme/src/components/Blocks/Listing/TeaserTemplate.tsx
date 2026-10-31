@@ -67,13 +67,6 @@ const TeaserTemplate: React.FC<TeaserTemplateProps & Record<string, any>> = ({
         data?.styles?.theme || 'default',
         { [`has--align--${align}`]: align },
       )}
-      style={
-        {
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2rem',
-        } as React.CSSProperties
-      }
     >
       {items.map((item, index) => {
         const date = formatDate(
@@ -85,26 +78,25 @@ const TeaserTemplate: React.FC<TeaserTemplateProps & Record<string, any>> = ({
           openExternalLinkInNewTab && !isInternalURL(item['@id']);
 
         return (
-          <div key={item['@id']} className="block">
-            <div
-              className={cx('block teaser', {
-                [`has--align--${align}`]: align,
-              })}
+          <div
+            key={item['@id'] || index}
+            className={cx('listing-item', 'teaser-item', {
+              [`has--align--${align}`]: align,
+            })}
+          >
+            <Card
+              item={
+                !isEditMode && !!(item['@id'] || item.href || item.url)
+                  ? item
+                  : null
+              }
+              openLinkInNewTab={openLinkInNewTab}
             >
-              <Card
-                item={
-                  !isEditMode && !!(item['@id'] || item.href || item.url)
-                    ? item
-                    : null
-                }
-                openLinkInNewTab={openLinkInNewTab}
-              >
-                <Card.Image item={item} imageComponent={Image} />
-                <Card.Summary>
-                  <TeaserSummary item={item} date={date} />
-                </Card.Summary>
-              </Card>
-            </div>
+              <Card.Image item={item} imageComponent={Image} />
+              <Card.Summary>
+                <TeaserSummary item={item} date={date} />
+              </Card.Summary>
+            </Card>
           </div>
         );
       })}

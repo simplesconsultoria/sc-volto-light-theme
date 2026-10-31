@@ -1,0 +1,128 @@
+// =============================================================================
+// SlateTable / Table Block Styling — sc-volto-light-theme
+// Garante suporte total ao sistema de larguras (narrow, default, layout, full),
+// neutraliza o display:grid com place-content do upstream no container intermediário
+// e garante expansão fluida (width: 100%) da tabela com overflow seguro.
+// =============================================================================
+
+.block.slateTable,
+.slate-table-wrapper,
+.block.slate-table {
+  box-sizing: border-box;
+
+  // Neutraliza o pseudo-elemento ::before herdado de .block .block:not(.inner)::before (pastanaga)
+  // que define position: absolute; left: -9px; width: calc(100% + 18px).
+  // Em modo full (100% bleed) ou larguras amplas, esses 9px à esquerda e 18px adicionais
+  // ultrapassam a largura da viewport provocando barra de rolagem horizontal desnecessária.
+  &::before,
+  .block::before,
+  .block.slate-table::before,
+  .block.table::before {
+    left: 0 !important;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    border: none !important;
+    content: none !important;
+  }
+
+  // Anula o isolamento do kitconcept em :not(.blocks-group-wrapper) > .block .block-inner-container
+  // que impunha display: grid, place-content: start e default-container-width fixo (940px)
+  .block.slate-table,
+  .slate-table-block-wrapper,
+  .block.table {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  .block-inner-container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    overflow-x: auto;
+  }
+
+  table.slate-table-block,
+  table.ui.table,
+  .ui.table.slate-table-block,
+  .ui.celled.table.slate-table-block {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+}
+
+// Suporte específico no Modo de Edição
+#page-edit,
+#page-add {
+  .block-editor-slateTable {
+    box-sizing: border-box;
+
+    .block.table,
+    .slate-table-block-wrapper,
+    .block-inner-container {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    table.slate-table-block,
+    table.ui.table,
+    .ui.table.slate-table-block {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      margin-right: auto !important;
+      margin-left: auto !important;
+    }
+  }
+}
+
+// Reset para tabelas contidas dentro de colunas (gridBlock, customGrid, accordion)
+.custom-grid-column,
+.block-column,
+.column,
+.contained {
+  .block.slateTable,
+  .slate-table-wrapper,
+  .block.slate-table,
+  .block-editor-slateTable {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+
+    .block-inner-container {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    table.slate-table-block,
+    table.ui.table {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+  }
+}

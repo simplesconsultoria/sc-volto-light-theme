@@ -1,0 +1,587 @@
+// =============================================================================
+// Block Width System — sc-volto-light-theme
+// Sistema centralizado e otimizado para larguras de blocos (narrow, default, layout, full).
+// Aplica universalmente em todos os blocos: padrão Slate, Heading, Introduction,
+// Event Calendar, Table of Contents, Table, etc., sem quebrar layouts nem vazar do viewport.
+// =============================================================================
+
+// Mixins utilitários para aplicação consistente de larguras
+// Redefine adjustMarginsToContainer e adjustMarginsToEditContainer para garantir
+// que em telas <= width + 2*20px, as margens laterais de 20px prevaleçam com !important,
+// impedindo que regras com margin: auto !important anulem o respiro da tela.
+@mixin adjustMarginsToContainer($width) {
+  @container (max-width: #{$width + 2 * $horizontal-space-small-screens}) {
+    margin-right: $horizontal-space-small-screens !important;
+    margin-left: $horizontal-space-small-screens !important;
+  }
+  @media (max-width: #{$width + 2 * $horizontal-space-small-screens}) {
+    margin-right: $horizontal-space-small-screens !important;
+    margin-left: $horizontal-space-small-screens !important;
+  }
+}
+
+@mixin adjustMarginsToEditContainer($width) {
+  @container (max-width: #{$width + 2 * $spacing-medium}) {
+    margin-right: $spacing-medium !important;
+    margin-left: $spacing-medium !important;
+  }
+}
+
+@mixin apply-narrow-width {
+  @include narrow-container-width();
+  max-width: var(--narrow-container-width) !important;
+  margin-right: auto;
+  margin-left: auto;
+  @include adjustMarginsToContainer($narrow-container-width);
+}
+
+@mixin apply-default-width {
+  @include default-container-width();
+  max-width: var(--default-container-width) !important;
+  margin-right: auto;
+  margin-left: auto;
+  @include adjustMarginsToContainer($default-container-width);
+}
+
+@mixin apply-layout-width {
+  @include layout-container-width();
+  max-width: var(--layout-container-width) !important;
+  margin-right: auto;
+  margin-left: auto;
+  @include adjustMarginsToContainer($layout-container-width);
+}
+
+@mixin apply-full-width {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+
+// -----------------------------------------------------------------------------
+// 1. Aplicação Direta em Classes de Bloco no Modo Visualização
+// -----------------------------------------------------------------------------
+// Blocos que gerenciam background próprio full-bleed com container interno
+// (heroBlock, customGrid) e blocos de imagem com alinhamento lateral são excluídos
+// da largura de bloco direta no container externo.
+.has--block-width--narrow:not(.block-editor-heroBlock):not(.heroBlock):not(
+    .block-editor-customGrid
+  ):not(.customGrid):not(.listing-headline-wrapper):not(.listing-body):not(
+    .contained
+  ):not(.column *):not(.custom-grid-column *),
+[class*='has--block-width--var(--narrow-container-width)']:not(
+    .block-editor-heroBlock
+  ):not(.heroBlock):not(.block-editor-customGrid):not(.customGrid):not(
+    .listing-headline-wrapper
+  ):not(.listing-body):not(.contained):not(.column *):not(
+    .custom-grid-column *
+  ) {
+  @include apply-narrow-width;
+}
+
+.has--block-width--default:not(.block-editor-heroBlock):not(.heroBlock):not(
+    .block-editor-customGrid
+  ):not(.customGrid):not(.listing-headline-wrapper):not(.listing-body):not(
+    .contained
+  ):not(.column *):not(.custom-grid-column *),
+[class*='has--block-width--var(--default-container-width)']:not(
+    .block-editor-heroBlock
+  ):not(.heroBlock):not(.block-editor-customGrid):not(.customGrid):not(
+    .listing-headline-wrapper
+  ):not(.listing-body):not(.contained):not(.column *):not(
+    .custom-grid-column *
+  ) {
+  @include apply-default-width;
+}
+
+.has--block-width--layout:not(.block-editor-heroBlock):not(.heroBlock):not(
+    .block-editor-customGrid
+  ):not(.customGrid):not(.listing-headline-wrapper):not(.listing-body):not(
+    .contained
+  ):not(.column *):not(.custom-grid-column *),
+[class*='has--block-width--var(--layout-container-width)']:not(
+    .block-editor-heroBlock
+  ):not(.heroBlock):not(.block-editor-customGrid):not(.customGrid):not(
+    .listing-headline-wrapper
+  ):not(.listing-body):not(.contained):not(.column *):not(
+    .custom-grid-column *
+  ) {
+  @include apply-layout-width;
+}
+
+.has--block-width--full:not(.block-editor-heroBlock):not(.heroBlock):not(
+    .block-editor-customGrid
+  ):not(.customGrid):not(.listing-headline-wrapper):not(.listing-body):not(
+    .contained
+  ):not(.column *):not(.custom-grid-column *),
+.has--block-width--unset:not(.block-editor-heroBlock):not(.heroBlock):not(
+    .block-editor-customGrid
+  ):not(.customGrid):not(.listing-headline-wrapper):not(.listing-body):not(
+    .contained
+  ):not(.column *):not(.custom-grid-column *) {
+  @include apply-full-width;
+}
+
+// Blocos contidos dentro de outros blocos (como gridBlock, customGrid, accordion)
+// herdam a largura e o alinhamento da coluna/container e não aplicam margens laterais.
+.block.contained,
+.contained:not([class*='block-editor-']),
+.custom-grid-column .block,
+.column .block,
+.accordion-block .content .block {
+  width: auto !important;
+  max-width: 100% !important;
+  align-self: stretch;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+
+  .block-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 2. Aplicação em Containers Internos de Todos os Blocos no Modo Visualização
+// -----------------------------------------------------------------------------
+// Cobre blocos com estrutura interna específica:
+// - Bloco padrão Slate (slate-inner-container, parágrafos, cabeçalhos, listas)
+// - Heading (.heading-wrapper)
+// - Introduction (.block-container)
+// - Event Calendar (.search-block-event)
+// - Table of Contents (.table-of-contents)
+#page-document .blocks-group-wrapper > .block:not(.contained),
+#page-document .blocks-group-wrapper > [class*='block-']:not(.contained),
+.block:not(.contained):not(.column .block):not(.custom-grid-column .block) {
+  &.has--block-width--narrow {
+    &,
+    > .block-inner-container,
+    > .heading-wrapper,
+    .heading-wrapper,
+    > .block-container,
+    .block-container,
+    &.search,
+    .block.search,
+    .searchBlock-container,
+    .search-block-event,
+    .table-of-contents {
+      @include apply-narrow-width;
+    }
+    &.slate p,
+    &.slate h2,
+    &.slate h3,
+    &.slate h4,
+    &.slate ul,
+    &.slate ol {
+      @include apply-narrow-width;
+    }
+  }
+
+  &.has--block-width--default {
+    &,
+    > .block-inner-container,
+    > .heading-wrapper,
+    .heading-wrapper,
+    > .block-container,
+    .block-container,
+    &.search,
+    .block.search,
+    .searchBlock-container,
+    .search-block-event,
+    .table-of-contents {
+      @include apply-default-width;
+    }
+    &.slate p,
+    &.slate h2,
+    &.slate h3,
+    &.slate h4,
+    &.slate ul,
+    &.slate ol {
+      @include apply-default-width;
+    }
+  }
+
+  &.has--block-width--layout {
+    &,
+    > .block-inner-container,
+    > .heading-wrapper,
+    .heading-wrapper,
+    > .block-container,
+    .block-container,
+    &.search,
+    .block.search,
+    .searchBlock-container,
+    .search-block-event,
+    .table-of-contents {
+      @include apply-layout-width;
+    }
+    &.slate p,
+    &.slate h2,
+    &.slate h3,
+    &.slate h4,
+    &.slate ul,
+    &.slate ol {
+      @include apply-layout-width;
+    }
+  }
+
+  &.has--block-width--full,
+  &.has--block-width--unset {
+    &,
+    > .block-inner-container,
+    > .heading-wrapper,
+    .heading-wrapper,
+    > .block-container,
+    .block-container,
+    &.search,
+    .block.search,
+    .searchBlock-container,
+    .search-block-event,
+    .table-of-contents {
+      @include apply-full-width;
+    }
+    &.slate p,
+    &.slate h2,
+    &.slate h3,
+    &.slate h4,
+    &.slate ul,
+    &.slate ol {
+      @include apply-full-width;
+    }
+
+    // Neutraliza ::before de blocos internos/filhos (como table) que herdam
+    // position: absolute; left: -9px; width: calc(100% + 18px), impedindo estouro lateral da página.
+    &::before,
+    .block::before {
+      left: 0 !important;
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      border: none !important;
+      content: none !important;
+    }
+
+    // Neutraliza ::before de blocos internos/filhos (como table) que herdam
+    // position: absolute; left: -9px; width: calc(100% + 18px), impedindo estouro lateral da página.
+    &::before,
+    .block::before {
+      left: 0 !important;
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      border: none !important;
+      content: none !important;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 3. Modo de Edição (#page-edit e #page-add)
+// -----------------------------------------------------------------------------
+#page-edit,
+#page-add {
+  [class*='block-editor-']:not(.block-editor-heroBlock):not(
+      .block-editor-customGrid
+    ):not(.contained):not([class*='block-editor-'].contained):not(
+      .column [class*='block-editor-']
+    ):not(.custom-grid-column [class*='block-editor-']):not(
+      .has--block-alignment--left
+    ):not(.has--block-alignment--right) {
+    &.has--block-width--narrow {
+      &,
+      .heading-wrapper,
+      .slate-editor,
+      .block.search,
+      .searchBlock-container,
+      .search-block-event,
+      .table-of-contents {
+        @include narrow-container-width();
+        @include adjustMarginsToEditContainer($narrow-container-width);
+        max-width: var(--narrow-container-width) !important;
+        margin-right: auto;
+        margin-left: auto;
+      }
+    }
+
+    &.has--block-width--default {
+      &,
+      .heading-wrapper,
+      .slate-editor,
+      .block.search,
+      .searchBlock-container,
+      .search-block-event,
+      .table-of-contents {
+        @include default-container-width();
+        @include adjustMarginsToEditContainer($default-container-width);
+        max-width: var(--default-container-width) !important;
+        margin-right: auto;
+        margin-left: auto;
+      }
+    }
+
+    &.has--block-width--layout {
+      &,
+      .heading-wrapper,
+      .slate-editor,
+      .block.search,
+      .searchBlock-container,
+      .search-block-event,
+      .table-of-contents {
+        @include layout-container-width();
+        @include adjustMarginsToEditContainer($layout-container-width);
+        max-width: var(--layout-container-width) !important;
+        margin-right: auto;
+        margin-left: auto;
+      }
+    }
+
+    &.has--block-width--full,
+    &.has--block-width--unset {
+      &,
+      .heading-wrapper,
+      .slate-editor,
+      .block.search,
+      .searchBlock-container,
+      .search-block-event,
+      .table-of-contents {
+        @include adjustEditContainerFullWidth();
+        max-width: 100% !important;
+        margin-right: auto;
+        margin-left: auto;
+      }
+
+      .block::before {
+        left: 0 !important;
+        width: 100% !important;
+      }
+    }
+  }
+
+  // Reset de blocos contidos em colunas e containers no modo de edição
+  .custom-grid-column,
+  .block-column,
+  .column,
+  .contained {
+    [class*='block-editor-'],
+    [class*='block-editor-'].contained {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+
+      .heading-wrapper,
+      .slate-editor,
+      .block-container,
+      .text-slate-editor-inner,
+      .search-block-event,
+      .table-of-contents,
+      .block.table,
+      .slate-table-block {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+    }
+
+    @container (max-width: 1920px) {
+      &,
+      [class*='block-editor-'],
+      .heading-wrapper,
+      .slate-editor,
+      .block-container,
+      .text-slate-editor-inner,
+      .search-block-event,
+      .table-of-contents,
+      .block.table,
+      .slate-table-block {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 4. Imagens e MainImageBlock com Alinhamento Lateral Ativo (Left / Right)
+// -----------------------------------------------------------------------------
+// Quando em modo de alinhamento lateral no desktop, o bloco permanece centralizado na coluna
+// correspondente (narrow, default, layout, full) e seu container colapsa verticalmente
+// para permitir que o texto subsequente envolva o figure flutuante dentro da mesma coluna.
+// Em telas pequenas/mobile, o alinhamento lateral cessa, a imagem torna-se centralizada,
+// e a altura torna-se automática (auto) para impedir que o texto se sobreponha à imagem.
+@media only screen and (min-width: #{$largest-mobile-screen + 1px}) {
+  .block.image,
+  .block.mainImageBlock,
+  .main-image-block {
+    &.align.left,
+    &.align.right,
+    &.has--block-alignment--left,
+    &.has--block-alignment--right {
+      height: 0;
+      margin-bottom: 0 !important;
+      clear: none;
+
+      figure {
+        max-width: var(
+          --media-size,
+          calc(var(--default-container-width) / 2 - 10px)
+        );
+        box-sizing: border-box;
+
+        img {
+          max-width: 100% !important;
+          height: auto;
+          box-sizing: border-box;
+        }
+      }
+    }
+  }
+}
+
+// Em telas pequenas / mobile:
+// - Mesmo que a imagem esteja alinhada à esquerda ou direita, ela para e fica central
+// - Altura torna-se auto e float é resetado para que o texto NÃO fique por cima das imagens
+// - Margens de respiro (adjustMarginsToContainer) evitam que fiquem coladas na tela
+@media only screen and (max-width: #{$largest-mobile-screen}) {
+  .block.image,
+  .block.mainImageBlock,
+  .main-image-block {
+    &.align.left,
+    &.align.right,
+    &.has--block-alignment--left,
+    &.has--block-alignment--right {
+      height: auto !important;
+      margin-top: $spacing-large !important;
+      margin-bottom: $spacing-large !important;
+      clear: both !important;
+      float: none !important;
+      text-align: center !important;
+
+      figure {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-right: auto !important;
+        margin-bottom: $spacing-small !important;
+        margin-left: auto !important;
+        clear: both !important;
+        float: none !important;
+        text-align: center !important;
+
+        img {
+          display: block !important;
+          margin-right: auto !important;
+          margin-left: auto !important;
+          float: none !important;
+        }
+
+        figcaption {
+          text-align: center !important;
+        }
+      }
+    }
+
+    &:not(.has--block-width--full) {
+      width: auto !important;
+      max-width: calc(100% - 2 * #{$horizontal-space-small-screens}) !important;
+      margin-right: $horizontal-space-small-screens !important;
+      margin-left: $horizontal-space-small-screens !important;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 5. Garantia de adjustMarginsToContainer para Imagens e MainImageBlock
+// -----------------------------------------------------------------------------
+#page-document {
+  container-type: inline-size;
+}
+
+#page-document .blocks-group-wrapper {
+  container-type: inline-size;
+
+  & > .block.image.has--block-width--default,
+  & > .block.mainImageBlock.has--block-width--default,
+  & > .main-image-block.has--block-width--default {
+    @include adjustMarginsToContainer($default-container-width);
+  }
+
+  & > .block.image.has--block-width--narrow,
+  & > .block.mainImageBlock.has--block-width--narrow,
+  & > .main-image-block.has--block-width--narrow {
+    @include adjustMarginsToContainer($narrow-container-width);
+  }
+
+  & > .block.image.has--block-width--layout,
+  & > .block.mainImageBlock.has--block-width--layout,
+  & > .main-image-block.has--block-width--layout {
+    @include adjustMarginsToContainer($layout-container-width);
+  }
+}
+
+#page-document .blocks-group-wrapper > .block.image.has--block-width--default,
+#page-document
+  .blocks-group-wrapper
+  > .block.mainImageBlock.has--block-width--default,
+#page-document
+  .blocks-group-wrapper
+  > .main-image-block.has--block-width--default {
+  max-width: var(--default-container-width) !important;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@container (max-width: 980px) {
+  #page-document
+    .blocks-group-wrapper
+    > .block:not(
+      .highlight,
+      .teaser,
+      .gridBlock,
+      .block.custom-grid,
+      .slider,
+      .listing,
+      .heading
+    ).has--block-width--default,
+  #page-document .blocks-group-wrapper > .block.image.has--block-width--default,
+  #page-document
+    .blocks-group-wrapper
+    > .block.mainImageBlock.has--block-width--default,
+  #page-document
+    .blocks-group-wrapper
+    > .main-image-block.has--block-width--default {
+    margin-right: 20px !important;
+    margin-left: 20px !important;
+  }
+}
+
+@media (max-width: 980px) {
+  #page-document
+    .blocks-group-wrapper
+    > .block:not(
+      .highlight,
+      .teaser,
+      .gridBlock,
+      .block.custom-grid,
+      .slider,
+      .listing,
+      .heading
+    ).has--block-width--default,
+  #page-document .blocks-group-wrapper > .block.image.has--block-width--default,
+  #page-document
+    .blocks-group-wrapper
+    > .block.mainImageBlock.has--block-width--default,
+  #page-document
+    .blocks-group-wrapper
+    > .main-image-block.has--block-width--default {
+    margin-right: 20px !important;
+    margin-left: 20px !important;
+  }
+}

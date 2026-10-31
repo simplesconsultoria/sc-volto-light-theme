@@ -11,6 +11,8 @@ import SimpleColorPickerWidget from './components/Widgets/SimpleColorPickerWidge
 import ColorGroupsWidget from './components/Widgets/ColorGroupsWidget';
 import BlockThemesWidget from './components/Widgets/BlockThemesWidget';
 import BlockThemeWidget from './components/Widgets/BlockThemeWidget';
+import BorderWidget from './components/Widgets/BorderWidget';
+import { resolveBlockWidthForBlock } from './helpers/blockWidth';
 
 /**
  * Block and variation titles are plain strings in the block configuration, and
@@ -48,10 +50,44 @@ function applyConfig(config: ConfigType) {
   config.widgets.widget.color_groups_widget = ColorGroupsWidget;
   config.widgets.widget.block_themes_widget = BlockThemesWidget;
   config.widgets.widget.block_theme_widget = BlockThemeWidget;
+  config.widgets.widget.border_widget = BorderWidget;
 
-  // Ensure blocks with theme, backColorGroup, or frontColorGroup receive appropriate classes
+  // Ensure blocks with blockWidth receive consistent has--block-width--* classes
+  // supporting data.styles['blockWidth:noprefix'], data.styles.blockWidth, and data.blockWidth
   config.settings.styleClassNameExtenders = [
     ...(config.settings.styleClassNameExtenders || []),
+    ({
+      block,
+      content,
+      data,
+      classNames,
+    }: {
+      block?: string;
+      content?: any;
+      data: any;
+      classNames: Array<string>;
+    }) => {
+      const currentBlockWidth = resolveBlockWidthForBlock({
+        block,
+        content,
+        data,
+      });
+      const cleaned = classNames.filter(
+        (cls) => !cls.startsWith('has--block-width--'),
+      );
+      return [...cleaned, `has--block-width--${currentBlockWidth}`];
+    },
+    ({ data, classNames }: { data: any; classNames: Array<string> }) => {
+      const borderWidth =
+        data?.styles?.['--cardBorderWidth'] ??
+        data?.styles?.cardBorderWidth ??
+        data?.cardBorderWidth;
+      const cleaned = classNames.filter((cls) => cls !== 'has--border');
+      if (borderWidth && borderWidth !== '0' && borderWidth !== '0px') {
+        cleaned.push('has--border');
+      }
+      return cleaned;
+    },
     ({ data, classNames }: { data: any; classNames: Array<string> }) => {
       const rawTheme = data?.theme || data?.styles?.theme;
       const theme =

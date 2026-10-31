@@ -10,6 +10,7 @@ import withQuerystringResults from '@plone/volto/components/manage/Blocks/Listin
 import SlotRenderer from '@plone/volto/components/theme/SlotRenderer/SlotRenderer';
 import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
 import { resolveBlockTheme } from '../../../config/blockThemes';
+import { normalizeBlockWidth } from '../../../helpers/blockWidth';
 
 const EMPTY_DATA = {};
 const EMPTY_ITEMS: any[] = [];
@@ -106,7 +107,7 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
   const {
     data = EMPTY_DATA,
     isEditMode,
-    listingItems = EMPTY_ITEMS,
+    listingItems: propListingItems,
     totalPages,
     onPaginationChange,
     variation,
@@ -122,6 +123,11 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
     content,
     intl,
   } = props;
+
+  const listingItems =
+    propListingItems && propListingItems.length > 0
+      ? propListingItems
+      : (props as any).items || propListingItems || EMPTY_ITEMS;
 
   let ListingBodyTemplate: React.ElementType | null = null;
   // Legacy support if template is present
@@ -149,35 +155,8 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
 
   const HeadlineTag = data.headlineTag || 'h2';
 
-  let rawBlockWidth =
-    data.blockWidth ||
-    data.styles?.blockWidth ||
-    data.styles?.['blockWidth:noprefix'];
-
-  // Extrai o valor caso esteja encapsulado num objeto (vindo do ButtonsWidget)
-  if (typeof rawBlockWidth === 'object' && rawBlockWidth !== null) {
-    rawBlockWidth =
-      rawBlockWidth['--block-width'] ||
-      rawBlockWidth.value ||
-      rawBlockWidth.id ||
-      Object.values(rawBlockWidth)[0];
-  }
-
-  // Faz o mapeamento das variáveis CSS para a string correspondente ('narrow', 'full', etc.)
-  if (typeof rawBlockWidth === 'string') {
-    if (rawBlockWidth === 'unset') rawBlockWidth = 'full';
-    else if (rawBlockWidth === 'var(--layout-container-width)')
-      rawBlockWidth = 'layout';
-    else if (rawBlockWidth === 'var(--narrow-container-width)')
-      rawBlockWidth = 'narrow';
-    else if (rawBlockWidth === 'var(--default-container-width)')
-      rawBlockWidth = 'default';
-  }
-
-  const blockWidthClass =
-    rawBlockWidth && typeof rawBlockWidth === 'string'
-      ? `has--block-width--${rawBlockWidth}`
-      : 'has--block-width--default';
+  const blockWidth = normalizeBlockWidth(data);
+  const blockWidthClass = `has--block-width--${blockWidth}`;
 
   const rawTheme = data.theme || data.styles?.theme || 'default';
   const theme =
@@ -215,10 +194,31 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
       frontColorGroup,
     });
 
+  const cardBorderWidth =
+    data['--cardBorderWidth'] || data.styles?.['--cardBorderWidth'];
+  const cardBorderColor =
+    data['--cardBorderColor'] || data.styles?.['--cardBorderColor'];
+
+  const mergedListingStyle = {
+    ...blockThemeStyle,
+    ...(cardBorderWidth
+      ? {
+          '--cardBorderWidth': cardBorderWidth,
+          '--theme-border-width': cardBorderWidth,
+        }
+      : {}),
+    ...(cardBorderColor
+      ? {
+          '--cardBorderColor': cardBorderColor,
+          '--theme-border-color': cardBorderColor,
+        }
+      : {}),
+  };
+
   return (
     <div
       className={cx('listing-block-container', blockThemeClass)}
-      style={blockThemeStyle}
+      style={mergedListingStyle}
     >
       {(data.headline || data.headlineButtonText) && (
         <Headline
@@ -227,12 +227,11 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
           listingItems={listingItems}
           data={data}
           isEditMode={isEditMode}
-          className={blockWidthClass}
         />
       )}
       <SlotRenderer name="aboveListingItems" content={content} data={data} />
       {listingItems?.length > 0 && ListingBodyTemplate ? (
-        <div ref={listingRef} className={cx('listing-body', blockWidthClass)}>
+        <div ref={listingRef} className="listing-body">
           <ListingBodyTemplate
             items={listingItems}
             isEditMode={isEditMode}

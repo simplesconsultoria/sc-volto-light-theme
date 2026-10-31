@@ -217,7 +217,9 @@ class TestThemeUtils:
             )
 
         def test_default_color_groups_exist_on_all_themes(self):
-            default_groups = themes.get_theme_color_groups(themes.DEFAULT_THEME_ID, self.registry)
+            default_groups = themes.get_theme_color_groups(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
             assert "primary" in default_groups
             assert "secondary" in default_groups
             assert "accent" in default_groups
@@ -249,7 +251,9 @@ class TestThemeUtils:
             assert natal_groups["vermelho"]["background_color_light"] == "#ff0000"
 
             # Default theme must automatically receive 'vermelho' with default fallback values
-            default_groups = themes.get_theme_color_groups(themes.DEFAULT_THEME_ID, self.registry)
+            default_groups = themes.get_theme_color_groups(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
             assert "vermelho" in default_groups
             assert default_groups["vermelho"]["name"] == "Vermelho"
             assert default_groups["vermelho"]["background_color_light"] == "#ffffff"
@@ -267,7 +271,9 @@ class TestThemeUtils:
             assert "destaque" in natal_bts
             assert natal_bts["destaque"]["back_color_group"] == "accent"
 
-            default_bts = themes.get_theme_block_themes(themes.DEFAULT_THEME_ID, self.registry)
+            default_bts = themes.get_theme_block_themes(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
             assert "destaque" in default_bts
             assert default_bts["destaque"]["back_color_group"] == "accent"
 
@@ -282,13 +288,21 @@ class TestThemeUtils:
 
         def test_cannot_delete_base_color_group(self):
             for bg in ("primary", "secondary", "accent", "neutral"):
-                with pytest.raises(ValueError, match="Base color group .* cannot be deleted"):
-                    themes.delete_color_group(themes.DEFAULT_THEME_ID, bg, registry=self.registry)
+                with pytest.raises(
+                    ValueError, match="Base color group .* cannot be deleted"
+                ):
+                    themes.delete_color_group(
+                        themes.DEFAULT_THEME_ID, bg, registry=self.registry
+                    )
 
         def test_cannot_delete_base_block_theme(self):
             for bt in ("default", "alternative"):
-                with pytest.raises(ValueError, match="Base block theme .* cannot be deleted"):
-                    themes.delete_block_theme(themes.DEFAULT_THEME_ID, bt, registry=self.registry)
+                with pytest.raises(
+                    ValueError, match="Base block theme .* cannot be deleted"
+                ):
+                    themes.delete_block_theme(
+                        themes.DEFAULT_THEME_ID, bt, registry=self.registry
+                    )
 
         def test_delete_custom_block_theme_cascades(self):
             custom_bt = {
@@ -298,12 +312,20 @@ class TestThemeUtils:
                 "front_color_group": "primary",
             }
             themes.create_block_theme("natal", custom_bt, registry=self.registry)
-            assert "promocional" in themes.get_theme_block_themes("natal", self.registry)
-            assert "promocional" in themes.get_theme_block_themes(themes.DEFAULT_THEME_ID, self.registry)
+            assert "promocional" in themes.get_theme_block_themes(
+                "natal", self.registry
+            )
+            assert "promocional" in themes.get_theme_block_themes(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
 
             themes.delete_block_theme("natal", "promocional", registry=self.registry)
-            assert "promocional" not in themes.get_theme_block_themes("natal", self.registry)
-            assert "promocional" not in themes.get_theme_block_themes(themes.DEFAULT_THEME_ID, self.registry)
+            assert "promocional" not in themes.get_theme_block_themes(
+                "natal", self.registry
+            )
+            assert "promocional" not in themes.get_theme_block_themes(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
 
         def test_delete_custom_color_group_cascades_and_reverts_block_themes(self):
             custom_group = {
@@ -331,18 +353,32 @@ class TestThemeUtils:
             themes.create_block_theme("natal", custom_bt, registry=self.registry)
 
             assert "roxo" in themes.get_theme_color_groups("natal", self.registry)
-            assert "roxo" in themes.get_theme_color_groups(themes.DEFAULT_THEME_ID, self.registry)
-            assert themes.get_theme_block_themes("natal", self.registry)["roxo-card"]["back_color_group"] == "roxo"
+            assert "roxo" in themes.get_theme_color_groups(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
+            assert (
+                themes.get_theme_block_themes("natal", self.registry)["roxo-card"][
+                    "back_color_group"
+                ]
+                == "roxo"
+            )
 
             # Delete 'roxo'
             themes.delete_color_group("natal", "roxo", registry=self.registry)
 
             # Verified deleted in both themes
             assert "roxo" not in themes.get_theme_color_groups("natal", self.registry)
-            assert "roxo" not in themes.get_theme_color_groups(themes.DEFAULT_THEME_ID, self.registry)
+            assert "roxo" not in themes.get_theme_color_groups(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
 
             # Block theme back_color_group must have reverted to 'primary'
-            assert themes.get_theme_block_themes("natal", self.registry)["roxo-card"]["back_color_group"] == "primary"
+            assert (
+                themes.get_theme_block_themes("natal", self.registry)["roxo-card"][
+                    "back_color_group"
+                ]
+                == "primary"
+            )
 
     def test_natal_theme_has_christmas_colors(self):
         natal_cgs = themes.default_color_groups_for_theme("natal")
@@ -351,6 +387,3 @@ class TestThemeUtils:
         natal_bts = themes.get_theme_block_themes("natal", self.registry)
         assert "alternative" in natal_bts
         assert "festivo" not in natal_bts
-
-
-

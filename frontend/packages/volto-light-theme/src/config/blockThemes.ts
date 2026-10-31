@@ -8,6 +8,8 @@
  * time, so the whole declaration is dropped. `theme/blockThemes.test.ts` guards it.
  */
 
+import type { ColorGroup, BlockTheme } from '../types/theme';
+
 export interface ThemeDefinition {
   style: Record<string, string>;
   name: string;
@@ -51,8 +53,6 @@ export function createThemeDefinition(
     label,
   };
 }
-
-import type { ColorGroup, BlockTheme } from '../types/theme';
 
 export const DEFAULT_COLOR_GROUPS: Record<string, ColorGroup> = {
   primary: {
@@ -299,7 +299,6 @@ export function resolveBlockTheme(
     ...(isCustom ? {} : baseStyle),
   } as React.CSSProperties;
 
-
   const classNames = [
     theme ? `has--theme--${theme}` : '',
     typeof theme === 'string' && theme.startsWith('custom-')
@@ -317,4 +316,3 @@ export function resolveBlockTheme(
     theme,
   };
 }
-

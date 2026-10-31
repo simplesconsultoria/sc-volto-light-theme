@@ -252,7 +252,6 @@ def default_color_groups_for_theme(theme_id: str, registry=None) -> dict:
     return {gid: dict(gdata) for gid, gdata in DEFAULT_COLOR_GROUPS.items()}
 
 
-
 def get_theme_color_groups(theme_id: str, registry=None) -> dict:
     """Get the mapping of ColorGroups for one theme."""
     registry = _registry(registry)
@@ -261,7 +260,9 @@ def get_theme_color_groups(theme_id: str, registry=None) -> dict:
         stored = registry[rec]
         if isinstance(stored, list):
             result = {
-                item["id"]: dict(item) for item in stored if isinstance(item, dict) and "id" in item
+                item["id"]: dict(item)
+                for item in stored
+                if isinstance(item, dict) and "id" in item
             }
         elif isinstance(stored, dict):
             # Ensure id property inside each dict
@@ -273,7 +274,9 @@ def get_theme_color_groups(theme_id: str, registry=None) -> dict:
                     result[k] = grp
         else:
             result = {}
-        base_defaults = NATAL_COLOR_GROUPS if theme_id == "natal" else DEFAULT_COLOR_GROUPS
+        base_defaults = (
+            NATAL_COLOR_GROUPS if theme_id == "natal" else DEFAULT_COLOR_GROUPS
+        )
         for base_id, base_data in base_defaults.items():
             if base_id not in result:
                 result[base_id] = dict(base_data)
@@ -289,7 +292,9 @@ def get_theme_block_themes(theme_id: str, registry=None) -> dict:
         stored = registry[rec]
         if isinstance(stored, list):
             result = {
-                item["id"]: dict(item) for item in stored if isinstance(item, dict) and "id" in item
+                item["id"]: dict(item)
+                for item in stored
+                if isinstance(item, dict) and "id" in item
             }
         elif isinstance(stored, dict):
             result = {}
@@ -300,7 +305,9 @@ def get_theme_block_themes(theme_id: str, registry=None) -> dict:
                     result[k] = bt
         else:
             result = {}
-        base_defaults = NATAL_BLOCK_THEMES if theme_id == "natal" else DEFAULT_BLOCK_THEMES
+        base_defaults = (
+            NATAL_BLOCK_THEMES if theme_id == "natal" else DEFAULT_BLOCK_THEMES
+        )
         for base_id, base_data in base_defaults.items():
             if base_id not in result:
                 result[base_id] = dict(base_data)
@@ -584,10 +591,7 @@ def theme_settings(theme_id: str, registry=None) -> dict:
     }
 
 
-
 def theme_title(theme_id: str, registry=None) -> str:
-
-
     """Human-readable title of a theme, falling back to its id.
 
     :param theme_id: the theme id.
@@ -723,7 +727,6 @@ def update_theme(theme_id: str, values: dict, registry=None) -> dict:
         sync_block_themes_across_themes(registry)
 
     return theme_values(theme_id, registry)
-
 
 
 def delete_theme(theme_id: str, registry=None) -> None:

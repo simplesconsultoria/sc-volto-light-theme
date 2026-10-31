@@ -1,0 +1,154 @@
+// =============================================================================
+// Introduction Block Styling — sc-volto-light-theme
+// Garante aplicação correta de largura (narrow, default, layout, full) e
+// neutralização completa de margens laterais quando contido em colunas e grids.
+// =============================================================================
+
+// Modo de visualização
+.block.introduction {
+  &.has--block-width--narrow {
+    .block-container {
+      @include apply-narrow-width;
+    }
+  }
+
+  &.has--block-width--default {
+    .block-container {
+      @include apply-default-width;
+    }
+  }
+
+  &.has--block-width--layout {
+    .block-container {
+      @include apply-layout-width;
+    }
+  }
+
+  &.has--block-width--full,
+  &.has--block-width--unset {
+    .block-container {
+      @include apply-full-width;
+    }
+  }
+}
+
+// Reset de margens e largura para Introduction dentro de colunas e containers
+// (CustomGrid, GridBlock, Accordion, etc.)
+.custom-grid-column,
+.block-column,
+.column,
+.contained {
+  .block.introduction,
+  &.block.introduction {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+
+    .block-container {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+  }
+}
+
+// Modo de edição (#page-edit e #page-add)
+#page-edit,
+#page-add {
+  .block-editor-introduction,
+  [class*='block-editor-introduction'] {
+    &:not(.contained):not(.column *):not(.custom-grid-column *) {
+      &.has--block-width--narrow {
+        &,
+        .slate-editor,
+        .text-slate-editor-inner {
+          @include narrow-container-width();
+          @include adjustMarginsToEditContainer($narrow-container-width);
+          width: 100%;
+          max-width: var(--narrow-container-width) !important;
+          margin-right: auto;
+          margin-left: auto;
+        }
+      }
+
+      &.has--block-width--default {
+        &,
+        .slate-editor,
+        .text-slate-editor-inner {
+          @include default-container-width();
+          @include adjustMarginsToEditContainer($default-container-width);
+          width: 100%;
+          max-width: var(--default-container-width) !important;
+          margin-right: auto;
+          margin-left: auto;
+        }
+      }
+
+      &.has--block-width--layout {
+        &,
+        .slate-editor,
+        .text-slate-editor-inner {
+          @include layout-container-width();
+          @include adjustMarginsToEditContainer($layout-container-width);
+          width: 100%;
+          max-width: var(--layout-container-width) !important;
+          margin-right: auto;
+          margin-left: auto;
+        }
+      }
+
+      &.has--block-width--full,
+      &.has--block-width--unset {
+        &,
+        .slate-editor,
+        .text-slate-editor-inner {
+          @include adjustEditContainerFullWidth();
+          width: 100% !important;
+          max-width: 100% !important;
+          margin-right: auto;
+          margin-left: auto;
+        }
+      }
+    }
+  }
+
+  // Reset total no modo de edição dentro de colunas e containers (customGrid, etc.)
+  .custom-grid-column,
+  .block-column,
+  .column,
+  .contained {
+    .block-editor-introduction,
+    [class*='block-editor-introduction'] {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+
+      .slate-editor,
+      .text-slate-editor-inner,
+      .block.introduction .slate-editor {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+    }
+
+    // Neutraliza qualquer container query que injete margens laterais no edit mode
+    @container (max-width: 1920px) {
+      &,
+      .block-editor-introduction,
+      [class*='block-editor-introduction'],
+      .slate-editor,
+      .block.introduction .slate-editor,
+      .text-slate-editor-inner {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+    }
+  }
+}

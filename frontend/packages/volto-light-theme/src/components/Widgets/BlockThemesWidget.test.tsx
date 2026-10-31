@@ -72,7 +72,7 @@ describe('BlockThemesWidget', () => {
 
   it('allows deleting a custom block theme but not base themes', () => {
     const onChange = vi.fn();
-    const { getByTitle, queryAllByTitle } = render(
+    const { queryAllByTitle } = render(
       <BlockThemesWidget
         id="block_themes"
         value={{

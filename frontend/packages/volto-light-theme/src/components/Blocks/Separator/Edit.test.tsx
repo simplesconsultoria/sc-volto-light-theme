@@ -30,6 +30,9 @@ describe('Separator Edit', () => {
         block="123"
         selected={true}
         properties={{}}
+        intl={{
+          formatMessage: ({ defaultMessage }: any) => defaultMessage,
+        }}
       />,
     );
     expect(getByText('View')).toBeInTheDocument();

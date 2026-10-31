@@ -1,33 +1,5 @@
 #page-document .block.eventMetadata,
 #page-edit .block.eventMetadata {
-  &.has--block-width--narrow {
-    width: 100%;
-    max-width: var(--narrow-container-width) !important;
-    margin-right: auto;
-    margin-left: auto;
-  }
-
-  &.has--block-width--layout {
-    width: 100%;
-    max-width: var(--layout-container-width) !important;
-    margin-right: auto;
-    margin-left: auto;
-  }
-
-  &.has--block-width--default {
-    width: 100%;
-    max-width: var(--default-container-width) !important;
-    margin-right: auto;
-    margin-left: auto;
-  }
-
-  &.has--block-width--full {
-    width: 100%;
-    max-width: 100% !important;
-    margin-right: auto;
-    margin-left: auto;
-  }
-
   .event-metadata-inner {
     display: grid;
     padding-top: $block-vertical-space;

@@ -1,0 +1,67 @@
+// =============================================================================
+// Separator Block Styling — sc-volto-light-theme
+// Garante aplicação correta de largura (narrow, default, layout, full),
+// funcionamento do adjustMarginsToContainer e neutralização em colunas.
+// =============================================================================
+
+.block.separator {
+  box-sizing: border-box;
+  padding-top: $spacing-medium;
+  padding-bottom: $spacing-medium;
+
+  hr {
+    height: 0;
+    box-sizing: border-box;
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+// Reset para Separator dentro de colunas e containers
+.custom-grid-column,
+.block-column,
+.column,
+.contained {
+  .block.separator,
+  &.block.separator {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+}
+
+#page-edit,
+#page-add {
+  .block-editor-separator {
+    .block.separator {
+      padding-top: $spacing-small;
+      padding-bottom: $spacing-small;
+    }
+  }
+
+  .custom-grid-column,
+  .block-column,
+  .column,
+  .contained {
+    .block-editor-separator,
+    [class*='block-editor-separator'] {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    @container (max-width: 1920px) {
+      &,
+      .block-editor-separator,
+      [class*='block-editor-separator'] {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+    }
+  }
+}

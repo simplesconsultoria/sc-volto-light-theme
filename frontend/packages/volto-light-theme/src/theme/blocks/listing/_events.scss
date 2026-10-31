@@ -1,31 +1,70 @@
 // =============================================================================
 // Listing Events Variation
 // Lista vertical de eventos com data destacada, titulo e badge de acao.
-// Responsivo: empilha em mobile com data horizontal no topo do item.
+// Suporte completo ao novo sistema de temas (ground / foreground / accent)
+// e adaptacao fluida para containers estreitos / grids (compact mode via
+// container queries e media queries).
 // =============================================================================
 
 &.events {
+  container-type: inline-size;
+  font-family: var(--colorgroup-back-font, inherit);
+
   .events-listing-wrapper {
     display: flex;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     flex-direction: column;
     padding: $spacing-large 0;
+    container-type: inline-size;
 
     .events-listing {
       display: flex;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
       flex-direction: column;
     }
 
     .event-listing-item {
       display: flex;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
       flex-direction: row;
       align-items: center;
       padding: 1.5rem 0;
-      border-bottom: 1px solid var(--theme-top-foreground-color);
+      border-bottom: 1px solid
+        var(
+          --theme-border-color,
+          color-mix(
+            in srgb,
+            var(--theme-foreground-color, currentColor) 20%,
+            transparent
+          )
+        );
       gap: 1.5rem;
       transition: background-color 0.2s ease;
 
       &:first-child {
-        border-top: 1px solid var(--theme-top-foreground-color);
+        border-top: 1px solid
+          var(
+            --theme-border-color,
+            color-mix(
+              in srgb,
+              var(--theme-foreground-color, currentColor) 20%,
+              transparent
+            )
+          );
+      }
+
+      &:hover {
+        background-color: color-mix(
+          in srgb,
+          var(--theme-foreground-color, currentColor) 4%,
+          transparent
+        );
       }
 
       .event-date-block {
@@ -36,11 +75,11 @@
         align-items: flex-start;
         justify-content: center;
         padding-left: 1rem;
-        border-left: 4px solid var(--theme-top-accent-color);
-        color: var(--theme-top-foreground-color);
+        border-left: 4px solid var(--theme-foreground-accent-color);
+        color: var(--theme-foreground-color);
 
         .event-day {
-          color: var(--theme-top-foreground-color);
+          color: var(--theme-foreground-color);
           font-size: 2rem;
           font-weight: 800;
           line-height: 1.1;
@@ -48,89 +87,351 @@
 
         .event-month {
           margin-top: 2px;
-          color: var(--theme-top-foreground-color);
+          color: var(--theme-foreground-accent-color);
           font-size: 0.9rem;
           font-weight: 700;
           text-transform: uppercase;
+        }
+
+        .event-end-date {
+          margin-top: 4px;
+          color: var(--theme-low-contrast-foreground-color);
+          font-size: 0.75rem;
         }
       }
 
       .event-content {
         display: flex;
+        min-width: 0;
         flex-direction: column;
         flex-grow: 1;
         justify-content: center;
 
         .event-title {
           margin: 0 0 0.25rem 0;
-          color: var(--theme-top-foreground-color);
+          color: var(--theme-foreground-color);
+          font-family: var(--colorgroup-back-font, inherit);
           font-size: 1.25rem;
           font-weight: 700;
           line-height: 1.3;
+          overflow-wrap: anywhere;
           transition: color 0.2s ease;
+          word-break: break-word;
 
-          &:hover {
-            color: var(--theme-top-accent-color);
+          a {
+            color: inherit;
+            text-decoration: none;
           }
+
+          &:hover,
+          a:hover {
+            color: var(--theme-foreground-accent-color);
+          }
+        }
+
+        .event-body {
+          margin-top: 0.5rem;
         }
 
         .event-description {
           display: -webkit-box;
           overflow: hidden;
-          margin-bottom: 0;
+          margin-bottom: 0.5rem;
           -webkit-box-orient: vertical;
-          color: var(--theme-top-low-contrast-foreground-color);
+          color: var(--theme-low-contrast-foreground-color);
           font-size: 0.95rem;
           -webkit-line-clamp: 2;
           line-clamp: 2;
           line-height: 1.5;
+          overflow-wrap: anywhere;
+          word-break: break-word;
+        }
+
+        .event-details {
+          display: flex;
+          flex-wrap: wrap;
+          color: var(--theme-low-contrast-foreground-color);
+          font-size: 0.875rem;
+          gap: 1rem;
+
+          .event-time,
+          .event-location {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            svg {
+              flex-shrink: 0;
+              margin-right: 2px;
+              stroke: currentColor;
+            }
+          }
         }
       }
 
       .event-actions {
         display: flex;
         min-width: 120px;
+        flex-shrink: 0;
         align-items: center;
         justify-content: flex-end;
 
         .event-label {
           display: inline-block;
           padding: 0.35rem 1rem;
-          background: var(--theme-top-accent-color);
-          color: var(--theme-color);
+          border-radius: 2px;
+          background-color: var(--theme-foreground-accent-color);
+          color: var(--theme-color, #ffffff);
           font-size: 0.8rem;
           font-weight: 600;
+          text-align: center;
+          white-space: nowrap;
         }
       }
 
-      @media (max-width: 640px) {
+      // -----------------------------------------------------------------------
+      // Layout Compacto direto em Colunas de Grid e no Bloco de Grid
+      // -----------------------------------------------------------------------
+      :is(
+          .two.grid-items,
+          .three.grid-items,
+          .four.grid-items,
+          .block.gridBlock:not(.one),
+          .custom-grid:not(.layout-1),
+          .customGrid:not(.layout-1),
+          .column,
+          .custom-grid-column
+        )
+        & {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
+        padding: 1.25rem 0;
+        gap: 0.75rem;
 
         .event-date-block {
           width: 100%;
           flex-direction: row;
           align-items: baseline;
-          padding-bottom: 0.5rem;
-          padding-left: 0;
-          border-bottom: 4px solid var(--theme-top-accent-color);
-          border-left: none;
-          gap: 0.5rem;
+          padding-bottom: 0.25rem;
+          padding-left: 0.75rem;
+          border-bottom: none;
+          border-left: 3px solid var(--theme-foreground-accent-color);
+          gap: 0.4rem;
 
           .event-day {
             font-size: 1.5rem;
+            line-height: 1;
           }
 
           .event-month {
             margin-top: 0;
-            font-size: 1rem;
+            font-size: 0.9rem;
+          }
+
+          .event-end-date {
+            margin-top: 0;
+            margin-left: 0.25rem;
+          }
+        }
+
+        .event-content {
+          width: 100%;
+
+          .event-title {
+            font-size: 1.1rem;
+          }
+
+          .event-details {
+            gap: 0.5rem;
           }
         }
 
         .event-actions {
           width: 100%;
+          min-width: unset;
           justify-content: flex-start;
+
+          .event-label {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+          }
+        }
+      }
+
+      // -----------------------------------------------------------------------
+      // Layout Compacto (Container Query: <= 640px ou Grids em colunas medias)
+      // -----------------------------------------------------------------------
+      @container (max-width: 640px) {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.25rem 0;
+        gap: 0.75rem;
+
+        .event-date-block {
+          width: 100%;
+          flex-direction: row;
+          align-items: baseline;
+          padding-bottom: 0.25rem;
+          padding-left: 0.75rem;
+          border-bottom: none;
+          border-left: 3px solid var(--theme-foreground-accent-color);
+          gap: 0.4rem;
+
+          .event-day {
+            font-size: 1.5rem;
+            line-height: 1;
+          }
+
+          .event-month {
+            margin-top: 0;
+            font-size: 0.9rem;
+          }
+
+          .event-end-date {
+            margin-top: 0;
+            margin-left: 0.25rem;
+          }
+        }
+
+        .event-content {
+          width: 100%;
+
+          .event-title {
+            font-size: 1.1rem;
+          }
+
+          .event-details {
+            gap: 0.5rem;
+          }
+        }
+
+        .event-actions {
+          width: 100%;
+          min-width: unset;
+          justify-content: flex-start;
+
+          .event-label {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+          }
+        }
+      }
+
+      // -----------------------------------------------------------------------
+      // Layout Extra-Compacto (Container Query: <= 320px, ex: coluna 20% grid)
+      // -----------------------------------------------------------------------
+      @container (max-width: 320px) {
+        padding: 0.75rem 0;
+        gap: 0.5rem;
+
+        .event-date-block {
+          padding-left: 0.5rem;
+          border-left-width: 3px;
+          gap: 0.3rem;
+
+          .event-day {
+            font-size: 1.25rem;
+          }
+
+          .event-month {
+            font-size: 0.8rem;
+          }
+
+          .event-end-date {
+            display: none;
+          }
+        }
+
+        .event-content {
+          .event-title {
+            font-size: 0.95rem;
+            line-height: 1.25;
+          }
+
+          .event-body {
+            margin-top: 0.25rem;
+          }
+
+          .event-description {
+            display: none; // Oculta descricao longa em colunas muito estreitas
+          }
+
+          .event-details {
+            flex-direction: column;
+            font-size: 0.75rem;
+            gap: 0.25rem;
+
+            .event-time,
+            .event-location {
+              font-size: 0.75rem;
+            }
+          }
+        }
+
+        .event-actions {
+          .event-label {
+            padding: 0.15rem 0.5rem;
+            font-size: 0.7rem;
+          }
+        }
+      }
+
+      // -----------------------------------------------------------------------
+      // Fallback para Telas Pequenas (Media Query: <= 640px)
+      // -----------------------------------------------------------------------
+      @media (max-width: 640px) {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.25rem 0;
+        gap: 0.75rem;
+
+        .event-date-block {
+          width: 100%;
+          flex-direction: row;
+          align-items: baseline;
+          padding-bottom: 0.25rem;
+          padding-left: 0.75rem;
+          border-bottom: none;
+          border-left: 3px solid var(--theme-foreground-accent-color);
+          gap: 0.4rem;
+
+          .event-day {
+            font-size: 1.5rem;
+            line-height: 1;
+          }
+
+          .event-month {
+            margin-top: 0;
+            font-size: 0.9rem;
+          }
+
+          .event-end-date {
+            margin-top: 0;
+            margin-left: 0.25rem;
+          }
+        }
+
+        .event-content {
+          width: 100%;
+
+          .event-title {
+            font-size: 1.1rem;
+          }
+
+          .event-details {
+            gap: 0.5rem;
+          }
+        }
+
+        .event-actions {
+          width: 100%;
+          min-width: unset;
+          justify-content: flex-start;
+
+          .event-label {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+          }
         }
       }
     }
@@ -143,7 +444,7 @@
       a {
         display: inline-flex;
         align-items: center;
-        color: var(--theme-top-accent-color);
+        color: var(--theme-foreground-accent-color);
         font-weight: 600;
         text-decoration: none;
         transition: all 0.2s ease;
@@ -151,6 +452,132 @@
         &:hover {
           text-decoration: underline;
         }
+      }
+    }
+  }
+
+  // Listing Headline Wrapper quando container e muito estreito
+  @container (max-width: 320px) {
+    .listing-headline-wrapper {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+      gap: 0.5rem;
+
+      .headline.block-title {
+        font-size: 1.25rem;
+      }
+
+      .ui.button.listing-headline-button {
+        align-self: flex-start;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Adaptadores Diretos para Colunas de Custom Grid e Grid Block
+// =============================================================================
+:is(.custom-grid-column, .column) .block.listing.events {
+  .event-listing-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 1.25rem 0 !important;
+    gap: 0.75rem !important;
+
+    .event-date-block {
+      width: 100% !important;
+      flex-direction: row !important;
+      align-items: baseline !important;
+      padding-bottom: 0.25rem !important;
+      padding-left: 0.75rem !important;
+      border-bottom: none !important;
+      border-left: 3px solid var(--theme-foreground-accent-color) !important;
+      gap: 0.4rem !important;
+
+      .event-day {
+        font-size: 1.5rem !important;
+        line-height: 1 !important;
+      }
+
+      .event-month {
+        margin-top: 0 !important;
+        font-size: 0.9rem !important;
+      }
+    }
+
+    .event-content {
+      width: 100% !important;
+
+      .event-title {
+        font-size: 1.1rem !important;
+      }
+    }
+
+    .event-actions {
+      width: 100% !important;
+      min-width: unset !important;
+      justify-content: flex-start !important;
+
+      .event-label {
+        padding: 0.25rem 0.75rem !important;
+        font-size: 0.75rem !important;
+      }
+    }
+  }
+}
+
+:is(
+    .layout-1-4 .custom-grid-column:first-child,
+    .layout-4-1 .custom-grid-column:last-child,
+    .layout-1-3 .custom-grid-column:first-child,
+    .layout-3-1 .custom-grid-column:last-child,
+    .layout-1-1-1 .custom-grid-column,
+    .layout-1-1-1-1 .custom-grid-column,
+    .layout-1-2-1 .custom-grid-column,
+    .block.gridBlock.three.columns .column,
+    .block.gridBlock.four.columns .column
+  )
+  .block.listing.events {
+  .event-listing-item {
+    padding: 0.75rem 0 !important;
+    gap: 0.4rem !important;
+
+    .event-date-block {
+      .event-day {
+        font-size: 1.2rem !important;
+      }
+
+      .event-month {
+        font-size: 0.8rem !important;
+      }
+
+      .event-end-date {
+        display: none !important;
+      }
+    }
+
+    .event-content {
+      .event-title {
+        font-size: 0.95rem !important;
+        line-height: 1.25 !important;
+      }
+
+      .event-description {
+        display: none !important;
+      }
+
+      .event-details {
+        flex-direction: column !important;
+        font-size: 0.75rem !important;
+        gap: 0.25rem !important;
+      }
+    }
+
+    .event-actions {
+      .event-label {
+        padding: 0.15rem 0.5rem !important;
+        font-size: 0.7rem !important;
       }
     }
   }

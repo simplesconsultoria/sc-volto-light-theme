@@ -6,35 +6,32 @@
 
 .listing-headline-wrapper {
   display: flex;
+  width: auto;
+  max-width: 100% !important;
   align-items: flex-end;
+  align-self: stretch;
   justify-content: space-between;
+  margin-right: 0 !important;
   margin-bottom: 1.5rem;
+  margin-left: 0 !important;
 
   gap: 1rem;
-  &.has--block-width--narrow {
-    @include narrow-container-width();
-    @include adjustMarginsToContainer($narrow-container-width);
-  }
-  &.has--block-width--default {
-    @include default-container-width();
-    @include adjustMarginsToContainer($default-container-width);
-  }
-  &.has--block-width--layout {
-    @include layout-container-width();
-    @include adjustMarginsToContainer($layout-container-width);
-  }
-  &.has--block-width--full,
-  &.has--block-width--unset {
-    @include layout-container-width(); // Default padding
-    max-width: 100% !important;
-  }
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
   .headline,
-  .headline h2.headline {
+  h2.headline,
+  h2.block-title,
+  .block-title {
     margin: 0 !important;
     color: var(--theme-foreground-color, inherit);
     font-family: var(--colorgroup-back-font, inherit);
@@ -55,6 +52,32 @@
           var(--theme-foreground-accent-color) 80%,
           var(--theme-color)
         ) !important;
+      }
+    }
+  }
+}
+
+// Sobrescreve especificidade alta do kitconcept no accordion (.content h2, .content h3)
+.accordion-block,
+.block-editor-accordion {
+  .ui.styled.accordion .content {
+    .listing-headline-wrapper,
+    .listing-block-container .listing-headline-wrapper {
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      .headline,
+      h2.headline,
+      h2.block-title,
+      .block-title {
+        margin: 0 !important;
+        margin-top: 0 !important;
+        margin-right: 0 !important;
+        margin-bottom: 0 !important;
+        margin-left: 0 !important;
       }
     }
   }

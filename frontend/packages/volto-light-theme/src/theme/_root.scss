@@ -136,17 +136,47 @@
 
   // Block theme: Default
   // Ground
-  --block-theme-default-bg: var(--colorgroup-primary-bg, var(--primary-color, #ffffff));
-  --block-theme-default-text: var(--colorgroup-primary-text, var(--primary-foreground-color, #000000));
-  --block-theme-default-high-contrast: var(--colorgroup-primary-text, var(--primary-foreground-color, #000000));
-  --block-theme-default-low-contrast: var(--colorgroup-primary-subtext, var(--primary-low-foreground-color, #333333));
-  --block-theme-default-accent-color: var(--colorgroup-primary-accent, var(--primary-accent-color, #b55e1c));
+  --block-theme-default-bg: var(
+    --colorgroup-primary-bg,
+    var(--primary-color, #ffffff)
+  );
+  --block-theme-default-text: var(
+    --colorgroup-primary-text,
+    var(--primary-foreground-color, #000000)
+  );
+  --block-theme-default-high-contrast: var(
+    --colorgroup-primary-text,
+    var(--primary-foreground-color, #000000)
+  );
+  --block-theme-default-low-contrast: var(
+    --colorgroup-primary-subtext,
+    var(--primary-low-foreground-color, #333333)
+  );
+  --block-theme-default-accent-color: var(
+    --colorgroup-primary-accent,
+    var(--primary-accent-color, #b55e1c)
+  );
   // High Ground
-  --block-theme-default-high-bg: var(--colorgroup-neutral-bg, var(--neutral-color, #edeff0));
-  --block-theme-default-top-text: var(--colorgroup-neutral-text, var(--neutral-foreground-color, #000000));
-  --block-theme-default-top-high-contrast: var(--colorgroup-neutral-text, var(--neutral-foreground-color, #000000));
-  --block-theme-default-top-low-contrast: var(--colorgroup-neutral-subtext, var(--neutral-low-foreground-color, #333333));
-  --block-theme-default-top-accent-color: var(--colorgroup-neutral-accent, var(--neutral-accent-color, #f4822c));
+  --block-theme-default-high-bg: var(
+    --colorgroup-neutral-bg,
+    var(--neutral-color, #edeff0)
+  );
+  --block-theme-default-top-text: var(
+    --colorgroup-neutral-text,
+    var(--neutral-foreground-color, #000000)
+  );
+  --block-theme-default-top-high-contrast: var(
+    --colorgroup-neutral-text,
+    var(--neutral-foreground-color, #000000)
+  );
+  --block-theme-default-top-low-contrast: var(
+    --colorgroup-neutral-subtext,
+    var(--neutral-low-foreground-color, #333333)
+  );
+  --block-theme-default-top-accent-color: var(
+    --colorgroup-neutral-accent,
+    var(--neutral-accent-color, #f4822c)
+  );
   // Border
   --block-theme-default-border: var(--accent-color);
   --block-theme-default-border-width: 4px 0 0;
@@ -156,17 +186,47 @@
 
   // Block theme: Alternative (formerly Brand)
   // Ground
-  --block-theme-alternative-bg: var(--colorgroup-accent-bg, var(--accent-color, #f4822c));
-  --block-theme-alternative-text: var(--colorgroup-accent-text, var(--accent-foreground-color, #000000));
-  --block-theme-alternative-high-contrast: var(--colorgroup-accent-text, var(--accent-foreground-color, #000000));
-  --block-theme-alternative-low-contrast: var(--colorgroup-accent-subtext, var(--accent-low-foreground-color, #333333));
-  --block-theme-alternative-accent-color: var(--colorgroup-accent-accent, var(--accent-accent-color, #000000));
+  --block-theme-alternative-bg: var(
+    --colorgroup-accent-bg,
+    var(--accent-color, #f4822c)
+  );
+  --block-theme-alternative-text: var(
+    --colorgroup-accent-text,
+    var(--accent-foreground-color, #000000)
+  );
+  --block-theme-alternative-high-contrast: var(
+    --colorgroup-accent-text,
+    var(--accent-foreground-color, #000000)
+  );
+  --block-theme-alternative-low-contrast: var(
+    --colorgroup-accent-subtext,
+    var(--accent-low-foreground-color, #333333)
+  );
+  --block-theme-alternative-accent-color: var(
+    --colorgroup-accent-accent,
+    var(--accent-accent-color, #000000)
+  );
   // High Ground
-  --block-theme-alternative-high-bg: var(--colorgroup-primary-bg, var(--primary-color, #ffffff));
-  --block-theme-alternative-top-text: var(--colorgroup-primary-text, var(--primary-foreground-color, #000000));
-  --block-theme-alternative-top-high-contrast: var(--colorgroup-primary-text, var(--primary-foreground-color, #000000));
-  --block-theme-alternative-top-low-contrast: var(--colorgroup-primary-subtext, var(--primary-low-foreground-color, #333333));
-  --block-theme-alternative-top-accent-color: var(--colorgroup-primary-accent, var(--primary-accent-color, #b55e1c));
+  --block-theme-alternative-high-bg: var(
+    --colorgroup-primary-bg,
+    var(--primary-color, #ffffff)
+  );
+  --block-theme-alternative-top-text: var(
+    --colorgroup-primary-text,
+    var(--primary-foreground-color, #000000)
+  );
+  --block-theme-alternative-top-high-contrast: var(
+    --colorgroup-primary-text,
+    var(--primary-foreground-color, #000000)
+  );
+  --block-theme-alternative-top-low-contrast: var(
+    --colorgroup-primary-subtext,
+    var(--primary-low-foreground-color, #333333)
+  );
+  --block-theme-alternative-top-accent-color: var(
+    --colorgroup-primary-accent,
+    var(--primary-accent-color, #b55e1c)
+  );
   // Border
   --block-theme-alternative-border: unset;
   --block-theme-alternative-border-width: 0;
@@ -177,18 +237,30 @@
   // Backward compatibility alias: Brand
   --block-theme-brand-bg: var(--block-theme-alternative-bg);
   --block-theme-brand-text: var(--block-theme-alternative-text);
-  --block-theme-brand-high-contrast: var(--block-theme-alternative-high-contrast);
+  --block-theme-brand-high-contrast: var(
+    --block-theme-alternative-high-contrast
+  );
   --block-theme-brand-low-contrast: var(--block-theme-alternative-low-contrast);
   --block-theme-brand-accent-color: var(--block-theme-alternative-accent-color);
   --block-theme-brand-high-bg: var(--block-theme-alternative-high-bg);
   --block-theme-brand-top-text: var(--block-theme-alternative-top-text);
-  --block-theme-brand-top-high-contrast: var(--block-theme-alternative-top-high-contrast);
-  --block-theme-brand-top-low-contrast: var(--block-theme-alternative-top-low-contrast);
-  --block-theme-brand-top-accent-color: var(--block-theme-alternative-top-accent-color);
+  --block-theme-brand-top-high-contrast: var(
+    --block-theme-alternative-top-high-contrast
+  );
+  --block-theme-brand-top-low-contrast: var(
+    --block-theme-alternative-top-low-contrast
+  );
+  --block-theme-brand-top-accent-color: var(
+    --block-theme-alternative-top-accent-color
+  );
   --block-theme-brand-border: var(--block-theme-alternative-border);
   --block-theme-brand-border-width: var(--block-theme-alternative-border-width);
-  --block-theme-brand-pattern-image: var(--block-theme-alternative-pattern-image);
-  --block-theme-brand-pattern-opacity: var(--block-theme-alternative-pattern-opacity);
+  --block-theme-brand-pattern-image: var(
+    --block-theme-alternative-pattern-image
+  );
+  --block-theme-brand-pattern-opacity: var(
+    --block-theme-alternative-pattern-opacity
+  );
 
   // ColorGroup tokens (primary, secondary, accent, neutral)
   --colorgroup-primary-bg: var(--primary-color);
@@ -255,7 +327,9 @@
   --theme-high-contrast-color: var(--colorgroup-secondary-bg);
   --theme-top-foreground-color: var(--colorgroup-secondary-text);
   --theme-top-high-contrast-foreground-color: var(--colorgroup-secondary-text);
-  --theme-top-low-contrast-foreground-color: var(--colorgroup-secondary-subtext);
+  --theme-top-low-contrast-foreground-color: var(
+    --colorgroup-secondary-subtext
+  );
   --theme-top-accent-color: var(--colorgroup-secondary-accent);
   --colorgroup-front-font: var(--colorgroup-secondary-font-family, inherit);
 }
@@ -298,23 +372,64 @@
 @each $back in (primary, secondary, accent, neutral) {
   @each $front in (primary, secondary, accent, neutral) {
     .blocks-group-wrapper.custom-#{$back}-#{$front} {
-      --theme-color: var(--colorgroup-#{$back}-bg, var(--#{$back}-color, var(--primary-color))) !important;
-      --theme-foreground-color: var(--colorgroup-#{$back}-text, var(--#{$back}-foreground-color, var(--primary-foreground-color))) !important;
-      --theme-high-contrast-foreground-color: var(--colorgroup-#{$back}-text, var(--#{$back}-foreground-color, var(--primary-foreground-color))) !important;
-      --theme-low-contrast-foreground-color: var(--colorgroup-#{$back}-subtext, var(--#{$back}-low-foreground-color, var(--primary-low-foreground-color))) !important;
-      --theme-foreground-accent-color: var(--colorgroup-#{$back}-accent, var(--#{$back}-accent-color, var(--primary-accent-color))) !important;
-      --colorgroup-back-font: var(--colorgroup-#{$back}-font-family, inherit) !important;
+      --theme-color: var(
+        --colorgroup-#{$back}-bg,
+        var(--#{$back}-color, var(--primary-color))
+      ) !important;
+      --theme-foreground-color: var(
+        --colorgroup-#{$back}-text,
+        var(--#{$back}-foreground-color, var(--primary-foreground-color))
+      ) !important;
+      --theme-high-contrast-foreground-color: var(
+        --colorgroup-#{$back}-text,
+        var(--#{$back}-foreground-color, var(--primary-foreground-color))
+      ) !important;
+      --theme-low-contrast-foreground-color: var(
+        --colorgroup-#{$back}-subtext,
+        var(
+          --#{$back}-low-foreground-color,
+          var(--primary-low-foreground-color)
+        )
+      ) !important;
+      --theme-foreground-accent-color: var(
+        --colorgroup-#{$back}-accent,
+        var(--#{$back}-accent-color, var(--primary-accent-color))
+      ) !important;
+      --colorgroup-back-font: var(
+        --colorgroup-#{$back}-font-family,
+        inherit
+      ) !important;
 
-      --theme-high-contrast-color: var(--colorgroup-#{$front}-bg, var(--#{$front}-color, var(--neutral-color))) !important;
-      --theme-top-foreground-color: var(--colorgroup-#{$front}-text, var(--#{$front}-foreground-color, var(--neutral-foreground-color))) !important;
-      --theme-top-high-contrast-foreground-color: var(--colorgroup-#{$front}-text, var(--#{$front}-foreground-color, var(--neutral-foreground-color))) !important;
-      --theme-top-low-contrast-foreground-color: var(--colorgroup-#{$front}-subtext, var(--#{$front}-low-foreground-color, var(--neutral-low-foreground-color))) !important;
-      --theme-top-accent-color: var(--colorgroup-#{$front}-accent, var(--#{$front}-accent-color, var(--neutral-accent-color))) !important;
-      --colorgroup-front-font: var(--colorgroup-#{$front}-font-family, inherit) !important;
+      --theme-high-contrast-color: var(
+        --colorgroup-#{$front}-bg,
+        var(--#{$front}-color, var(--neutral-color))
+      ) !important;
+      --theme-top-foreground-color: var(
+        --colorgroup-#{$front}-text,
+        var(--#{$front}-foreground-color, var(--neutral-foreground-color))
+      ) !important;
+      --theme-top-high-contrast-foreground-color: var(
+        --colorgroup-#{$front}-text,
+        var(--#{$front}-foreground-color, var(--neutral-foreground-color))
+      ) !important;
+      --theme-top-low-contrast-foreground-color: var(
+        --colorgroup-#{$front}-subtext,
+        var(
+          --#{$front}-low-foreground-color,
+          var(--neutral-low-foreground-color)
+        )
+      ) !important;
+      --theme-top-accent-color: var(
+        --colorgroup-#{$front}-accent,
+        var(--#{$front}-accent-color, var(--neutral-accent-color))
+      ) !important;
+      --colorgroup-front-font: var(
+        --colorgroup-#{$front}-font-family,
+        inherit
+      ) !important;
     }
   }
 }
-
 
 [data-theme='light'] {
   color-scheme: light;

@@ -1,6 +1,790 @@
-.block.eventCalendar {
+// =============================================================================
+// Event Calendar Block
+// Bloco de calendário e busca de eventos (@kitconcept/volto-calendar-block).
+// Suporte ao sistema de temas (ground / foreground / accent) e adaptação
+// responsiva fluida dentro de containers estreitos e colunas de Custom Grid
+// ("versão para div pequena de tamanho").
+// =============================================================================
+
+.block.eventCalendar,
+.block.eventsearch,
+.search-block-event {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  color: var(--theme-foreground-color, inherit);
+  container-type: inline-size;
+  font-family: var(--colorgroup-back-font, inherit);
+
+  .first-row,
+  .react-aria-DateRangePicker,
+  .react-aria-DateRangePicker .react-aria-Group,
+  .search-wrapper,
+  .search-filters-sort,
+  .template-container,
+  .card-listing,
+  .card-inner,
+  .card-summary {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  // ---------------------------------------------------------------------------
+  // 1. Integração com o Sistema de Temas
+  // ---------------------------------------------------------------------------
+
+  // Círculo de Data (.date-inset)
   .date-inset {
-    border: 4px solid var(--theme-border-color);
-    color: var(--theme-top-foreground-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid
+      var(--theme-foreground-accent-color, var(--primary-accent-color, #f4822c)) !important;
+    border-radius: 50% !important;
+    background-color: var(--theme-high-contrast-color, #ffffff) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    color: var(
+      --theme-top-foreground-color,
+      var(--theme-foreground-color, #000000)
+    ) !important;
+    transition: all 0.2s ease;
+
+    .day {
+      color: var(
+        --theme-top-foreground-color,
+        var(--theme-foreground-color, #000000)
+      );
+      font-weight: 700;
+    }
+
+    .month {
+      color: var(
+        --theme-top-accent-color,
+        var(--theme-foreground-accent-color, #f4822c)
+      );
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .separator {
+      background: color-mix(
+        in srgb,
+        var(--theme-top-foreground-color, #000000) 25%,
+        transparent
+      ) !important;
+    }
+  }
+
+  // Card do Evento
+  .card-listing {
+    .card-inner {
+      gap: 20px;
+    }
+
+    .card-summary {
+      border-bottom: 1px solid
+        var(
+          --theme-border-color,
+          color-mix(
+            in srgb,
+            var(--theme-foreground-color, currentColor) 20%,
+            transparent
+          )
+        ) !important;
+
+      .headline.calendar {
+        color: var(--theme-low-contrast-foreground-color, #666666);
+      }
+
+      h2,
+      .title {
+        color: var(--theme-foreground-color, inherit) !important;
+
+        a {
+          color: inherit;
+          text-decoration: none;
+
+          &:hover {
+            color: var(
+              --theme-foreground-accent-color,
+              var(--primary-accent-color)
+            );
+          }
+        }
+      }
+
+      .description {
+        color: var(--theme-low-contrast-foreground-color, #666666);
+      }
+    }
+  }
+
+  // Controles de Busca e Filtros
+  .search-block-event {
+    color: var(--theme-foreground-color, inherit);
+
+    .react-aria-DateRangePicker {
+      .react-aria-Group {
+        border: 1px solid
+          color-mix(
+            in srgb,
+            var(--theme-foreground-color, currentColor) 25%,
+            transparent
+          );
+        border-radius: 4px;
+        background-color: var(--theme-high-contrast-color, #ffffff);
+      }
+
+      .react-aria-DateInput span {
+        color: var(
+          --theme-top-foreground-color,
+          var(--theme-foreground-color, #000000)
+        );
+      }
+
+      .react-aria-Button {
+        background: transparent;
+        color: var(
+          --theme-top-foreground-color,
+          var(--theme-foreground-color, #000000)
+        );
+
+        svg {
+          fill: currentColor !important;
+        }
+      }
+    }
+
+    .search-details {
+      color: var(--theme-low-contrast-foreground-color, inherit);
+    }
+
+    .search-input input {
+      border: 1px solid
+        color-mix(
+          in srgb,
+          var(--theme-foreground-color, currentColor) 25%,
+          transparent
+        );
+      border-radius: 4px;
+      background-color: var(--theme-high-contrast-color, #ffffff);
+      color: var(
+        --theme-top-foreground-color,
+        var(--theme-foreground-color, #000000)
+      );
+    }
+
+    .search-filters-sort {
+      .search-sort-wrapper > * {
+        border-color: color-mix(
+          in srgb,
+          var(--theme-foreground-color, currentColor) 25%,
+          transparent
+        );
+        background-color: var(--theme-high-contrast-color, #ffffff);
+        color: var(
+          --theme-top-foreground-color,
+          var(--theme-foreground-color, #000000)
+        );
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 2. Layout Médio (Container Query <= 720px, ex: Custom Grid 50/50 ou tablets)
+  // ---------------------------------------------------------------------------
+  @container (max-width: 720px) {
+    .search-block-event {
+      .first-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .react-aria-DateRangePicker {
+        height: 48px;
+
+        .react-aria-Group {
+          height: 100%;
+        }
+
+        .react-aria-DateInput[slot='start'],
+        .react-aria-DateInput[slot='end'] {
+          min-width: 85px;
+        }
+      }
+
+      .search-wrapper {
+        .search-input input {
+          height: 48px;
+        }
+
+        .search-input-actions button {
+          height: 48px;
+        }
+      }
+
+      .template-container {
+        margin-top: 24px;
+      }
+    }
+
+    .card-listing {
+      margin-bottom: 28px;
+
+      .card-inner {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 16px;
+
+        .image-wrapper {
+          width: 90px !important;
+          flex-basis: 90px !important;
+          flex-shrink: 0;
+
+          .date-inset {
+            width: 90px !important;
+            min-width: 90px !important;
+            height: 90px !important;
+            min-height: 90px !important;
+
+            .day {
+              font-size: 28px !important;
+              line-height: 30px !important;
+            }
+
+            .month {
+              font-size: 11px !important;
+            }
+
+            &.has-end-date {
+              .day {
+                font-size: 18px !important;
+                line-height: 20px !important;
+              }
+
+              .month {
+                font-size: 9px !important;
+                line-height: 11px !important;
+              }
+
+              .separator {
+                width: 60% !important;
+                margin: 3px 0 !important;
+              }
+            }
+          }
+        }
+
+        .card-summary {
+          min-width: 0;
+          flex-grow: 1;
+          padding-bottom: 20px;
+
+          h2,
+          .title {
+            font-size: 1.1rem;
+            line-height: 1.3;
+          }
+
+          .description {
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+          }
+        }
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 3. Layout Pequeno / Div Pequena de Tamanho (Container Query <= 420px)
+  // ---------------------------------------------------------------------------
+  @container (max-width: 420px) {
+    .search-block-event {
+      overflow: visible !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+
+      .first-row {
+        overflow: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+      }
+
+      .react-aria-DateRangePicker {
+        overflow: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        box-sizing: border-box !important;
+
+        .react-aria-Group {
+          overflow: visible !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          height: auto !important;
+          min-height: 40px !important;
+          box-sizing: border-box !important;
+          flex-wrap: wrap !important;
+          justify-content: space-between !important;
+          padding: 4px 6px !important;
+        }
+
+        .react-aria-DateInput[slot='start'],
+        .react-aria-DateInput[slot='end'] {
+          width: auto !important;
+          min-width: 60px !important;
+          flex: 1 1 auto !important;
+          margin: 0 !important;
+          font-size: 0.75rem !important;
+        }
+
+        .react-aria-DateSegment {
+          font-size: 0.75rem !important;
+        }
+
+        svg {
+          width: 20px !important;
+          height: 20px !important;
+        }
+      }
+
+      .search-details {
+        margin: 2px 0 !important;
+        font-size: 0.75rem !important;
+        text-align: center !important;
+
+        .number {
+          font-size: 1.1rem !important;
+        }
+      }
+
+      .search-filters-sort {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+
+        .sort-on-wrapper {
+          width: 100% !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+        }
+
+        .search-sort-wrapper {
+          display: flex !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+
+          > * {
+            height: 38px !important;
+          }
+
+          > .search-sort-on {
+            overflow: hidden !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            flex: 1 1 auto !important;
+            text-overflow: ellipsis !important;
+          }
+
+          button {
+            flex-shrink: 0 !important;
+          }
+        }
+
+        .search-sort-on {
+          font-size: 0.8rem !important;
+        }
+      }
+
+      .search-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+
+        .search-input {
+          width: 100% !important;
+          max-width: 100% !important;
+          box-sizing: border-box !important;
+
+          input {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 38px !important;
+            box-sizing: border-box !important;
+            padding: 4px 8px !important;
+            font-size: 0.8rem !important;
+          }
+        }
+
+        .search-input-actions button {
+          height: 38px !important;
+        }
+      }
+
+      .template-container {
+        overflow: visible !important;
+        margin-top: 14px !important;
+      }
+    }
+
+    .card-listing {
+      overflow: visible !important;
+      margin-bottom: 20px !important;
+
+      .card-inner {
+        overflow: visible !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px !important;
+        text-align: center !important;
+
+        .image-wrapper {
+          display: flex !important;
+          width: auto !important;
+          flex-basis: auto !important;
+          justify-content: center !important;
+          margin: 0 auto !important;
+
+          .date-inset {
+            width: 76px !important;
+            min-width: 76px !important;
+            height: 76px !important;
+            min-height: 76px !important;
+            border-width: 3px !important;
+            border-radius: 50% !important;
+
+            .day {
+              font-size: 22px !important;
+              font-weight: 700 !important;
+              line-height: 24px !important;
+            }
+
+            .month {
+              font-size: 10px !important;
+              font-weight: 600 !important;
+            }
+
+            &.has-end-date {
+              .day {
+                font-size: 14px !important;
+                line-height: 15px !important;
+              }
+
+              .month {
+                font-size: 8px !important;
+                line-height: 10px !important;
+              }
+
+              .separator {
+                width: 50% !important;
+                margin: 2px auto !important;
+              }
+            }
+          }
+        }
+
+        .card-summary {
+          overflow: visible !important;
+          width: 100% !important;
+          align-self: stretch !important;
+          padding-bottom: 16px !important;
+
+          .headline.calendar {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            font-size: 0.75rem !important;
+            gap: 2px !important;
+
+            .event-title:before {
+              display: none !important;
+            }
+          }
+
+          h2,
+          .title {
+            margin: 4px 0 !important;
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+            line-height: 1.25 !important;
+            overflow-wrap: anywhere !important;
+            word-break: break-word !important;
+          }
+
+          .description {
+            display: -webkit-box !important;
+            overflow: hidden !important;
+            -webkit-box-orient: vertical !important;
+            font-size: 0.8rem !important;
+            -webkit-line-clamp: 2 !important;
+            line-clamp: 2 !important;
+            line-height: 1.35 !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 4. Adaptação Direta dentro de Colunas de Custom Grid e GridBlock
+// -----------------------------------------------------------------------------
+:is(.custom-grid-column, .column) .block.eventCalendar {
+  overflow: visible !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+
+  .search-block-event {
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+
+    .first-row {
+      overflow: visible !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0 !important;
+      margin: 0 !important;
+      gap: 10px;
+    }
+
+    .react-aria-DateRangePicker {
+      overflow: visible !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: auto;
+      min-height: 40px;
+      box-sizing: border-box !important;
+      margin: 0 !important;
+
+      .react-aria-Group {
+        overflow: visible !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        height: auto;
+        min-height: 40px;
+        box-sizing: border-box !important;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 4px 6px;
+      }
+
+      .react-aria-DateInput[slot='start'],
+      .react-aria-DateInput[slot='end'] {
+        width: auto;
+        min-width: 0 !important;
+        flex: 1 1 auto;
+        margin: 0 !important;
+      }
+    }
+
+    .search-wrapper {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      margin: 0 !important;
+
+      .search-input {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+
+        input {
+          width: 100% !important;
+          max-width: 100% !important;
+          height: 40px;
+          box-sizing: border-box !important;
+        }
+      }
+
+      .search-input-actions button {
+        height: 40px;
+      }
+    }
+
+    .template-container {
+      overflow: visible !important;
+      margin-top: 20px;
+    }
+  }
+}
+
+// Para colunas muito estreitas de Custom Grid (ex: 20%, 25%, 33%)
+:is(
+    .layout-1-4 .custom-grid-column:first-child,
+    .layout-4-1 .custom-grid-column:last-child,
+    .layout-1-3 .custom-grid-column:first-child,
+    .layout-3-1 .custom-grid-column:last-child,
+    .layout-1-1-1 .custom-grid-column,
+    .layout-1-1-1-1 .custom-grid-column,
+    .layout-1-2-1 .custom-grid-column,
+    .block.gridBlock.three.columns .column,
+    .block.gridBlock.four.columns .column
+  )
+  .block.eventCalendar {
+  .search-block-event {
+    .react-aria-DateRangePicker {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+
+      .react-aria-Group {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        flex-wrap: wrap !important;
+        padding: 4px 6px !important;
+      }
+
+      .react-aria-DateInput[slot='start'],
+      .react-aria-DateInput[slot='end'] {
+        width: auto !important;
+        min-width: 50px !important;
+        flex: 1 1 auto !important;
+        margin: 0 !important;
+        font-size: 0.75rem !important;
+      }
+
+      .react-aria-DateSegment {
+        font-size: 0.75rem !important;
+      }
+
+      svg {
+        width: 20px !important;
+        height: 20px !important;
+      }
+    }
+
+    .search-details {
+      display: none;
+    }
+
+    .search-filters-sort {
+      .search-sort-wrapper > * {
+        height: 38px;
+      }
+    }
+
+    .search-wrapper {
+      .search-input input {
+        height: 38px;
+        font-size: 0.8rem;
+      }
+
+      .search-input-actions button {
+        height: 38px;
+      }
+    }
+  }
+
+  .card-listing {
+    margin-bottom: 20px;
+
+    .card-inner {
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 10px !important;
+      text-align: center !important;
+
+      .image-wrapper {
+        width: auto !important;
+        flex-basis: auto !important;
+        margin: 0 auto !important;
+
+        .date-inset {
+          width: 76px !important;
+          min-width: 76px !important;
+          height: 76px !important;
+          min-height: 76px !important;
+
+          .day {
+            font-size: 22px !important;
+            line-height: 24px !important;
+          }
+
+          .month {
+            font-size: 10px !important;
+          }
+
+          &.has-end-date {
+            .day {
+              font-size: 14px !important;
+              line-height: 15px !important;
+            }
+
+            .month {
+              font-size: 8px !important;
+              line-height: 10px !important;
+            }
+
+            .separator {
+              width: 50% !important;
+              margin: 2px auto !important;
+            }
+          }
+        }
+      }
+
+      .card-summary {
+        width: 100% !important;
+        align-self: stretch !important;
+        padding-bottom: 16px !important;
+
+        .headline.calendar {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-size: 0.75rem;
+          gap: 2px;
+
+          .event-title:before {
+            display: none;
+          }
+        }
+
+        h2,
+        .title {
+          margin: 4px 0 !important;
+          font-size: 0.95rem !important;
+          line-height: 1.25 !important;
+          overflow-wrap: anywhere !important;
+          word-break: break-word !important;
+        }
+
+        .description {
+          display: -webkit-box !important;
+          overflow: hidden !important;
+          -webkit-box-orient: vertical !important;
+          font-size: 0.8rem !important;
+          -webkit-line-clamp: 2 !important;
+          line-clamp: 2 !important;
+          line-height: 1.35 !important;
+        }
+      }
+    }
   }
 }

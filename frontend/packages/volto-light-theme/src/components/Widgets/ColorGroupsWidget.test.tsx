@@ -40,7 +40,9 @@ describe('ColorGroupsWidget', () => {
       />,
     );
 
-    const fontInput = container.querySelector('#font-primary') as HTMLInputElement;
+    const fontInput = container.querySelector(
+      '#font-primary',
+    ) as HTMLInputElement;
     fireEvent.change(fontInput, { target: { value: 'Roboto, sans-serif' } });
 
     expect(onChange).toHaveBeenCalledWith(
@@ -132,8 +134,12 @@ describe('ColorGroupsWidget', () => {
       <ColorGroupsWidget id="color_groups" onChange={onChange} />,
     );
 
-    const header = container.querySelector('.colorgroup-card-header') as HTMLElement;
-    const body = container.querySelector('.colorgroup-card-body') as HTMLElement;
+    const header = container.querySelector(
+      '.colorgroup-card-header',
+    ) as HTMLElement;
+    const body = container.querySelector(
+      '.colorgroup-card-body',
+    ) as HTMLElement;
 
     expect(body.style.display).toBe('none');
 

@@ -160,18 +160,13 @@ class TestUpdate:
         transaction.commit()
 
     def test_update_a_field(self):
-        response = self.api.patch(
-            f"{PANEL}/corporate", json={"description": "Updated"}
-        )
+        response = self.api.patch(f"{PANEL}/corporate", json={"description": "Updated"})
         assert response.status_code in (200, 204)
 
     def test_update_is_persisted(self):
         self.api.patch(f"{PANEL}/corporate", json={"description": "Updated"})
         transaction.commit()
-        assert (
-            self.api.get(f"{PANEL}/corporate").json()["description"]
-            == "Updated"
-        )
+        assert self.api.get(f"{PANEL}/corporate").json()["description"] == "Updated"
 
     def test_update_is_partial(self):
         self.api.patch(f"{PANEL}/corporate", json={"description": "Updated"})
@@ -302,11 +297,16 @@ class TestColorGroupsAndBlockThemesControlpanel:
 
         # Festive now has 'dourado' with its custom background
         festive_updated = self.api.get(f"{PANEL}/festive").json()
-        assert festive_updated["color_groups"]["dourado"]["background_color_light"] == "#ffd700"
+        assert (
+            festive_updated["color_groups"]["dourado"]["background_color_light"]
+            == "#ffd700"
+        )
 
         # Default theme must automatically have 'dourado' synced with defaults
         default_updated = self.api.get(f"{PANEL}/{themes.DEFAULT_THEME_ID}").json()
         assert "dourado" in default_updated["color_groups"]
         assert default_updated["color_groups"]["dourado"]["name"] == "Dourado"
-        assert default_updated["color_groups"]["dourado"]["background_color_light"] == "#ffffff"
-
+        assert (
+            default_updated["color_groups"]["dourado"]["background_color_light"]
+            == "#ffffff"
+        )

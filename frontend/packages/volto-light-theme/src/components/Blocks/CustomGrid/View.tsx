@@ -12,6 +12,7 @@ import {
   resolveBlockTheme,
   type ThemeDefinition,
 } from '../../../config/blockThemes';
+import { normalizeBlockWidth } from '../../../helpers/blockWidth';
 
 function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
   const blockThemes = blockType
@@ -41,7 +42,16 @@ const CustomGridColumn = ({
 }: any) => {
   return (
     <div className={cx('custom-grid-column', className)} style={style}>
-      <RenderBlocks content={colData} metadata={metadata} path={path} />
+      <RenderBlocks
+        content={colData}
+        metadata={metadata}
+        properties={{
+          ...metadata,
+          ...colData,
+        }}
+        path={path}
+        isContainer
+      />
     </div>
   );
 };
@@ -62,7 +72,8 @@ const CustomGridView = (props: any) => {
   const themeDefinitions = getThemeDefinitions(blockType);
   const themeValue = data?.theme ?? data?.styles?.theme;
   const backColorGroup = data?.backColorGroup ?? data?.styles?.backColorGroup;
-  const frontColorGroup = data?.frontColorGroup ?? data?.styles?.frontColorGroup;
+  const frontColorGroup =
+    data?.frontColorGroup ?? data?.styles?.frontColorGroup;
 
   const resolved = resolveBlockTheme({
     theme: typeof themeValue === 'string' ? themeValue : undefined,
@@ -82,17 +93,8 @@ const CustomGridView = (props: any) => {
   };
 
   // Block width classes
-  let rawBlockWidth = data.blockWidth;
-  if (typeof rawBlockWidth === 'object' && rawBlockWidth !== null) {
-    rawBlockWidth =
-      rawBlockWidth.value ||
-      rawBlockWidth.id ||
-      Object.values(rawBlockWidth)[0];
-  }
-  const blockWidthClass =
-    rawBlockWidth && typeof rawBlockWidth === 'string'
-      ? `has--block-width--${rawBlockWidth}`
-      : 'has--block-width--layout';
+  const normalizedWidth = normalizeBlockWidth(data) || 'layout';
+  const blockWidthClass = `has--block-width--${normalizedWidth}`;
 
   // Remove Volto's injected width classes to prevent conflicts with our custom logic
   const cleanedClassName = (className || '')
@@ -128,21 +130,26 @@ const CustomGridView = (props: any) => {
           const colThemeValue = safeColData.settings?.theme;
           const colBack = safeColData.settings?.backColorGroup;
           const colFront = safeColData.settings?.frontColorGroup;
-          const colResolved = resolveBlockTheme({
-            theme: typeof colThemeValue === 'string' ? colThemeValue : undefined,
-            backColorGroup: colBack,
-            frontColorGroup: colFront,
-            themeDefinitions,
-          });
+          const hasColTheme = Boolean(colThemeValue);
+          const colResolved = hasColTheme
+            ? resolveBlockTheme({
+                theme:
+                  typeof colThemeValue === 'string' ? colThemeValue : undefined,
+                backColorGroup: colBack,
+                frontColorGroup: colFront,
+                themeDefinitions,
+              })
+            : null;
 
-          const colThemeStyle =
-            typeof colThemeValue === 'object' && colThemeValue !== null
+          const colThemeStyle = hasColTheme
+            ? typeof colThemeValue === 'object' && colThemeValue !== null
               ? (colThemeValue as React.CSSProperties)
-              : colResolved.style;
+              : colResolved?.style
+            : undefined;
 
           const colThemeClass = cx(
-            { 'has-theme': !!colThemeValue },
-            colResolved.className,
+            hasColTheme && 'has-theme',
+            colResolved?.className,
           );
 
           return (

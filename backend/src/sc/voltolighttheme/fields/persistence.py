@@ -56,4 +56,3 @@ def json_persistent_field_adapter(context):
         key: value for key, value in context.__dict__.items() if key not in ignored
     })
     return instance
-

@@ -43,7 +43,10 @@ const ThemeSwatches: React.FC<ThemeSwatchesProps> = ({ theme }) => {
   }, [rawBlockThemes]);
 
   return (
-    <span className="sc-theme-swatches" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+    <span
+      className="sc-theme-swatches"
+      style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+    >
       {/* ColorGroup background squares */}
       <span
         className="sc-theme-cg-swatches"

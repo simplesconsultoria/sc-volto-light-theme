@@ -19,6 +19,9 @@
 @import 'components/documentByLine';
 @import 'components/search';
 @import 'components/themesControlpanel';
+@import 'components/borderWidget';
+@import 'blocks/blockWidth';
+@import 'blocks/borders';
 @import 'blocks/listing';
 @import 'blocks/teaser';
 @import 'blocks/slider';
@@ -31,4 +34,10 @@
 @import 'blocks/schemaBlock';
 @import 'blocks/buttonBlock';
 @import 'blocks/customGrid';
+@import 'blocks/accordion';
+@import 'blocks/video';
+@import 'blocks/introduction';
+@import 'blocks/separator';
+@import 'blocks/table';
+@import 'blocks/search';
 @import 'views/notFound';

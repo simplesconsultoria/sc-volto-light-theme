@@ -1,0 +1,200 @@
+// =============================================================================
+// Accordion Block Enhancements
+// =============================================================================
+
+.accordion-block,
+.block-editor-accordion {
+  background-color: var(--theme-color, transparent);
+  color: var(--theme-foreground-color, inherit);
+
+  .ui.styled.accordion,
+  .ui.accordion {
+    background-color: var(--theme-color, transparent);
+    box-shadow: none;
+    color: var(--theme-foreground-color, inherit);
+
+    & > .title.accordion-title,
+    & > .title,
+    .title.accordion-title:not(.content *) {
+      border-color: var(
+        --theme-border-color,
+        color-mix(
+          in srgb,
+          var(--theme-foreground-color, currentColor) 20%,
+          transparent
+        )
+      ) !important;
+      background-color: var(--theme-color, transparent) !important;
+      color: var(--theme-foreground-color, inherit) !important;
+
+      & > span,
+      .input-accordion-title {
+        color: var(--theme-foreground-color, inherit) !important;
+      }
+
+      &.active {
+        background-color: var(--theme-color, transparent) !important;
+        color: var(--theme-foreground-color, inherit) !important;
+
+        & > span {
+          color: var(--theme-foreground-color, inherit) !important;
+        }
+      }
+
+      &:hover {
+        background-color: color-mix(
+          in srgb,
+          var(--theme-foreground-color, currentColor) 6%,
+          var(--theme-color, transparent)
+        ) !important;
+        color: var(--theme-foreground-color, inherit) !important;
+      }
+
+      & > svg,
+      &.active > svg {
+        fill: var(--theme-foreground-accent-color, currentColor) !important;
+      }
+
+      i.icon {
+        color: var(--theme-foreground-accent-color, currentColor) !important;
+      }
+    }
+
+    .content {
+      background-color: var(--theme-color, transparent) !important;
+      color: var(--theme-foreground-color, inherit);
+      font-size: 1rem;
+      line-height: 1.5;
+
+      p,
+      .description,
+      .card-summary p,
+      .item-summary,
+      .summary {
+        font-size: 0.95rem !important;
+        line-height: 1.45 !important;
+      }
+
+      // Restaura a estilização de títulos de cards/eventos/search dentro do accordion para evitar
+      // contaminação por regras do Semantic UI (.ui.styled.accordion .title) e tamanho desproporcional
+      .card-listing,
+      .card-summary,
+      .card,
+      .listing-item,
+      .block.eventCalendar,
+      .block.eventsearch,
+      .block.teaser,
+      .block.search,
+      .block.listing {
+        .title {
+          padding: 0 !important;
+          border: none !important;
+          border-top: none !important;
+          border-right: none !important;
+          border-bottom: none !important;
+          border-left: none !important;
+          margin-top: 0 !important;
+          margin-bottom: $spacing-small !important;
+          background: transparent !important;
+          background-color: transparent !important;
+          color: var(--theme-foreground-color, inherit) !important;
+          font-family: var(--colorgroup-back-font, inherit) !important;
+          font-size: 1.25rem !important;
+          font-weight: 700 !important;
+          line-height: 1.5rem !important;
+
+          @media only screen and (max-width: $largest-mobile-screen) {
+            font-size: 1.125rem !important;
+            line-height: 1.375rem !important;
+          }
+
+          @container (max-width: #{$largest-mobile-screen}) {
+            font-size: 1.125rem !important;
+            line-height: 1.375rem !important;
+          }
+
+          a {
+            color: inherit !important;
+            font-size: inherit !important;
+            font-weight: inherit !important;
+            text-decoration: none !important;
+
+            &:hover {
+              color: var(
+                --theme-foreground-accent-color,
+                var(--primary-accent-color)
+              ) !important;
+            }
+          }
+
+          &:hover {
+            background-color: transparent !important;
+          }
+        }
+      }
+
+      // Restaura dimensões normais para cards de listagem e itens dentro do accordion
+      .card-summary,
+      .card,
+      .listing-item {
+        .title {
+          font-size: 1rem !important;
+          line-height: 1.25rem !important;
+        }
+
+        p,
+        .description {
+          font-size: 0.875rem !important;
+          line-height: 1.35 !important;
+        }
+      }
+
+      // 1. Desativa margens de h2/h3 para headings dentro de listagem (.listing-headline-wrapper)
+      .listing-headline-wrapper,
+      .listing-block-container .listing-headline-wrapper,
+      .block.listing .listing-headline-wrapper {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .headline,
+        h2.headline,
+        h2.block-title,
+        .block-title {
+          margin: 0 !important;
+          margin-top: 0 !important;
+          margin-right: 0 !important;
+          margin-bottom: 0 !important;
+          margin-left: 0 !important;
+        }
+      }
+
+      // 2. Elementos dentro do accordion seguem sempre o tema do accordion
+      // Força herança de todas as propriedades customizadas do tema
+      .listing-block-container,
+      .block,
+      [class*='has--theme--'],
+      [class*='has-back-colorgroup-'],
+      [class*='has-front-colorgroup-'] {
+        --theme-color: inherit !important;
+        --theme-foreground-color: inherit !important;
+        --theme-high-contrast-foreground-color: inherit !important;
+        --theme-low-contrast-foreground-color: inherit !important;
+        --theme-foreground-accent-color: inherit !important;
+        --colorgroup-back-font: inherit !important;
+        --theme-high-contrast-color: inherit !important;
+        --theme-top-foreground-color: inherit !important;
+        --theme-top-high-contrast-foreground-color: inherit !important;
+        --theme-top-low-contrast-foreground-color: inherit !important;
+        --theme-top-accent-color: inherit !important;
+        --colorgroup-front-font: inherit !important;
+        --theme-border-color: inherit !important;
+        --theme-border-width: inherit !important;
+        --theme-pattern-image: inherit !important;
+        --theme-pattern-opacity: inherit !important;
+      }
+    }
+  }
+}

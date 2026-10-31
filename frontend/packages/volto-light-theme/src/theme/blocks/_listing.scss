@@ -17,6 +17,58 @@ body .block.listing,
   @import 'listing/pagination';
   @import 'listing/columns';
   @import 'listing/events';
+  @import 'listing/teaser';
+
+  .listing-block-container {
+    width: auto;
+    max-width: 100%;
+    align-self: stretch;
+  }
+
+  .listing-headline-wrapper,
+  .listing-body {
+    width: auto;
+    max-width: 100% !important;
+    align-self: stretch;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  // Summary variation: remove min-width on small screens so image doesn't break out
+  &.summary,
+  .summary-variation {
+    .listing-item {
+      .card {
+        .card-inner .image-wrapper {
+          @container (max-width: #{$largest-mobile-screen}) {
+            width: 100%;
+            max-width: 100%;
+            flex: 1 1 auto;
+          }
+          @media (max-width: #{$largest-mobile-screen}) {
+            width: 100%;
+            max-width: 100%;
+            flex: 1 1 auto;
+          }
+
+          img {
+            @container (max-width: #{$largest-mobile-screen}) {
+              width: 100% !important;
+              min-width: unset !important;
+              max-width: 100% !important;
+              height: auto;
+            }
+            @media (max-width: #{$largest-mobile-screen}) {
+              width: 100% !important;
+              min-width: unset !important;
+              max-width: 100% !important;
+              height: auto;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 // =============================================================================
@@ -50,65 +102,176 @@ body .block.listing,
   padding: $spacing-medium 0;
 }
 
-// Container widths para carousel/mediaCarousel no page-document
-#page-document .blocks-group-wrapper > .block.listing.carousel,
-#page-document .blocks-group-wrapper > .block.listing.mediaCarousel {
-  @include default-container-width();
-  @include adjustMarginsToContainer($default-container-width);
+// Override: remove constraints de container para filhos do listing
+#page-document .blocks-group-wrapper > .block.listing {
+  .listing-item,
+  .emptyListing,
+  .image-gallery,
+  .card {
+    max-width: unset !important;
+    margin-right: unset !important;
+    margin-left: unset !important;
+  }
 }
 
-// Container widths para listing nao-carousel no page-document
-#page-document
-  .blocks-group-wrapper
-  > .block.listing:not(.carousel):not(.mediaCarousel) {
-  position: relative;
+// Full width containment: em telas pequenas o tamanho full nunca deve vazar da tela
+.block.listing.has--block-width--full {
+  width: 100% !important;
   max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
 
-  .listing-body {
-    &.has--block-width--narrow,
-    &[class*='has--block-width--var(--narrow-container-width)'] {
-      @include narrow-container-width();
-      @include adjustMarginsToContainer($narrow-container-width);
-      max-width: var(--narrow-container-width) !important;
-      margin-right: auto;
-      margin-left: auto;
-    }
+  .listing-block-container,
+  .listing-body,
+  .listing-carousel,
+  .listing-carousel__viewport {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
 
-    &.has--block-width--default,
-    &[class*='has--block-width--var(--default-container-width)'] {
-      @include default-container-width();
-      @include adjustMarginsToContainer($default-container-width);
-      max-width: var(--default-container-width) !important;
-      margin-right: auto;
-      margin-left: auto;
-    }
+// =============================================================================
+// Listing dentro de blocos de Grid (customGrid, custom-grid, gridBlock) e .contained
+// Reseta margens laterais sem usar width: 100% em todas as resoluções
+// (desktop e mobile), pois o bloco de grid pai já gerencia o container e respiros.
+// =============================================================================
+.custom-grid,
+.customGrid,
+.block.gridBlock,
+.gridBlock,
+.column,
+.custom-grid-column {
+  .block.listing,
+  .block.contained {
+    width: auto !important;
+    max-width: 100% !important;
+    align-self: stretch;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
 
-    &.has--block-width--layout,
-    &[class*='has--block-width--var(--layout-container-width)'] {
-      @include layout-container-width();
-      @include adjustMarginsToContainer($layout-container-width);
-      max-width: var(--layout-container-width) !important;
-      margin-right: auto;
-      margin-left: auto;
-    }
-
-    &.has--block-width--unset,
-    &.has--block-width--full {
+    .listing-block-container,
+    .listing-headline-wrapper,
+    .listing-body,
+    .listing-carousel,
+    .listing-carousel__viewport,
+    .listing-teaser-wrapper {
+      width: auto !important;
       max-width: 100% !important;
-      padding-right: 0;
-      padding-left: 0;
+      align-self: stretch;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    &.grid,
+    &.imageGallery,
+    &.image-gallery {
+      ul.items {
+        width: auto !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+      }
     }
   }
 }
 
-// Override: remove constraints de container para filhos do listing
-#page-document .blocks-group-wrapper > .block.listing {
-  &.grid,
-  .listing-item,
-  .emptyListing,
-  .image-gallery {
-    max-width: unset !important;
-    margin-right: unset !important;
-    margin-left: unset !important;
+.block.listing.contained {
+  width: auto !important;
+  max-width: 100% !important;
+  align-self: stretch;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+
+  .listing-block-container,
+  .listing-headline-wrapper,
+  .listing-body,
+  .listing-carousel,
+  .listing-carousel__viewport,
+  .listing-teaser-wrapper {
+    width: auto !important;
+    max-width: 100% !important;
+    align-self: stretch;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+}
+
+// =============================================================================
+// Modo Edicao do Bloco de Grid (GridBlock no Volto)
+// Garante que cada celula/coluna no editor mantenha sua largura percentual
+// (100%, 50%, 33.3%, 25%) sem encolher nem colapsar devido ao flexbox do react-beautiful-dnd.
+// =============================================================================
+.block-editor-gridBlock,
+.block.gridBlock {
+  .grid-items {
+    [data-rbd-droppable-id] {
+      display: flex !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    &.one [class*='block-editor-'] {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    &.two [class*='block-editor-'] {
+      width: 50% !important;
+      min-width: 0 !important;
+      max-width: 50% !important;
+      box-sizing: border-box !important;
+    }
+
+    &.three [class*='block-editor-'] {
+      width: 33.33333333% !important;
+      min-width: 0 !important;
+      max-width: 33.33333333% !important;
+      box-sizing: border-box !important;
+    }
+
+    &.four [class*='block-editor-'] {
+      width: 25% !important;
+      min-width: 0 !important;
+      max-width: 25% !important;
+      box-sizing: border-box !important;
+    }
+  }
+}
+
+// Listing contido no editor (dentro de colunas ou grid)
+.block-editor-listing.contained {
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+
+  .cell-wrapper,
+  .ui.drag.block.inner,
+  .ui.drag.block.inner.listing {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .block.listing {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+
+    .listing-block-container,
+    .listing-body,
+    .events-listing-wrapper,
+    .events-listing,
+    .listing-teaser-wrapper {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
   }
 }

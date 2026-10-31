@@ -1,5 +1,4 @@
 import { defineMessages } from 'react-intl';
-import config from '@plone/volto/registry';
 const messages = defineMessages({
   labelCustomGrid: {
     id: 'Custom Grid',
@@ -55,10 +54,17 @@ export const ColumnSchema = (intl: any) => {
     ],
     properties: {
       theme: {
-        widget: 'color_picker',
+        widget: 'block_theme_widget',
         title: intl.formatMessage(messages.labelTheme),
-        themes: config.blocks?.themes || [],
-        default: config.blocks?.themes?.[0]?.name || '',
+        default: 'default',
+      },
+      backColorGroup: {
+        title: 'Área de Trás (Color Group)',
+        type: 'string',
+      },
+      frontColorGroup: {
+        title: 'Área da Frente (Color Group)',
+        type: 'string',
       },
     },
     required: [],
@@ -71,7 +77,7 @@ export const CustomGridSchema = ({ intl }: { intl: any }) => ({
     {
       id: 'default',
       title: intl.formatMessage(messages.labelDefault),
-      fields: ['title', 'layout', 'blockWidth'],
+      fields: ['title', 'layout'],
     },
   ],
   properties: {
@@ -97,11 +103,6 @@ export const CustomGridSchema = ({ intl }: { intl: any }) => ({
         ['1-1-1-1', '25 / 25 / 25 / 25'],
       ],
       default: '1-1',
-    },
-    blockWidth: {
-      title: 'Block Width',
-      widget: 'blockWidth',
-      default: 'layout',
     },
   },
   required: ['layout'],

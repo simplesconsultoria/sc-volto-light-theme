@@ -8,6 +8,7 @@ import {
   resolveBlockTheme,
   type ThemeDefinition,
 } from '../../../config/blockThemes';
+import { normalizeBlockWidth } from '../../../helpers/blockWidth';
 
 function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
   const blockThemes = blockType
@@ -33,7 +34,8 @@ const HeroBlockView: React.FC<HeroBlockViewProps> = (props) => {
   const themeDefinitions = getThemeDefinitions(blockType);
   const themeValue = data?.theme ?? data?.styles?.theme;
   const backColorGroup = data?.backColorGroup ?? data?.styles?.backColorGroup;
-  const frontColorGroup = data?.frontColorGroup ?? data?.styles?.frontColorGroup;
+  const frontColorGroup =
+    data?.frontColorGroup ?? data?.styles?.frontColorGroup;
 
   const resolved = resolveBlockTheme({
     theme: typeof themeValue === 'string' ? themeValue : undefined,
@@ -54,19 +56,8 @@ const HeroBlockView: React.FC<HeroBlockViewProps> = (props) => {
 
   const variation = data.variation || 'flex';
   const typeHref = data?.href?.[0]?.['@type'] || '';
-  let rawBlockWidth = data.blockWidth;
-
-  if (typeof rawBlockWidth === 'object' && rawBlockWidth !== null) {
-    rawBlockWidth =
-      rawBlockWidth.value ||
-      rawBlockWidth.id ||
-      Object.values(rawBlockWidth)[0];
-  }
-
-  const blockWidthClass =
-    rawBlockWidth && typeof rawBlockWidth === 'string'
-      ? `has--block-width--${rawBlockWidth}`
-      : 'has--block-width--layout';
+  const normalizedWidth = normalizeBlockWidth(data) || 'layout';
+  const blockWidthClass = `has--block-width--${normalizedWidth}`;
   const imageSize = data.imageSize || '50%';
 
   const finalStyle: React.CSSProperties = {

@@ -4,9 +4,15 @@
 // Cores de borda via --cardBorderColor e --content-type-border-color.
 // =============================================================================
 
-&.grid {
+&.grid,
+&.imageGallery,
+&.image-gallery {
   .listing-item,
+  .listing-item.news-listing,
+  .listing-item.item-listing,
   .listing-item.person-listing {
+    border-bottom: none !important;
+
     .card {
       height: 100%;
       border: solid var(--cardBorderColor, var(--theme-border-color));
@@ -14,6 +20,7 @@
         --cardBorderWidth,
         var(--theme-border-width)
       ) !important;
+      border-color: var(--cardBorderColor, var(--theme-border-color));
       border-top-color: var(
         --cardBorderColor,
         var(--content-type-border-color, var(--theme-border-color))
@@ -25,11 +32,14 @@
         padding: 0 !important;
 
         .card-summary {
+          padding: $spacing-medium $spacing-small !important;
+
           @container (max-width: #{$largest-mobile-screen}) {
             padding-top: $spacing-medium !important;
           }
-
-          padding: $spacing-medium $spacing-small $spacing-medium $spacing-small !important;
+          @media (max-width: #{$largest-mobile-screen}) {
+            padding-top: $spacing-medium !important;
+          }
 
           .title {
             color: var(--theme-top-foreground-color);
@@ -48,6 +58,11 @@
               display: none;
             }
           }
+        }
+
+        .item-image + .card-summary,
+        .image-wrapper + .card-summary {
+          padding-top: $spacing-medium !important;
         }
       }
 

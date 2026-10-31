@@ -13,15 +13,15 @@
 // container mais externo. Nós removemos max-width e margin dele
 // para permitir que o background-color sangre até as bordas.
 // ===============================================================
-.block.customGrid {
-  max-width: unset !important;
-  padding-right: 0 !important;
-  padding-left: 0 !important;
-  margin-right: 0 !important;
-  margin-left: 0 !important;
-  // container-type garante que o @container interno funcione
-  container-type: inline-size;
-}
+// .block.customGrid {
+//   max-width: unset !important;
+//   padding-right: 0 !important;
+//   padding-left: 0 !important;
+//   margin-right: 0 !important;
+//   margin-left: 0 !important;
+//   // container-type garante que o @container interno funcione
+//   container-type: inline-size;
+// }
 
 // ===============================================================
 // 2. Container Interno da Grid
@@ -29,39 +29,6 @@
 .custom-grid {
   display: grid;
   gap: 1rem;
-
-  // Larguras do Container (usando mixins do sc-volto-light-theme)
-  &.has--block-width--narrow,
-  &[class*='has--block-width--var(--narrow-container-width)']:not(
-      :where(.custom-grid-edit *)
-    ) {
-    @include narrow-container-width();
-    @include adjustMarginsToContainer($narrow-container-width);
-  }
-
-  &.has--block-width--default,
-  &[class*='has--block-width--var(--default-container-width)']:not(
-      :where(.custom-grid-edit *)
-    ) {
-    @include default-container-width();
-    @include adjustMarginsToContainer($default-container-width);
-  }
-
-  &.has--block-width--layout,
-  &[class*='has--block-width--var(--layout-container-width)']:not(
-      :where(.custom-grid-edit *)
-    ) {
-    @include layout-container-width();
-    @include adjustMarginsToContainer($layout-container-width);
-  }
-
-  &.has--block-width--unset,
-  &.has--block-width--full {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-  }
 
   // Comportamentos de Layout (CSS Grid)
   &.layout-1 {
@@ -164,7 +131,11 @@
 // ===============================================================
 .custom-grid-column {
   display: flex;
+  overflow: visible;
+  min-width: 0;
+  max-width: 100%;
   min-height: 60px;
+  box-sizing: border-box;
   flex-direction: column;
 
   container-type: inline-size;
@@ -212,10 +183,16 @@
 
   .custom-grid-column {
     position: relative;
+    min-width: 0;
     min-height: 80px;
+    box-sizing: border-box;
     padding: 0.5rem 2.2rem;
     border: 1px dashed #b8c6c8;
     transition: border-color 0.15s ease;
+
+    @container (max-width: 320px) {
+      padding: 0.5rem 1rem !important;
+    }
 
     &:hover,
     &.is-focused {
@@ -431,6 +408,164 @@
     .hero-block-container {
       max-width: 100% !important;
       margin: 0 !important;
+    }
+  }
+}
+
+// ===============================================================
+// 7. Imagens em Colunas de Grid Muito Pequenas (< 280px)
+// Quando e SOMENTE quando a imagem estiver em uma coluna bem pequena (< 280px),
+// o texto e a parte preta vão para baixo da imagem, com tipografia reduzida:
+// - A sobreposição escura sobre a foto (figure:after) é desativada.
+// - A legenda (figcaption) vai para baixo da imagem com fundo preto (#000000).
+// - Em tamanhos normais/grandes dentro dos grids, o layout padrão do tema
+//   (tarja e texto sobrepostos na imagem) é mantido intacto.
+// ===============================================================
+
+@mixin small-grid-image-caption-layout {
+  figure {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    margin: 0 !important;
+
+    &:after {
+      display: none !important;
+      height: 0 !important;
+      content: none !important;
+      opacity: 0 !important;
+    }
+
+    img {
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+
+    figcaption {
+      position: static !important;
+      z-index: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      left: auto !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 0.45rem 0.6rem !important;
+      margin: 0 !important;
+      background: #000000 !important;
+      border-bottom-left-radius: 4px !important;
+      border-bottom-right-radius: 4px !important;
+      color: $white !important;
+
+      .title {
+        display: block !important;
+        margin: 0 0 2px 0 !important;
+        color: $white !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0 !important;
+        line-height: 1.25 !important;
+        word-break: break-word !important;
+      }
+
+      .description {
+        display: block !important;
+        margin: 0 !important;
+        color: rgba(255, 255, 255, 0.85) !important;
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+
+        p {
+          margin: 0 !important;
+          font-size: 10px !important;
+          line-height: 1.2 !important;
+        }
+      }
+
+      .credits {
+        display: block !important;
+        margin-top: 3px !important;
+        color: rgba(255, 255, 255, 0.65) !important;
+        font-size: 9px !important;
+        line-height: 1.1 !important;
+      }
+    }
+
+    figcaption:not(:has(strong.title)):not(:has(.title)) {
+      display: none !important;
+    }
+  }
+}
+
+// 1. Garantir container-type em colunas de grid
+.custom-grid-column,
+.block.gridBlock .ui.stackable.grid > .column,
+.block.gridBlock .column {
+  container-type: inline-size;
+}
+
+// 2. Aplicação via Container Queries quando a coluna for bem pequena (< 280px)
+@container (max-width: 280px) {
+  .block.image,
+  .block-editor-image {
+    @include small-grid-image-caption-layout;
+  }
+}
+
+// 3. Aplicação direta para proporções conhecidas onde a coluna é bem pequena (20% ou 4+ colunas)
+.layout-1-4 .custom-grid-column:first-child,
+.layout-4-1 .custom-grid-column:last-child,
+.layout-1-3 .custom-grid-column:first-child,
+.layout-3-1 .custom-grid-column:last-child,
+.layout-1-1-1-1 .custom-grid-column,
+.layout-1-1-1-1-1 .custom-grid-column,
+.block.gridBlock.grid-columns-4 .column,
+.block.gridBlock.grid-columns-5 .column,
+.block.gridBlock.grid-columns-6 .column,
+.block.gridBlock.four.columns .column,
+.block.gridBlock.five.columns .column,
+.block.gridBlock.six.columns .column {
+  .block.image,
+  .block-editor-image {
+    @include small-grid-image-caption-layout;
+  }
+} // ===============================================================
+// 6. Sidebar Column Settings
+// ===============================================================
+.custom-grid-sidebar-column {
+  padding: 12px 14px 24px;
+
+  .ui.segment.custom-grid-sidebar-header {
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .ui.form {
+    header.header.pulled {
+      padding: 4px 6px 12px;
+      margin-bottom: 8px;
+
+      h2 {
+        margin: 0;
+        font-size: 1.15rem;
+      }
+    }
+
+    .ui.segment.form.attached {
+      padding: 18px 20px 24px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+      .block-theme-widget {
+        padding: 4px 0 8px;
+        margin-bottom: 0.75rem;
+      }
     }
   }
 }

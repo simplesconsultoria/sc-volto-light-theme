@@ -1,0 +1,89 @@
+// =============================================================================
+// Borders System — sc-volto-light-theme
+// Fornece mixins e regras para posicionamento inteligente e desacoplado de bordas.
+// Os componentes gerenciam onde a borda é colocada (ex: imagem, texto, card ou container).
+// =============================================================================
+
+// Mixin universal para aplicar borda customizada definida pelo BorderWidget
+@mixin apply-block-border(
+  $width: var(--cardBorderWidth),
+  $color:
+    var(
+      --cardBorderColor,
+      var(--theme-border-color, var(--primary-accent-color, #007bc1))
+    ),
+  $style: solid
+) {
+  border-width: $width !important;
+  border-style: $style;
+  border-color: $color !important;
+}
+
+// Mixin utilitário para desenvolvedores aplicarem bordas diretamente em elementos específicos
+@mixin component-border($target-selector: null) {
+  @if $target-selector {
+    #{$target-selector} {
+      @include apply-block-border;
+    }
+  } @else {
+    @include apply-block-border;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Aplicação Específica por Componente
+// -----------------------------------------------------------------------------
+
+// 1. Elementos com alvos customizados explícitos escolhidos pelo desenvolvedor
+[style*='--cardBorderWidth'] {
+  .block-border-target,
+  [data-border-target],
+  .text-border-target {
+    @include apply-block-border;
+  }
+}
+
+// 2. Blocos de Imagem (image e mainImageBlock):
+// A borda é aplicada especificamente na imagem em si (img / figure img),
+// e não em volta do container inteiro do bloco ou das legendas
+.block.image[style*='--cardBorderWidth'],
+.block.mainImageBlock[style*='--cardBorderWidth'],
+.main-image-block[style*='--cardBorderWidth'],
+#page-edit [class*='block-editor-image'][style*='--cardBorderWidth'],
+#page-edit [class*='block-editor-mainImageBlock'][style*='--cardBorderWidth'] {
+  figure > img,
+  img {
+    @include apply-block-border;
+  }
+}
+
+// 3. Bloco de Citação (Quote):
+// A borda é delegada para o elemento interno .quote-block
+.block.quoteBlock[style*='--cardBorderWidth'],
+#page-edit .block-editor-quoteBlock[style*='--cardBorderWidth'] {
+  .quote-block {
+    @include apply-block-border;
+  }
+}
+
+// 4. Blocos comuns com container interno ou sem alvo específico:
+// Não aplica na camada mais alta (.block) se o bloco contiver .card, imagem,
+// citação ou alvo de borda explícito.
+.block[style*='--cardBorderWidth'],
+#page-edit [class*='block-editor-'][style*='--cardBorderWidth'] {
+  &:not(:has(.card)):not(:has(figure img)):not(:has(img)):not(.image):not(
+      .mainImageBlock
+    ):not(.quoteBlock):not(:has(.quote-block)):not(
+      :has(.block-border-target)
+    ):not(:has([data-border-target])) {
+    // Se possuir .block-inner-container, aplica nele para manter o fundo sangrado
+    & > .block-inner-container {
+      @include apply-block-border;
+    }
+
+    // Caso não possua container interno, aplica no próprio bloco
+    &:not(:has(> .block-inner-container)) {
+      @include apply-block-border;
+    }
+  }
+}

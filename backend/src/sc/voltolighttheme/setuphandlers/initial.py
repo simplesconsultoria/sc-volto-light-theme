@@ -4,12 +4,10 @@ from plone.exportimport import importers
 from plone.registry.interfaces import IRegistry
 from Products.GenericSetup.tool import SetupTool
 from sc.voltolighttheme import logger
-from sc.voltolighttheme.utils.themes import (
-    NATAL_BLOCK_THEMES,
-    NATAL_COLOR_GROUPS,
-    save_theme_block_themes,
-    save_theme_color_groups,
-)
+from sc.voltolighttheme.utils.themes import NATAL_BLOCK_THEMES
+from sc.voltolighttheme.utils.themes import NATAL_COLOR_GROUPS
+from sc.voltolighttheme.utils.themes import save_theme_block_themes
+from sc.voltolighttheme.utils.themes import save_theme_color_groups
 from zope.component import queryUtility
 
 

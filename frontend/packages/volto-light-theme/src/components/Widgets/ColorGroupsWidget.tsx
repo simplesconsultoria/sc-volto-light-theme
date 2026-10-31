@@ -87,7 +87,10 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
 
   const handleAddGroup = (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanId = newId.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+    const cleanId = newId
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, '-');
     if (!cleanId) {
       setErrorMsg('O ID do ColorGroup é obrigatório.');
       return;
@@ -254,7 +257,9 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
                 style={{ display: isExpanded ? 'block' : 'none' }}
               >
                 <div className="group-font-row">
-                  <label htmlFor={`font-${group.id}`}>Fonte (Font Family):</label>
+                  <label htmlFor={`font-${group.id}`}>
+                    Fonte (Font Family):
+                  </label>
                   <input
                     id={`font-${group.id}`}
                     type="text"
@@ -534,8 +539,7 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
                     <button
                       type="button"
                       style={{
-                        backgroundColor:
-                          group.accent_color_light || '#f4822c',
+                        backgroundColor: group.accent_color_light || '#f4822c',
                         color: '#ffffff',
                         border: 'none',
                         padding: '4px 10px',
@@ -553,8 +557,7 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
                   <div
                     className="preview-card dark"
                     style={{
-                      backgroundColor:
-                        group.background_color_dark || '#000000',
+                      backgroundColor: group.background_color_dark || '#000000',
                       color: group.text_color_dark || '#ffffff',
                       fontFamily: group.font_family || 'inherit',
                     }}
@@ -580,8 +583,7 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
                     <button
                       type="button"
                       style={{
-                        backgroundColor:
-                          group.accent_color_dark || '#f4822c',
+                        backgroundColor: group.accent_color_dark || '#f4822c',
                         color: '#ffffff',
                         border: 'none',
                         padding: '4px 10px',

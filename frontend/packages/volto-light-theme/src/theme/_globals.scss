@@ -17,6 +17,8 @@ body {
 }
 
 .ui.basic.segment.content-area {
+  width: 100%;
+  flex: 1 1 100%;
   background-color: var(--primary-color);
 }
 
@@ -176,8 +178,9 @@ body .block.search .search-wrapper {
   }
 }
 
-.ui.basic.segment.content-area {
-  container-type: inline-size;
+.blocks-group-wrapper {
+  display: flow-root;
+  clear: both;
 }
 
 #page-document {
@@ -232,4 +235,3 @@ body .block.search .search-wrapper {
 .sr-only {
   display: none !important;
 }
-

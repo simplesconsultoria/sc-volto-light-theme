@@ -6,7 +6,11 @@ import React, {
   useSyncExternalStore,
 } from 'react';
 import { ReactReduxContext } from 'react-redux';
-import type { BlockTheme, ColorGroup, SerializedTheme } from '../../types/theme';
+import type {
+  BlockTheme,
+  ColorGroup,
+  SerializedTheme,
+} from '../../types/theme';
 import {
   DEFAULT_BLOCK_THEMES,
   DEFAULT_COLOR_GROUPS,
@@ -283,8 +287,13 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
     newBack: string,
     newFront: string,
   ) => {
+    const formattedTheme =
+      newThemeValue === 'custom' || newThemeValue.startsWith('custom')
+        ? `custom-${newBack}-${newFront}`
+        : newThemeValue;
+
     // Notify standard onChange
-    onChange(id, newThemeValue);
+    onChange(id, formattedTheme);
 
     // Propagate to parent block and styles object if onChangeBlock or onChangeFormData is available
     const parentOnChangeBlock = onChangeBlock || (props as any)?.onChangeBlock;
@@ -293,12 +302,12 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
     const currentStyles = formData?.styles || objectvalue || {};
     const updatedData = {
       ...formData,
-      theme: newThemeValue,
+      theme: formattedTheme,
       backColorGroup: newBack,
       frontColorGroup: newFront,
       styles: {
         ...currentStyles,
-        theme: newThemeValue,
+        theme: formattedTheme,
         backColorGroup: newBack,
         frontColorGroup: newFront,
       },
@@ -383,9 +392,7 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
               size={18}
             />
             <span className="theme-name-label">{currentThemeTitle}</span>
-            <span
-              className={`dropdown-arrow ${isThemeMenuOpen ? 'open' : ''}`}
-            >
+            <span className={`dropdown-arrow ${isThemeMenuOpen ? 'open' : ''}`}>
               ▾
             </span>
           </button>
@@ -425,8 +432,15 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
                     key={bt.id}
                     className={`theme-dropdown-item ${isSelected ? 'selected' : ''}`}
                     role="option"
+                    tabIndex={0}
                     aria-selected={isSelected}
                     onClick={() => handleSelectTheme(bt.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSelectTheme(bt.id);
+                      }
+                    }}
                   >
                     <SplitColorCircle
                       backColor={bBg}
@@ -443,8 +457,15 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
                 <div
                   className="theme-dropdown-item selected"
                   role="option"
+                  tabIndex={0}
                   aria-selected={true}
                   onClick={() => handleSelectTheme('custom')}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleSelectTheme('custom');
+                    }
+                  }}
                 >
                   <SplitColorCircle
                     backColor={getGroupBg(currentBack)}
@@ -544,13 +565,17 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
                         key={cg.id}
                         className={`colorgroup-dropdown-item ${isSelected ? 'selected' : ''}`}
                         role="option"
+                        tabIndex={0}
                         aria-selected={isSelected}
                         onClick={() => handleSelectBack(cg.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleSelectBack(cg.id);
+                          }
+                        }}
                       >
-                        <SolidColorCircle
-                          color={getGroupBg(cg.id)}
-                          size={16}
-                        />
+                        <SolidColorCircle color={getGroupBg(cg.id)} size={16} />
                         <span className="item-label">{cg.name || cg.id}</span>
                         {isSelected && <span className="check-mark">✓</span>}
                       </div>
@@ -614,13 +639,17 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
                         key={cg.id}
                         className={`colorgroup-dropdown-item ${isSelected ? 'selected' : ''}`}
                         role="option"
+                        tabIndex={0}
                         aria-selected={isSelected}
                         onClick={() => handleSelectFront(cg.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleSelectFront(cg.id);
+                          }
+                        }}
                       >
-                        <SolidColorCircle
-                          color={getGroupBg(cg.id)}
-                          size={16}
-                        />
+                        <SolidColorCircle color={getGroupBg(cg.id)} size={16} />
                         <span className="item-label">{cg.name || cg.id}</span>
                         {isSelected && <span className="check-mark">✓</span>}
                       </div>

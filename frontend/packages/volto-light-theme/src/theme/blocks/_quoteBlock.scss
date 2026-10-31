@@ -14,9 +14,11 @@ $quote-padding-vertical: $spacing-medium;
   background-color: var(--theme-color);
   color: var(--theme-foreground-color, var(--primary-foreground-color));
 
-  // Always force default-container-width regardless of other wrappers or missing options
-  @include default-container-width();
-  @include adjustMarginsToContainer($default-container-width);
+  // Fallback padrão se nenhuma classe específica de largura estiver aplicada
+  &:not([class*='has--block-width-']) {
+    @include default-container-width();
+    @include adjustMarginsToContainer($default-container-width);
+  }
 }
 
 .quote-block {
@@ -33,6 +35,16 @@ $quote-padding-vertical: $spacing-medium;
         var(--theme-high-contrast-color, var(--accent-color))
       )
     );
+
+  // Suporte a personalização de borda em qualquer lado via BorderWidget
+  :is(
+      .block.quoteBlock[style*='--cardBorderWidth'],
+      [class*='block-editor-quoteBlock'][style*='--cardBorderWidth']
+    )
+    & {
+    border-width: var(--cardBorderWidth) !important;
+    border-style: solid;
+  }
   margin: 0;
 
   // Transparent background (default)

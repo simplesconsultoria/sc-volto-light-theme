@@ -34,7 +34,7 @@ export const EventMetadataSchema = ({ intl }: any) => ({
     {
       id: 'styling',
       title: 'Styling',
-      fields: ['blockWidth', 'theme'],
+      fields: ['theme'],
     },
   ],
   properties: {
@@ -61,11 +61,6 @@ export const EventMetadataSchema = ({ intl }: any) => ({
     price: {
       title: 'Price/Participation (override)',
       type: 'string',
-    },
-    blockWidth: {
-      title: intl.formatMessage(messages.blockWidth),
-      widget: 'blockWidth',
-      default: 'layout',
     },
     theme: {
       title: intl.formatMessage(messages.theme),

@@ -54,12 +54,16 @@ const ColorGroupDropdownSelect: React.FC<ColorGroupDropdownSelectProps> = ({
     };
   }, []);
 
-  const currentGroup = availableColorGroups[value] || availableColorGroups.primary;
+  const currentGroup =
+    availableColorGroups[value] || availableColorGroups.primary;
   const currentBg = currentGroup?.background_color_light || '#ffffff';
   const groupKeys = Object.keys(availableColorGroups);
 
   return (
-    <div className="select-control colorgroup-select-control" ref={containerRef}>
+    <div
+      className="select-control colorgroup-select-control"
+      ref={containerRef}
+    >
       <label htmlFor={id} className="control-label">
         {label}
       </label>
@@ -109,15 +113,24 @@ const ColorGroupDropdownSelect: React.FC<ColorGroupDropdownSelectProps> = ({
                   key={key}
                   className={`colorgroup-option-item ${isSelected ? 'selected' : ''}`}
                   role="option"
+                  tabIndex={0}
                   aria-selected={isSelected}
                   onClick={() => {
                     onChange(key);
                     setIsOpen(false);
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onChange(key);
+                      setIsOpen(false);
+                    }
+                  }}
                 >
                   <SolidColorCircle color={bg} size={16} />
                   <span className="option-name">
-                    {cg?.name || key} <span className="option-key">({key})</span>
+                    {cg?.name || key}{' '}
+                    <span className="option-key">({key})</span>
                   </span>
                   {isSelected && <span className="option-check">✓</span>}
                 </div>
@@ -211,7 +224,10 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
 
   const handleAddBlockTheme = (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanId = newId.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+    const cleanId = newId
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, '-');
     if (!cleanId) {
       setErrorMsg('O ID do tema de bloco é obrigatório.');
       return;
@@ -252,9 +268,10 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
       <div className="blockthemes-header">
         <h4>Temas de Bloco (Block Themes)</h4>
         <p className="help">
-          Um Tema de Bloco é um conjunto predefinido de dois ColorGroups: a área de
-          trás (fundo do bloco, título da listagem) e a área da frente (cartões, chips
-          e destaques). Clique em um tema para expandir e editar.
+          Um Tema de Bloco é um conjunto predefinido de dois ColorGroups: a área
+          de trás (fundo do bloco, título da listagem) e a área da frente
+          (cartões, chips e destaques). Clique em um tema para expandir e
+          editar.
         </p>
       </div>
 
@@ -436,8 +453,8 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
           <h5>+ Adicionar Novo Tema de Bloco</h5>
         </div>
         <p className="help">
-          Crie um novo tema de bloco selecionando os ColorGroups para a área de trás
-          (fundo do bloco) e para a área da frente (cards e destaques).
+          Crie um novo tema de bloco selecionando os ColorGroups para a área de
+          trás (fundo do bloco) e para a área da frente (cards e destaques).
         </p>
 
         {errorMsg && <div className="ui error message">{errorMsg}</div>}
@@ -487,7 +504,9 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
         </div>
 
         {/* Live Preview of the new theme being configured */}
-        <div className="preview-label">Pré-visualização do Novo Tema de Bloco:</div>
+        <div className="preview-label">
+          Pré-visualização do Novo Tema de Bloco:
+        </div>
         <div
           className="blocktheme-preview"
           style={{

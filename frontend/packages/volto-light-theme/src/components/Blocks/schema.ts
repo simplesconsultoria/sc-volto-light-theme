@@ -1,31 +1,7 @@
 import { addStyling } from '@plone/volto/helpers/Extensions/withBlockSchemaEnhancer';
 import config from '@plone/volto/registry';
-import { defineMessages } from 'react-intl';
 import type { IntlShape } from '@plone/types/src/i18n';
 import type { JSONSchema } from '@plone/types/src/config/';
-
-const messages = defineMessages({
-  backgroundColor: {
-    id: 'Theme Preset',
-    defaultMessage: 'Theme Preset',
-  },
-  borderColor: {
-    id: 'Border color',
-    defaultMessage: 'Border color',
-  },
-  backColorGroup: {
-    id: 'Área de Trás (Color Group)',
-    defaultMessage: 'Área de Trás (Color Group)',
-  },
-  frontColorGroup: {
-    id: 'Área da Frente (Color Group)',
-    defaultMessage: 'Área da Frente (Color Group)',
-  },
-  defaultFromTheme: {
-    id: 'Padrão do Tema',
-    defaultMessage: 'Padrão do Tema',
-  },
-});
 
 interface StylingSchemaProps {
   schema: JSONSchema;
@@ -39,7 +15,6 @@ export const defaultStylingSchema = ({
   intl,
 }: StylingSchemaProps): JSONSchema => {
   const blockConfig = config.blocks?.blocksConfig?.[formData['@type']];
-  const themes = blockConfig?.themes || config.blocks.themes;
   const defaultTheme =
     blockConfig?.defaultTheme || config.blocks.themes?.[0]?.name;
 

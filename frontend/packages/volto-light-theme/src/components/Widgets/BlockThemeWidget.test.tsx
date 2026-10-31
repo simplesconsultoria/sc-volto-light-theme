@@ -94,8 +94,12 @@ describe('BlockThemeWidget', () => {
     const { getByTestId } = render(
       <BlockThemeWidget id="theme" onChange={onChange} value="default" />,
     );
-    const hiddenSelect = getByTestId('block-theme-hidden-select') as HTMLSelectElement;
-    const optionValues = Array.from(hiddenSelect.options).map((opt) => opt.value);
+    const hiddenSelect = getByTestId(
+      'block-theme-hidden-select',
+    ) as HTMLSelectElement;
+    const optionValues = Array.from(hiddenSelect.options).map(
+      (opt) => opt.value,
+    );
     expect(optionValues).toContain('alternative');
     expect(optionValues).not.toContain('festivo');
   });
@@ -113,8 +117,12 @@ describe('BlockThemeWidget', () => {
         }}
       />,
     );
-    const hiddenSelect = getByTestId('block-theme-hidden-select') as HTMLSelectElement;
-    const optionValues = Array.from(hiddenSelect.options).map((opt) => opt.value);
+    const hiddenSelect = getByTestId(
+      'block-theme-hidden-select',
+    ) as HTMLSelectElement;
+    const optionValues = Array.from(hiddenSelect.options).map(
+      (opt) => opt.value,
+    );
     expect(optionValues).toContain('default');
     expect(optionValues).toContain('alternative');
     expect(optionValues).not.toContain('festivo');

@@ -14,10 +14,10 @@ $hero-card-overlap: 60px;
 }
 
 .block.heroBlock {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin-right: 0 !important;
-  margin-left: 0 !important;
+  // width: 100% !important;
+  // max-width: 100% !important;
+  // margin-right: 0 !important;
+  // margin-left: 0 !important;
   background-color: var(--theme-color, transparent);
   color: var(--theme-foreground-color, inherit);
 
@@ -30,20 +30,24 @@ $hero-card-overlap: 60px;
   @include layout-container-width();
   @include adjustMarginsToContainer($layout-container-width);
 
-  // Block widths overrides
+  &.has--block-width--narrow,
   &.has--block-width--var\(--narrow-container-width\) {
     @include narrow-container-width();
     @include adjustMarginsToContainer($narrow-container-width);
   }
+
+  &.has--block-width--default,
   &.has--block-width--var\(--default-container-width\) {
     @include default-container-width();
     @include adjustMarginsToContainer($default-container-width);
   }
-  &.has--block-width--var\(--layout-container-width\),
-  &.has--block-width--layout {
+
+  &.has--block-width--layout,
+  &.has--block-width--var\(--layout-container-width\) {
     @include layout-container-width();
     @include adjustMarginsToContainer($layout-container-width);
   }
+
   &.has--block-width--unset,
   &.has--block-width--full {
     // Apenas a variação flex se expande para tocar as laterais da página
@@ -615,23 +619,37 @@ $hero-card-overlap: 60px;
 #page-edit,
 #page-add {
   .block-editor-heroBlock {
+    width: 100% !important;
+    max-width: 100% !important;
+
     .block.heroBlock {
-      &.has--block-width--var\(--narrow-container-width\) .hero-block {
-        max-width: var(--narrow-container-width) !important;
-        margin-right: auto !important;
-        margin-left: auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    .hero-block-container {
+      &.has--block-width--narrow,
+      &.has--block-width--var\(--narrow-container-width\) {
+        @include narrow-container-width();
+        @include adjustMarginsToEditContainer($narrow-container-width);
       }
-      &.has--block-width--var\(--default-container-width\) .hero-block {
-        max-width: var(--default-container-width) !important;
-        margin-right: auto !important;
-        margin-left: auto !important;
+
+      &.has--block-width--default,
+      &.has--block-width--var\(--default-container-width\) {
+        @include default-container-width();
+        @include adjustMarginsToEditContainer($default-container-width);
       }
-      &.has--block-width--var\(--layout-container-width\) .hero-block {
-        max-width: var(--layout-container-width) !important;
-        margin-right: auto !important;
-        margin-left: auto !important;
+
+      &.has--block-width--layout,
+      &.has--block-width--var\(--layout-container-width\) {
+        @include layout-container-width();
+        @include adjustMarginsToEditContainer($layout-container-width);
       }
-      &.has--block-width--unset {
+
+      &.has--block-width--unset,
+      &.has--block-width--full {
         @include adjustEditContainerFullWidth();
         .hero-block {
           max-width: 100% !important;

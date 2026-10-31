@@ -1,23 +1,11 @@
 import React from 'react';
 import cx from 'classnames';
 import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
+import { normalizeBlockWidth } from '../../../helpers/blockWidth';
 
 const EventMetadataView = (props: any) => {
   const { data, properties, className } = props;
-  let blockWidth = data?.blockWidth || 'default';
-  if (typeof blockWidth === 'object' && blockWidth !== null) {
-    const val =
-      (blockWidth as any)['--block-width'] ||
-      (blockWidth as any).value ||
-      (blockWidth as any).id ||
-      Object.values(blockWidth)[0];
-
-    if (val === 'unset') blockWidth = 'full';
-    else if (val === 'var(--layout-container-width)') blockWidth = 'layout';
-    else if (val === 'var(--narrow-container-width)') blockWidth = 'narrow';
-    else if (val === 'var(--default-container-width)') blockWidth = 'default';
-    else blockWidth = val;
-  }
+  const blockWidth = normalizeBlockWidth(data) || 'default';
 
   const themeClass = data?.theme ? `bg-${data.theme}` : 'bg-slate';
 

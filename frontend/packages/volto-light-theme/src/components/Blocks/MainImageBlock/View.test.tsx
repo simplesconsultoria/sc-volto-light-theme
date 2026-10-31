@@ -91,6 +91,39 @@ describe('MainImageBlock View', () => {
     ).toBeInTheDocument();
   });
 
+  it('resolves preview image and default metadata from metadata when properties is an empty container object', () => {
+    const store = mockStore({
+      intl: { locale: 'en', messages: {} },
+    });
+
+    const metadata = {
+      title: 'Page Title Default',
+      description: 'Page Caption Default',
+      preview_image_link: 'http://example.com/image.jpg',
+    };
+
+    // Inside a GridBlock or Accordion, properties is the container object
+    const properties = {
+      '@type': 'gridBlock',
+      blocks: {},
+    };
+
+    // data has no explicit title/description, should default to metadata
+    const { getByText, getByAltText } = render(
+      <Provider store={store}>
+        <MainImageBlockView
+          data={{} as any}
+          properties={properties as any}
+          metadata={metadata as any}
+        />
+      </Provider>,
+    );
+
+    expect(getByText('Page Title Default')).toBeInTheDocument();
+    expect(getByText('Page Caption Default')).toBeInTheDocument();
+    expect(getByAltText('Mocked preview')).toBeInTheDocument();
+  });
+
   it('renders nothing in view mode when no image is provided', () => {
     const store = mockStore({
       intl: { locale: 'en', messages: {} },
