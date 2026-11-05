@@ -207,7 +207,9 @@ export function blockThemeUtilityClasses(
     .filter((bt) => bt && typeof bt === 'object' && bt.id)
     .map(
       (bt) => `
-.has--theme--${bt.id} {
+.has--theme--${bt.id},
+.blocks-group-wrapper.has--theme--${bt.id},
+.blocks-group-wrapper.${bt.id} {
   --theme-color: var(--block-theme-${bt.id}-bg);
   --theme-foreground-color: var(--block-theme-${bt.id}-text);
   --theme-high-contrast-foreground-color: var(--block-theme-${bt.id}-high-contrast);
@@ -248,7 +250,9 @@ export function colorGroupUtilityClasses(
     .filter((cg) => cg && typeof cg === 'object' && cg.id)
     .map(
       (cg) => `
-.has-back-colorgroup-${cg.id} {
+.has-back-colorgroup-${cg.id},
+.blocks-group-wrapper.has-back-colorgroup-${cg.id},
+.blocks-group-wrapper[class*="custom-${cg.id}-"] {
   --theme-color: var(--colorgroup-${cg.id}-bg);
   --theme-foreground-color: var(--colorgroup-${cg.id}-text);
   --theme-high-contrast-foreground-color: var(--colorgroup-${cg.id}-text);

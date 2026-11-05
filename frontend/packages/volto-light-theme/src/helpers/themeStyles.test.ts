@@ -485,7 +485,8 @@ describe('themeSettingsOf', () => {
     expect(css).toContain(
       '--block-theme-red-high-bg: var(--colorgroup-neutral-bg);',
     );
-    expect(css).toContain('.has--theme--red {');
+    expect(css).toContain('.has--theme--red,');
+    expect(css).toContain('.blocks-group-wrapper.has--theme--red,');
     expect(css).toContain('--theme-color: var(--block-theme-red-bg);');
     expect(css).toContain(
       '--theme-high-contrast-color: var(--block-theme-red-high-bg);',
@@ -565,8 +566,11 @@ describe('themeSettingsOf', () => {
       expect(css).toContain('--colorgroup-custom_brand-bg-repeat: repeat-x;');
       expect(css).toContain('--colorgroup-custom_brand-bg-position: top left;');
 
-      // Utility class has background layer properties
-      expect(css).toContain('.has-back-colorgroup-custom_brand {');
+      // Utility class and blocks-group-wrapper have background layer properties
+      expect(css).toContain('.has-back-colorgroup-custom_brand,');
+      expect(css).toContain(
+        '.blocks-group-wrapper[class*="custom-custom_brand-"] {',
+      );
       expect(css).toContain(
         '--theme-bg-image: var(--colorgroup-custom_brand-bg-image, none);',
       );

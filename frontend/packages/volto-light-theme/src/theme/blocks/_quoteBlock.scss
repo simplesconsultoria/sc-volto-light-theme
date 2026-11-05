@@ -11,7 +11,7 @@ $quote-padding-vertical: $spacing-medium;
 #page-edit .block-editor-quoteBlock,
 #page-add .block-editor-quoteBlock,
 .block.quoteBlock {
-  background-color: var(--theme-color);
+  background-color: transparent;
   color: var(--theme-foreground-color, var(--primary-foreground-color));
 
   // Fallback padrão se nenhuma classe específica de largura estiver aplicada

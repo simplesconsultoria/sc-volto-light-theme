@@ -129,7 +129,7 @@
   &.has-theme {
     padding: 1rem;
     border-radius: 4px;
-    background-color: var(--theme-color, transparent);
+    background-color: transparent;
     color: var(--theme-foreground-color, inherit);
   }
 }

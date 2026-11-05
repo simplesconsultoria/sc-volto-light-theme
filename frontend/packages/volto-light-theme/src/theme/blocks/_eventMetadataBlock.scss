@@ -5,7 +5,7 @@
     padding-top: $block-vertical-space;
     border-top: var(--theme-border-width, 3px) solid
       var(--theme-border-color, var(--primary-accent-color));
-    background-color: var(--theme-color, #f0f8fb);
+    background-color: transparent;
     color: var(--theme-foreground-color, inherit);
     gap: 1.5rem;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

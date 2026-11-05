@@ -7,15 +7,11 @@ $hero-card-overlap: 60px;
 #page-document
   .blocks-group-wrapper
   > .block:has(.heroBlock.has--block-width--unset),
-#page-document
-  .blocks-group-wrapper
-  > .block.heroBlock.has--block-width--unset,
+#page-document .blocks-group-wrapper > .block.heroBlock.has--block-width--unset,
 #page-document
   .blocks-group-wrapper
   > .block:has(.heroBlock.has--block-width--full),
-#page-document
-  .blocks-group-wrapper
-  > .block.heroBlock.has--block-width--full,
+#page-document .blocks-group-wrapper > .block.heroBlock.has--block-width--full,
 #page-document
   .blocks-group-wrapper
   > .block:has(.hero-block-container.has--block-width--full),
@@ -31,7 +27,7 @@ $hero-card-overlap: 60px;
 }
 
 .block.heroBlock {
-  background-color: var(--theme-color, transparent);
+  background-color: transparent !important;
   color: var(--theme-foreground-color, inherit);
 
   // Container type para permitir que fontes reajam à largura da coluna
@@ -39,6 +35,7 @@ $hero-card-overlap: 60px;
 
   // Quando o heroBlock externo possui imagem de fundo, evita duplicar o background no container interno
   .hero-block-container {
+    background-color: transparent !important;
     background-image: none !important;
   }
 }
@@ -122,6 +119,7 @@ $hero-card-overlap: 60px;
 
 .hero-block {
   --hero-image-fit: cover;
+  background-color: transparent;
 
   &.image-fit-contain {
     --hero-image-fit: contain;

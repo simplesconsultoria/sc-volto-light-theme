@@ -1,17 +1,19 @@
 .block.schemaForm {
+  background-color: transparent !important;
+
   .ui.segment {
-    background-color: var(--theme-color);
+    background-color: transparent !important;
     label {
       color: var(--theme-foreground-color);
     }
     input,
     textarea {
-      background-color: var(--theme-color);
-      color: var(--theme-foreground-color);
+      background-color: var(--theme-high-contrast-color);
+      color: var(--theme-top-foreground-color);
     }
   }
   .ui.clearing.segment.actions {
-    background-color: var(--theme-color);
+    background-color: transparent !important;
     button {
       background-color: var(--theme-high-contrast-color);
       color: var(--theme-top-foreground-color);

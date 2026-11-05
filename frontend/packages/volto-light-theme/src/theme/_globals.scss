@@ -181,9 +181,62 @@ body .block.search .search-wrapper {
 .blocks-group-wrapper {
   display: flow-root;
   clear: both;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+
+  // Em todos os blocos e containers intermediários agrupados:
+  // Se não for um elemento Highground, deve ter background-color: transparent (null)
+  // e background-image: none, pois margens e espaçamentos internos do conteúdo
+  // revelariam caixas de fundo cortadas sobre o wrapper contínuo.
+  & > .block,
+  & > [class*='block-'],
+  .block:not(.is-highground):not(.card):not(.ui.card):not(.card-container):not(.hero-card):not(.has-highground-bg),
+  .block-inner-container,
+  .block-container:not(.card):not(.ui.card),
+  .hero-block-container,
+  .hero-block:not(.hero-card),
+  .hero-flex,
+  .hero-flex-inner,
+  .hero-flex-content,
+  .hero-flex-image-wrapper,
+  .listing-block-container,
+  .listing-headline-wrapper,
+  .listing-body,
+  .searchBlock-container,
+  .event-metadata-inner,
+  .custom-grid-container {
+    background-color: transparent !important;
+    background-image: none !important;
+  }
+
+  // Preserva e garante a estilização de elementos que são Highground (cards, chips, botões)
+  .card,
+  .ui.card,
+  .listing-item,
+  .teaser-item,
+  .grid-item,
+  .hero-card-info,
+  .hero-card-image-wrapper,
+  .is-highground,
+  [data-ground='high'] {
+    background-color: var(--theme-high-contrast-color);
+  }
 }
 
 #page-document {
+  &.ui.container,
+  &.q.container,
+  &.container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+
   .blocks-group-wrapper:last-child {
     margin-bottom: 0 !important;
   }
@@ -195,6 +248,13 @@ body .block.search .search-wrapper {
   .blocks-group-wrapper .block.introduction {
     margin-top: 40px;
     margin-bottom: 40px;
+  }
+
+  // Elementos diretos fora de blocks-group-wrapper (caso existam) respeitam a largura de layout
+  & > *:not(.blocks-group-wrapper) {
+    max-width: var(--layout-container-width);
+    margin-right: auto;
+    margin-left: auto;
   }
 }
 

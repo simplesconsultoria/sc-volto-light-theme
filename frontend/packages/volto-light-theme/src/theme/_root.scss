@@ -427,6 +427,11 @@
         --colorgroup-#{$front}-font-family,
         inherit
       ) !important;
+
+      background-image: var(--colorgroup-#{$back}-bg-image, none);
+      background-size: var(--colorgroup-#{$back}-bg-size, auto);
+      background-repeat: var(--colorgroup-#{$back}-bg-repeat, repeat);
+      background-position: var(--colorgroup-#{$back}-bg-position, center);
     }
   }
 }
