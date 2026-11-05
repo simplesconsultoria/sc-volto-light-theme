@@ -35,16 +35,6 @@ $quote-padding-vertical: $spacing-medium;
         var(--theme-high-contrast-color, var(--accent-color))
       )
     );
-
-  // Suporte a personalização de borda em qualquer lado via BorderWidget
-  :is(
-      .block.quoteBlock[style*='--cardBorderWidth'],
-      [class*='block-editor-quoteBlock'][style*='--cardBorderWidth']
-    )
-    & {
-    border-width: var(--cardBorderWidth) !important;
-    border-style: solid;
-  }
   margin: 0;
 
   // Transparent background (default)
@@ -98,10 +88,6 @@ $quote-padding-vertical: $spacing-medium;
 #page-edit,
 #page-add {
   .block-editor-quoteBlock {
-    // .block.quoteBlock {
-    //   max-width: var(--default-container-width, 940px);
-    // }
-
     // Ensure slate editor inherits the italic style
     .quote-text {
       .text-slate-editor-inner {
@@ -112,26 +98,4 @@ $quote-padding-vertical: $spacing-medium;
       }
     }
   }
-}
-
-// Suporte a alinhamento de texto no bloco Introduction (via styles.align)
-.has--align--center.block-editor-introduction .block.introduction,
-.has--block-alignment--center.block-editor-introduction .block.introduction,
-body .block.introduction.has--align--center,
-body .block.introduction.has--block-alignment--center {
-  text-align: center;
-}
-
-.has--align--right.block-editor-introduction .block.introduction,
-.has--block-alignment--right.block-editor-introduction .block.introduction,
-body .block.introduction.has--align--right,
-body .block.introduction.has--block-alignment--right {
-  text-align: right;
-}
-
-.has--align--left.block-editor-introduction .block.introduction,
-.has--block-alignment--left.block-editor-introduction .block.introduction,
-body .block.introduction.has--align--left,
-body .block.introduction.has--block-alignment--left {
-  text-align: left;
 }

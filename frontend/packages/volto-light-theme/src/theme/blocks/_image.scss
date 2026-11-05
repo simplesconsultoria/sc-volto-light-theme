@@ -1,0 +1,298 @@
+// =============================================================================
+// Image & MainImageBlock System — sc-volto-light-theme
+// Unifica e otimiza a estilização de Image e MainImageBlock em modo visualização e edição.
+// =============================================================================
+
+.block.image,
+.block.mainImageBlock,
+.main-image-block,
+.block-editor-image,
+.block-editor-mainImageBlock {
+  --align-left: left;
+  --align-center: none;
+  --align-right: right;
+
+  // Tamanhos de imagem flutuante, referenciados pela variável --media-size
+  --size-small: 220px;
+  --size-medium: 300px;
+  --size-large: calc(
+    var(--block-width, var(--default-container-width)) / 2 - 10px
+  );
+
+  // Mapeamento direto de tamanhos via classes
+  &.small,
+  &.s {
+    --media-size: var(--size-small);
+  }
+  &.medium,
+  &.m {
+    --media-size: var(--size-medium);
+  }
+  &.large,
+  &.l {
+    --media-size: var(--size-large);
+  }
+
+  // Sobrescrita e garantia de --block-width e max-width baseados na classe has--block-width--*
+  &.has--block-width--narrow {
+    --block-width: var(--narrow-container-width) !important;
+    max-width: var(--narrow-container-width) !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+
+  &.has--block-width--default {
+    --block-width: var(--default-container-width) !important;
+    max-width: var(--default-container-width) !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+
+  &.has--block-width--layout {
+    --block-width: var(--layout-container-width) !important;
+    max-width: var(--layout-container-width) !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+
+  &.has--block-width--full,
+  &.has--block-width--unset {
+    --block-width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  figure {
+    box-sizing: border-box;
+
+    img {
+      max-width: 100% !important;
+      height: auto;
+      box-sizing: border-box;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 1. Modo de Visualização (#page-document)
+// -----------------------------------------------------------------------------
+#page-document {
+  .blocks-group-wrapper > .block.image,
+  .blocks-group-wrapper > .block.mainImageBlock,
+  .blocks-group-wrapper > .main-image-block {
+    // Margens responsivas por largura de container
+    &.has--block-width--narrow {
+      @include adjustMarginsToContainer($narrow-container-width);
+    }
+    &.has--block-width--default {
+      @include adjustMarginsToContainer($default-container-width);
+    }
+    &.has--block-width--layout {
+      @include adjustMarginsToContainer($layout-container-width);
+    }
+
+    // Alinhamento central
+    &.center,
+    &.align.center,
+    &.has--block-alignment--center {
+      figure {
+        margin-right: auto;
+        margin-left: auto;
+        clear: both;
+        float: none;
+        text-align: center;
+
+        img {
+          margin-right: auto;
+          margin-left: auto;
+          float: none;
+        }
+      }
+    }
+
+    // Alinhamento lateral (left / right) em Desktop
+    @media only screen and (min-width: #{$largest-mobile-screen + 1px}) {
+      &.left,
+      &.align.left,
+      &.has--block-alignment--left {
+        height: 0;
+        margin-bottom: 0 !important;
+        clear: none;
+
+        figure {
+          @include floated-figure('left');
+          max-width: var(
+            --media-size,
+            calc(var(--block-width, var(--default-container-width)) / 2 - 10px)
+          );
+        }
+      }
+
+      &.right,
+      &.align.right,
+      &.has--block-alignment--right {
+        height: 0;
+        margin-bottom: 0 !important;
+        clear: none;
+
+        figure {
+          @include floated-figure('right');
+          max-width: var(
+            --media-size,
+            calc(var(--block-width, var(--default-container-width)) / 2 - 10px)
+          );
+        }
+      }
+    }
+
+    // Alinhamento lateral em Mobile
+    @media only screen and (max-width: #{$largest-mobile-screen}) {
+      &.left,
+      &.right,
+      &.align.left,
+      &.align.right,
+      &.has--block-alignment--left,
+      &.has--block-alignment--right {
+        height: auto !important;
+        margin-top: $spacing-large !important;
+        margin-bottom: $spacing-large !important;
+        clear: both !important;
+        float: none !important;
+        text-align: center !important;
+
+        figure {
+          width: 100% !important;
+          max-width: 100% !important;
+          margin-right: auto !important;
+          margin-bottom: $spacing-small !important;
+          margin-left: auto !important;
+          clear: both !important;
+          float: none !important;
+          text-align: center !important;
+
+          img {
+            display: block !important;
+            margin-right: auto !important;
+            margin-left: auto !important;
+            float: none !important;
+          }
+
+          figcaption {
+            text-align: center !important;
+          }
+        }
+      }
+
+      &:not(.has--block-width--full) {
+        width: auto !important;
+        max-width: calc(
+          100% - 2 * #{$horizontal-space-small-screens}
+        ) !important;
+        margin-right: $horizontal-space-small-screens !important;
+        margin-left: $horizontal-space-small-screens !important;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 2. Modo de Edição (#page-edit, #page-add)
+// -----------------------------------------------------------------------------
+#page-edit,
+#page-add {
+  .block-editor-image,
+  .block-editor-mainImageBlock {
+    // Aplicação de respiros responsivos nos blocos de edição
+    &.has--block-width--narrow {
+      @include adjustMarginsToEditContainer($narrow-container-width);
+    }
+    &.has--block-width--default {
+      @include adjustMarginsToEditContainer($default-container-width);
+    }
+    &.has--block-width--layout {
+      @include adjustMarginsToEditContainer($layout-container-width);
+    }
+    &.has--block-width--full,
+    &.has--block-width--unset {
+      @include adjustEditContainerFullWidth();
+    }
+
+    // Alinhamento central
+    &.center,
+    &.has--block-alignment--center {
+      figure.center,
+      figure {
+        margin-right: auto;
+        margin-left: auto;
+        float: none;
+      }
+    }
+
+    // Alinhamento lateral em Desktop
+    @media only screen and (min-width: #{$largest-mobile-screen + 1px}) {
+      &.left,
+      &.has--block-alignment--left {
+        figure {
+          @include floated-figure('left');
+          max-width: var(
+            --media-size,
+            calc(var(--block-width, var(--default-container-width)) / 2 - 10px)
+          );
+        }
+      }
+
+      &.right,
+      &.has--block-alignment--right {
+        figure {
+          @include floated-figure('right');
+          max-width: var(
+            --media-size,
+            calc(var(--block-width, var(--default-container-width)) / 2 - 10px)
+          );
+        }
+      }
+    }
+
+    // Propagação de largura para wrappers internos de blocos na edição
+    .block.inner .block .block,
+    .block.mainImageBlock {
+      max-width: var(--block-width) !important;
+      margin-right: auto !important;
+      margin-left: auto !important;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 3. Imagens dentro de containers estruturais (CustomGrid, GridBlock, Accordion)
+// -----------------------------------------------------------------------------
+.custom-grid-column,
+.block.gridBlock .column,
+.column,
+.accordion-block .content {
+  .block.image,
+  .block.mainImageBlock,
+  .main-image-block,
+  .block-editor-image,
+  .block-editor-mainImageBlock {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+
+    figure {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-right: auto !important;
+      margin-left: auto !important;
+      float: none !important;
+
+      img {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto;
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import install, {
   disableThemeSchema,
   installAccordionBlock,
 } from './blocks';
+import { resolveBlockTheme } from './blockThemes';
 
 describe('Block Width and Borders Schema Enhancer', () => {
   it('injeta theme, blockWidth e borders no schema de blocos padrão', () => {
@@ -644,5 +645,44 @@ describe('Block Width and Borders Schema Enhancer', () => {
 
     expect(editResult.props.data.variation).toBe('facetsTopSide');
     expect(editResult.props.data.listingBodyTemplate).toBe('grid');
+  });
+
+  it('resolves created block themes properly with resolveBlockTheme and themes.find', () => {
+    const mockConfig: any = {
+      settings: {},
+      blocks: {
+        blocksConfig: {},
+      },
+    };
+    install(mockConfig);
+
+    // Register a created block theme in config.blocks.blockThemes
+    mockConfig.blocks.blockThemes = {
+      red: {
+        id: 'red',
+        name: 'Red',
+        back_color_group: 'red',
+        front_color_group: 'neutral',
+      },
+    };
+
+    // 1. Test customThemes.find finds 'red'
+    const foundTheme = mockConfig.blocks.themes.find(
+      (t: any) => t.name === 'red',
+    );
+    expect(foundTheme).toBeDefined();
+    expect(foundTheme.name).toBe('red');
+    expect(foundTheme.style['--theme-color']).toBe('var(--block-theme-red-bg)');
+
+    // 2. Test resolveBlockTheme with theme: 'red'
+    const resolved = resolveBlockTheme({
+      theme: 'red',
+      blockThemes: mockConfig.blocks.blockThemes,
+    });
+    expect(resolved.backColorGroup).toBe('red');
+    expect(resolved.frontColorGroup).toBe('neutral');
+    expect(resolved.className).toContain('has--theme--red');
+    expect(resolved.className).toContain('has-back-colorgroup-red');
+    expect(resolved.className).toContain('has-front-colorgroup-neutral');
   });
 });

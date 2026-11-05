@@ -8,6 +8,7 @@
  * time, so the whole declaration is dropped. `theme/blockThemes.test.ts` guards it.
  */
 
+import config from '@plone/volto/registry';
 import type { ColorGroup, BlockTheme } from '../types/theme';
 
 export interface ThemeDefinition {
@@ -248,54 +249,74 @@ export function resolveBlockTheme(
     customFront = parts[2];
   }
 
+  const isCustom = typeof theme === 'string' && theme.startsWith('custom');
+
+  const allBlockThemes: Record<string, BlockTheme> = {
+    ...DEFAULT_BLOCK_THEMES,
+    ...((config as any)?.blocks?.blockThemes || {}),
+    ...(blockThemes || {}),
+  };
+
   const currentBlockTheme =
-    blockThemes[theme] ||
-    (theme === 'brand' ? blockThemes['alternative'] : undefined) ||
+    allBlockThemes[theme] ||
+    (theme === 'brand' ? allBlockThemes['alternative'] : undefined) ||
     DEFAULT_BLOCK_THEMES[theme] ||
     (theme === 'brand' ? DEFAULT_BLOCK_THEMES['alternative'] : undefined);
 
-  const resolvedBack =
-    directBack ||
-    (typeof rawTheme === 'object' && rawTheme !== null
-      ? (rawTheme as any).backColorGroup
-      : undefined) ||
-    customBack ||
-    currentBlockTheme?.back_color_group ||
-    'primary';
-  const resolvedFront =
-    directFront ||
-    (typeof rawTheme === 'object' && rawTheme !== null
-      ? (rawTheme as any).frontColorGroup
-      : undefined) ||
-    customFront ||
-    currentBlockTheme?.front_color_group ||
-    'neutral';
+  const resolvedBack = isCustom
+    ? customBack ||
+      directBack ||
+      (typeof rawTheme === 'object' && rawTheme !== null
+        ? (rawTheme as any).backColorGroup
+        : undefined) ||
+      'primary'
+    : currentBlockTheme?.back_color_group ||
+      directBack ||
+      (typeof rawTheme === 'object' && rawTheme !== null
+        ? (rawTheme as any).backColorGroup
+        : undefined) ||
+      'primary';
+
+  const resolvedFront = isCustom
+    ? customFront ||
+      directFront ||
+      (typeof rawTheme === 'object' && rawTheme !== null
+        ? (rawTheme as any).frontColorGroup
+        : undefined) ||
+      'neutral'
+    : currentBlockTheme?.front_color_group ||
+      directFront ||
+      (typeof rawTheme === 'object' && rawTheme !== null
+        ? (rawTheme as any).frontColorGroup
+        : undefined) ||
+      'neutral';
 
   const themeDef =
     themeDefinitions.find((t) => t.name === theme) ||
     (theme === 'brand'
       ? themeDefinitions.find((t) => t.name === 'alternative')
+      : undefined) ||
+    (!isCustom && theme !== 'default'
+      ? createThemeDefinition(theme, currentBlockTheme?.name || theme)
       : undefined);
   const baseStyle: Record<string, string> = themeDef?.style
     ? { ...themeDef.style }
     : {};
 
-  const isCustom = typeof theme === 'string' && theme.startsWith('custom');
-
   const style: React.CSSProperties = {
-    '--theme-color': `var(--colorgroup-${resolvedBack}-bg, var(--${resolvedBack}-color, var(--primary-color)))`,
-    '--theme-foreground-color': `var(--colorgroup-${resolvedBack}-text, var(--${resolvedBack}-foreground-color, var(--primary-foreground-color)))`,
-    '--theme-high-contrast-foreground-color': `var(--colorgroup-${resolvedBack}-text, var(--${resolvedBack}-foreground-color, var(--primary-foreground-color)))`,
-    '--theme-low-contrast-foreground-color': `var(--colorgroup-${resolvedBack}-subtext, var(--${resolvedBack}-low-foreground-color, var(--primary-low-foreground-color)))`,
-    '--theme-foreground-accent-color': `var(--colorgroup-${resolvedBack}-accent, var(--${resolvedBack}-accent-color, var(--primary-accent-color)))`,
-    '--colorgroup-back-font': `var(--colorgroup-${resolvedBack}-font-family, inherit)`,
+    '--theme-color': `var(--block-theme-${theme}-bg, var(--colorgroup-${resolvedBack}-bg, var(--${resolvedBack}-color, var(--primary-color))))`,
+    '--theme-foreground-color': `var(--block-theme-${theme}-text, var(--colorgroup-${resolvedBack}-text, var(--${resolvedBack}-foreground-color, var(--primary-foreground-color))))`,
+    '--theme-high-contrast-foreground-color': `var(--block-theme-${theme}-high-contrast, var(--colorgroup-${resolvedBack}-text, var(--${resolvedBack}-foreground-color, var(--primary-foreground-color))))`,
+    '--theme-low-contrast-foreground-color': `var(--block-theme-${theme}-low-contrast, var(--colorgroup-${resolvedBack}-subtext, var(--${resolvedBack}-low-foreground-color, var(--primary-low-foreground-color))))`,
+    '--theme-foreground-accent-color': `var(--block-theme-${theme}-accent-color, var(--colorgroup-${resolvedBack}-accent, var(--${resolvedBack}-accent-color, var(--primary-accent-color))))`,
+    '--colorgroup-back-font': `var(--block-theme-${theme}-font-family, var(--colorgroup-${resolvedBack}-font-family, inherit))`,
 
-    '--theme-high-contrast-color': `var(--colorgroup-${resolvedFront}-bg, var(--${resolvedFront}-color, var(--neutral-color)))`,
-    '--theme-top-foreground-color': `var(--colorgroup-${resolvedFront}-text, var(--${resolvedFront}-foreground-color, var(--neutral-foreground-color)))`,
-    '--theme-top-high-contrast-foreground-color': `var(--colorgroup-${resolvedFront}-text, var(--${resolvedFront}-foreground-color, var(--neutral-foreground-color)))`,
-    '--theme-top-low-contrast-foreground-color': `var(--colorgroup-${resolvedFront}-subtext, var(--${resolvedFront}-low-foreground-color, var(--neutral-low-foreground-color)))`,
-    '--theme-top-accent-color': `var(--colorgroup-${resolvedFront}-accent, var(--${resolvedFront}-accent-color, var(--neutral-accent-color)))`,
-    '--colorgroup-front-font': `var(--colorgroup-${resolvedFront}-font-family, inherit)`,
+    '--theme-high-contrast-color': `var(--block-theme-${theme}-high-bg, var(--colorgroup-${resolvedFront}-bg, var(--${resolvedFront}-color, var(--neutral-color))))`,
+    '--theme-top-foreground-color': `var(--block-theme-${theme}-top-text, var(--colorgroup-${resolvedFront}-text, var(--${resolvedFront}-foreground-color, var(--neutral-foreground-color))))`,
+    '--theme-top-high-contrast-foreground-color': `var(--block-theme-${theme}-top-high-contrast, var(--colorgroup-${resolvedFront}-text, var(--${resolvedFront}-foreground-color, var(--neutral-foreground-color))))`,
+    '--theme-top-low-contrast-foreground-color': `var(--block-theme-${theme}-top-low-contrast, var(--colorgroup-${resolvedFront}-subtext, var(--${resolvedFront}-low-foreground-color, var(--neutral-low-foreground-color))))`,
+    '--theme-top-accent-color': `var(--block-theme-${theme}-top-accent-color, var(--colorgroup-${resolvedFront}-accent, var(--${resolvedFront}-accent-color, var(--neutral-accent-color))))`,
+    '--colorgroup-front-font': `var(--block-theme-${theme}-top-font-family, var(--colorgroup-${resolvedFront}-font-family, inherit))`,
     ...(isCustom ? {} : baseStyle),
   } as React.CSSProperties;
 

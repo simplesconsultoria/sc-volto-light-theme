@@ -8,6 +8,7 @@ import {
   themeSettingsOf,
   themeCustomProperties,
   themeStyleSheet,
+  blockThemeUtilityClasses,
 } from './themeStyles';
 import type { SerializedTheme, ThemeSettings } from '../types/theme';
 
@@ -460,6 +461,32 @@ describe('themeSettingsOf', () => {
     });
     expect(themeStyleSheet(themeSettingsOf(field))).toBe(
       ':root {\n  --primary-color-light: #123456;\n}',
+    );
+  });
+
+  it('generates block theme utility classes and properties for created block themes', () => {
+    const field = serialized({
+      token: 'custom',
+      value: {
+        block_themes: {
+          red: {
+            id: 'red',
+            name: 'Red Theme',
+            back_color_group: 'red',
+            front_color_group: 'neutral',
+          },
+        },
+      },
+    });
+    const css = themeStyleSheet(themeSettingsOf(field));
+    expect(css).toContain('--block-theme-red-bg: var(--colorgroup-red-bg);');
+    expect(css).toContain(
+      '--block-theme-red-high-bg: var(--colorgroup-neutral-bg);',
+    );
+    expect(css).toContain('.has--theme--red {');
+    expect(css).toContain('--theme-color: var(--block-theme-red-bg);');
+    expect(css).toContain(
+      '--theme-high-contrast-color: var(--block-theme-red-high-bg);',
     );
   });
 });

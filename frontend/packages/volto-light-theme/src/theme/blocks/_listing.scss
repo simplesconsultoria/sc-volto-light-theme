@@ -32,6 +32,13 @@ body .block.listing,
     align-self: stretch;
     margin-right: 0 !important;
     margin-left: 0 !important;
+    .items {
+      width: auto;
+      max-width: 100% !important;
+      align-self: stretch;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
   }
 
   // Summary variation: remove min-width on small screens so image doesn't break out

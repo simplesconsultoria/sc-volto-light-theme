@@ -155,6 +155,39 @@ export function blockThemeCustomProperties(
   };
 }
 
+export function blockThemeUtilityClasses(
+  blockThemes?: Record<string, BlockTheme> | BlockTheme[],
+): string {
+  if (!blockThemes) return '';
+  const list = Array.isArray(blockThemes)
+    ? blockThemes
+    : Object.values(blockThemes);
+  return list
+    .filter((bt) => bt && typeof bt === 'object' && bt.id)
+    .map(
+      (bt) => `
+.has--theme--${bt.id} {
+  --theme-color: var(--block-theme-${bt.id}-bg);
+  --theme-foreground-color: var(--block-theme-${bt.id}-text);
+  --theme-high-contrast-foreground-color: var(--block-theme-${bt.id}-high-contrast);
+  --theme-low-contrast-foreground-color: var(--block-theme-${bt.id}-low-contrast);
+  --theme-foreground-accent-color: var(--block-theme-${bt.id}-accent-color);
+  --colorgroup-back-font: var(--block-theme-${bt.id}-font-family, inherit);
+  --theme-high-contrast-color: var(--block-theme-${bt.id}-high-bg);
+  --theme-top-foreground-color: var(--block-theme-${bt.id}-top-text);
+  --theme-top-high-contrast-foreground-color: var(--block-theme-${bt.id}-top-high-contrast);
+  --theme-top-low-contrast-foreground-color: var(--block-theme-${bt.id}-top-low-contrast);
+  --theme-top-accent-color: var(--block-theme-${bt.id}-top-accent-color);
+  --colorgroup-front-font: var(--block-theme-${bt.id}-top-font-family, inherit);
+  --theme-border-color: var(--block-theme-${bt.id}-border, var(--colorgroup-${bt.back_color_group}-accent, var(--accent-color)));
+  --theme-border-width: var(--block-theme-${bt.id}-border-width, 0);
+  --theme-pattern-image: var(--block-theme-${bt.id}-pattern-image, none);
+  --theme-pattern-opacity: var(--block-theme-${bt.id}-pattern-opacity, 0);
+}`,
+    )
+    .join('\n');
+}
+
 export function colorGroupUtilityClasses(
   colorGroups?: Record<string, ColorGroup> | ColorGroup[],
 ): string {
@@ -358,6 +391,9 @@ export function themeStyleSheet(
   const utilities = settings?.color_groups
     ? colorGroupUtilityClasses(settings.color_groups)
     : '';
+  const blockThemeUtilities = settings?.block_themes
+    ? blockThemeUtilityClasses(settings.block_themes)
+    : '';
 
-  return [rootRule, utilities].filter(Boolean).join('\n');
+  return [rootRule, utilities, blockThemeUtilities].filter(Boolean).join('\n');
 }

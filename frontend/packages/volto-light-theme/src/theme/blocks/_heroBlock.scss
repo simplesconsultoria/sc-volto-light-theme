@@ -14,10 +14,6 @@ $hero-card-overlap: 60px;
 }
 
 .block.heroBlock {
-  // width: 100% !important;
-  // max-width: 100% !important;
-  // margin-right: 0 !important;
-  // margin-left: 0 !important;
   background-color: var(--theme-color, transparent);
   color: var(--theme-foreground-color, inherit);
 
@@ -29,23 +25,31 @@ $hero-card-overlap: 60px;
   // Default fallback if no block-width is selected
   @include layout-container-width();
   @include adjustMarginsToContainer($layout-container-width);
+  margin-right: auto;
+  margin-left: auto;
 
   &.has--block-width--narrow,
   &.has--block-width--var\(--narrow-container-width\) {
     @include narrow-container-width();
     @include adjustMarginsToContainer($narrow-container-width);
+    margin-right: auto;
+    margin-left: auto;
   }
 
   &.has--block-width--default,
   &.has--block-width--var\(--default-container-width\) {
     @include default-container-width();
     @include adjustMarginsToContainer($default-container-width);
+    margin-right: auto;
+    margin-left: auto;
   }
 
   &.has--block-width--layout,
   &.has--block-width--var\(--layout-container-width\) {
     @include layout-container-width();
     @include adjustMarginsToContainer($layout-container-width);
+    margin-right: auto;
+    margin-left: auto;
   }
 
   &.has--block-width--unset,
@@ -619,43 +623,37 @@ $hero-card-overlap: 60px;
 #page-edit,
 #page-add {
   .block-editor-heroBlock {
-    width: 100% !important;
-    max-width: 100% !important;
-
     .block.heroBlock {
-      width: 100% !important;
-      max-width: 100% !important;
+      width: 100%;
+      max-width: 100%;
       margin-right: 0 !important;
       margin-left: 0 !important;
     }
 
-    .hero-block-container {
-      &.has--block-width--narrow,
-      &.has--block-width--var\(--narrow-container-width\) {
-        @include narrow-container-width();
-        @include adjustMarginsToEditContainer($narrow-container-width);
-      }
+    &:not([class*='has--block-width-']) {
+      @include layout-container-width();
+      @include adjustMarginsToEditContainer($layout-container-width);
+      max-width: var(--layout-container-width) !important;
+      margin-right: auto;
+      margin-left: auto;
+    }
 
-      &.has--block-width--default,
-      &.has--block-width--var\(--default-container-width\) {
-        @include default-container-width();
-        @include adjustMarginsToEditContainer($default-container-width);
+    &:not(.has--block-width--full):not(.has--block-width--unset) {
+      .hero-block-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
       }
+    }
 
-      &.has--block-width--layout,
-      &.has--block-width--var\(--layout-container-width\) {
+    &.has--block-width--full,
+    &.has--block-width--unset {
+      .hero-block-container:not(.has--full-width-image) {
         @include layout-container-width();
         @include adjustMarginsToEditContainer($layout-container-width);
-      }
-
-      &.has--block-width--unset,
-      &.has--block-width--full {
-        @include adjustEditContainerFullWidth();
-        .hero-block {
-          max-width: 100% !important;
-          margin-right: auto !important;
-          margin-left: auto !important;
-        }
+        margin-right: auto !important;
+        margin-left: auto !important;
       }
     }
   }

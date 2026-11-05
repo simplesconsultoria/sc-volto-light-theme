@@ -50,7 +50,9 @@
 .block.mainImageBlock[style*='--cardBorderWidth'],
 .main-image-block[style*='--cardBorderWidth'],
 #page-edit [class*='block-editor-image'][style*='--cardBorderWidth'],
-#page-edit [class*='block-editor-mainImageBlock'][style*='--cardBorderWidth'] {
+#page-edit [class*='block-editor-mainImageBlock'][style*='--cardBorderWidth'],
+#page-add [class*='block-editor-image'][style*='--cardBorderWidth'],
+#page-add [class*='block-editor-mainImageBlock'][style*='--cardBorderWidth'] {
   figure > img,
   img {
     @include apply-block-border;
@@ -60,7 +62,8 @@
 // 3. Bloco de Citação (Quote):
 // A borda é delegada para o elemento interno .quote-block
 .block.quoteBlock[style*='--cardBorderWidth'],
-#page-edit .block-editor-quoteBlock[style*='--cardBorderWidth'] {
+#page-edit .block-editor-quoteBlock[style*='--cardBorderWidth'],
+#page-add .block-editor-quoteBlock[style*='--cardBorderWidth'] {
   .quote-block {
     @include apply-block-border;
   }
@@ -70,7 +73,8 @@
 // Não aplica na camada mais alta (.block) se o bloco contiver .card, imagem,
 // citação ou alvo de borda explícito.
 .block[style*='--cardBorderWidth'],
-#page-edit [class*='block-editor-'][style*='--cardBorderWidth'] {
+#page-edit [class*='block-editor-'][style*='--cardBorderWidth'],
+#page-add [class*='block-editor-'][style*='--cardBorderWidth'] {
   &:not(:has(.card)):not(:has(figure img)):not(:has(img)):not(.image):not(
       .mainImageBlock
     ):not(.quoteBlock):not(:has(.quote-block)):not(

@@ -1,5 +1,11 @@
 import React from 'react';
-import { createThemeDefinition, type ThemeDefinition } from './blockThemes';
+import config from '@plone/volto/registry';
+import {
+  createThemeDefinition,
+  DEFAULT_BLOCK_THEMES,
+  DEFAULT_COLOR_GROUPS,
+  type ThemeDefinition,
+} from './blockThemes';
 import type { ConfigType } from '@plone/registry';
 import type { BlockConfigBase } from '@plone/types';
 import { addStyling } from '@plone/volto/helpers/Extensions/withBlockSchemaEnhancer';
@@ -122,7 +128,6 @@ for (const back of baseColorGroups) {
 const customThemes: ThemeDefinition[] = [
   createThemeDefinition('default', 'Primary'),
   createThemeDefinition('alternative', 'Alternative'),
-  createThemeDefinition('brand', 'Brand'),
   ...generatedCustomThemes,
 ];
 
@@ -136,6 +141,15 @@ customThemes.find = function (predicate: any, thisArg?: any) {
       if (predicate.call(thisArg, candidate)) {
         return candidate;
       }
+    }
+  }
+  // Also check active block themes from config.blocks.blockThemes or registered block themes
+  const cfg = (customThemes as any)?.config || (config as any);
+  const activeBlockThemes = cfg?.blocks?.blockThemes || {};
+  for (const [id, bt] of Object.entries(activeBlockThemes)) {
+    const candidate = createThemeDefinition(id, (bt as any)?.name || id);
+    if (predicate.call(thisArg, candidate)) {
+      return candidate;
     }
   }
   return undefined;
@@ -334,7 +348,16 @@ function installLocalBlocks(config: ConfigType) {
 }
 
 function installThemes(config: ConfigType) {
+  (customThemes as any).config = config;
   config.blocks.themes = customThemes;
+  (config.blocks as any).blockThemes = {
+    ...DEFAULT_BLOCK_THEMES,
+    ...((config.blocks as any).blockThemes || {}),
+  };
+  (config.blocks as any).colorGroups = {
+    ...DEFAULT_COLOR_GROUPS,
+    ...((config.blocks as any).colorGroups || {}),
+  };
   return config;
 }
 
@@ -511,7 +534,6 @@ export function enhanceBlockConfig(
       default: 'default',
     };
 
-    // Remove campos redundantes legados
     // Remove campos redundantes legados e blockWidth nativo da raiz
     delete schema.properties.backgroundColor;
     delete schema.properties.blockWidth;

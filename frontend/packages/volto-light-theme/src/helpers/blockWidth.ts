@@ -47,20 +47,52 @@ export function normalizeBlockWidth(data: any): BlockWidth {
   let raw =
     data.styles?.['blockWidth:noprefix'] ??
     data['blockWidth:noprefix'] ??
+    data.styles?.['block-width:noprefix'] ??
+    data['block-width:noprefix'] ??
+    data.styles?.['--block-width'] ??
+    data['--block-width'] ??
+    data.styles?.['block-width'] ??
+    data['block-width'] ??
     data.styles?.blockWidth ??
-    data.blockWidth;
+    data.blockWidth ??
+    data.styles?.width ??
+    data.width;
 
   // Extrai valor se encapsulado em objeto (ex: vindo de ButtonsWidget ou radio personalizado)
-  if (typeof raw === 'object' && raw !== null) {
-    raw = raw['--block-width'] || raw.value || raw.id || Object.values(raw)[0];
+  while (typeof raw === 'object' && raw !== null) {
+    if (raw.name && typeof raw.name === 'string') {
+      raw = raw.name;
+      break;
+    }
+    if (raw['--block-width'] && typeof raw['--block-width'] === 'string') {
+      raw = raw['--block-width'];
+      break;
+    }
+    if (raw.style && typeof raw.style === 'object') {
+      raw = raw.style['--block-width'] || raw.style.value || raw.style;
+      continue;
+    }
+    raw = raw.value || raw.id || raw.val || (Object.values(raw)[0] as any);
   }
 
   if (typeof raw === 'string') {
-    const trimmed = raw.trim();
-    if (trimmed === 'unset') return 'full';
-    if (trimmed === 'var(--layout-container-width)') return 'layout';
-    if (trimmed === 'var(--narrow-container-width)') return 'narrow';
-    if (trimmed === 'var(--default-container-width)') return 'default';
+    const trimmed = raw.trim().toLowerCase();
+    if (
+      trimmed === 'unset' ||
+      trimmed.includes('full') ||
+      trimmed.includes('100%')
+    ) {
+      return 'full';
+    }
+    if (trimmed.includes('narrow')) {
+      return 'narrow';
+    }
+    if (trimmed.includes('layout') || trimmed.includes('wide')) {
+      return 'layout';
+    }
+    if (trimmed.includes('default') || trimmed.includes('fit')) {
+      return 'default';
+    }
     if (VALID_BLOCK_WIDTHS.includes(trimmed as BlockWidth)) {
       return trimmed as BlockWidth;
     }
@@ -72,9 +104,8 @@ export function normalizeBlockWidth(data: any): BlockWidth {
 /**
  * Resolve a largura efetiva para um bloco.
  * Se o bloco for uma imagem alinhada lateralmente (left ou right):
- * - A largura da coluna é derivada dos blocos adjacentes (ao lado dela no mesmo tema).
- * - Caso haja múltiplos elementos adjacentes com larguras diferentes (ex: um default e outro layout),
- *   adota o menor tamanho entre eles (narrow < default < layout < full).
+ * - A largura do bloco é derivada do elemento imediatamente ao lado dela (compartilhando o espaço do float).
+ * - Prioriza o primeiro bloco subsequente adjacente no mesmo tema; caso não exista, verifica o bloco anterior.
  */
 export function resolveBlockWidthForBlock({
   block,
@@ -112,9 +143,7 @@ export function resolveBlockWidthForBlock({
       ? rawTheme.theme || 'default'
       : rawTheme;
 
-  const candidateWidths: BlockWidth[] = [];
-
-  // 1. Examina blocos subsequentes no mesmo grupo de tema
+  // 1. Examina blocos subsequentes no mesmo grupo de tema (que fluem ao lado do float)
   for (let i = currentIndex + 1; i < items.length; i++) {
     const siblingId = items[i];
     const siblingData = content.blocks[siblingId];
@@ -148,17 +177,12 @@ export function resolveBlockWidthForBlock({
       break;
     }
 
-    // Coleta a largura normalizada do bloco irmão
-    candidateWidths.push(normalizeBlockWidth(siblingData));
-
-    // Analisa até 3 blocos adjacentes que dividem o espaço com o float
-    if (candidateWidths.length >= 3) {
-      break;
-    }
+    // O elemento irmão imediatamente ao lado define a largura do bloco
+    return normalizeBlockWidth(siblingData);
   }
 
   // 2. Se não houver irmãos subsequentes no mesmo tema, verifica o bloco anterior
-  if (candidateWidths.length === 0 && currentIndex > 0) {
+  if (currentIndex > 0) {
     const prevId = items[currentIndex - 1];
     const prevData = content.blocks[prevId];
     if (prevData) {
@@ -170,24 +194,11 @@ export function resolveBlockWidthForBlock({
           : rawPrevTheme;
 
       if (prevTheme === currentTheme) {
-        candidateWidths.push(normalizeBlockWidth(prevData));
+        return normalizeBlockWidth(prevData);
       }
     }
   }
 
-  // Se nenhum bloco adjacente foi encontrado, fallback para 'default'
-  if (candidateWidths.length === 0) {
-    return 'default';
-  }
-
-  // Caso tenham mais que dois elementos com tamanhos diferentes, seleciona o menor
-  let smallest = candidateWidths[0];
-  for (let i = 1; i < candidateWidths.length; i++) {
-    const current = candidateWidths[i];
-    if (WIDTH_RANK[current] < WIDTH_RANK[smallest]) {
-      smallest = current;
-    }
-  }
-
-  return smallest;
+  // Se nenhum bloco adjacente foi encontrado, fallback para a largura configurada ou 'default'
+  return normalizeBlockWidth(data);
 }

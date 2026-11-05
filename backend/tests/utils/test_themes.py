@@ -3,7 +3,6 @@
 from plone.registry import field
 from plone.registry import Record
 from plone.registry.interfaces import IRegistry
-from sc.voltolighttheme.fields.color import InvalidColor
 from sc.voltolighttheme.utils import themes
 from zope.component import getUtility
 
@@ -285,6 +284,28 @@ class TestThemeUtils:
             settings = themes.theme_settings(themes.DEFAULT_THEME_ID, self.registry)
             assert "color_groups" in settings
             assert "block_themes" in settings
+
+        def test_update_theme_registers_missing_block_themes_record(self):
+            rec = themes.record_name(themes.DEFAULT_THEME_ID, "block_themes")
+            if rec in self.registry.records:
+                del self.registry.records[rec]
+            assert rec not in self.registry.records
+            themes.update_theme(
+                themes.DEFAULT_THEME_ID,
+                {
+                    "block_themes": {
+                        "default": {
+                            "id": "default",
+                            "name": "Primary",
+                            "back_color_group": "primary",
+                            "front_color_group": "neutral",
+                        }
+                    }
+                },
+                registry=self.registry,
+            )
+            assert rec in self.registry.records
+            assert "default" in self.registry[rec]
 
         def test_cannot_delete_base_color_group(self):
             for bg in ("primary", "secondary", "accent", "neutral"):

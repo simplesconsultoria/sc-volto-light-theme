@@ -152,3 +152,25 @@
     }
   }
 }
+
+// Suporte a alinhamento de texto no bloco Introduction (via styles.align)
+.has--align--center.block-editor-introduction .block.introduction,
+.has--block-alignment--center.block-editor-introduction .block.introduction,
+body .block.introduction.has--align--center,
+body .block.introduction.has--block-alignment--center {
+  text-align: center;
+}
+
+.has--align--right.block-editor-introduction .block.introduction,
+.has--block-alignment--right.block-editor-introduction .block.introduction,
+body .block.introduction.has--align--right,
+body .block.introduction.has--block-alignment--right {
+  text-align: right;
+}
+
+.has--align--left.block-editor-introduction .block.introduction,
+.has--block-alignment--left.block-editor-introduction .block.introduction,
+body .block.introduction.has--align--left,
+body .block.introduction.has--block-alignment--left {
+  text-align: left;
+}

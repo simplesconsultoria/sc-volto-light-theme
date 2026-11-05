@@ -189,40 +189,4 @@
       color: var(--theme-top-low-contrast-foreground-color, inherit) !important;
     }
   }
-
-  // Card Borders inside Search Block when customized via BorderWidget
-  &[style*='--cardBorderColor'],
-  .listing-block-container[style*='--cardBorderColor'],
-  &[style*='--cardBorderWidth'],
-  .listing-block-container[style*='--cardBorderWidth'] {
-    .listing-item .card,
-    .card {
-      border: solid
-        var(--cardBorderColor, var(--theme-border-color, currentColor)) !important;
-      border-width: var(
-        --cardBorderWidth,
-        var(--theme-border-width, 0)
-      ) !important;
-      border-color: var(
-        --cardBorderColor,
-        var(--theme-border-color, currentColor)
-      ) !important;
-      border-top-color: var(
-        --cardBorderColor,
-        var(--theme-border-color, currentColor)
-      ) !important;
-      border-right-color: var(
-        --cardBorderColor,
-        var(--theme-border-color, currentColor)
-      ) !important;
-      border-bottom-color: var(
-        --cardBorderColor,
-        var(--theme-border-color, currentColor)
-      ) !important;
-      border-left-color: var(
-        --cardBorderColor,
-        var(--theme-border-color, currentColor)
-      ) !important;
-    }
-  }
 }

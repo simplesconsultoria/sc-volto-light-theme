@@ -7,7 +7,10 @@ const EventMetadataView = (props: any) => {
   const { data, properties, className } = props;
   const blockWidth = normalizeBlockWidth(data) || 'default';
 
-  const themeClass = data?.theme ? `bg-${data.theme}` : 'bg-slate';
+  const theme = data?.theme || 'default';
+  const themeClass = (className || '').includes('has--theme--')
+    ? ''
+    : `has--theme--${theme}`;
 
   const cleanClassName = (className || '')
     .replace(/has--block-width--[\w-]+/g, '')

@@ -24,22 +24,6 @@ const messages = defineMessages({
     id: 'Default',
     defaultMessage: 'Default',
   },
-  labelPrimary: {
-    id: 'Primary',
-    defaultMessage: 'Primary',
-  },
-  labelSecondary: {
-    id: 'Secondary',
-    defaultMessage: 'Secondary',
-  },
-  labelTertiary: {
-    id: 'Tertiary',
-    defaultMessage: 'Tertiary',
-  },
-  labelGrey: {
-    id: 'Grey',
-    defaultMessage: 'Grey',
-  },
 });
 
 export const ColumnSchema = (intl: any) => {

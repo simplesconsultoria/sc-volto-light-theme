@@ -13,6 +13,7 @@ import BlockThemesWidget from './components/Widgets/BlockThemesWidget';
 import BlockThemeWidget from './components/Widgets/BlockThemeWidget';
 import BorderWidget from './components/Widgets/BorderWidget';
 import { resolveBlockWidthForBlock } from './helpers/blockWidth';
+import { DEFAULT_BLOCK_THEMES } from './config/blockThemes';
 
 /**
  * Block and variation titles are plain strings in the block configuration, and
@@ -72,10 +73,27 @@ function applyConfig(config: ConfigType) {
         content,
         data,
       });
-      const cleaned = classNames.filter(
+      let cleaned = classNames.filter(
         (cls) => !cls.startsWith('has--block-width--'),
       );
-      return [...cleaned, `has--block-width--${currentBlockWidth}`];
+      cleaned.push(`has--block-width--${currentBlockWidth}`);
+
+      // Se for imagem ou mainImageBlock com alinhamento explícito, sincroniza has--block-alignment--*
+      const blockType = data?.['@type'];
+      const align =
+        data?.align || data?.styles?.['align:noprefix'] || data?.styles?.align;
+      if (
+        (blockType === 'image' || blockType === 'mainImageBlock') &&
+        align &&
+        (align === 'left' || align === 'right' || align === 'center')
+      ) {
+        cleaned = cleaned.filter(
+          (cls) => !cls.startsWith('has--block-alignment--'),
+        );
+        cleaned.push(`has--block-alignment--${align}`);
+      }
+
+      return cleaned;
     },
     ({ data, classNames }: { data: any; classNames: Array<string> }) => {
       const borderWidth =
@@ -103,20 +121,45 @@ function applyConfig(config: ConfigType) {
         customFront = parts[2];
       }
 
-      const backColorGroup =
-        data?.backColorGroup ||
-        data?.styles?.backColorGroup ||
-        customBack ||
-        (typeof rawTheme === 'object' && rawTheme !== null
-          ? rawTheme.backColorGroup
-          : undefined);
-      const frontColorGroup =
-        data?.frontColorGroup ||
-        data?.styles?.frontColorGroup ||
-        customFront ||
-        (typeof rawTheme === 'object' && rawTheme !== null
-          ? rawTheme.frontColorGroup
-          : undefined);
+      const activeBlockThemes: Record<string, any> = {
+        ...DEFAULT_BLOCK_THEMES,
+        ...((config.blocks as any)?.blockThemes || {}),
+      };
+      const currentBlockTheme =
+        typeof theme === 'string'
+          ? activeBlockThemes[theme] ||
+            (theme === 'brand' ? activeBlockThemes['alternative'] : undefined)
+          : undefined;
+
+      const isCustom = typeof theme === 'string' && theme.startsWith('custom');
+
+      const backColorGroup = isCustom
+        ? customBack ||
+          data?.backColorGroup ||
+          data?.styles?.backColorGroup ||
+          (typeof rawTheme === 'object' && rawTheme !== null
+            ? rawTheme.backColorGroup
+            : undefined)
+        : currentBlockTheme?.back_color_group ||
+          data?.backColorGroup ||
+          data?.styles?.backColorGroup ||
+          (typeof rawTheme === 'object' && rawTheme !== null
+            ? rawTheme.backColorGroup
+            : undefined);
+
+      const frontColorGroup = isCustom
+        ? customFront ||
+          data?.frontColorGroup ||
+          data?.styles?.frontColorGroup ||
+          (typeof rawTheme === 'object' && rawTheme !== null
+            ? rawTheme.frontColorGroup
+            : undefined)
+        : currentBlockTheme?.front_color_group ||
+          data?.frontColorGroup ||
+          data?.styles?.frontColorGroup ||
+          (typeof rawTheme === 'object' && rawTheme !== null
+            ? rawTheme.frontColorGroup
+            : undefined);
 
       // Clean existing theme/colorgroup classes to prevent duplicates
       const cleaned = classNames.filter(

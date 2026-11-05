@@ -53,6 +53,34 @@ describe('normalizeBlockWidth', () => {
     expect(
       normalizeBlockWidth({ blockWidth: { '--block-width': 'narrow' } }),
     ).toBe('narrow');
+    expect(
+      normalizeBlockWidth({
+        styles: {
+          'blockWidth:noprefix': {
+            name: 'narrow',
+            style: { '--block-width': 'var(--narrow-container-width)' },
+          },
+        },
+      }),
+    ).toBe('narrow');
+    expect(
+      normalizeBlockWidth({
+        styles: {
+          'blockWidth:noprefix': {
+            style: { '--block-width': 'var(--layout-container-width)' },
+          },
+        },
+      }),
+    ).toBe('layout');
+    expect(
+      normalizeBlockWidth({
+        styles: {
+          'blockWidth:noprefix': {
+            '--block-width': 'var(--default-container-width)',
+          },
+        },
+      }),
+    ).toBe('default');
     expect(normalizeBlockWidth({ blockWidth: { value: 'layout' } })).toBe(
       'layout',
     );
@@ -104,20 +132,20 @@ describe('resolveBlockWidthForBlock', () => {
     ).toBe('layout');
   });
 
-  it('adota o menor tamanho entre elementos adjacentes de larguras diferentes', () => {
-    // default e layout -> adota default (menor)
-    const contentDefaultAndLayout = {
+  it('adota a largura do elemento imediatamente adjacente ao lado do float', () => {
+    // img1 seguido de txt1 (layout) e txt2 (default) -> adota layout (do bloco ao lado)
+    const contentLayoutAndDefault = {
       blocks: {
-        img1: { '@type': 'image', align: 'left', theme: 'default' },
+        img1: { '@type': 'image', align: 'right', theme: 'default' },
         txt1: {
           '@type': 'slate',
           theme: 'default',
-          styles: { 'blockWidth:noprefix': 'default' },
+          styles: { 'blockWidth:noprefix': 'layout' },
         },
         txt2: {
-          '@type': 'slate',
+          '@type': 'quoteBlock',
           theme: 'default',
-          styles: { 'blockWidth:noprefix': 'layout' },
+          styles: { 'blockWidth:noprefix': 'default' },
         },
       },
       blocks_layout: {
@@ -128,24 +156,24 @@ describe('resolveBlockWidthForBlock', () => {
     expect(
       resolveBlockWidthForBlock({
         block: 'img1',
-        content: contentDefaultAndLayout,
-        data: contentDefaultAndLayout.blocks.img1,
+        content: contentLayoutAndDefault,
+        data: contentLayoutAndDefault.blocks.img1,
       }),
-    ).toBe('default');
+    ).toBe('layout');
 
-    // narrow e default -> adota narrow (menor)
+    // img1 (mainImageBlock) seguido de txt1 (narrow) e txt2 (default) -> adota narrow (do bloco ao lado)
     const contentNarrowAndDefault = {
       blocks: {
-        img1: { '@type': 'mainImageBlock', align: 'right', theme: 'default' },
+        img1: { '@type': 'mainImageBlock', align: 'left', theme: 'default' },
         txt1: {
           '@type': 'slate',
           theme: 'default',
-          styles: { 'blockWidth:noprefix': 'default' },
+          styles: { 'blockWidth:noprefix': 'narrow' },
         },
         txt2: {
           '@type': 'slate',
           theme: 'default',
-          styles: { 'blockWidth:noprefix': 'narrow' },
+          styles: { 'blockWidth:noprefix': 'default' },
         },
       },
       blocks_layout: {

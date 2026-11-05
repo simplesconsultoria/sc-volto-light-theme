@@ -245,6 +245,16 @@ def theme_exists(theme_id: str, registry=None) -> bool:
     )
 
 
+def ensure_theme_records(theme_id: str, registry=None) -> None:
+    """Ensure all records for a theme definition are registered in the registry."""
+    registry = _registry(registry)
+    prefix = record_name(theme_id, "").rstrip(".")
+    try:
+        registry.registerInterface(ISCVLTThemeDefinition, prefix=prefix)
+    except Exception:
+        pass
+
+
 def default_color_groups_for_theme(theme_id: str, registry=None) -> dict:
     """Return default color groups for a theme."""
     if theme_id == "natal":
@@ -321,6 +331,8 @@ def save_theme_color_groups(theme_id: str, color_groups: dict, registry=None) ->
     """Save ColorGroups mapping for one theme in the registry."""
     registry = _registry(registry)
     rec = record_name(theme_id, "color_groups")
+    if rec not in registry.records:
+        ensure_theme_records(theme_id, registry)
     normalized = {}
     for gid, gdata in color_groups.items():
         if isinstance(gdata, dict):
@@ -335,6 +347,8 @@ def save_theme_block_themes(theme_id: str, block_themes: dict, registry=None) ->
     """Save BlockThemes mapping for one theme in the registry."""
     registry = _registry(registry)
     rec = record_name(theme_id, "block_themes")
+    if rec not in registry.records:
+        ensure_theme_records(theme_id, registry)
     normalized = {}
     for btid, btdata in block_themes.items():
         if isinstance(btdata, dict):
@@ -356,6 +370,9 @@ def sync_color_groups_across_themes(registry=None) -> None:
     all_tids = theme_ids(registry)
     if not all_tids:
         return
+
+    for tid in all_tids:
+        ensure_theme_records(tid, registry)
 
     # 1. Discover all unique color group definitions across all themes
     discovered: dict[str, dict] = {}
@@ -399,6 +416,9 @@ def sync_block_themes_across_themes(registry=None) -> None:
     all_tids = theme_ids(registry)
     if not all_tids:
         return
+
+    for tid in all_tids:
+        ensure_theme_records(tid, registry)
 
     discovered: dict[str, dict] = {}
     for btid, btdata in DEFAULT_BLOCK_THEMES.items():
@@ -547,6 +567,8 @@ def theme_values(theme_id: str, registry=None) -> dict:
     if not theme_exists(theme_id, registry):
         return {}
 
+    ensure_theme_records(theme_id, registry)
+
     values = {}
     for name in theme_field_names():
         record = record_name(theme_id, name)
@@ -661,6 +683,8 @@ def update_theme(theme_id: str, values: dict, registry=None) -> dict:
     if not theme_exists(theme_id, registry):
         raise KeyError(theme_id)
 
+    ensure_theme_records(theme_id, registry)
+
     known = set(theme_field_names())
     for name, value in values.items():
         if name not in known:
@@ -719,7 +743,11 @@ def update_theme(theme_id: str, values: dict, registry=None) -> dict:
             ]
             for btid in deleted_bts:
                 delete_block_theme(theme_id, btid, registry)
-        registry[record_name(theme_id, name)] = value
+        rec = record_name(theme_id, name)
+        if rec not in registry.records:
+            ensure_theme_records(theme_id, registry)
+        if rec in registry.records:
+            registry[rec] = value
 
     if "color_groups" in values:
         sync_color_groups_across_themes(registry)

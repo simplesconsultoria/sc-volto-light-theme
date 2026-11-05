@@ -42,8 +42,8 @@ describe('Introduction and Separator Block Width & Container Integration', () =>
   it('_blockWidth SCSS: excludes contained and custom-grid columns from edit container queries and enforces 0 lateral margins', () => {
     const scss = readThemeFile('theme/blocks/_blockWidth.scss');
 
-    expect(scss).toContain(
-      ":not(.custom-grid-column [class*='block-editor-'])",
+    expect(scss).toMatch(
+      /:not\(\s*\.custom-grid-column\s+\[class\*='block-editor-'\]\s*\)/,
     );
     expect(scss).toContain('.custom-grid-column,');
     expect(scss).toContain('.block-container');

@@ -1,7 +1,6 @@
 import React from 'react';
 import { defineMessages } from 'react-intl';
 import type { BlockSchemaProps } from '@plone/types';
-import config from '@plone/volto/registry';
 import { defaultStylingSchema } from '../schema';
 
 const messages = defineMessages({
@@ -40,14 +39,6 @@ const messages = defineMessages({
   size: {
     id: 'Image size',
     defaultMessage: 'Image size',
-  },
-  blockWidth: {
-    id: 'Block Width',
-    defaultMessage: 'Block Width',
-  },
-  styling: {
-    id: 'Styling',
-    defaultMessage: 'Styling',
   },
   linkSettings: {
     id: 'Link settings',
@@ -125,61 +116,6 @@ export const MainImageSchema = (props: BlockSchemaProps): any => {
   if (enhancedSchema.properties.size) {
     enhancedSchema.properties.size.default = 'l';
     enhancedSchema.properties.size.disabled = formData.align === 'center';
-  }
-
-  const stylesSchema = (enhancedSchema.properties.styles as any)?.schema;
-  if (stylesSchema) {
-    stylesSchema.fieldsets = stylesSchema.fieldsets || [];
-    if (!stylesSchema.fieldsets.length) {
-      stylesSchema.fieldsets.push({
-        id: 'default',
-        title: 'default',
-        fields: [],
-      });
-    }
-
-    stylesSchema.fieldsets[0].fields = [
-      'blockWidth:noprefix',
-      ...stylesSchema.fieldsets[0].fields.filter(
-        (field: string) => field !== 'blockWidth:noprefix',
-      ),
-    ];
-
-    stylesSchema.properties = stylesSchema.properties || {};
-    stylesSchema.properties['blockWidth:noprefix'] = {
-      widget: 'blockWidth',
-      title: intl.formatMessage(messages.blockWidth),
-      default: 'default',
-      filterActions: ['narrow', 'default', 'layout', 'full'],
-      actions: config.blocks.widths || [],
-      disabled: formData.align === 'left' || formData.align === 'right',
-    };
-  }
-
-  if (!enhancedSchema.fieldsets.some((fieldset) => fieldset.id === 'styling')) {
-    enhancedSchema.fieldsets.push({
-      id: 'styling',
-      title: intl.formatMessage(messages.styling),
-      fields: ['styles'],
-    });
-  }
-
-  if (!enhancedSchema.properties.styles) {
-    enhancedSchema.properties.styles = {
-      widget: 'object',
-      title: intl.formatMessage(messages.styling),
-      schema: {
-        fieldsets: [
-          {
-            id: 'default',
-            title: 'default',
-            fields: [],
-          },
-        ],
-        properties: {},
-        required: [],
-      },
-    };
   }
 
   // Add Link settings fieldset similar to Volto Image block

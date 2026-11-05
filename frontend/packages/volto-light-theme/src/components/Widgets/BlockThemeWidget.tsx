@@ -6,6 +6,7 @@ import React, {
   useSyncExternalStore,
 } from 'react';
 import { ReactReduxContext } from 'react-redux';
+import config from '@plone/volto/registry';
 import type {
   BlockTheme,
   ColorGroup,
@@ -224,6 +225,24 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
     objectvalue?.block_themes,
   ]);
 
+  // Keep config.blocks.blockThemes and colorGroups updated with available themes
+  useEffect(() => {
+    if (availableBlockThemes && (config as any)?.blocks) {
+      (config as any).blocks.blockThemes = {
+        ...DEFAULT_BLOCK_THEMES,
+        ...((config as any).blocks.blockThemes || {}),
+        ...availableBlockThemes,
+      };
+    }
+    if (availableColorGroups && (config as any)?.blocks) {
+      (config as any).blocks.colorGroups = {
+        ...DEFAULT_COLOR_GROUPS,
+        ...((config as any).blocks.colorGroups || {}),
+        ...availableColorGroups,
+      };
+    }
+  }, [availableBlockThemes, availableColorGroups]);
+
   const [customBack, setCustomBack] = useState<string | null>(null);
   const [customFront, setCustomFront] = useState<string | null>(null);
 
@@ -253,26 +272,42 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
   }
 
   const currentThemeId = initialThemeId;
+  const isCustomTheme =
+    currentThemeId === 'custom' || currentThemeId.startsWith('custom-');
 
-  const currentBack =
-    customBack ||
-    parsedBack ||
-    formData?.backColorGroup ||
-    formData?.styles?.backColorGroup ||
-    objectvalue?.backColorGroup ||
-    (typeof value === 'object' ? value?.backColorGroup : undefined) ||
-    availableBlockThemes[currentThemeId]?.back_color_group ||
-    'primary';
+  const currentBack = isCustomTheme
+    ? customBack ||
+      parsedBack ||
+      formData?.backColorGroup ||
+      formData?.styles?.backColorGroup ||
+      objectvalue?.backColorGroup ||
+      (typeof value === 'object' ? value?.backColorGroup : undefined) ||
+      'primary'
+    : availableBlockThemes[currentThemeId]?.back_color_group ||
+      customBack ||
+      parsedBack ||
+      formData?.backColorGroup ||
+      formData?.styles?.backColorGroup ||
+      objectvalue?.backColorGroup ||
+      (typeof value === 'object' ? value?.backColorGroup : undefined) ||
+      'primary';
 
-  const currentFront =
-    customFront ||
-    parsedFront ||
-    formData?.frontColorGroup ||
-    formData?.styles?.frontColorGroup ||
-    objectvalue?.frontColorGroup ||
-    (typeof value === 'object' ? value?.frontColorGroup : undefined) ||
-    availableBlockThemes[currentThemeId]?.front_color_group ||
-    'neutral';
+  const currentFront = isCustomTheme
+    ? customFront ||
+      parsedFront ||
+      formData?.frontColorGroup ||
+      formData?.styles?.frontColorGroup ||
+      objectvalue?.frontColorGroup ||
+      (typeof value === 'object' ? value?.frontColorGroup : undefined) ||
+      'neutral'
+    : availableBlockThemes[currentThemeId]?.front_color_group ||
+      customFront ||
+      parsedFront ||
+      formData?.frontColorGroup ||
+      formData?.styles?.frontColorGroup ||
+      objectvalue?.frontColorGroup ||
+      (typeof value === 'object' ? value?.frontColorGroup : undefined) ||
+      'neutral';
 
   const getGroupBg = (groupId: string): string => {
     return (
@@ -294,6 +329,12 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
 
     // Notify standard onChange
     onChange(id, formattedTheme);
+
+    const onChangeField = (props as any)?.onChangeField;
+    if (onChangeField) {
+      onChangeField('backColorGroup', newBack);
+      onChangeField('frontColorGroup', newFront);
+    }
 
     // Propagate to parent block and styles object if onChangeBlock or onChangeFormData is available
     const parentOnChangeBlock = onChangeBlock || (props as any)?.onChangeBlock;

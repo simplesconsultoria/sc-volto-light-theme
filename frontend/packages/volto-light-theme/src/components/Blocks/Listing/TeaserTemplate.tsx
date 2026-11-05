@@ -62,11 +62,9 @@ const TeaserTemplate: React.FC<TeaserTemplateProps & Record<string, any>> = ({
 
   return (
     <div
-      className={cx(
-        'listing-teaser-wrapper',
-        data?.styles?.theme || 'default',
-        { [`has--align--${align}`]: align },
-      )}
+      className={cx('listing-teaser-wrapper', {
+        [`has--align--${align}`]: align,
+      })}
     >
       {items.map((item, index) => {
         const date = formatDate(

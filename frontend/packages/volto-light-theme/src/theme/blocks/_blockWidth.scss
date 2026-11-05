@@ -267,18 +267,6 @@
       border: none !important;
       content: none !important;
     }
-
-    // Neutraliza ::before de blocos internos/filhos (como table) que herdam
-    // position: absolute; left: -9px; width: calc(100% + 18px), impedindo estouro lateral da página.
-    &::before,
-    .block::before {
-      left: 0 !important;
-      display: none !important;
-      width: 0 !important;
-      height: 0 !important;
-      border: none !important;
-      content: none !important;
-    }
   }
 }
 
@@ -287,13 +275,11 @@
 // -----------------------------------------------------------------------------
 #page-edit,
 #page-add {
-  [class*='block-editor-']:not(.block-editor-heroBlock):not(
-      .block-editor-customGrid
-    ):not(.contained):not([class*='block-editor-'].contained):not(
-      .column [class*='block-editor-']
-    ):not(.custom-grid-column [class*='block-editor-']):not(
-      .has--block-alignment--left
-    ):not(.has--block-alignment--right) {
+  [class*='block-editor-']:not(.block-editor-customGrid):not(.contained):not(
+      [class*='block-editor-'].contained
+    ):not(.column [class*='block-editor-']):not(
+      .custom-grid-column [class*='block-editor-']
+    ):not(.has--block-alignment--left):not(.has--block-alignment--right) {
     &.has--block-width--narrow {
       &,
       .heading-wrapper,
@@ -410,178 +396,10 @@
 }
 
 // -----------------------------------------------------------------------------
-// 4. Imagens e MainImageBlock com Alinhamento Lateral Ativo (Left / Right)
+// 4. Configuração de Container Queries no Documento (#page-document)
 // -----------------------------------------------------------------------------
-// Quando em modo de alinhamento lateral no desktop, o bloco permanece centralizado na coluna
-// correspondente (narrow, default, layout, full) e seu container colapsa verticalmente
-// para permitir que o texto subsequente envolva o figure flutuante dentro da mesma coluna.
-// Em telas pequenas/mobile, o alinhamento lateral cessa, a imagem torna-se centralizada,
-// e a altura torna-se automática (auto) para impedir que o texto se sobreponha à imagem.
-@media only screen and (min-width: #{$largest-mobile-screen + 1px}) {
-  .block.image,
-  .block.mainImageBlock,
-  .main-image-block {
-    &.align.left,
-    &.align.right,
-    &.has--block-alignment--left,
-    &.has--block-alignment--right {
-      height: 0;
-      margin-bottom: 0 !important;
-      clear: none;
-
-      figure {
-        max-width: var(
-          --media-size,
-          calc(var(--default-container-width) / 2 - 10px)
-        );
-        box-sizing: border-box;
-
-        img {
-          max-width: 100% !important;
-          height: auto;
-          box-sizing: border-box;
-        }
-      }
-    }
-  }
-}
-
-// Em telas pequenas / mobile:
-// - Mesmo que a imagem esteja alinhada à esquerda ou direita, ela para e fica central
-// - Altura torna-se auto e float é resetado para que o texto NÃO fique por cima das imagens
-// - Margens de respiro (adjustMarginsToContainer) evitam que fiquem coladas na tela
-@media only screen and (max-width: #{$largest-mobile-screen}) {
-  .block.image,
-  .block.mainImageBlock,
-  .main-image-block {
-    &.align.left,
-    &.align.right,
-    &.has--block-alignment--left,
-    &.has--block-alignment--right {
-      height: auto !important;
-      margin-top: $spacing-large !important;
-      margin-bottom: $spacing-large !important;
-      clear: both !important;
-      float: none !important;
-      text-align: center !important;
-
-      figure {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin-right: auto !important;
-        margin-bottom: $spacing-small !important;
-        margin-left: auto !important;
-        clear: both !important;
-        float: none !important;
-        text-align: center !important;
-
-        img {
-          display: block !important;
-          margin-right: auto !important;
-          margin-left: auto !important;
-          float: none !important;
-        }
-
-        figcaption {
-          text-align: center !important;
-        }
-      }
-    }
-
-    &:not(.has--block-width--full) {
-      width: auto !important;
-      max-width: calc(100% - 2 * #{$horizontal-space-small-screens}) !important;
-      margin-right: $horizontal-space-small-screens !important;
-      margin-left: $horizontal-space-small-screens !important;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// 5. Garantia de adjustMarginsToContainer para Imagens e MainImageBlock
-// -----------------------------------------------------------------------------
-#page-document {
-  container-type: inline-size;
-}
-
+#page-document,
 #page-document .blocks-group-wrapper {
   container-type: inline-size;
-
-  & > .block.image.has--block-width--default,
-  & > .block.mainImageBlock.has--block-width--default,
-  & > .main-image-block.has--block-width--default {
-    @include adjustMarginsToContainer($default-container-width);
-  }
-
-  & > .block.image.has--block-width--narrow,
-  & > .block.mainImageBlock.has--block-width--narrow,
-  & > .main-image-block.has--block-width--narrow {
-    @include adjustMarginsToContainer($narrow-container-width);
-  }
-
-  & > .block.image.has--block-width--layout,
-  & > .block.mainImageBlock.has--block-width--layout,
-  & > .main-image-block.has--block-width--layout {
-    @include adjustMarginsToContainer($layout-container-width);
-  }
 }
 
-#page-document .blocks-group-wrapper > .block.image.has--block-width--default,
-#page-document
-  .blocks-group-wrapper
-  > .block.mainImageBlock.has--block-width--default,
-#page-document
-  .blocks-group-wrapper
-  > .main-image-block.has--block-width--default {
-  max-width: var(--default-container-width) !important;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-@container (max-width: 980px) {
-  #page-document
-    .blocks-group-wrapper
-    > .block:not(
-      .highlight,
-      .teaser,
-      .gridBlock,
-      .block.custom-grid,
-      .slider,
-      .listing,
-      .heading
-    ).has--block-width--default,
-  #page-document .blocks-group-wrapper > .block.image.has--block-width--default,
-  #page-document
-    .blocks-group-wrapper
-    > .block.mainImageBlock.has--block-width--default,
-  #page-document
-    .blocks-group-wrapper
-    > .main-image-block.has--block-width--default {
-    margin-right: 20px !important;
-    margin-left: 20px !important;
-  }
-}
-
-@media (max-width: 980px) {
-  #page-document
-    .blocks-group-wrapper
-    > .block:not(
-      .highlight,
-      .teaser,
-      .gridBlock,
-      .block.custom-grid,
-      .slider,
-      .listing,
-      .heading
-    ).has--block-width--default,
-  #page-document .blocks-group-wrapper > .block.image.has--block-width--default,
-  #page-document
-    .blocks-group-wrapper
-    > .block.mainImageBlock.has--block-width--default,
-  #page-document
-    .blocks-group-wrapper
-    > .main-image-block.has--block-width--default {
-    margin-right: 20px !important;
-    margin-left: 20px !important;
-  }
-}

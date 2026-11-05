@@ -58,10 +58,6 @@ const messages = defineMessages({
     defaultMessage: 'Center bottom',
   },
   positionRightBottom: { id: 'Right bottom', defaultMessage: 'Right bottom' },
-  blockWidth: {
-    id: 'Block Width',
-    defaultMessage: 'Block Width',
-  },
 });
 
 const objectPositionChoices = (intl: IntlShape) => [

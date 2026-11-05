@@ -1,10 +1,15 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import config from '@plone/volto/registry';
 import Helmet from '@plone/volto/helpers/Helmet/Helmet';
 import type { Content } from '@plone/types';
 import { getInherit } from '../../actions/inherit/inherit';
 import { useLiveData } from '../../helpers/useLiveData';
 import { themeSettingsOf, themeStyleSheet } from '../../helpers/themeStyles';
+import {
+  DEFAULT_BLOCK_THEMES,
+  DEFAULT_COLOR_GROUPS,
+} from '../../config/blockThemes';
 import type { SerializedTheme } from '../../types/theme';
 import type { InheritRootState } from '../../types/inherit';
 
@@ -42,7 +47,34 @@ const Theming = ({ content }: { content: Content }) => {
   );
 
   const theme = useLiveData<SerializedTheme>(content, THEME_BEHAVIOR, 'theme');
-  const styles = themeStyleSheet(themeSettingsOf(theme));
+  const settings = themeSettingsOf(theme);
+  const styles = themeStyleSheet(settings);
+
+  // Synchronously ensure active blockThemes and colorGroups are registered in config.blocks
+  if (settings?.block_themes && (config as any)?.blocks) {
+    const bts = Array.isArray(settings.block_themes)
+      ? Object.fromEntries(
+          settings.block_themes.filter(Boolean).map((b) => [b.id, b]),
+        )
+      : settings.block_themes;
+    (config as any).blocks.blockThemes = {
+      ...DEFAULT_BLOCK_THEMES,
+      ...((config as any).blocks.blockThemes || {}),
+      ...bts,
+    };
+  }
+  if (settings?.color_groups && (config as any)?.blocks) {
+    const cgs = Array.isArray(settings.color_groups)
+      ? Object.fromEntries(
+          settings.color_groups.filter(Boolean).map((c) => [c.id, c]),
+        )
+      : settings.color_groups;
+    (config as any).blocks.colorGroups = {
+      ...DEFAULT_COLOR_GROUPS,
+      ...((config as any).blocks.colorGroups || {}),
+      ...cgs,
+    };
+  }
 
   useEffect(() => {
     // Only act when we are on a 404 page and inherit data has not been fetched.

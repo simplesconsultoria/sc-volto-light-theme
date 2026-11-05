@@ -1,14 +1,9 @@
 import { defineMessages } from 'react-intl';
-import config from '@plone/volto/registry';
 
 const messages = defineMessages({
   eventMetadata: {
     id: 'Event Metadata',
     defaultMessage: 'Event Metadata',
-  },
-  blockWidth: {
-    id: 'Block Width',
-    defaultMessage: 'Block Width',
   },
   theme: {
     id: 'Theme',
@@ -63,10 +58,9 @@ export const EventMetadataSchema = ({ intl }: any) => ({
       type: 'string',
     },
     theme: {
+      widget: 'block_theme_widget',
       title: intl.formatMessage(messages.theme),
-      widget: 'color_picker',
-      themes: config.blocks.themes,
-      default: 'slate',
+      default: 'default',
     },
   },
   required: [],

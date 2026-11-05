@@ -8,23 +8,7 @@
 // ===============================================================
 
 // ===============================================================
-// 1. Estrutura do Bloco (Volto BlockWrapper)
-// O Volto por padrão injeta a classe `.block.customGrid` no
-// container mais externo. Nós removemos max-width e margin dele
-// para permitir que o background-color sangre até as bordas.
-// ===============================================================
-// .block.customGrid {
-//   max-width: unset !important;
-//   padding-right: 0 !important;
-//   padding-left: 0 !important;
-//   margin-right: 0 !important;
-//   margin-left: 0 !important;
-//   // container-type garante que o @container interno funcione
-//   container-type: inline-size;
-// }
-
-// ===============================================================
-// 2. Container Interno da Grid
+// 1. Container Interno da Grid
 // ===============================================================
 .custom-grid {
   display: grid;
