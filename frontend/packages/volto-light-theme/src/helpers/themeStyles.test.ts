@@ -9,6 +9,8 @@ import {
   themeCustomProperties,
   themeStyleSheet,
   blockThemeUtilityClasses,
+  formatBackgroundImage,
+  colorGroupResponsiveImageRules,
 } from './themeStyles';
 import type { SerializedTheme, ThemeSettings } from '../types/theme';
 
@@ -488,5 +490,109 @@ describe('themeSettingsOf', () => {
     expect(css).toContain(
       '--theme-high-contrast-color: var(--block-theme-red-high-bg);',
     );
+  });
+
+  describe('ColorGroup 2nd Background Layer and CSS Patterns', () => {
+    it('formatBackgroundImage wraps URLs and preserves CSS gradients and data URIs', () => {
+      expect(formatBackgroundImage('')).toBe('none');
+      expect(formatBackgroundImage('none')).toBe('none');
+      expect(formatBackgroundImage('https://example.com/pat.png')).toBe(
+        'url("https://example.com/pat.png")',
+      );
+      expect(formatBackgroundImage('url("https://example.com/pat.png")')).toBe(
+        'url("https://example.com/pat.png")',
+      );
+      expect(formatBackgroundImage('data:image/svg+xml,...')).toBe(
+        'url("data:image/svg+xml,...")',
+      );
+      expect(
+        formatBackgroundImage('radial-gradient(circle, #fff 10%, #000 90%)'),
+      ).toBe('radial-gradient(circle, #fff 10%, #000 90%)');
+      expect(
+        formatBackgroundImage(
+          'linear-gradient(to right, red, transparent 1px)',
+        ),
+      ).toBe('linear-gradient(to right, red, transparent 1px)');
+      expect(
+        formatBackgroundImage(
+          'repeating-linear-gradient(45deg, #000, #000 2px, transparent 2px, transparent 10px)',
+        ),
+      ).toBe(
+        'repeating-linear-gradient(45deg, #000, #000 2px, transparent 2px, transparent 10px)',
+      );
+    });
+
+    it('generates background image layer properties in ColorGroup utility classes', () => {
+      const field = serialized({
+        token: 'custom',
+        value: {
+          color_groups: {
+            custom_brand: {
+              id: 'custom_brand',
+              name: 'Custom Brand',
+              background_color_light: '#ffffff',
+              background_color_dark: '#111111',
+              text_color_light: '#000000',
+              text_color_dark: '#ffffff',
+              subtext_color_light: '#666666',
+              subtext_color_dark: '#cccccc',
+              accent_color_light: '#ff0000',
+              accent_color_dark: '#ff5555',
+              bg_image_light_desktop: 'https://example.com/pattern.svg',
+              bg_image_light_mobile: 'https://example.com/mobile-pattern.svg',
+              bg_image_dark_desktop:
+                'radial-gradient(circle, #333 1px, transparent 1px)',
+              bg_size: '32px 32px',
+              bg_repeat: 'repeat-x',
+              bg_position: 'top left',
+            },
+          },
+        },
+      });
+
+      const css = themeStyleSheet(themeSettingsOf(field));
+
+      expect(css).toContain(
+        '--colorgroup-custom_brand-bg-image-light-desktop: url("https://example.com/pattern.svg");',
+      );
+      expect(css).toContain(
+        '--colorgroup-custom_brand-bg-image-light-mobile: url("https://example.com/mobile-pattern.svg");',
+      );
+      expect(css).toContain(
+        '--colorgroup-custom_brand-bg-image-dark-desktop: radial-gradient(circle, #333 1px, transparent 1px);',
+      );
+      expect(css).toContain('--colorgroup-custom_brand-bg-size: 32px 32px;');
+      expect(css).toContain('--colorgroup-custom_brand-bg-repeat: repeat-x;');
+      expect(css).toContain('--colorgroup-custom_brand-bg-position: top left;');
+
+      // Utility class has background layer properties
+      expect(css).toContain('.has-back-colorgroup-custom_brand {');
+      expect(css).toContain(
+        '--theme-bg-image: var(--colorgroup-custom_brand-bg-image, none);',
+      );
+      expect(css).toContain(
+        '--theme-bg-size: var(--colorgroup-custom_brand-bg-size, auto);',
+      );
+      expect(css).toContain(
+        '--theme-bg-repeat: var(--colorgroup-custom_brand-bg-repeat, repeat);',
+      );
+      expect(css).toContain(
+        '--theme-bg-position: var(--colorgroup-custom_brand-bg-position, center);',
+      );
+      expect(css).toContain('background-image: var(--theme-bg-image);');
+      expect(css).toContain('background-size: var(--theme-bg-size);');
+      expect(css).toContain('background-repeat: var(--theme-bg-repeat);');
+      expect(css).toContain('background-position: var(--theme-bg-position);');
+
+      // Responsive and dark mode rules
+      expect(css).toContain('@media (max-width: 768px)');
+      expect(css).toContain(
+        '--colorgroup-custom_brand-bg-image: var(--colorgroup-custom_brand-bg-image-light-mobile',
+      );
+      expect(css).toContain("[data-theme='dark']");
+      expect(css).toContain(
+        '--colorgroup-custom_brand-bg-image: var(--colorgroup-custom_brand-bg-image-dark-desktop',
+      );
+    });
   });
 });

@@ -85,6 +85,15 @@ export type ColorGroup = {
   subtext_color_dark: string;
   accent_color_light: string;
   accent_color_dark: string;
+
+  // Background image / CSS pattern layer (placed on top of background color)
+  bg_image_light_desktop?: string;
+  bg_image_light_mobile?: string;
+  bg_image_dark_desktop?: string;
+  bg_image_dark_mobile?: string;
+  bg_size?: string;
+  bg_repeat?: string;
+  bg_position?: string;
 };
 
 /**

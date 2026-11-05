@@ -149,4 +149,186 @@ describe('ColorGroupsWidget', () => {
     fireEvent.click(header);
     expect(body.style.display).toBe('none');
   });
+
+  it('applies a CSS pattern preset when clicked', () => {
+    const onChange = vi.fn();
+    const { getAllByText, container } = render(
+      <ColorGroupsWidget id="color_groups" onChange={onChange} />,
+    );
+
+    // Expand primary group
+    const header = container.querySelector(
+      '.colorgroup-card-header',
+    ) as HTMLElement;
+    fireEvent.click(header);
+
+    // Click 'Pontos (Dots)' preset button in the expanded card
+    const dotsBtn = getAllByText('Pontos (Dots)')[0];
+    fireEvent.click(dotsBtn);
+
+    expect(onChange).toHaveBeenCalledWith(
+      'color_groups',
+      expect.objectContaining({
+        primary: expect.objectContaining({
+          bg_image_light_desktop: expect.stringContaining('radial-gradient'),
+          bg_size: '24px 24px',
+          bg_repeat: 'repeat',
+          bg_position: '0 0',
+        }),
+      }),
+    );
+  });
+
+  it('updates background layer fields: repeat, size, position, and mode images', () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <ColorGroupsWidget id="color_groups" onChange={onChange} />,
+    );
+
+    // Expand primary group
+    const header = container.querySelector(
+      '.colorgroup-card-header',
+    ) as HTMLElement;
+    fireEvent.click(header);
+
+    // Change Light Desktop image
+    const lightDeskInput = container.querySelector(
+      '#img-light-desk-primary',
+    ) as HTMLInputElement;
+    fireEvent.change(lightDeskInput, {
+      target: { value: 'https://example.com/banner.png' },
+    });
+    expect(onChange).toHaveBeenCalledWith(
+      'color_groups',
+      expect.objectContaining({
+        primary: expect.objectContaining({
+          bg_image_light_desktop: 'https://example.com/banner.png',
+        }),
+      }),
+    );
+
+    // Change Repeat
+    const repeatSelect = container.querySelector(
+      '#bg-repeat-primary',
+    ) as HTMLSelectElement;
+    fireEvent.change(repeatSelect, { target: { value: 'no-repeat' } });
+    expect(onChange).toHaveBeenCalledWith(
+      'color_groups',
+      expect.objectContaining({
+        primary: expect.objectContaining({
+          bg_repeat: 'no-repeat',
+        }),
+      }),
+    );
+
+    // Change Size
+    const sizeSelect = container.querySelector(
+      '#bg-size-primary',
+    ) as HTMLSelectElement;
+    fireEvent.change(sizeSelect, { target: { value: 'cover' } });
+    expect(onChange).toHaveBeenCalledWith(
+      'color_groups',
+      expect.objectContaining({
+        primary: expect.objectContaining({
+          bg_size: 'cover',
+        }),
+      }),
+    );
+
+    // Change Position
+    const posSelect = container.querySelector(
+      '#bg-pos-primary',
+    ) as HTMLSelectElement;
+    fireEvent.change(posSelect, { target: { value: 'top center' } });
+    expect(onChange).toHaveBeenCalledWith(
+      'color_groups',
+      expect.objectContaining({
+        primary: expect.objectContaining({
+          bg_position: 'top center',
+        }),
+      }),
+    );
+  });
+
+  it('updates background layer fields by clicking interactive icon buttons', () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <ColorGroupsWidget id="color_groups" onChange={onChange} />,
+    );
+
+    // Expand primary group
+    const header = container.querySelector(
+      '.colorgroup-card-header',
+    ) as HTMLElement;
+    fireEvent.click(header);
+
+    // Click Cover size button
+    const coverBtn = container.querySelector(
+      '#bg-size-cover-primary',
+    ) as HTMLButtonElement;
+    expect(coverBtn).toBeInTheDocument();
+    fireEvent.click(coverBtn);
+    expect(onChange).toHaveBeenCalledWith(
+      'color_groups',
+      expect.objectContaining({
+        primary: expect.objectContaining({
+          bg_size: 'cover',
+        }),
+      }),
+    );
+
+    // Click No-Repeat button
+    const noRepeatBtn = container.querySelector(
+      '#bg-repeat-no-repeat-primary',
+    ) as HTMLButtonElement;
+    expect(noRepeatBtn).toBeInTheDocument();
+    fireEvent.click(noRepeatBtn);
+    expect(onChange).toHaveBeenCalledWith(
+      'color_groups',
+      expect.objectContaining({
+        primary: expect.objectContaining({
+          bg_repeat: 'no-repeat',
+        }),
+      }),
+    );
+
+    // Click Top-Left compass cell
+    const topLeftBtn = container.querySelector(
+      '#bg-pos-top-left-primary',
+    ) as HTMLButtonElement;
+    expect(topLeftBtn).toBeInTheDocument();
+    fireEvent.click(topLeftBtn);
+    expect(onChange).toHaveBeenCalledWith(
+      'color_groups',
+      expect.objectContaining({
+        primary: expect.objectContaining({
+          bg_position: 'top left',
+        }),
+      }),
+    );
+  });
+
+  it('toggles device preview simulation between Desktop and Mobile', () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <ColorGroupsWidget id="color_groups" onChange={onChange} />,
+    );
+
+    const header = container.querySelector(
+      '.colorgroup-card-header',
+    ) as HTMLElement;
+    fireEvent.click(header);
+
+    const deviceBtn = container.querySelector(
+      '.device-toggle-btn',
+    ) as HTMLButtonElement;
+    expect(deviceBtn).toBeInTheDocument();
+    expect(deviceBtn.textContent).toContain('Desktop');
+
+    fireEvent.click(deviceBtn);
+    expect(deviceBtn.textContent).toContain('Mobile');
+
+    fireEvent.click(deviceBtn);
+    expect(deviceBtn.textContent).toContain('Desktop');
+  });
 });

@@ -17,6 +17,88 @@ export interface ThemeDefinition {
   label: string;
 }
 
+export interface CssPatternPreset {
+  id: string;
+  label: string;
+  description: string;
+  css: string;
+  defaultSize?: string;
+  defaultRepeat?: string;
+  defaultPosition?: string;
+}
+
+export const CSS_PATTERN_PRESETS: CssPatternPreset[] = [
+  {
+    id: 'none',
+    label: 'Nenhum',
+    description: 'Sem imagem ou padrão (apenas cor sólida de fundo)',
+    css: '',
+  },
+  {
+    id: 'dots',
+    label: 'Pontos (Dots)',
+    description: 'Padrão sutil de pontos',
+    css: 'radial-gradient(color-mix(in srgb, currentColor 18%, transparent) 1.5px, transparent 1.5px)',
+    defaultSize: '24px 24px',
+    defaultRepeat: 'repeat',
+    defaultPosition: '0 0',
+  },
+  {
+    id: 'grid',
+    label: 'Grade (Grid)',
+    description: 'Grade quadriculada moderna com transparência',
+    css: 'linear-gradient(to right, color-mix(in srgb, currentColor 12%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, currentColor 12%, transparent) 1px, transparent 1px)',
+    defaultSize: '32px 32px',
+    defaultRepeat: 'repeat',
+    defaultPosition: '0 0',
+  },
+  {
+    id: 'diagonal-stripes',
+    label: 'Listras Diagonais',
+    description: 'Listras diagonais elegantes em 45 graus',
+    css: 'repeating-linear-gradient(45deg, color-mix(in srgb, currentColor 10%, transparent), color-mix(in srgb, currentColor 10%, transparent) 1.5px, transparent 1.5px, transparent 12px)',
+    defaultSize: 'auto',
+    defaultRepeat: 'repeat',
+    defaultPosition: '0 0',
+  },
+  {
+    id: 'waves-acreative',
+    label: 'Ondas (Acreative Waves)',
+    description: 'Ondas dinâmicas curvas inspiradas no projeto acreative',
+    css: 'radial-gradient(44.72px at 50% 60px, color-mix(in srgb, currentColor 20%, transparent) 99%, #0000 101%) calc(50% - 40px) 0/80px 51% repeat-x, radial-gradient(44.72px at 50% -40px, #0000 99%, color-mix(in srgb, currentColor 20%, transparent) 101%) 50% 20px/80px calc(51% - 20px) repeat-x, radial-gradient(44.72px at 50% calc(100% - 60px), color-mix(in srgb, currentColor 20%, transparent) 99%, #0000 101%) calc(50% - 40px) 100%/80px 51% repeat-x, radial-gradient(44.72px at 50% calc(100% + 40px), #0000 99%, color-mix(in srgb, currentColor 20%, transparent) 101%) 50% calc(100% - 20px)/80px calc(51% - 20px) repeat-x',
+    defaultSize: 'auto',
+    defaultRepeat: 'repeat-x',
+    defaultPosition: 'center',
+  },
+  {
+    id: 'blueprint',
+    label: 'Blueprint (Grade Fina)',
+    description: 'Malha milimétrica dupla estilo blueprint técnico',
+    css: 'linear-gradient(color-mix(in srgb, currentColor 14%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, currentColor 14%, transparent) 1px, transparent 1px), linear-gradient(color-mix(in srgb, currentColor 6%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, currentColor 6%, transparent) 1px, transparent 1px)',
+    defaultSize: '50px 50px, 50px 50px, 10px 10px, 10px 10px',
+    defaultRepeat: 'repeat',
+    defaultPosition: '0 0',
+  },
+  {
+    id: 'zigzag',
+    label: 'Zigzag / Chevron',
+    description: 'Padrão geométrico de ziguezague',
+    css: 'linear-gradient(135deg, color-mix(in srgb, currentColor 12%, transparent) 25%, transparent 25%) -20px 0/40px 40px, linear-gradient(225deg, color-mix(in srgb, currentColor 12%, transparent) 25%, transparent 25%) -20px 0/40px 40px, linear-gradient(315deg, color-mix(in srgb, currentColor 12%, transparent) 25%, transparent 25%) 0 0/40px 40px, linear-gradient(45deg, color-mix(in srgb, currentColor 12%, transparent) 25%, transparent 25%) 0 0/40px 40px',
+    defaultSize: '40px 40px',
+    defaultRepeat: 'repeat',
+    defaultPosition: '0 0',
+  },
+  {
+    id: 'radial-mesh',
+    label: 'Malha Radial (Mesh Dots)',
+    description: 'Padrão de círculos concêntricos e pontos radiais',
+    css: 'radial-gradient(color-mix(in srgb, currentColor 15%, transparent) 1px, color-mix(in srgb, transparent 20%, transparent) 2px) 0 0 / 30px 30px',
+    defaultSize: '30px 30px',
+    defaultRepeat: 'repeat',
+    defaultPosition: '0 0',
+  },
+];
+
 /**
  * Create a complete theme definition by mapping every `--theme-*` variable
  * to its `--block-theme-{name}-*` counterpart.
@@ -68,6 +150,13 @@ export const DEFAULT_COLOR_GROUPS: Record<string, ColorGroup> = {
     subtext_color_dark: '#f8f8f8',
     accent_color_light: '#b55e1c',
     accent_color_dark: '#f4822c',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
   },
   secondary: {
     id: 'secondary',
@@ -81,6 +170,13 @@ export const DEFAULT_COLOR_GROUPS: Record<string, ColorGroup> = {
     subtext_color_dark: '#333333',
     accent_color_light: '#f4822c',
     accent_color_dark: '#f4822c',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
   },
   accent: {
     id: 'accent',
@@ -94,6 +190,13 @@ export const DEFAULT_COLOR_GROUPS: Record<string, ColorGroup> = {
     subtext_color_dark: '#f8f8f8',
     accent_color_light: '#000000',
     accent_color_dark: '#ffffff',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
   },
   neutral: {
     id: 'neutral',
@@ -107,6 +210,13 @@ export const DEFAULT_COLOR_GROUPS: Record<string, ColorGroup> = {
     subtext_color_dark: '#e6e6e6',
     accent_color_light: '#f4822c',
     accent_color_dark: '#f4822c',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
   },
 };
 
@@ -138,6 +248,13 @@ export const NATAL_COLOR_GROUPS: Record<string, ColorGroup> = {
     subtext_color_dark: '#a3c4b0',
     accent_color_light: '#c41e3a',
     accent_color_dark: '#ea4335',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
   },
   secondary: {
     id: 'secondary',
@@ -151,6 +268,13 @@ export const NATAL_COLOR_GROUPS: Record<string, ColorGroup> = {
     subtext_color_dark: '#c0d6c8',
     accent_color_light: '#f8b229',
     accent_color_dark: '#f8b229',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
   },
   accent: {
     id: 'accent',
@@ -164,6 +288,13 @@ export const NATAL_COLOR_GROUPS: Record<string, ColorGroup> = {
     subtext_color_dark: '#ffd0d5',
     accent_color_light: '#f8b229',
     accent_color_dark: '#f8b229',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
   },
   neutral: {
     id: 'neutral',
@@ -177,6 +308,13 @@ export const NATAL_COLOR_GROUPS: Record<string, ColorGroup> = {
     subtext_color_dark: '#b5d0c0',
     accent_color_light: '#c41e3a',
     accent_color_dark: '#f8b229',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
   },
 };
 
@@ -317,6 +455,14 @@ export function resolveBlockTheme(
     '--theme-top-low-contrast-foreground-color': `var(--block-theme-${theme}-top-low-contrast, var(--colorgroup-${resolvedFront}-subtext, var(--${resolvedFront}-low-foreground-color, var(--neutral-low-foreground-color))))`,
     '--theme-top-accent-color': `var(--block-theme-${theme}-top-accent-color, var(--colorgroup-${resolvedFront}-accent, var(--${resolvedFront}-accent-color, var(--neutral-accent-color))))`,
     '--colorgroup-front-font': `var(--block-theme-${theme}-top-font-family, var(--colorgroup-${resolvedFront}-font-family, inherit))`,
+    '--theme-bg-image': `var(--block-theme-${theme}-pattern-image, var(--colorgroup-${resolvedBack}-bg-image, none))`,
+    '--theme-bg-size': `var(--colorgroup-${resolvedBack}-bg-size, auto)`,
+    '--theme-bg-repeat': `var(--colorgroup-${resolvedBack}-bg-repeat, repeat)`,
+    '--theme-bg-position': `var(--colorgroup-${resolvedBack}-bg-position, center)`,
+    backgroundImage: `var(--theme-bg-image, none)`,
+    backgroundSize: `var(--theme-bg-size, auto)`,
+    backgroundRepeat: `var(--theme-bg-repeat, repeat)`,
+    backgroundPosition: `var(--theme-bg-position, center)`,
     ...(isCustom ? {} : baseStyle),
   } as React.CSSProperties;
 

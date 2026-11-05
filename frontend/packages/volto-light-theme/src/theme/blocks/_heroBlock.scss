@@ -9,8 +9,25 @@ $hero-card-overlap: 60px;
   > .block:has(.heroBlock.has--block-width--unset),
 #page-document
   .blocks-group-wrapper
-  > .block.heroBlock.has--block-width--unset {
+  > .block.heroBlock.has--block-width--unset,
+#page-document
+  .blocks-group-wrapper
+  > .block:has(.heroBlock.has--block-width--full),
+#page-document
+  .blocks-group-wrapper
+  > .block.heroBlock.has--block-width--full,
+#page-document
+  .blocks-group-wrapper
+  > .block:has(.hero-block-container.has--block-width--full),
+#page-document
+  .blocks-group-wrapper
+  > .block:has(.hero-block-container.has--block-width--unset) {
+  width: 100%;
   max-width: none;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
 }
 
 .block.heroBlock {
@@ -19,6 +36,11 @@ $hero-card-overlap: 60px;
 
   // Container type para permitir que fontes reajam à largura da coluna
   container-type: inline-size;
+
+  // Quando o heroBlock externo possui imagem de fundo, evita duplicar o background no container interno
+  .hero-block-container {
+    background-image: none !important;
+  }
 }
 
 .hero-block-container {
@@ -54,15 +76,12 @@ $hero-card-overlap: 60px;
 
   &.has--block-width--unset,
   &.has--block-width--full {
-    // Apenas a variação flex se expande para tocar as laterais da página
-    &:has(.hero-flex) {
-      width: 100%;
-      max-width: 100%;
-      padding-right: 0;
-      padding-left: 0;
-      margin-right: 0;
-      margin-left: 0;
-    }
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
 
     .hero-flex.text-right .hero-flex-content {
       padding-right: max(2rem, calc(50% - var(--layout-container-width)));

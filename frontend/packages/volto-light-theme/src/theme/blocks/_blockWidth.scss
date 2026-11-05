@@ -244,7 +244,9 @@
     .block.search,
     .searchBlock-container,
     .search-block-event,
-    .table-of-contents {
+    .table-of-contents,
+    > .hero-block-container,
+    .hero-block-container {
       @include apply-full-width;
     }
     &.slate p,

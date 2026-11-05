@@ -72,7 +72,11 @@ const HeroBlockView: React.FC<HeroBlockViewProps> = (props) => {
   };
 
   return (
-    <BlockWrapper {...(props as any)}>
+    <BlockWrapper
+      {...(props as any)}
+      className={cx(props.className, blockWidthClass, resolved.className)}
+      style={finalStyle}
+    >
       <div
         className={cx(
           'hero-block-container',

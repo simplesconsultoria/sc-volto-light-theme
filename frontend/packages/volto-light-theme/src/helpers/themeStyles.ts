@@ -94,6 +94,24 @@ export function cssVariableFor(field: string): string {
  * stylesheet defaults.
  */
 
+export function formatBackgroundImage(value?: string): string {
+  if (!value || typeof value !== 'string') return 'none';
+  const trimmed = value.trim();
+  if (!trimmed || trimmed === 'none') return 'none';
+  if (trimmed.startsWith('url(')) return trimmed;
+  if (trimmed.startsWith('data:')) return `url("${trimmed}")`;
+  if (
+    trimmed.startsWith('linear-gradient') ||
+    trimmed.startsWith('radial-gradient') ||
+    trimmed.startsWith('repeating-linear-gradient') ||
+    trimmed.startsWith('repeating-radial-gradient') ||
+    trimmed.startsWith('conic-gradient')
+  ) {
+    return trimmed;
+  }
+  return `url("${trimmed}")`;
+}
+
 export function colorGroupCustomProperties(
   cg: ColorGroup,
 ): Record<string, string> {
@@ -131,6 +149,29 @@ export function colorGroupCustomProperties(
   if (cg.font_family) {
     props[`${prefix}-font-family`] = cg.font_family.trim();
   }
+
+  const imgLightDesk = formatBackgroundImage(cg.bg_image_light_desktop);
+  const imgLightMob = formatBackgroundImage(
+    cg.bg_image_light_mobile || cg.bg_image_light_desktop,
+  );
+  const imgDarkDesk = formatBackgroundImage(
+    cg.bg_image_dark_desktop || cg.bg_image_light_desktop,
+  );
+  const imgDarkMob = formatBackgroundImage(
+    cg.bg_image_dark_mobile ||
+      cg.bg_image_dark_desktop ||
+      cg.bg_image_light_mobile ||
+      cg.bg_image_light_desktop,
+  );
+
+  props[`${prefix}-bg-image-light-desktop`] = imgLightDesk;
+  props[`${prefix}-bg-image-light-mobile`] = imgLightMob;
+  props[`${prefix}-bg-image-dark-desktop`] = imgDarkDesk;
+  props[`${prefix}-bg-image-dark-mobile`] = imgDarkMob;
+  props[`${prefix}-bg-size`] = cg.bg_size?.trim() || 'auto';
+  props[`${prefix}-bg-repeat`] = cg.bg_repeat?.trim() || 'repeat';
+  props[`${prefix}-bg-position`] = cg.bg_position?.trim() || 'center';
+  props[`${prefix}-bg-image`] = `var(${prefix}-bg-image-light-desktop, none)`;
 
   return props;
 }
@@ -183,6 +224,14 @@ export function blockThemeUtilityClasses(
   --theme-border-width: var(--block-theme-${bt.id}-border-width, 0);
   --theme-pattern-image: var(--block-theme-${bt.id}-pattern-image, none);
   --theme-pattern-opacity: var(--block-theme-${bt.id}-pattern-opacity, 0);
+  --theme-bg-image: var(--block-theme-${bt.id}-pattern-image, var(--colorgroup-${bt.back_color_group}-bg-image, none));
+  --theme-bg-size: var(--colorgroup-${bt.back_color_group}-bg-size, auto);
+  --theme-bg-repeat: var(--colorgroup-${bt.back_color_group}-bg-repeat, repeat);
+  --theme-bg-position: var(--colorgroup-${bt.back_color_group}-bg-position, center);
+  background-image: var(--theme-bg-image);
+  background-size: var(--theme-bg-size);
+  background-repeat: var(--theme-bg-repeat);
+  background-position: var(--theme-bg-position);
 }`,
     )
     .join('\n');
@@ -206,6 +255,14 @@ export function colorGroupUtilityClasses(
   --theme-low-contrast-foreground-color: var(--colorgroup-${cg.id}-subtext);
   --theme-foreground-accent-color: var(--colorgroup-${cg.id}-accent);
   --colorgroup-back-font: var(--colorgroup-${cg.id}-font-family, inherit);
+  --theme-bg-image: var(--colorgroup-${cg.id}-bg-image, none);
+  --theme-bg-size: var(--colorgroup-${cg.id}-bg-size, auto);
+  --theme-bg-repeat: var(--colorgroup-${cg.id}-bg-repeat, repeat);
+  --theme-bg-position: var(--colorgroup-${cg.id}-bg-position, center);
+  background-image: var(--theme-bg-image);
+  background-size: var(--theme-bg-size);
+  background-repeat: var(--theme-bg-repeat);
+  background-position: var(--theme-bg-position);
 }
 .has-front-colorgroup-${cg.id} {
   --theme-high-contrast-color: var(--colorgroup-${cg.id}-bg);
@@ -214,9 +271,79 @@ export function colorGroupUtilityClasses(
   --theme-top-low-contrast-foreground-color: var(--colorgroup-${cg.id}-subtext);
   --theme-top-accent-color: var(--colorgroup-${cg.id}-accent);
   --colorgroup-front-font: var(--colorgroup-${cg.id}-font-family, inherit);
+  --theme-top-bg-image: var(--colorgroup-${cg.id}-bg-image, none);
+  --theme-top-bg-size: var(--colorgroup-${cg.id}-bg-size, auto);
+  --theme-top-bg-repeat: var(--colorgroup-${cg.id}-bg-repeat, repeat);
+  --theme-top-bg-position: var(--colorgroup-${cg.id}-bg-position, center);
 }`,
     )
     .join('\n');
+}
+
+export function colorGroupResponsiveImageRules(
+  colorGroups?: Record<string, ColorGroup> | ColorGroup[],
+): string {
+  if (!colorGroups) return '';
+  const list = Array.isArray(colorGroups)
+    ? colorGroups
+    : Object.values(colorGroups);
+  const active = list.filter(
+    (cg) =>
+      cg &&
+      typeof cg === 'object' &&
+      cg.id &&
+      (cg.bg_image_light_desktop ||
+        cg.bg_image_light_mobile ||
+        cg.bg_image_dark_desktop ||
+        cg.bg_image_dark_mobile),
+  );
+  if (active.length === 0) return '';
+
+  const mobileLightDecls = active
+    .map(
+      (cg) =>
+        `  --colorgroup-${cg.id}-bg-image: var(--colorgroup-${cg.id}-bg-image-light-mobile, var(--colorgroup-${cg.id}-bg-image-light-desktop, none));`,
+    )
+    .join('\n');
+
+  const darkDeskDecls = active
+    .map(
+      (cg) =>
+        `  --colorgroup-${cg.id}-bg-image: var(--colorgroup-${cg.id}-bg-image-dark-desktop, var(--colorgroup-${cg.id}-bg-image-light-desktop, none));`,
+    )
+    .join('\n');
+
+  const darkMobDecls = active
+    .map(
+      (cg) =>
+        `  --colorgroup-${cg.id}-bg-image: var(--colorgroup-${cg.id}-bg-image-dark-mobile, var(--colorgroup-${cg.id}-bg-image-dark-desktop, var(--colorgroup-${cg.id}-bg-image-light-mobile, none)));`,
+    )
+    .join('\n');
+
+  return `
+@media (max-width: 768px) {
+  :root {
+${mobileLightDecls}
+  }
+}
+[data-theme='dark'] {
+${darkDeskDecls}
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+${darkDeskDecls}
+  }
+}
+@media (max-width: 768px) {
+  [data-theme='dark'] {
+${darkMobDecls}
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+${darkMobDecls}
+    }
+  }
+}`;
 }
 
 /**
@@ -394,6 +521,16 @@ export function themeStyleSheet(
   const blockThemeUtilities = settings?.block_themes
     ? blockThemeUtilityClasses(settings.block_themes)
     : '';
+  const responsiveImageRules = settings?.color_groups
+    ? colorGroupResponsiveImageRules(settings.color_groups)
+    : '';
 
-  return [rootRule, utilities, blockThemeUtilities].filter(Boolean).join('\n');
+  return [
+    rootRule,
+    utilities,
+    blockThemeUtilities,
+    responsiveImageRules,
+  ]
+    .filter(Boolean)
+    .join('\n');
 }
