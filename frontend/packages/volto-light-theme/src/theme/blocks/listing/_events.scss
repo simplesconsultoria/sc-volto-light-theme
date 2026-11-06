@@ -1,9 +1,9 @@
 // =============================================================================
 // Listing Events Variation
-// Lista vertical de eventos com data destacada, titulo e badge de acao.
-// Suporte completo ao novo sistema de temas (ground / foreground / accent)
-// e adaptacao fluida para containers estreitos / grids (compact mode via
-// container queries e media queries).
+// Vertical list of events with highlighted date, title, and action badge.
+// Full support for the theme system (ground / foreground / accent)
+// and fluid adaptation for narrow containers / grids (compact mode via
+// container queries and media queries).
 // =============================================================================
 
 &.events {
@@ -190,7 +190,7 @@
       }
 
       // -----------------------------------------------------------------------
-      // Layout Compacto direto em Colunas de Grid e no Bloco de Grid
+      // Compact layout inside grid columns and Grid Block
       // -----------------------------------------------------------------------
       :is(
           .two.grid-items,
@@ -259,7 +259,7 @@
       }
 
       // -----------------------------------------------------------------------
-      // Layout Compacto (Container Query: <= 640px ou Grids em colunas medias)
+      // Compact layout (Container Query: <= 640px or medium grid columns)
       // -----------------------------------------------------------------------
       @container (max-width: 640px) {
         flex-direction: column;
@@ -318,7 +318,7 @@
       }
 
       // -----------------------------------------------------------------------
-      // Layout Extra-Compacto (Container Query: <= 320px, ex: coluna 20% grid)
+      // Extra-compact layout (Container Query: <= 320px, e.g. 20% grid column)
       // -----------------------------------------------------------------------
       @container (max-width: 320px) {
         padding: 0.75rem 0;
@@ -353,7 +353,7 @@
           }
 
           .event-description {
-            display: none; // Oculta descricao longa em colunas muito estreitas
+            display: none; // Hide long description in very narrow columns
           }
 
           .event-details {
@@ -377,7 +377,7 @@
       }
 
       // -----------------------------------------------------------------------
-      // Fallback para Telas Pequenas (Media Query: <= 640px)
+      // Small screen fallback (Media Query: <= 640px)
       // -----------------------------------------------------------------------
       @media (max-width: 640px) {
         flex-direction: column;
@@ -456,7 +456,7 @@
     }
   }
 
-  // Listing Headline Wrapper quando container e muito estreito
+  // Listing Headline Wrapper when container is very narrow
   @container (max-width: 320px) {
     .listing-headline-wrapper {
       flex-direction: column;
@@ -476,7 +476,7 @@
 }
 
 // =============================================================================
-// Adaptadores Diretos para Colunas de Custom Grid e Grid Block
+// Direct Adapters for Custom Grid columns and Grid Block
 // =============================================================================
 :is(.custom-grid-column, .column) .block.listing.events {
   .event-listing-item {

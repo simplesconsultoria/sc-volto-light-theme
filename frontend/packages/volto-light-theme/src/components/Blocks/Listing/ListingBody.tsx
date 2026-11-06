@@ -158,41 +158,8 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
   const blockWidth = normalizeBlockWidth(data);
   const blockWidthClass = `has--block-width--${blockWidth}`;
 
-  const rawTheme = data.theme || data.styles?.theme || 'default';
-  const theme =
-    typeof rawTheme === 'object' && rawTheme !== null
-      ? (rawTheme as any).theme || 'default'
-      : rawTheme || 'default';
-
-  let customBack: string | undefined;
-  let customFront: string | undefined;
-  if (typeof theme === 'string' && theme.startsWith('custom-')) {
-    const parts = theme.split('-');
-    customBack = parts[1];
-    customFront = parts[2];
-  }
-
-  const backColorGroup =
-    customBack ||
-    (typeof rawTheme === 'object' && rawTheme !== null
-      ? (rawTheme as any).backColorGroup
-      : undefined) ||
-    data.backColorGroup ||
-    data.styles?.backColorGroup;
-
-  const frontColorGroup =
-    customFront ||
-    (typeof rawTheme === 'object' && rawTheme !== null
-      ? (rawTheme as any).frontColorGroup
-      : undefined) ||
-    data.frontColorGroup ||
-    data.styles?.frontColorGroup;
   const { style: blockThemeStyle, className: blockThemeClass } =
-    resolveBlockTheme({
-      theme,
-      backColorGroup,
-      frontColorGroup,
-    });
+    resolveBlockTheme(data);
 
   const cardBorderWidth =
     data['--cardBorderWidth'] || data.styles?.['--cardBorderWidth'];

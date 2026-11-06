@@ -17,6 +17,19 @@ export interface ThemeDefinition {
   label: string;
 }
 
+/**
+ * Resolves available theme definitions for a specific block or site fallback.
+ */
+export function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
+  const blockThemes = blockType
+    ? (config.blocks?.blocksConfig as any)?.[blockType]?.themes
+    : undefined;
+
+  return (blockThemes ||
+    (config.blocks as any)?.themes ||
+    []) as ThemeDefinition[];
+}
+
 export interface CssPatternPreset {
   id: string;
   label: string;
@@ -344,10 +357,12 @@ export const BASE_BLOCK_THEME_IDS = ['default', 'alternative'];
 
 export interface ResolveBlockThemeOptions {
   theme?: string | any;
+  styles?: { theme?: string; [key: string]: any };
   backColorGroup?: string;
   frontColorGroup?: string;
   themeDefinitions?: ThemeDefinition[];
   blockThemes?: Record<string, BlockTheme>;
+  [key: string]: any;
 }
 
 export interface ResolvedBlockTheme {
@@ -362,17 +377,26 @@ export interface ResolvedBlockTheme {
  * Resolves the block theme preset and the back/front ColorGroups.
  * Back ColorGroup controls the block ground (background, headline/title, buttons).
  * Front ColorGroup controls the high ground (cards, chips, card title and subtext).
+ * Can be called with full block `data` directly: `resolveBlockTheme(data)`.
  */
 export function resolveBlockTheme(
-  options: ResolveBlockThemeOptions = {},
+  optionsOrData: ResolveBlockThemeOptions = {},
 ): ResolvedBlockTheme {
   const {
-    theme: rawTheme = 'default',
+    theme: rawThemeExplicit,
+    styles,
     backColorGroup: directBack,
     frontColorGroup: directFront,
-    themeDefinitions = [],
+    themeDefinitions: directThemeDefinitions,
     blockThemes = DEFAULT_BLOCK_THEMES,
-  } = options;
+  } = optionsOrData;
+
+  const blockType = optionsOrData?.['@type'] as string | undefined;
+  const rawTheme = rawThemeExplicit ?? styles?.theme ?? 'default';
+  const themeDefinitions =
+    directThemeDefinitions && directThemeDefinitions.length > 0
+      ? directThemeDefinitions
+      : getThemeDefinitions(blockType);
 
   const theme =
     typeof rawTheme === 'object' && rawTheme !== null
@@ -455,6 +479,14 @@ export function resolveBlockTheme(
     '--theme-top-low-contrast-foreground-color': `var(--block-theme-${theme}-top-low-contrast, var(--colorgroup-${resolvedFront}-subtext, var(--${resolvedFront}-low-foreground-color, var(--neutral-low-foreground-color))))`,
     '--theme-top-accent-color': `var(--block-theme-${theme}-top-accent-color, var(--colorgroup-${resolvedFront}-accent, var(--${resolvedFront}-accent-color, var(--neutral-accent-color))))`,
     '--colorgroup-front-font': `var(--block-theme-${theme}-top-font-family, var(--colorgroup-${resolvedFront}-font-family, inherit))`,
+    '--highground-bg-image': `var(--colorgroup-${resolvedFront}-bg-image, none)`,
+    '--highground-bg-size': `var(--colorgroup-${resolvedFront}-bg-size, auto)`,
+    '--highground-bg-repeat': `var(--colorgroup-${resolvedFront}-bg-repeat, repeat)`,
+    '--highground-bg-position': `var(--colorgroup-${resolvedFront}-bg-position, center)`,
+    '--colorgroup-front-bg-image': `var(--colorgroup-${resolvedFront}-bg-image, none)`,
+    '--colorgroup-front-bg-size': `var(--colorgroup-${resolvedFront}-bg-size, auto)`,
+    '--colorgroup-front-bg-repeat': `var(--colorgroup-${resolvedFront}-bg-repeat, repeat)`,
+    '--colorgroup-front-bg-position': `var(--colorgroup-${resolvedFront}-bg-position, center)`,
     '--theme-bg-image': `var(--block-theme-${theme}-pattern-image, var(--colorgroup-${resolvedBack}-bg-image, none))`,
     '--theme-bg-size': `var(--colorgroup-${resolvedBack}-bg-size, auto)`,
     '--theme-bg-repeat': `var(--colorgroup-${resolvedBack}-bg-repeat, repeat)`,

@@ -1,8 +1,8 @@
 // =============================================================================
 // SlateTable / Table Block Styling — sc-volto-light-theme
-// Garante suporte total ao sistema de larguras (narrow, default, layout, full),
-// neutraliza o display:grid com place-content do upstream no container intermediário
-// e garante expansão fluida (width: 100%) da tabela com overflow seguro.
+// Ensures full support for block widths (narrow, default, layout, full),
+// neutralizes upstream intermediate container display:grid with place-content,
+// and ensures fluid 100% table expansion with safe horizontal scrolling.
 // =============================================================================
 
 .block.slateTable,
@@ -10,10 +10,9 @@
 .block.slate-table {
   box-sizing: border-box;
 
-  // Neutraliza o pseudo-elemento ::before herdado de .block .block:not(.inner)::before (pastanaga)
-  // que define position: absolute; left: -9px; width: calc(100% + 18px).
-  // Em modo full (100% bleed) ou larguras amplas, esses 9px à esquerda e 18px adicionais
-  // ultrapassam a largura da viewport provocando barra de rolagem horizontal desnecessária.
+  // Neutralize ::before pseudo-element inherited from .block .block:not(.inner)::before
+  // which sets position: absolute; left: -9px; width: calc(100% + 18px).
+  // In full-bleed or wide layouts, this extra offset causes unwanted horizontal scrolling.
   &::before,
   .block::before,
   .block.slate-table::before,
@@ -26,8 +25,8 @@
     content: none !important;
   }
 
-  // Anula o isolamento do kitconcept em :not(.blocks-group-wrapper) > .block .block-inner-container
-  // que impunha display: grid, place-content: start e default-container-width fixo (940px)
+  // Override kitconcept container isolation in :not(.blocks-group-wrapper) > .block .block-inner-container
+  // which imposed display: grid, place-content: start, and fixed 940px width.
   .block.slate-table,
   .slate-table-block-wrapper,
   .block.table {
@@ -64,7 +63,7 @@
   }
 }
 
-// Suporte específico no Modo de Edição
+// Specific support in Edit Mode
 #page-edit,
 #page-add {
   .block-editor-slateTable {
@@ -95,7 +94,7 @@
   }
 }
 
-// Reset para tabelas contidas dentro de colunas (gridBlock, customGrid, accordion)
+// Reset for tables contained within columns (gridBlock, customGrid, accordion)
 .custom-grid-column,
 .block-column,
 .column,

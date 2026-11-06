@@ -14,7 +14,7 @@ $quote-padding-vertical: $spacing-medium;
   background-color: transparent;
   color: var(--theme-foreground-color, var(--primary-foreground-color));
 
-  // Fallback padrão se nenhuma classe específica de largura estiver aplicada
+  // Default fallback if no specific block width class is applied
   &:not([class*='has--block-width-']) {
     @include default-container-width();
     @include adjustMarginsToContainer($default-container-width);

@@ -1,14 +1,14 @@
 // =============================================================================
 // Block Width System — sc-volto-light-theme
-// Sistema centralizado e otimizado para larguras de blocos (narrow, default, layout, full).
-// Aplica universalmente em todos os blocos: padrão Slate, Heading, Introduction,
-// Event Calendar, Table of Contents, Table, etc., sem quebrar layouts nem vazar do viewport.
+// Centralized, responsive system for block widths (narrow, default, layout, full).
+// Universally applies to all blocks: Slate, Heading, Introduction, Event Calendar,
+// Table of Contents, Table, etc., preventing layout breaks and viewport overflow.
 // =============================================================================
 
-// Mixins utilitários para aplicação consistente de larguras
-// Redefine adjustMarginsToContainer e adjustMarginsToEditContainer para garantir
-// que em telas <= width + 2*20px, as margens laterais de 20px prevaleçam com !important,
-// impedindo que regras com margin: auto !important anulem o respiro da tela.
+// Utility mixins for consistent width application.
+// Redefines adjustMarginsToContainer and adjustMarginsToEditContainer so that
+// on screens <= width + 2*20px, lateral 20px margins prevail, preventing margin: auto
+// from stripping the safety gutters.
 @mixin adjustMarginsToContainer($width) {
   @container (max-width: #{$width + 2 * $horizontal-space-small-screens}) {
     margin-right: $horizontal-space-small-screens !important;
@@ -62,11 +62,11 @@
 }
 
 // -----------------------------------------------------------------------------
-// 1. Aplicação Direta em Classes de Bloco no Modo Visualização
+// 1. Direct Application on Block Classes in View Mode
 // -----------------------------------------------------------------------------
-// Blocos que gerenciam background próprio full-bleed com container interno
-// (heroBlock, customGrid) e blocos de imagem com alinhamento lateral são excluídos
-// da largura de bloco direta no container externo.
+// Blocks that manage their own full-bleed background with an inner container
+// (heroBlock, customGrid) and image blocks with lateral alignments are excluded
+// from direct block width rules on the outer container.
 .has--block-width--narrow:not(.block-editor-heroBlock):not(.heroBlock):not(
     .block-editor-customGrid
   ):not(.customGrid):not(.listing-headline-wrapper):not(.listing-body):not(
@@ -125,8 +125,8 @@
   @include apply-full-width;
 }
 
-// Blocos contidos dentro de outros blocos (como gridBlock, customGrid, accordion)
-// herdam a largura e o alinhamento da coluna/container e não aplicam margens laterais.
+// Blocks contained within other blocks (gridBlock, customGrid, accordion)
+// inherit column width and alignment without applying lateral page breakout margins.
 .block.contained,
 .contained:not([class*='block-editor-']),
 .custom-grid-column .block,
@@ -149,10 +149,10 @@
 }
 
 // -----------------------------------------------------------------------------
-// 2. Aplicação em Containers Internos de Todos os Blocos no Modo Visualização
+// 2. Application on Inner Containers Across All Blocks in View Mode
 // -----------------------------------------------------------------------------
-// Cobre blocos com estrutura interna específica:
-// - Bloco padrão Slate (slate-inner-container, parágrafos, cabeçalhos, listas)
+// Covers blocks with specific inner markup structures:
+// - Standard Slate (slate-inner-container, paragraphs, headings, lists)
 // - Heading (.heading-wrapper)
 // - Introduction (.block-container)
 // - Event Calendar (.search-block-event)
@@ -258,8 +258,7 @@
       @include apply-full-width;
     }
 
-    // Neutraliza ::before de blocos internos/filhos (como table) que herdam
-    // position: absolute; left: -9px; width: calc(100% + 18px), impedindo estouro lateral da página.
+    // Neutralize ::before on inner elements (e.g. table) to prevent horizontal overflow
     &::before,
     .block::before {
       left: 0 !important;
@@ -273,7 +272,7 @@
 }
 
 // -----------------------------------------------------------------------------
-// 3. Modo de Edição (#page-edit e #page-add)
+// 3. Edit Mode (#page-edit and #page-add)
 // -----------------------------------------------------------------------------
 #page-edit,
 #page-add {
@@ -352,7 +351,7 @@
     }
   }
 
-  // Reset de blocos contidos em colunas e containers no modo de edição
+  // Reset for blocks contained inside columns and containers in edit mode
   .custom-grid-column,
   .block-column,
   .column,
@@ -398,10 +397,9 @@
 }
 
 // -----------------------------------------------------------------------------
-// 4. Configuração de Container Queries no Documento (#page-document)
+// 4. Container Queries Configuration on Document (#page-document)
 // -----------------------------------------------------------------------------
 #page-document,
 #page-document .blocks-group-wrapper {
   container-type: inline-size;
 }
-

@@ -1,8 +1,8 @@
 // =============================================================================
 // Listing Teaser (Highlight) Variation
-// Suporte ao layout Highlight (imagem lateral ou empilhada) com alinhamentos
-// (left, right, center), container query context, e compatibilidade com
-// temas de bloco, grupos de cor e bordas (BorderWidget).
+// Support for Highlight layout (lateral or stacked image) with alignments
+// (left, right, center), container query context, and compatibility with
+// block themes, color groups, and borders (BorderWidget).
 // =============================================================================
 
 &.teaser {
@@ -43,6 +43,22 @@
       ) !important;
       margin: 0 !important;
       background-color: var(--theme-high-contrast-color, transparent);
+      background-image: var(
+        --highground-bg-image,
+        var(--colorgroup-front-bg-image, none)
+      );
+      background-position: var(
+        --highground-bg-position,
+        var(--colorgroup-front-bg-position, center)
+      );
+      background-repeat: var(
+        --highground-bg-repeat,
+        var(--colorgroup-front-bg-repeat, repeat)
+      );
+      background-size: var(
+        --highground-bg-size,
+        var(--colorgroup-front-bg-size, auto)
+      );
       font-family: var(--colorgroup-front-font, inherit);
 
       .card-inner {
@@ -199,7 +215,7 @@
       }
     }
 
-    // Responsive: Quando dentro de colunas de grid
+    // Responsive: When inside grid columns
     :is(
         .two.grid-items,
         .three.grid-items,

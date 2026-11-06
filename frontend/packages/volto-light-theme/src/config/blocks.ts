@@ -502,11 +502,25 @@ export function installAccordionBlock(config: ConfigType) {
 export const DEFAULT_BORDER_EXCLUDED_BLOCKS = ['separator'];
 
 /**
- * Aprimora a configuração de schema de um bloco para injetar:
- * 1. Tema do Bloco (widget unificado block_theme_widget)
- * 2. Largura do Bloco (blockWidth:noprefix) em todos os blocos
- * 3. Bordas (--cardBorderColor e --cardBorderWidth com border_widget) em todos os blocos,
- *    exceto aqueles listados em config.settings.borderExcludedBlocks
+ * Detects if a block has float alignment configured ('left' or 'right').
+ */
+export function isBlockAligned(args: any): boolean {
+  const align =
+    args?.formData?.align ||
+    args?.formData?.styles?.['align:noprefix'] ||
+    args?.formData?.styles?.align ||
+    args?.data?.align ||
+    args?.data?.styles?.['align:noprefix'] ||
+    args?.data?.styles?.align;
+  return align === 'left' || align === 'right';
+}
+
+/**
+ * Enhances a block schema configuration to inject:
+ * 1. Block Theme (unified widget block_theme_widget)
+ * 2. Block Width (blockWidth:noprefix) across all blocks
+ * 3. Borders (--cardBorderColor and --cardBorderWidth with border_widget) across all blocks,
+ *    except those listed in config.settings.borderExcludedBlocks
  */
 export function enhanceBlockConfig(
   blockConfig: any,
@@ -520,10 +534,10 @@ export function enhanceBlockConfig(
   blockConfig.schemaEnhancer = (args: any) => {
     let schema = prevEnhancer ? prevEnhancer(args) : args.schema;
 
-    // Garante que o fieldset 'styling' e schema.properties.styles.schema existam
+    // Ensure the 'styling' fieldset and schema.properties.styles.schema exist
     addStyling({ schema, intl: args.intl });
 
-    // Garante que o widget unificado de Tema do Bloco esteja presente na raiz de estilo
+    // Ensure unified Block Theme widget is present on the style root
     schema.properties = schema.properties || {};
     schema.properties.theme = {
       widget: 'block_theme_widget',
@@ -534,11 +548,11 @@ export function enhanceBlockConfig(
       default: 'default',
     };
 
-    // Remove campos redundantes legados e blockWidth nativo da raiz
+    // Remove legacy redundant fields and root-level blockWidth
     delete schema.properties.backgroundColor;
     delete schema.properties.blockWidth;
     if (schema.fieldsets) {
-      // Remove blockWidth de qualquer fieldset padrão ou layout (mantido apenas em styles)
+      // Remove blockWidth from default or layout fieldsets (kept only in styles)
       schema.fieldsets.forEach((f: any) => {
         if (f.fields) {
           f.fields = f.fields.filter(
@@ -566,35 +580,20 @@ export function enhanceBlockConfig(
       }
     }
 
-    // Injeta opções no schema interno de estilos do Volto (styles.schema)
+    // Inject options into Volto's internal styles schema (styles.schema)
     if (schema?.properties?.styles?.schema) {
       const stylesSchema = schema.properties.styles.schema;
       stylesSchema.properties = stylesSchema.properties || {};
 
-      // Remove propriedades redundantes de dentro de styles
+      // Remove redundant properties from within styles
       delete stylesSchema.properties.theme;
       delete stylesSchema.properties.backgroundColor;
 
-      // 1. Largura do Bloco (universal para TODOS os blocos)
-      // Para blocos de imagem (image e mainImageBlock), quando em modo de alinhamento lateral (left/right),
-      // a opção de largura é desativada, pois o bloco flui naturalmente ao lado de outros elementos
+      // 1. Block Width (universal across ALL blocks)
+      // For image blocks (image and mainImageBlock), when in side-aligned mode (left/right),
+      // the block width option is disabled as the block naturally flows alongside other content
       const isImageBlock = blockId === 'image' || blockId === 'mainImageBlock';
-      const isAligned =
-        isImageBlock &&
-        Boolean(
-          args?.formData?.align === 'left' ||
-            args?.formData?.align === 'right' ||
-            args?.formData?.styles?.['align:noprefix'] === 'left' ||
-            args?.formData?.styles?.['align:noprefix'] === 'right' ||
-            args?.formData?.styles?.align === 'left' ||
-            args?.formData?.styles?.align === 'right' ||
-            args?.data?.align === 'left' ||
-            args?.data?.align === 'right' ||
-            args?.data?.styles?.['align:noprefix'] === 'left' ||
-            args?.data?.styles?.['align:noprefix'] === 'right' ||
-            args?.data?.styles?.align === 'left' ||
-            args?.data?.styles?.align === 'right',
-        );
+      const isAligned = isImageBlock && isBlockAligned(args);
 
       if (!isAligned) {
         stylesSchema.properties['blockWidth:noprefix'] = {
@@ -615,7 +614,7 @@ export function enhanceBlockConfig(
         delete stylesSchema.properties['blockWidth:noprefix'];
       }
 
-      // 2. Bordas (para todos os blocos, EXCETO os excluídos da blacklist)
+      // 2. Borders (for all blocks, EXCEPT those excluded in the blacklist)
       const excluded =
         (config.settings as any)?.borderExcludedBlocks ||
         DEFAULT_BORDER_EXCLUDED_BLOCKS;
@@ -645,7 +644,7 @@ export function enhanceBlockConfig(
         };
       }
 
-      // Organiza a ordem dos campos no fieldset default do stylesSchema
+      // Organize field order inside the default fieldset of stylesSchema
       const defaultFieldset = stylesSchema.fieldsets?.find(
         (f: any) => f.id === 'default',
       );
@@ -725,12 +724,12 @@ function syncContainerBlocks(config: ConfigType) {
 }
 
 function installBlockStyling(config: ConfigType) {
-  // Aplica em todos os blocos já existentes no registry
+  // Apply enhancement to all blocks already registered
   Object.keys(config.blocks.blocksConfig).forEach((blockId) => {
     enhanceBlockConfig(config.blocks.blocksConfig[blockId], blockId, config);
   });
 
-  // Proxy no blocksConfig para interceptar e aprimorar qualquer bloco futuro
+  // Proxy blocksConfig to intercept and enhance dynamically registered blocks
   config.blocks.blocksConfig = new Proxy(config.blocks.blocksConfig, {
     set(target: any, prop: string, value: any) {
       if (value && typeof value === 'object') {

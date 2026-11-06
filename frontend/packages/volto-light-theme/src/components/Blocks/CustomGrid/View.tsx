@@ -2,27 +2,13 @@ import React from 'react';
 import cx from 'classnames';
 import { RenderBlocks } from '@plone/volto/components';
 import { BlockWrapper } from '@kitconcept/volto-bm3-compat';
-import config from '@plone/volto/registry';
 
 // ========================================================================
 // Theme Resolution Logic (padronizado com o HeroBlock)
 // ========================================================================
 
-import {
-  resolveBlockTheme,
-  type ThemeDefinition,
-} from '../../../config/blockThemes';
+import { resolveBlockTheme } from '../../../config/blockThemes';
 import { normalizeBlockWidth } from '../../../helpers/blockWidth';
-
-function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
-  const blockThemes = blockType
-    ? (config.blocks?.blocksConfig as any)?.[blockType]?.themes
-    : undefined;
-
-  return (blockThemes ||
-    (config.blocks as any)?.themes ||
-    []) as ThemeDefinition[];
-}
 
 // ========================================================================
 // Componentes do Bloco
@@ -68,19 +54,8 @@ const CustomGridView = (props: any) => {
   const columnsLayout = data?.data?.blocks_layout?.items || [];
 
   // Theme resolution for the Grid Wrapper
-  const blockType = data?.['@type'] as string | undefined;
-  const themeDefinitions = getThemeDefinitions(blockType);
   const themeValue = data?.theme ?? data?.styles?.theme;
-  const backColorGroup = data?.backColorGroup ?? data?.styles?.backColorGroup;
-  const frontColorGroup =
-    data?.frontColorGroup ?? data?.styles?.frontColorGroup;
-
-  const resolved = resolveBlockTheme({
-    theme: typeof themeValue === 'string' ? themeValue : undefined,
-    backColorGroup,
-    frontColorGroup,
-    themeDefinitions,
-  });
+  const resolved = resolveBlockTheme(data);
 
   const themeStyle =
     typeof themeValue === 'object' && themeValue !== null
@@ -137,7 +112,6 @@ const CustomGridView = (props: any) => {
                   typeof colThemeValue === 'string' ? colThemeValue : undefined,
                 backColorGroup: colBack,
                 frontColorGroup: colFront,
-                themeDefinitions,
               })
             : null;
 

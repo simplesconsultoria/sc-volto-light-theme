@@ -8,7 +8,7 @@
     border: solid var(--cardBorderColor, var(--theme-border-color));
     border-width: var(--cardBorderWidth, var(--theme-border-width, 0));
 
-    // Configura container para reatividade baseada em largura do pai
+    // Configure container for parent width reactivity
     container-type: inline-size;
 
     .slider-wrapper {

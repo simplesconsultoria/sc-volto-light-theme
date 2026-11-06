@@ -8,7 +8,7 @@ import cx from 'classnames';
 import type { Content } from '@plone/types';
 import type { MainImageBlockData } from './index';
 import Layout, { type MainImageAlign, type MainImageSize } from './Layout';
-import type { ThemeDefinition } from '../../../config/blocks';
+import { resolveBlockTheme } from '../../../config/blockThemes';
 import { ReactReduxContext, useSelector } from 'react-redux';
 
 interface MainImageBlockViewProps {
@@ -20,33 +20,6 @@ interface MainImageBlockViewProps {
   properties?: Content;
   metadata?: Content;
   [key: string]: any;
-}
-
-function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
-  const blockThemes = blockType
-    ? (config.blocks?.blocksConfig as any)?.[blockType]?.themes
-    : undefined;
-
-  return (blockThemes ||
-    (config.blocks as any)?.themes ||
-    []) as ThemeDefinition[];
-}
-
-function resolveThemeStyle(
-  theme: unknown,
-  themeDefinitions: ThemeDefinition[],
-): React.CSSProperties {
-  if (!theme) return {};
-
-  if (typeof theme === 'string') {
-    return themeDefinitions.find((t) => t.name === theme)?.style ?? {};
-  }
-
-  if (typeof theme === 'object') {
-    return theme as React.CSSProperties;
-  }
-
-  return {};
 }
 
 function unwrapCandidate(candidate: any): any {
@@ -100,10 +73,14 @@ const MainImageBlockView: React.FC<MainImageBlockViewProps> = (props) => {
     stateContent ||
     ({} as Content);
 
-  const blockType = (data as any)?.['@type'] as string | undefined;
-  const themeDefinitions = getThemeDefinitions(blockType);
   const themeValue = (data as any)?.theme ?? (data as any)?.styles?.theme;
-  const themeStyle = resolveThemeStyle(themeValue, themeDefinitions);
+  const resolved = resolveBlockTheme(data);
+
+  const themeStyle =
+    typeof themeValue === 'object' && themeValue !== null
+      ? (themeValue as React.CSSProperties)
+      : resolved.style;
+
   const mergedStyle: React.CSSProperties = {
     ...(style || {}),
     ...themeStyle,
@@ -210,7 +187,7 @@ const MainImageBlockView: React.FC<MainImageBlockViewProps> = (props) => {
       size={data.size as MainImageSize | undefined}
       title={imageTitle}
       description={imageDescription}
-      className={className}
+      className={cx(className, resolved.className)}
       style={mergedStyle}
       image={imageElement}
     />

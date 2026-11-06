@@ -1,5 +1,5 @@
 /**
- * Helper para normalização e resolução de larguras de blocos (Block Width).
+ * Helper for block width normalization and resolution (Block Width System).
  */
 
 export const VALID_BLOCK_WIDTHS = [
@@ -10,15 +10,6 @@ export const VALID_BLOCK_WIDTHS = [
 ] as const;
 export type BlockWidth = (typeof VALID_BLOCK_WIDTHS)[number];
 
-/**
- * Normaliza o valor de largura de bloco vindo de qualquer formato suportado:
- * - string direta: 'narrow' | 'default' | 'layout' | 'full' | 'unset'
- * - CSS custom property string: 'var(--narrow-container-width)', etc.
- * - objeto com chave de estilo: { '--block-width': '...' } ou { value: '...' }
- *
- * Retorna sempre uma string válida: 'narrow' | 'default' | 'layout' | 'full'.
- * Fallback padrão: 'default'.
- */
 export const WIDTH_RANK: Record<BlockWidth, number> = {
   narrow: 1,
   default: 2,
@@ -33,13 +24,13 @@ export interface ResolveBlockWidthParams {
 }
 
 /**
- * Normaliza o valor de largura de bloco vindo de qualquer formato suportado:
- * - string direta: 'narrow' | 'default' | 'layout' | 'full' | 'unset'
+ * Normalizes block width value from any supported format:
+ * - direct string: 'narrow' | 'default' | 'layout' | 'full' | 'unset'
  * - CSS custom property string: 'var(--narrow-container-width)', etc.
- * - objeto com chave de estilo: { '--block-width': '...' } ou { value: '...' }
+ * - object with style key: { '--block-width': '...' } or { value: '...' }
  *
- * Retorna sempre uma string válida: 'narrow' | 'default' | 'layout' | 'full'.
- * Fallback padrão: 'default'.
+ * Always returns a valid string: 'narrow' | 'default' | 'layout' | 'full'.
+ * Default fallback: 'default'.
  */
 export function normalizeBlockWidth(data: any): BlockWidth {
   if (!data) return 'default';
@@ -58,7 +49,7 @@ export function normalizeBlockWidth(data: any): BlockWidth {
     data.styles?.width ??
     data.width;
 
-  // Extrai valor se encapsulado em objeto (ex: vindo de ButtonsWidget ou radio personalizado)
+  // Extract value if wrapped in an object (e.g. from ButtonsWidget or custom radio)
   while (typeof raw === 'object' && raw !== null) {
     if (raw.name && typeof raw.name === 'string') {
       raw = raw.name;
@@ -102,10 +93,10 @@ export function normalizeBlockWidth(data: any): BlockWidth {
 }
 
 /**
- * Resolve a largura efetiva para um bloco.
- * Se o bloco for uma imagem alinhada lateralmente (left ou right):
- * - A largura do bloco é derivada do elemento imediatamente ao lado dela (compartilhando o espaço do float).
- * - Prioriza o primeiro bloco subsequente adjacente no mesmo tema; caso não exista, verifica o bloco anterior.
+ * Resolves the effective block width for a block.
+ * If the block is a floated image (align left or right):
+ * - The block width is derived from the adjacent element sharing the float.
+ * - Prioritizes the first subsequent adjacent block in the same theme; otherwise checks previous block.
  */
 export function resolveBlockWidthForBlock({
   block,
@@ -121,12 +112,12 @@ export function resolveBlockWidthForBlock({
     (blockType === 'image' || blockType === 'mainImageBlock') &&
     (align === 'left' || align === 'right');
 
-  // Se não for imagem alinhada lateralmente, usa a largura própria do bloco
+  // If not a floated image, use the block's own width
   if (!isAlignedImage) {
     return normalizeBlockWidth(data);
   }
 
-  // Tenta resolver a largura a partir dos blocos adjacentes no mesmo layout
+  // Attempt to resolve width from adjacent blocks in the same layout
   const items = content?.blocks_layout?.items;
   if (!items || !block || !content?.blocks) {
     return normalizeBlockWidth(data);
@@ -143,13 +134,13 @@ export function resolveBlockWidthForBlock({
       ? rawTheme.theme || 'default'
       : rawTheme;
 
-  // 1. Examina blocos subsequentes no mesmo grupo de tema (que fluem ao lado do float)
+  // 1. Inspect subsequent blocks in the same theme group (flowing next to the float)
   for (let i = currentIndex + 1; i < items.length; i++) {
     const siblingId = items[i];
     const siblingData = content.blocks[siblingId];
     if (!siblingData) continue;
 
-    // Se o bloco seguinte tem tema diferente, ele fica em outro container isolado (BFC)
+    // If subsequent block has a different theme, it sits in an isolated container
     const rawSiblingTheme =
       siblingData.theme || siblingData.styles?.theme || 'default';
     const siblingTheme =
@@ -162,7 +153,7 @@ export function resolveBlockWidthForBlock({
     }
 
     const siblingType = siblingData['@type'];
-    // Elementos divisores ou containers full-bleed encerram a adjacência
+    // Full-bleed or separator elements terminate float adjacency
     if (
       siblingType === 'separator' ||
       siblingType === 'heroBlock' ||
@@ -177,11 +168,11 @@ export function resolveBlockWidthForBlock({
       break;
     }
 
-    // O elemento irmão imediatamente ao lado define a largura do bloco
+    // The sibling element immediately beside defines the width
     return normalizeBlockWidth(siblingData);
   }
 
-  // 2. Se não houver irmãos subsequentes no mesmo tema, verifica o bloco anterior
+  // 2. If no subsequent sibling in same theme, check previous block
   if (currentIndex > 0) {
     const prevId = items[currentIndex - 1];
     const prevData = content.blocks[prevId];
@@ -199,6 +190,6 @@ export function resolveBlockWidthForBlock({
     }
   }
 
-  // Se nenhum bloco adjacente foi encontrado, fallback para a largura configurada ou 'default'
+  // Fallback to configured width or 'default'
   return normalizeBlockWidth(data);
 }

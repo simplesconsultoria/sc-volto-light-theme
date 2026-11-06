@@ -139,7 +139,14 @@ describe('BorderWidget Component', () => {
       screen.getByRole('button', { name: 'Topo & Lateral' }),
     ).toBeInTheDocument();
 
-    // Botões dos lados
+    // Botão de expandir ajuste por lado
+    const toggleBtn = screen.getByRole('button', {
+      name: /Personalizar espessura por lado/i,
+    });
+    expect(toggleBtn).toBeInTheDocument();
+
+    // Ao expandir, exibe os botões dos 4 lados
+    fireEvent.click(toggleBtn);
     expect(
       screen.getByRole('button', { name: /Borda Superior/i }),
     ).toBeInTheDocument();
@@ -188,6 +195,12 @@ describe('BorderWidget Component', () => {
     const onChange = vi.fn();
     render(<BorderWidget id="test-border" value="0px" onChange={onChange} />);
 
+    // Expande a seção detalhada
+    const toggleBtn = screen.getByRole('button', {
+      name: /Personalizar espessura por lado/i,
+    });
+    fireEvent.click(toggleBtn);
+
     const topSideBtn = screen.getByRole('button', { name: /Borda Superior/i });
     fireEvent.click(topSideBtn);
 
@@ -202,5 +215,64 @@ describe('BorderWidget Component', () => {
     fireEvent.click(incBtn);
 
     expect(onChange).toHaveBeenCalledWith('test-border', '2px');
+  });
+
+  it('permite diminuir espessura via botão stepper', () => {
+    const onChange = vi.fn();
+    render(<BorderWidget id="test-border" value="3px" onChange={onChange} />);
+
+    const decBtn = screen.getByRole('button', { name: /Diminuir espessura/i });
+    fireEvent.click(decBtn);
+
+    expect(onChange).toHaveBeenCalledWith('test-border', '2px');
+  });
+
+  it('expande e colapsa a seção de personalização por lado e altera espessura individual', () => {
+    const onChange = vi.fn();
+    render(<BorderWidget id="test-border" value="2px" onChange={onChange} />);
+
+    // Botão de alternância
+    const toggleBtn = screen.getByRole('button', {
+      name: /Personalizar espessura por lado/i,
+    });
+    expect(toggleBtn).toBeInTheDocument();
+    expect(toggleBtn).toHaveAttribute('aria-expanded', 'false');
+
+    // Clica para expandir
+    fireEvent.click(toggleBtn);
+    expect(toggleBtn).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByText('Ocultar ajuste por lado')).toBeInTheDocument();
+
+    // Altera espessura do Topo
+    const topInput = screen.getByLabelText(
+      /Espessura da borda Topo em pixels/i,
+    );
+    expect(topInput).toBeInTheDocument();
+    fireEvent.change(topInput, { target: { value: '5' } });
+
+    expect(onChange).toHaveBeenCalledWith('test-border', '5px 2px 2px 2px');
+  });
+
+  it('possui tooltips acessíveis nos presets e botões de lados', () => {
+    render(<BorderWidget id="test-border" value="" onChange={vi.fn()} />);
+
+    // Presets possuem tooltips descritivos
+    const noneBtn = screen.getByRole('button', { name: 'Sem borda' });
+    expect(noneBtn).toHaveAttribute('title', 'Sem borda (0px)');
+
+    const allBtn = screen.getByRole('button', { name: 'Completa' });
+    expect(allBtn).toHaveAttribute(
+      'title',
+      'Borda completa em todos os 4 lados',
+    );
+
+    // Ao expandir, botões de lados possuem títulos e aria-labels
+    const toggleBtn = screen.getByRole('button', {
+      name: /Personalizar espessura por lado/i,
+    });
+    fireEvent.click(toggleBtn);
+
+    const topBtn = screen.getByRole('button', { name: /Borda Superior/i });
+    expect(topBtn).toHaveAttribute('title', 'Alternar Borda Superior');
   });
 });

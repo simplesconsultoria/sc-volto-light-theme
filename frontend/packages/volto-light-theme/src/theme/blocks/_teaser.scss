@@ -80,7 +80,7 @@ body #page-edit [class^='block-editor-'] > .block .teaser,
       ) !important;
     }
 
-    // Se o card não tem link, garante que não tenha ponteiro clicável
+    // If card has no link, ensure cursor is default instead of pointer
     &:has(.no-link) {
       cursor: default;
       .card {

@@ -49,7 +49,7 @@ describe('SlateTable / Table Block Width & Styling Integration', () => {
     const scss = readThemeFile('theme/blocks/_blockWidth.scss');
 
     // In the main view mode rules, .slate-table-block is not selected as inner descendant
-    const viewSection = scss.split('// 3. Modo de Edição')[0];
+    const viewSection = scss.split('// 3. Edit Mode')[0];
     expect(viewSection).not.toContain('.slate-table-block,');
   });
 

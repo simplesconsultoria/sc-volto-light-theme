@@ -1,7 +1,7 @@
 // =============================================================================
 // Listing Headline Wrapper
-// Barra superior do bloco listing com titulo e botao de acao.
-// Responsivo: empilha em mobile.
+// Top bar of listing block with title and action button.
+// Responsive: stacks vertically on mobile viewports.
 // =============================================================================
 
 .listing-headline-wrapper {
@@ -57,7 +57,7 @@
   }
 }
 
-// Sobrescreve especificidade alta do kitconcept no accordion (.content h2, .content h3)
+// Override high specificity from kitconcept inside accordion (.content h2, .content h3)
 .accordion-block,
 .block-editor-accordion {
   .ui.styled.accordion .content {

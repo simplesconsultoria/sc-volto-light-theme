@@ -3,9 +3,83 @@
 // =============================================================================
 
 .accordion-block,
-.block-editor-accordion {
+.block-editor-accordion,
+.block-accordion {
   background-color: var(--theme-color, transparent);
   color: var(--theme-foreground-color, inherit);
+  --block-accordion-background: var(--theme-color, transparent);
+  --block-accordion-border: var(
+    --theme-border-color,
+    color-mix(
+      in srgb,
+      var(--theme-foreground-color, currentColor) 20%,
+      transparent
+    )
+  );
+  --block-accordion-title-color: var(--theme-foreground-color, inherit);
+  --block-accordion-content-color: var(--theme-foreground-color, inherit);
+  --block-accordion-chevron-color: var(
+    --theme-foreground-accent-color,
+    currentColor
+  );
+
+  // Aurora Plate Accordion styling
+  .block-accordion__panel {
+    border-color: var(--block-accordion-border);
+    background-color: var(--theme-color, transparent);
+  }
+
+  .block-accordion__title {
+    background-color: var(--theme-color, transparent) !important;
+    color: var(--block-accordion-title-color) !important;
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--theme-foreground-color, currentColor) 6%,
+        var(--theme-color, transparent)
+      ) !important;
+    }
+
+    svg,
+    .chevron {
+      color: var(--block-accordion-chevron-color) !important;
+      fill: var(--block-accordion-chevron-color) !important;
+    }
+  }
+
+  .block-accordion__content {
+    background-color: var(--theme-color, transparent) !important;
+    color: var(--block-accordion-content-color) !important;
+
+    // Elements inside follow the accordion theme
+    .listing-block-container,
+    .block,
+    .block-teaser,
+    .block-image,
+    .block-table,
+    .block-listing,
+    [class*='has--theme--'],
+    [class*='has-back-colorgroup-'],
+    [class*='has-front-colorgroup-'] {
+      --theme-color: inherit !important;
+      --theme-foreground-color: inherit !important;
+      --theme-high-contrast-foreground-color: inherit !important;
+      --theme-low-contrast-foreground-color: inherit !important;
+      --theme-foreground-accent-color: inherit !important;
+      --colorgroup-back-font: inherit !important;
+      --theme-high-contrast-color: inherit !important;
+      --theme-top-foreground-color: inherit !important;
+      --theme-top-high-contrast-foreground-color: inherit !important;
+      --theme-top-low-contrast-foreground-color: inherit !important;
+      --theme-top-accent-color: inherit !important;
+      --colorgroup-front-font: inherit !important;
+      --theme-border-color: inherit !important;
+      --theme-border-width: inherit !important;
+      --theme-pattern-image: inherit !important;
+      --theme-pattern-opacity: inherit !important;
+    }
+  }
 
   .ui.styled.accordion,
   .ui.accordion {
@@ -75,8 +149,8 @@
         line-height: 1.45 !important;
       }
 
-      // Restaura a estilização de títulos de cards/eventos/search dentro do accordion para evitar
-      // contaminação por regras do Semantic UI (.ui.styled.accordion .title) e tamanho desproporcional
+      // Restore card/event/search title styling inside accordion to prevent
+      // contamination from Semantic UI rules (.ui.styled.accordion .title) and disproportionate sizing
       .card-listing,
       .card-summary,
       .card,
@@ -133,7 +207,7 @@
         }
       }
 
-      // Restaura dimensões normais para cards de listagem e itens dentro do accordion
+      // Restore normal dimensions for listing cards and items inside accordion
       .card-summary,
       .card,
       .listing-item {
@@ -149,7 +223,7 @@
         }
       }
 
-      // 1. Desativa margens de h2/h3 para headings dentro de listagem (.listing-headline-wrapper)
+      // 1. Disable margins for headings inside listing (.listing-headline-wrapper)
       .listing-headline-wrapper,
       .listing-block-container .listing-headline-wrapper,
       .block.listing .listing-headline-wrapper {
@@ -171,8 +245,8 @@
         }
       }
 
-      // 2. Elementos dentro do accordion seguem sempre o tema do accordion
-      // Força herança de todas as propriedades customizadas do tema
+      // 2. Elements inside accordion always follow the accordion theme
+      // Force inheritance of all custom theme properties
       .listing-block-container,
       .block,
       [class*='has--theme--'],

@@ -1,4 +1,247 @@
 // Themes control panel and widgets styling
+/// Unified 3-column layout and button stylings for background image layer controls
+/// (Used both in ColorGroup accordion items and in the "Add New ColorGroup" form)
+@mixin layer-controls-interactive-styles() {
+  display: grid;
+  align-items: stretch;
+  margin-top: 1.25rem;
+  gap: 1.25rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  @media (max-width: 960px) {
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .control-group-box {
+    display: flex;
+    height: 100%;
+    box-sizing: border-box;
+    flex-direction: column;
+    padding: 0.875rem 1rem;
+    border: 1px solid
+      color-mix(in srgb, var(--primary-foreground-color) 12%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--neutral-color) 40%, transparent);
+    gap: 0.75rem;
+
+    .control-group-label {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--primary-foreground-color);
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+
+    .icon-button-group,
+    .button-group-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+
+      .icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 10px;
+        border: 1px solid
+          color-mix(in srgb, var(--primary-foreground-color) 20%, transparent);
+        border-radius: 4px;
+        background: var(--primary-color, #fff);
+        color: var(--primary-foreground-color);
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-weight: 500;
+        gap: 6px;
+        line-height: 1.2;
+        transition: all 150ms ease;
+        white-space: nowrap;
+
+        svg {
+          width: 14px;
+          height: 14px;
+          flex-shrink: 0;
+          stroke: currentColor;
+        }
+
+        &:hover {
+          border-color: var(--accent-color);
+          background: color-mix(
+            in srgb,
+            var(--accent-color) 10%,
+            var(--primary-color, #fff)
+          );
+          color: var(--accent-color);
+
+          svg {
+            stroke: var(--accent-color);
+          }
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--accent-color);
+          outline-offset: 1px;
+        }
+
+        &.is-active {
+          border-color: var(--accent-color);
+          background: var(--accent-color);
+          color: var(--accent-foreground-color, #ffffff);
+          font-weight: 600;
+
+          svg {
+            stroke: var(--accent-foreground-color, #ffffff);
+          }
+        }
+      }
+    }
+
+    .pattern-pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 2px;
+      gap: 6px;
+
+      .pills-hint {
+        color: var(--primary-low-foreground-color);
+        font-size: 0.72rem;
+        font-weight: 600;
+      }
+
+      .pill-btn,
+      .size-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 8px;
+        border: 1px solid
+          color-mix(in srgb, var(--primary-foreground-color) 18%, transparent);
+        border-radius: 12px;
+        background: var(--primary-color, #fff);
+        color: var(--primary-foreground-color);
+        cursor: pointer;
+        font-size: 0.72rem;
+        font-weight: 500;
+        transition: all 150ms ease;
+
+        &:hover {
+          border-color: var(--accent-color);
+          background: color-mix(
+            in srgb,
+            var(--accent-color) 8%,
+            var(--primary-color, #fff)
+          );
+          color: var(--accent-color);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--accent-color);
+          outline-offset: 1px;
+        }
+
+        &.is-active {
+          border-color: var(--accent-color);
+          background: var(--accent-color);
+          color: var(--accent-foreground-color, #ffffff);
+          font-weight: 600;
+        }
+      }
+    }
+
+    .compass-grid-wrapper {
+      display: flex;
+      justify-content: flex-start;
+      margin: 2px 0;
+
+      .compass-grid {
+        display: grid;
+        padding: 4px;
+        border: 1px solid
+          color-mix(in srgb, var(--primary-foreground-color) 16%, transparent);
+        border-radius: 6px;
+        background: color-mix(
+          in srgb,
+          var(--primary-foreground-color) 4%,
+          transparent
+        );
+        gap: 4px;
+        grid-template-columns: repeat(3, 36px);
+        grid-template-rows: repeat(3, 36px);
+
+        .compass-cell-btn {
+          display: inline-flex;
+          width: 36px;
+          height: 36px;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+          border: 1px solid
+            color-mix(in srgb, var(--primary-foreground-color) 16%, transparent);
+          border-radius: 4px;
+          background: var(--primary-color, #fff);
+          color: var(--primary-foreground-color);
+          cursor: pointer;
+          font-size: 1.05rem;
+          font-weight: bold;
+          transition: all 150ms ease;
+
+          &:hover {
+            border-color: var(--accent-color);
+            background: color-mix(
+              in srgb,
+              var(--accent-color) 14%,
+              var(--primary-color, #fff)
+            );
+            color: var(--accent-color);
+          }
+
+          &:focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 1px;
+          }
+
+          &.is-active {
+            border-color: var(--accent-color);
+            background: var(--accent-color);
+            box-shadow: 0 0 0 1px var(--accent-color);
+            color: var(--accent-foreground-color, #ffffff);
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .custom-input-compact {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 6px 10px;
+      border: 1px solid
+        color-mix(in srgb, var(--primary-foreground-color) 20%, transparent);
+      border-radius: 4px;
+      margin-top: auto;
+      background: var(--primary-color, #fff);
+      color: var(--primary-foreground-color);
+      font-size: 0.8125rem;
+      transition:
+        border-color 150ms ease,
+        box-shadow 150ms ease;
+
+      &:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 1px var(--accent-color);
+        outline: none;
+      }
+
+      &::placeholder {
+        color: var(--primary-low-foreground-color);
+        font-size: 0.75rem;
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
 .sc-themes-controlpanel {
   max-width: 1200px;
   padding: 1.5rem 2rem;
@@ -64,7 +307,7 @@
   .blockthemes-widget {
     display: flex;
     flex-direction: column;
-    padding: 0.5rem 0;
+    padding: $spacing-medium;
     gap: 1.5rem;
 
     .colorgroups-header,
@@ -277,18 +520,23 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 14px;
-            border: 1px solid
+            padding: 10px 4px;
+            border: none;
+            border-radius: 0;
+            border-bottom: 1px solid
               color-mix(
                 in srgb,
-                var(--neutral-foreground-color) 15%,
+                var(--primary-foreground-color) 8%,
                 transparent
               );
-            border-radius: 6px;
-            background: var(--neutral-color);
+            background: transparent;
+
+            &:last-child {
+              border-bottom: none;
+            }
 
             .color-label {
-              color: var(--neutral-foreground-color);
+              color: var(--primary-foreground-color);
               font-size: 0.95rem;
               font-weight: 500;
             }
@@ -304,7 +552,7 @@
 
                 .mode-tag {
                   min-width: 45px;
-                  color: var(--neutral-low-foreground-color);
+                  color: var(--primary-low-foreground-color);
                   font-size: 0.8rem;
                 }
 
@@ -315,7 +563,7 @@
                   border: 1px solid
                     color-mix(
                       in srgb,
-                      var(--neutral-foreground-color) 25%,
+                      var(--primary-foreground-color) 25%,
                       transparent
                     );
                   border-radius: 4px;
@@ -329,7 +577,7 @@
                   border: 1px solid
                     color-mix(
                       in srgb,
-                      var(--neutral-foreground-color) 25%,
+                      var(--primary-foreground-color) 25%,
                       transparent
                     );
                   border-radius: 4px;
@@ -344,20 +592,13 @@
         }
 
         .colorgroup-image-layer {
+          padding: 16px 0 0 0;
+          border: none;
+          border-radius: 0;
+          border-top: 1px solid
+            color-mix(in srgb, var(--primary-foreground-color) 12%, transparent);
           margin-top: 1.25rem;
-          padding: 14px 16px;
-          border: 1px solid
-            color-mix(
-              in srgb,
-              var(--accent-color) 30%,
-              transparent
-            );
-          border-radius: 8px;
-          background: color-mix(
-            in srgb,
-            var(--accent-color) 4%,
-            transparent
-          );
+          background: transparent;
 
           .layer-header {
             margin-bottom: 0.85rem;
@@ -419,8 +660,8 @@
                 border-radius: 20px;
                 background: var(--neutral-color);
                 color: var(--neutral-foreground-color);
-                font-size: 0.8rem;
                 cursor: pointer;
+                font-size: 0.8rem;
                 transition: all 0.15s ease;
 
                 &:hover {
@@ -444,32 +685,33 @@
 
           .image-matrix-grid {
             display: grid;
+            margin-bottom: 1rem;
             gap: 1rem;
             grid-template-columns: 1fr 1fr;
-            margin-bottom: 1rem;
 
             @media (max-width: 768px) {
               grid-template-columns: 1fr;
             }
 
             .mode-matrix-card {
-              padding: 10px 12px;
+              padding: 8px 12px;
               border: 1px solid
                 color-mix(
                   in srgb,
-                  var(--neutral-foreground-color) 15%,
+                  var(--primary-foreground-color) 10%,
                   transparent
                 );
-              border-radius: 6px;
-              background: var(--neutral-color);
+              border-radius: 4px;
+              background: transparent;
 
               .mode-matrix-header {
                 display: flex;
                 align-items: center;
-                gap: 6px;
                 margin-bottom: 8px;
-                color: var(--neutral-foreground-color);
+                color: var(--primary-foreground-color);
                 font-size: 0.85rem;
+                font-weight: 500;
+                gap: 6px;
 
                 .mode-indicator {
                   display: inline-block;
@@ -478,10 +720,10 @@
                   border-radius: 50%;
 
                   &.light-dot {
-                    background: #f4822c;
+                    background: var(--accent-color, #f4822c);
                   }
                   &.dark-dot {
-                    background: #6366f1;
+                    background: var(--primary-accent-color, #6366f1);
                   }
                 }
               }
@@ -496,7 +738,7 @@
                 label {
                   display: block;
                   margin-bottom: 4px;
-                  color: var(--neutral-low-foreground-color);
+                  color: var(--primary-low-foreground-color);
                   font-size: 0.8rem;
                 }
 
@@ -511,7 +753,7 @@
                     border: 1px solid
                       color-mix(
                         in srgb,
-                        var(--neutral-foreground-color) 20%,
+                        var(--primary-foreground-color) 20%,
                         transparent
                       );
                     border-radius: 4px;
@@ -528,15 +770,15 @@
                     border: 1px solid
                       color-mix(
                         in srgb,
-                        var(--neutral-foreground-color) 25%,
+                        var(--primary-foreground-color) 25%,
                         transparent
                       );
                     border-radius: 4px;
                     background: var(--neutral-color);
                     color: var(--neutral-foreground-color);
+                    cursor: pointer;
                     font-size: 0.75rem;
                     font-weight: 600;
-                    cursor: pointer;
                     white-space: nowrap;
 
                     &:hover {
@@ -565,203 +807,9 @@
             }
           }
 
-          .layer-controls-interactive {
-            display: grid;
-            gap: 0.85rem;
-            grid-template-columns: 1fr 1fr 1fr;
-
-            @media (max-width: 900px) {
-              grid-template-columns: 1fr;
-            }
-
-            .control-group-box {
-              display: flex;
-              flex-direction: column;
-              padding: 10px 12px;
-              border: 1px solid
-                color-mix(
-                  in srgb,
-                  var(--neutral-foreground-color) 15%,
-                  transparent
-                );
-              border-radius: 6px;
-              background: var(--neutral-color);
-              gap: 8px;
-
-              .control-group-label {
-                color: var(--primary-foreground-color);
-                font-size: 0.8rem;
-                font-weight: 600;
-              }
-
-              .icon-button-group {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 5px;
-
-                .icon-btn {
-                  display: inline-flex;
-                  align-items: center;
-                  justify-content: center;
-                  padding: 5px 8px;
-                  border: 1px solid
-                    color-mix(
-                      in srgb,
-                      var(--neutral-foreground-color) 20%,
-                      transparent
-                    );
-                  border-radius: 4px;
-                  background: var(--primary-color);
-                  color: var(--primary-foreground-color);
-                  font-size: 0.76rem;
-                  gap: 5px;
-                  cursor: pointer;
-                  transition: all 0.15s ease;
-
-                  svg {
-                    flex-shrink: 0;
-                  }
-
-                  &:hover {
-                    border-color: var(--accent-color);
-                    background: color-mix(
-                      in srgb,
-                      var(--accent-color) 12%,
-                      transparent
-                    );
-                  }
-
-                  &.is-active {
-                    border-color: var(--accent-color);
-                    background: var(--accent-color);
-                    color: var(--accent-foreground-color, #ffffff);
-                    font-weight: 600;
-
-                    svg {
-                      stroke: var(--accent-foreground-color, #ffffff);
-                    }
-                  }
-                }
-              }
-
-              .pattern-pills-row {
-                display: flex;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 5px;
-                margin-top: 2px;
-
-                .pills-hint {
-                  color: var(--neutral-low-foreground-color);
-                  font-size: 0.72rem;
-                }
-
-                .pill-btn {
-                  padding: 2px 7px;
-                  border: 1px solid
-                    color-mix(
-                      in srgb,
-                      var(--neutral-foreground-color) 20%,
-                      transparent
-                    );
-                  border-radius: 12px;
-                  background: var(--primary-color);
-                  color: var(--primary-foreground-color);
-                  font-size: 0.72rem;
-                  cursor: pointer;
-                  transition: all 0.15s ease;
-
-                  &:hover {
-                    border-color: var(--accent-color);
-                  }
-
-                  &.is-active {
-                    border-color: var(--accent-color);
-                    background: var(--accent-color);
-                    color: var(--accent-foreground-color, #ffffff);
-                    font-weight: 600;
-                  }
-                }
-              }
-
-              .compass-grid-wrapper {
-                display: flex;
-                justify-content: flex-start;
-
-                .compass-grid {
-                  display: grid;
-                  gap: 3px;
-                  grid-template-columns: repeat(3, 34px);
-                  grid-template-rows: repeat(3, 34px);
-                  padding: 3px;
-                  border: 1px solid
-                    color-mix(
-                      in srgb,
-                      var(--neutral-foreground-color) 20%,
-                      transparent
-                    );
-                  border-radius: 6px;
-                  background: color-mix(
-                    in srgb,
-                    var(--primary-foreground-color) 5%,
-                    transparent
-                  );
-
-                  .compass-cell-btn {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 34px;
-                    height: 34px;
-                    border: 1px solid
-                      color-mix(
-                        in srgb,
-                        var(--neutral-foreground-color) 15%,
-                        transparent
-                      );
-                    border-radius: 4px;
-                    background: var(--primary-color);
-                    color: var(--primary-foreground-color);
-                    font-size: 1rem;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: all 0.15s ease;
-
-                    &:hover {
-                      border-color: var(--accent-color);
-                      background: color-mix(
-                        in srgb,
-                        var(--accent-color) 15%,
-                        transparent
-                      );
-                    }
-
-                    &.is-active {
-                      border-color: var(--accent-color);
-                      background: var(--accent-color);
-                      color: var(--accent-foreground-color, #ffffff);
-                      box-shadow: 0 0 0 1px var(--accent-color);
-                    }
-                  }
-                }
-              }
-
-              .custom-input-compact {
-                width: 100%;
-                margin-top: 2px;
-                padding: 4px 6px;
-                border: 1px solid
-                  color-mix(
-                    in srgb,
-                    var(--neutral-foreground-color) 20%,
-                    transparent
-                  );
-                border-radius: 4px;
-                background: var(--primary-color);
-                color: var(--primary-foreground-color);
-                font-size: 0.75rem;
-              }
-            }
+          .layer-controls-interactive,
+          .layer-controls-row {
+            @include layer-controls-interactive-styles();
           }
         }
 
@@ -781,20 +829,12 @@
           .device-toggle-btn {
             padding: 3px 10px;
             border: 1px solid
-              color-mix(
-                in srgb,
-                var(--accent-color) 35%,
-                transparent
-              );
+              color-mix(in srgb, var(--accent-color) 35%, transparent);
             border-radius: 12px;
-            background: color-mix(
-              in srgb,
-              var(--accent-color) 8%,
-              transparent
-            );
+            background: color-mix(in srgb, var(--accent-color) 8%, transparent);
             color: var(--primary-foreground-color);
-            font-size: 0.75rem;
             cursor: pointer;
+            font-size: 0.75rem;
 
             &:hover {
               border-color: var(--accent-color);
@@ -848,11 +888,11 @@
     .add-colorgroup-card,
     .add-blocktheme-card {
       padding: 1.5rem;
-      border: 2px dashed
+      border: 1px dashed
         color-mix(in srgb, var(--primary-foreground-color) 25%, transparent);
-      border-radius: 8px;
+      border-radius: 6px;
       margin-top: 1rem;
-      background: var(--neutral-color);
+      background: transparent;
 
       h5 {
         margin-top: 0;
@@ -926,18 +966,19 @@
       }
 
       .add-image-layer-row {
+        padding: 12px 0 0 0;
+        border: none;
+        border-radius: 0;
+        border-top: 1px solid
+          color-mix(in srgb, var(--primary-foreground-color) 12%, transparent);
         margin: 1rem 0;
-        padding: 10px 14px;
-        border: 1px dashed
-          color-mix(in srgb, var(--neutral-foreground-color) 25%, transparent);
-        border-radius: 6px;
-        background: color-mix(in srgb, var(--neutral-color) 50%, transparent);
+        background: transparent;
 
         .field-item {
           display: flex;
           flex-direction: column;
-          gap: 0.25rem;
           margin-bottom: 8px;
+          gap: 0.25rem;
 
           label {
             color: var(--neutral-foreground-color);
@@ -959,30 +1000,10 @@
           }
         }
 
+        .layer-controls-interactive,
+        .add-layer-controls-interactive,
         .add-layer-controls-mini {
-          display: grid;
-          gap: 0.75rem;
-          grid-template-columns: 1fr 1fr 1fr;
-
-          @media (max-width: 600px) {
-            grid-template-columns: 1fr;
-          }
-
-          select,
-          input {
-            width: 100%;
-            padding: 5px 8px;
-            border: 1px solid
-              color-mix(
-                in srgb,
-                var(--neutral-foreground-color) 20%,
-                transparent
-              );
-            border-radius: 4px;
-            background: var(--primary-color);
-            color: var(--primary-foreground-color);
-            font-size: 0.8rem;
-          }
+          @include layer-controls-interactive-styles();
         }
       }
 
@@ -1080,6 +1101,70 @@
           color: var(--primary-low-foreground-color);
           font-size: 0.85rem;
           font-weight: 600;
+        }
+
+        .colorgroup-chips-palette {
+          display: flex;
+          flex-wrap: wrap;
+          margin-top: 4px;
+          gap: 6px;
+
+          .colorgroup-chip-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            border: 1px solid
+              color-mix(
+                in srgb,
+                var(--primary-foreground-color) 18%,
+                transparent
+              );
+            border-radius: 4px;
+            background: var(--primary-color, #fff);
+            color: var(--primary-foreground-color, #252525);
+            cursor: pointer;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            gap: 6px;
+            transition:
+              border-color 150ms ease,
+              background-color 150ms ease,
+              color 150ms ease,
+              box-shadow 150ms ease;
+
+            &:hover {
+              border-color: var(--accent-color, #007bc1);
+              background-color: color-mix(
+                in srgb,
+                var(--accent-color, #007bc1) 8%,
+                var(--primary-color, #fff)
+              );
+              color: var(--accent-color, #007bc1);
+            }
+
+            &:focus-visible {
+              border-color: var(--accent-color, #007bc1);
+              outline: 2px solid var(--accent-color, #007bc1);
+              outline-offset: 1px;
+            }
+
+            &.is-selected {
+              border-color: var(--accent-color, #007bc1);
+              background-color: color-mix(
+                in srgb,
+                var(--accent-color, #007bc1) 12%,
+                var(--primary-color, #fff)
+              );
+              box-shadow: inset 0 0 0 1px var(--accent-color, #007bc1);
+              color: var(--accent-color, #007bc1);
+              font-weight: 600;
+
+              .chip-check {
+                margin-left: 2px;
+                font-weight: 700;
+              }
+            }
+          }
         }
 
         .colorgroup-dropdown-wrapper {
@@ -1344,280 +1429,6 @@
           cursor: pointer;
           font-size: 0.9rem;
           font-weight: 600;
-        }
-      }
-    }
-  }
-}
-
-// BlockThemeWidget in Block Sidebar (STYLING tab)
-.block-theme-widget {
-  margin-bottom: 1rem;
-
-  .widget-header {
-    margin-bottom: 0.4rem;
-
-    .widget-title {
-      color: var(--primary-foreground-color);
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    .help {
-      margin: 0.2rem 0 0 0;
-      color: var(--primary-low-foreground-color);
-      font-size: 0.8rem;
-    }
-  }
-
-  .block-theme-selector-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    .theme-dropdown-container {
-      position: relative;
-      flex: 1;
-
-      .theme-dropdown-trigger {
-        display: flex;
-        width: 100%;
-        align-items: center;
-        padding: 8px 12px;
-        border: 1px solid
-          color-mix(in srgb, var(--primary-foreground-color) 20%, transparent);
-        border-radius: 4px;
-        background: var(--primary-color);
-        cursor: pointer;
-        gap: 10px;
-        text-align: left;
-        transition: border-color 0.15s ease;
-
-        &:hover,
-        &:focus {
-          border-color: color-mix(
-            in srgb,
-            var(--primary-foreground-color) 35%,
-            transparent
-          );
-          outline: none;
-        }
-
-        .theme-name-label {
-          flex: 1;
-          color: var(--primary-foreground-color);
-          font-size: 0.95rem;
-          font-weight: 500;
-        }
-
-        .dropdown-arrow {
-          color: var(--primary-low-foreground-color);
-          font-size: 0.8rem;
-          transition: transform 0.2s ease;
-
-          &.open {
-            transform: rotate(180deg);
-          }
-        }
-      }
-
-      .theme-dropdown-menu {
-        position: absolute;
-        z-index: 100;
-        top: calc(100% + 4px);
-        right: 0;
-        left: 0;
-        max-height: 220px;
-        border: 1px solid
-          color-mix(in srgb, var(--primary-foreground-color) 20%, transparent);
-        border-radius: 6px;
-        background: var(--primary-color);
-        box-shadow: 0 4px 12px
-          color-mix(in srgb, var(--primary-foreground-color) 15%, transparent);
-        overflow-y: auto;
-
-        .theme-dropdown-item {
-          display: flex;
-          align-items: center;
-          padding: 8px 12px;
-          color: var(--primary-foreground-color);
-          cursor: pointer;
-          font-size: 0.9rem;
-          gap: 10px;
-          transition: background 0.15s ease;
-
-          &:hover {
-            background: var(--neutral-color);
-          }
-
-          &.selected {
-            background: color-mix(
-              in srgb,
-              var(--accent-color) 15%,
-              var(--neutral-color)
-            );
-            font-weight: 600;
-          }
-
-          .item-label {
-            flex: 1;
-          }
-
-          .check-mark {
-            color: var(--accent-color);
-            font-weight: bold;
-          }
-        }
-      }
-    }
-
-    .theme-edit-btn {
-      display: flex;
-      width: 38px;
-      height: 38px;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid
-        color-mix(in srgb, var(--primary-foreground-color) 20%, transparent);
-      border-radius: 4px;
-      background: var(--primary-color);
-      color: var(--primary-foreground-color);
-      cursor: pointer;
-      transition: all 0.15s ease;
-
-      &:hover {
-        border-color: color-mix(
-          in srgb,
-          var(--primary-foreground-color) 35%,
-          transparent
-        );
-        background: var(--neutral-color);
-        color: var(--accent-color);
-      }
-
-      &.is-active {
-        border-color: var(--accent-color);
-        background: color-mix(in srgb, var(--accent-color) 15%, transparent);
-        color: var(--accent-color);
-      }
-    }
-  }
-
-  .theme-colorgroups-details {
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    border: 1px solid
-      color-mix(in srgb, var(--neutral-foreground-color) 15%, transparent);
-    border-radius: 6px;
-    margin-top: 10px;
-    background: var(--neutral-color);
-    gap: 10px;
-
-    .details-help {
-      margin: 0;
-      color: var(--neutral-low-foreground-color);
-      font-size: 0.8rem;
-    }
-
-    .colorgroup-field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-
-      .field-group-label {
-        color: var(--neutral-foreground-color);
-        font-size: 0.85rem;
-        font-weight: 600;
-      }
-
-      .colorgroup-dropdown-container {
-        position: relative;
-
-        .colorgroup-dropdown-trigger {
-          display: flex;
-          width: 100%;
-          align-items: center;
-          padding: 6px 10px;
-          border: 1px solid
-            color-mix(in srgb, var(--neutral-foreground-color) 25%, transparent);
-          border-radius: 4px;
-          background: var(--primary-color);
-          cursor: pointer;
-          gap: 8px;
-          text-align: left;
-
-          &:hover {
-            border-color: color-mix(
-              in srgb,
-              var(--neutral-foreground-color) 40%,
-              transparent
-            );
-          }
-
-          .cg-label {
-            flex: 1;
-            color: var(--primary-foreground-color);
-            font-size: 0.85rem;
-          }
-
-          .dropdown-arrow {
-            color: var(--primary-low-foreground-color);
-            font-size: 0.75rem;
-            transition: transform 0.2s ease;
-
-            &.open {
-              transform: rotate(180deg);
-            }
-          }
-        }
-
-        .colorgroup-dropdown-menu {
-          position: absolute;
-          z-index: 101;
-          top: calc(100% + 4px);
-          right: 0;
-          left: 0;
-          max-height: 180px;
-          border: 1px solid
-            color-mix(in srgb, var(--primary-foreground-color) 20%, transparent);
-          border-radius: 4px;
-          background: var(--primary-color);
-          box-shadow: 0 4px 12px
-            color-mix(in srgb, var(--primary-foreground-color) 15%, transparent);
-          overflow-y: auto;
-
-          .colorgroup-dropdown-item {
-            display: flex;
-            align-items: center;
-            padding: 6px 10px;
-            color: var(--primary-foreground-color);
-            cursor: pointer;
-            font-size: 0.85rem;
-            gap: 8px;
-
-            &:hover {
-              background: var(--neutral-color);
-            }
-
-            &.selected {
-              background: color-mix(
-                in srgb,
-                var(--accent-color) 15%,
-                var(--neutral-color)
-              );
-              font-weight: 600;
-            }
-
-            .item-label {
-              flex: 1;
-            }
-
-            .check-mark {
-              color: var(--accent-color);
-              font-weight: bold;
-            }
-          }
         }
       }
     }

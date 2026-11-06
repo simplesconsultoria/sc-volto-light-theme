@@ -3,10 +3,15 @@ import type { ColorGroup } from '../../types/theme';
 import {
   DEFAULT_COLOR_GROUPS,
   BASE_COLOR_GROUP_IDS,
-  CSS_PATTERN_PRESETS,
   type CssPatternPreset,
 } from '../../config/blockThemes';
-import { formatBackgroundImage } from '../../helpers/themeStyles';
+import {
+  SIZE_OPTIONS,
+  SIZE_PATTERN_PILLS,
+  REPEAT_OPTIONS,
+  POSITION_COMPASS,
+} from './ColorGroups/constants';
+import { ColorGroupItem } from './ColorGroups/ColorGroupItem';
 
 export interface ColorGroupsWidgetProps {
   id: string;
@@ -17,358 +22,6 @@ export interface ColorGroupsWidgetProps {
   required?: boolean;
   [key: string]: any;
 }
-
-const IconRepeatAll = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="3" y="3" width="7" height="7" rx="1" />
-    <rect x="14" y="3" width="7" height="7" rx="1" />
-    <rect x="3" y="14" width="7" height="7" rx="1" />
-    <rect x="14" y="14" width="7" height="7" rx="1" />
-  </svg>
-);
-
-const IconRepeatX = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="2" y="7" width="5" height="10" rx="1" />
-    <rect x="9.5" y="7" width="5" height="10" rx="1" />
-    <rect x="17" y="7" width="5" height="10" rx="1" />
-    <line x1="2" y1="4" x2="22" y2="4" strokeDasharray="2 2" />
-    <line x1="2" y1="20" x2="22" y2="20" strokeDasharray="2 2" />
-  </svg>
-);
-
-const IconRepeatY = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="7" y="2" width="10" height="5" rx="1" />
-    <rect x="7" y="9.5" width="10" height="5" rx="1" />
-    <rect x="7" y="17" width="10" height="5" rx="1" />
-    <line x1="4" y1="2" x2="4" y2="22" strokeDasharray="2 2" />
-    <line x1="20" y1="2" x2="20" y2="22" strokeDasharray="2 2" />
-  </svg>
-);
-
-const IconNoRepeat = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" strokeDasharray="3 3" />
-    <rect x="8" y="8" width="8" height="8" rx="1" fill="currentColor" />
-  </svg>
-);
-
-const IconRepeatRound = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M4 12a8 8 0 0 1 14.9-4M20 12a8 8 0 0 1-14.9 4" />
-    <polyline points="18 4 20 8 16 8" />
-    <polyline points="6 20 4 16 8 16" />
-  </svg>
-);
-
-const IconRepeatSpace = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect
-      x="3"
-      y="6"
-      width="6"
-      height="12"
-      rx="1"
-      fill="currentColor"
-      fillOpacity="0.25"
-    />
-    <rect
-      x="15"
-      y="6"
-      width="6"
-      height="12"
-      rx="1"
-      fill="currentColor"
-      fillOpacity="0.25"
-    />
-    <line x1="10" y1="12" x2="14" y2="12" strokeDasharray="2 1" />
-  </svg>
-);
-
-const IconSizeCover = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-  </svg>
-);
-
-const IconSizeContain = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="3" y="5" width="18" height="14" rx="2" strokeDasharray="3 3" />
-    <rect
-      x="7"
-      y="8"
-      width="10"
-      height="8"
-      rx="1"
-      fill="currentColor"
-      fillOpacity="0.3"
-    />
-  </svg>
-);
-
-const IconSizeAuto = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" />
-    <text
-      x="12"
-      y="15"
-      fontSize="7.5"
-      fontWeight="bold"
-      textAnchor="middle"
-      fill="currentColor"
-      stroke="none"
-    >
-      1:1
-    </text>
-  </svg>
-);
-
-const IconSizeWidth = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <line x1="3" y1="12" x2="21" y2="12" />
-    <polyline points="7 8 3 12 7 16" />
-    <polyline points="17 8 21 12 17 16" />
-    <line x1="3" y1="5" x2="3" y2="19" />
-    <line x1="21" y1="5" x2="21" y2="19" />
-  </svg>
-);
-
-const SIZE_OPTIONS = [
-  {
-    value: 'cover',
-    label: 'Cover',
-    shortLabel: 'Cover',
-    icon: IconSizeCover,
-    title: 'Preencher todo o bloco (cover)',
-  },
-  {
-    value: 'contain',
-    label: 'Contain',
-    shortLabel: 'Contain',
-    icon: IconSizeContain,
-    title: 'Conter imagem inteira sem cortar (contain)',
-  },
-  {
-    value: 'auto',
-    label: 'Auto',
-    shortLabel: 'Auto',
-    icon: IconSizeAuto,
-    title: 'Tamanho original da imagem (auto)',
-  },
-  {
-    value: '100% auto',
-    label: '100% Largura',
-    shortLabel: '100% Largura',
-    icon: IconSizeWidth,
-    title: 'Largura total esticada (100% auto)',
-  },
-];
-
-const SIZE_PATTERN_PILLS = [
-  {
-    value: '24px 24px',
-    label: '24px',
-    title: 'Tamanho pequeno para patterns (24px 24px)',
-  },
-  {
-    value: '32px 32px',
-    label: '32px',
-    title: 'Tamanho médio para patterns (32px 32px)',
-  },
-  {
-    value: '50px 50px',
-    label: '50px',
-    title: 'Tamanho grande para patterns (50px 50px)',
-  },
-];
-
-const REPEAT_OPTIONS = [
-  {
-    value: 'repeat',
-    label: 'Repetir',
-    shortLabel: 'Repetir',
-    icon: IconRepeatAll,
-    title: 'Repetir imagem no X e no Y (repeat)',
-  },
-  {
-    value: 'repeat-x',
-    label: 'Horizontal',
-    shortLabel: 'Repetir X',
-    icon: IconRepeatX,
-    title: 'Repetir apenas na horizontal (repeat-x)',
-  },
-  {
-    value: 'repeat-y',
-    label: 'Vertical',
-    shortLabel: 'Repetir Y',
-    icon: IconRepeatY,
-    title: 'Repetir apenas na vertical (repeat-y)',
-  },
-  {
-    value: 'no-repeat',
-    label: 'Não repetir',
-    shortLabel: '1x Única',
-    icon: IconNoRepeat,
-    title: 'Não repetir a imagem (no-repeat)',
-  },
-  {
-    value: 'round',
-    label: 'Ajustar',
-    shortLabel: 'Round',
-    icon: IconRepeatRound,
-    title: 'Repetir ajustando proporções sem corte (round)',
-  },
-  {
-    value: 'space',
-    label: 'Espaçado',
-    shortLabel: 'Space',
-    icon: IconRepeatSpace,
-    title: 'Espaçar uniformemente (space)',
-  },
-];
-
-const POSITION_COMPASS = [
-  {
-    value: 'top left',
-    label: 'Superior Esquerdo (↖)',
-    arrow: '↖',
-    idKey: 'top-left',
-  },
-  {
-    value: 'top center',
-    label: 'Superior Centro (↑)',
-    arrow: '↑',
-    idKey: 'top-center',
-  },
-  {
-    value: 'top right',
-    label: 'Superior Direito (↗)',
-    arrow: '↗',
-    idKey: 'top-right',
-  },
-  {
-    value: 'center left',
-    label: 'Centro Esquerdo (←)',
-    arrow: '←',
-    idKey: 'center-left',
-  },
-  { value: 'center', label: 'Centro (•)', arrow: '•', idKey: 'center' },
-  {
-    value: 'center right',
-    label: 'Centro Direito (→)',
-    arrow: '→',
-    idKey: 'center-right',
-  },
-  {
-    value: 'bottom left',
-    label: 'Inferior Esquerdo (↙)',
-    arrow: '↙',
-    idKey: 'bottom-left',
-  },
-  {
-    value: 'bottom center',
-    label: 'Inferior Centro (↓)',
-    arrow: '↓',
-    idKey: 'bottom-center',
-  },
-  {
-    value: 'bottom right',
-    label: 'Inferior Direito (↘)',
-    arrow: '↘',
-    idKey: 'bottom-right',
-  },
-];
 
 export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
   id,
@@ -495,15 +148,14 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     const reader = new FileReader();
-    reader.onload = (event) => {
-      const dataUrl = event.target?.result as string;
-      if (dataUrl) {
-        updateGroup(groupId, field, dataUrl);
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        updateGroup(groupId, field, reader.result);
       }
     };
     reader.readAsDataURL(file);
-    e.target.value = '';
   };
 
   const handleDeleteGroup = (groupId: string) => {
@@ -581,950 +233,22 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
       </div>
 
       <div className="colorgroups-list">
-        {Object.values(groups).map((group) => {
-          const isExpanded = !!expandedGroups[group.id];
-          const isBase = BASE_COLOR_GROUP_IDS.includes(group.id);
-          const isMobilePreview = previewDevice[group.id] === 'mobile';
-
-          const hasImageLayer = !!(
-            group.bg_image_light_desktop ||
-            group.bg_image_light_mobile ||
-            group.bg_image_dark_desktop ||
-            group.bg_image_dark_mobile
-          );
-
-          // Active preview images
-          const lightImgPreview = formatBackgroundImage(
-            isMobilePreview
-              ? group.bg_image_light_mobile || group.bg_image_light_desktop
-              : group.bg_image_light_desktop,
-          );
-          const darkImgPreview = formatBackgroundImage(
-            isMobilePreview
-              ? group.bg_image_dark_mobile ||
-                  group.bg_image_dark_desktop ||
-                  group.bg_image_light_mobile ||
-                  group.bg_image_light_desktop
-              : group.bg_image_dark_desktop || group.bg_image_light_desktop,
-          );
-
-          return (
-            <div
-              key={group.id}
-              className={`colorgroup-card ${isExpanded ? 'is-expanded' : 'is-collapsed'}`}
-            >
-              {/* Collapsed Header / Bar */}
-              <div
-                className="colorgroup-card-header"
-                onClick={() => toggleExpand(group.id)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    toggleExpand(group.id);
-                  }
-                }}
-              >
-                <div className="header-left">
-                  <span
-                    className={`accordion-chevron ${isExpanded ? 'rotated' : ''}`}
-                    aria-hidden="true"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                  </span>
-                  <strong className="group-name">{group.name}</strong>
-                  <code className="group-id">{group.id}</code>
-                  {isBase && (
-                    <span className="base-tag" title="Grupo base protegido">
-                      Base
-                    </span>
-                  )}
-                  {hasImageLayer && (
-                    <span
-                      className="layer-tag"
-                      title="Possui 2ª camada de imagem/padrão configurada"
-                    >
-                      2ª Camada Ativa
-                    </span>
-                  )}
-                </div>
-
-                <div className="header-right">
-                  {/* 4 Mini Color Swatch Dots */}
-                  <div className="color-swatches-preview">
-                    <span
-                      className="swatch-dot"
-                      style={{
-                        backgroundColor:
-                          group.background_color_light || '#ffffff',
-                      }}
-                      title={`Fundo: ${group.background_color_light}`}
-                    />
-                    <span
-                      className="swatch-dot"
-                      style={{
-                        backgroundColor: group.text_color_light || '#000000',
-                      }}
-                      title={`Texto: ${group.text_color_light}`}
-                    />
-                    <span
-                      className="swatch-dot"
-                      style={{
-                        backgroundColor: group.subtext_color_light || '#666666',
-                      }}
-                      title={`Subtexto: ${group.subtext_color_light}`}
-                    />
-                    <span
-                      className="swatch-dot"
-                      style={{
-                        backgroundColor: group.accent_color_light || '#f4822c',
-                      }}
-                      title={`Accent: ${group.accent_color_light}`}
-                    />
-                  </div>
-
-                  {/* Delete button only for custom groups */}
-                  {!isBase ? (
-                    <button
-                      type="button"
-                      className="delete-group-btn"
-                      title="Excluir este ColorGroup"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteGroup(group.id);
-                      }}
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="3 6 5 6 21 6" />
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                      </svg>
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-
-              {/* Expandable Editor and Previews */}
-              <div
-                className="colorgroup-card-body"
-                style={{ display: isExpanded ? 'block' : 'none' }}
-              >
-                <div className="group-font-row">
-                  <label htmlFor={`font-${group.id}`}>
-                    Fonte (Font Family):
-                  </label>
-                  <input
-                    id={`font-${group.id}`}
-                    type="text"
-                    value={group.font_family || ''}
-                    onChange={(e) =>
-                      updateGroup(group.id, 'font_family', e.target.value)
-                    }
-                    placeholder="ex: Inter, sans-serif"
-                  />
-                </div>
-
-                <div className="colorgroup-colors-grid">
-                  <div className="color-row">
-                    <span className="color-label">1ª Camada: Fundo (Background Color):</span>
-                    <div className="color-inputs">
-                      <div className="mode-input">
-                        <span className="mode-tag">Claro</span>
-                        <input
-                          type="color"
-                          value={group.background_color_light || '#ffffff'}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'background_color_light',
-                              e.target.value,
-                            )
-                          }
-                        />
-                        <input
-                          type="text"
-                          className="hex-input"
-                          value={group.background_color_light || ''}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'background_color_light',
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="mode-input">
-                        <span className="mode-tag">Escuro</span>
-                        <input
-                          type="color"
-                          value={group.background_color_dark || '#000000'}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'background_color_dark',
-                              e.target.value,
-                            )
-                          }
-                        />
-                        <input
-                          type="text"
-                          className="hex-input"
-                          value={group.background_color_dark || ''}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'background_color_dark',
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="color-row">
-                    <span className="color-label">Texto (Text):</span>
-                    <div className="color-inputs">
-                      <div className="mode-input">
-                        <span className="mode-tag">Claro</span>
-                        <input
-                          type="color"
-                          value={group.text_color_light || '#000000'}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'text_color_light',
-                              e.target.value,
-                            )
-                          }
-                        />
-                        <input
-                          type="text"
-                          className="hex-input"
-                          value={group.text_color_light || ''}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'text_color_light',
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="mode-input">
-                        <span className="mode-tag">Escuro</span>
-                        <input
-                          type="color"
-                          value={group.text_color_dark || '#ffffff'}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'text_color_dark',
-                              e.target.value,
-                            )
-                          }
-                        />
-                        <input
-                          type="text"
-                          className="hex-input"
-                          value={group.text_color_dark || ''}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'text_color_dark',
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="color-row">
-                    <span className="color-label">Subtexto (Subtext):</span>
-                    <div className="color-inputs">
-                      <div className="mode-input">
-                        <span className="mode-tag">Claro</span>
-                        <input
-                          type="color"
-                          value={group.subtext_color_light || '#666666'}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'subtext_color_light',
-                              e.target.value,
-                            )
-                          }
-                        />
-                        <input
-                          type="text"
-                          className="hex-input"
-                          value={group.subtext_color_light || ''}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'subtext_color_light',
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="mode-input">
-                        <span className="mode-tag">Escuro</span>
-                        <input
-                          type="color"
-                          value={group.subtext_color_dark || '#cccccc'}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'subtext_color_dark',
-                              e.target.value,
-                            )
-                          }
-                        />
-                        <input
-                          type="text"
-                          className="hex-input"
-                          value={group.subtext_color_dark || ''}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'subtext_color_dark',
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="color-row">
-                    <span className="color-label">Accent:</span>
-                    <div className="color-inputs">
-                      <div className="mode-input">
-                        <span className="mode-tag">Claro</span>
-                        <input
-                          type="color"
-                          value={group.accent_color_light || '#f4822c'}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'accent_color_light',
-                              e.target.value,
-                            )
-                          }
-                        />
-                        <input
-                          type="text"
-                          className="hex-input"
-                          value={group.accent_color_light || ''}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'accent_color_light',
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="mode-input">
-                        <span className="mode-tag">Escuro</span>
-                        <input
-                          type="color"
-                          value={group.accent_color_dark || '#f4822c'}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'accent_color_dark',
-                              e.target.value,
-                            )
-                          }
-                        />
-                        <input
-                          type="text"
-                          className="hex-input"
-                          value={group.accent_color_dark || ''}
-                          onChange={(e) =>
-                            updateGroup(
-                              group.id,
-                              'accent_color_dark',
-                              e.target.value,
-                            )
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 2nd Background Layer: Image and CSS Patterns Section */}
-                <div className="colorgroup-image-layer">
-                  <div className="layer-header">
-                    <div className="layer-title-wrapper">
-                      <span className="layer-badge">2ª Camada</span>
-                      <strong className="layer-title">
-                        Imagem e Padrões CSS de Fundo (Background Image Layer)
-                      </strong>
-                    </div>
-                    <p className="layer-help">
-                      Adicione uma imagem (link/arquivo) ou padrão CSS. A imagem
-                      é renderizada em cima da cor de fundo configurada acima,
-                      permitindo transparência e sobreposição responsiva.
-                    </p>
-                  </div>
-
-                  {/* Quick CSS Pattern Presets */}
-                  <div className="presets-section">
-                    <span className="presets-label">
-                      Padrões CSS Prontos (Presets estilo Acreative):
-                    </span>
-                    <div className="pattern-presets-list">
-                      {CSS_PATTERN_PRESETS.map((preset) => {
-                        const isSelected =
-                          group.bg_image_light_desktop === preset.css ||
-                          (!group.bg_image_light_desktop && preset.id === 'none');
-                        return (
-                          <button
-                            key={preset.id}
-                            type="button"
-                            className={`preset-pill ${isSelected ? 'is-active' : ''}`}
-                            onClick={() => handleApplyPreset(group.id, preset)}
-                            title={preset.description}
-                          >
-                            {preset.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Responsive & Theme Matrix for Image Sources */}
-                  <div className="image-matrix-grid">
-                    {/* Modo Claro */}
-                    <div className="mode-matrix-card light-mode-card">
-                      <div className="mode-matrix-header">
-                        <span className="mode-indicator light-dot" />
-                        <strong>Modo Claro (Light Mode)</strong>
-                      </div>
-
-                      <div className="image-field-block">
-                        <label htmlFor={`img-light-desk-${group.id}`}>
-                          Desktop (Arquivo, Link ou Pattern CSS):
-                        </label>
-                        <div className="image-input-row">
-                          <input
-                            id={`img-light-desk-${group.id}`}
-                            type="text"
-                            value={group.bg_image_light_desktop || ''}
-                            onChange={(e) =>
-                              updateGroup(
-                                group.id,
-                                'bg_image_light_desktop',
-                                e.target.value,
-                              )
-                            }
-                            placeholder="https://... ou radial-gradient(...)"
-                          />
-                          <label
-                            className="file-upload-btn"
-                            title="Enviar imagem do seu computador"
-                          >
-                            <span>Arquivo</span>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) =>
-                                handleFileUpload(
-                                  group.id,
-                                  'bg_image_light_desktop',
-                                  e,
-                                )
-                              }
-                            />
-                          </label>
-                          {group.bg_image_light_desktop ? (
-                            <button
-                              type="button"
-                              className="clear-field-btn"
-                              onClick={() =>
-                                updateGroup(
-                                  group.id,
-                                  'bg_image_light_desktop',
-                                  '',
-                                )
-                              }
-                              title="Limpar imagem"
-                            >
-                              ✕
-                            </button>
-                          ) : null}
-                        </div>
-                      </div>
-
-                      <div className="image-field-block">
-                        <label htmlFor={`img-light-mob-${group.id}`}>
-                          Mobile (Opcional - usa Desktop se vazio):
-                        </label>
-                        <div className="image-input-row">
-                          <input
-                            id={`img-light-mob-${group.id}`}
-                            type="text"
-                            value={group.bg_image_light_mobile || ''}
-                            onChange={(e) =>
-                              updateGroup(
-                                group.id,
-                                'bg_image_light_mobile',
-                                e.target.value,
-                              )
-                            }
-                            placeholder="Vazio = herda do Desktop"
-                          />
-                          <label
-                            className="file-upload-btn"
-                            title="Enviar imagem para mobile"
-                          >
-                            <span>Arquivo</span>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) =>
-                                handleFileUpload(
-                                  group.id,
-                                  'bg_image_light_mobile',
-                                  e,
-                                )
-                              }
-                            />
-                          </label>
-                          {group.bg_image_light_mobile ? (
-                            <button
-                              type="button"
-                              className="clear-field-btn"
-                              onClick={() =>
-                                updateGroup(
-                                  group.id,
-                                  'bg_image_light_mobile',
-                                  '',
-                                )
-                              }
-                              title="Limpar imagem mobile"
-                            >
-                              ✕
-                            </button>
-                          ) : null}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Modo Escuro */}
-                    <div className="mode-matrix-card dark-mode-card">
-                      <div className="mode-matrix-header">
-                        <span className="mode-indicator dark-dot" />
-                        <strong>Modo Escuro (Dark Mode)</strong>
-                      </div>
-
-                      <div className="image-field-block">
-                        <label htmlFor={`img-dark-desk-${group.id}`}>
-                          Desktop (Opcional - usa Modo Claro se vazio):
-                        </label>
-                        <div className="image-input-row">
-                          <input
-                            id={`img-dark-desk-${group.id}`}
-                            type="text"
-                            value={group.bg_image_dark_desktop || ''}
-                            onChange={(e) =>
-                              updateGroup(
-                                group.id,
-                                'bg_image_dark_desktop',
-                                e.target.value,
-                              )
-                            }
-                            placeholder="Vazio = herda do Modo Claro"
-                          />
-                          <label
-                            className="file-upload-btn"
-                            title="Enviar imagem para modo escuro"
-                          >
-                            <span>Arquivo</span>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) =>
-                                handleFileUpload(
-                                  group.id,
-                                  'bg_image_dark_desktop',
-                                  e,
-                                )
-                              }
-                            />
-                          </label>
-                          {group.bg_image_dark_desktop ? (
-                            <button
-                              type="button"
-                              className="clear-field-btn"
-                              onClick={() =>
-                                updateGroup(
-                                  group.id,
-                                  'bg_image_dark_desktop',
-                                  '',
-                                )
-                              }
-                              title="Limpar imagem modo escuro"
-                            >
-                              ✕
-                            </button>
-                          ) : null}
-                        </div>
-                      </div>
-
-                      <div className="image-field-block">
-                        <label htmlFor={`img-dark-mob-${group.id}`}>
-                          Mobile (Opcional):
-                        </label>
-                        <div className="image-input-row">
-                          <input
-                            id={`img-dark-mob-${group.id}`}
-                            type="text"
-                            value={group.bg_image_dark_mobile || ''}
-                            onChange={(e) =>
-                              updateGroup(
-                                group.id,
-                                'bg_image_dark_mobile',
-                                e.target.value,
-                              )
-                            }
-                            placeholder="Vazio = herda do escuro desktop / claro mobile"
-                          />
-                          <label
-                            className="file-upload-btn"
-                            title="Enviar imagem escuro mobile"
-                          >
-                            <span>Arquivo</span>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) =>
-                                handleFileUpload(
-                                  group.id,
-                                  'bg_image_dark_mobile',
-                                  e,
-                                )
-                              }
-                            />
-                          </label>
-                          {group.bg_image_dark_mobile ? (
-                            <button
-                              type="button"
-                              className="clear-field-btn"
-                              onClick={() =>
-                                updateGroup(
-                                  group.id,
-                                  'bg_image_dark_mobile',
-                                  '',
-                                )
-                              }
-                              title="Limpar imagem escuro mobile"
-                            >
-                              ✕
-                            </button>
-                          ) : null}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Layer Styling Controls: Interactive Size, Repeat, and Position with Icons */}
-                  <div className="layer-controls-interactive">
-                    {/* Tamanho (Size) */}
-                    <div className="control-group-box">
-                      <span className="control-group-label">
-                        Tamanho (background-size):
-                      </span>
-                      <div className="icon-button-group">
-                        {SIZE_OPTIONS.map((opt) => {
-                          const isActive =
-                            (group.bg_size || 'auto') === opt.value;
-                          const IconComp = opt.icon;
-                          const cleanVal = opt.value.replace(/[^a-z0-9]/gi, '-');
-                          return (
-                            <button
-                              key={opt.value}
-                              id={`bg-size-${cleanVal}-${group.id}`}
-                              type="button"
-                              className={`icon-btn ${isActive ? 'is-active' : ''}`}
-                              onClick={() =>
-                                updateGroup(group.id, 'bg_size', opt.value)
-                              }
-                              title={opt.title}
-                            >
-                              <IconComp />
-                              <span>{opt.shortLabel}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {/* Pattern sizes pills */}
-                      <div className="pattern-pills-row">
-                        <span className="pills-hint">Padrões:</span>
-                        {SIZE_PATTERN_PILLS.map((pill) => {
-                          const isActive = group.bg_size === pill.value;
-                          return (
-                            <button
-                              key={pill.value}
-                              type="button"
-                              className={`pill-btn ${isActive ? 'is-active' : ''}`}
-                              onClick={() =>
-                                updateGroup(group.id, 'bg_size', pill.value)
-                              }
-                              title={pill.title}
-                            >
-                              {pill.label}
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      <input
-                        id={`bg-size-${group.id}`}
-                        type="text"
-                        className="custom-input-compact"
-                        value={group.bg_size || ''}
-                        onChange={(e) =>
-                          updateGroup(group.id, 'bg_size', e.target.value)
-                        }
-                        placeholder="ou digite custom (ex: 40px, 100% 100%)"
-                      />
-                    </div>
-
-                    {/* Repetição (Repeat) */}
-                    <div className="control-group-box">
-                      <span className="control-group-label">
-                        Repetição (background-repeat):
-                      </span>
-                      <div className="icon-button-group">
-                        {REPEAT_OPTIONS.map((opt) => {
-                          const isActive =
-                            (group.bg_repeat || 'repeat') === opt.value;
-                          const IconComp = opt.icon;
-                          const cleanVal = opt.value.replace(/[^a-z0-9]/gi, '-');
-                          return (
-                            <button
-                              key={opt.value}
-                              id={`bg-repeat-${cleanVal}-${group.id}`}
-                              type="button"
-                              className={`icon-btn ${isActive ? 'is-active' : ''}`}
-                              onClick={() =>
-                                updateGroup(group.id, 'bg_repeat', opt.value)
-                              }
-                              title={opt.title}
-                            >
-                              <IconComp />
-                              <span>{opt.shortLabel}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      <input
-                        id={`bg-repeat-${group.id}`}
-                        type="text"
-                        className="custom-input-compact"
-                        value={group.bg_repeat || ''}
-                        onChange={(e) =>
-                          updateGroup(group.id, 'bg_repeat', e.target.value)
-                        }
-                        placeholder="ou digite custom (ex: repeat space)"
-                      />
-                    </div>
-
-                    {/* Posição (Position 3x3 Compass) */}
-                    <div className="control-group-box">
-                      <span className="control-group-label">
-                        Posição (background-position):
-                      </span>
-                      <div className="compass-grid-wrapper">
-                        <div className="compass-grid">
-                          {POSITION_COMPASS.map((pos) => {
-                            const currentPos = (
-                              group.bg_position || 'center'
-                            )
-                              .toLowerCase()
-                              .trim();
-                            const isActive = currentPos === pos.value;
-                            return (
-                              <button
-                                key={pos.value}
-                                id={`bg-pos-${pos.idKey}-${group.id}`}
-                                type="button"
-                                className={`compass-cell-btn ${isActive ? 'is-active' : ''}`}
-                                onClick={() =>
-                                  updateGroup(
-                                    group.id,
-                                    'bg_position',
-                                    pos.value,
-                                  )
-                                }
-                                title={pos.label}
-                              >
-                                {pos.arrow}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      <input
-                        id={`bg-pos-${group.id}`}
-                        type="text"
-                        className="custom-input-compact"
-                        value={group.bg_position || ''}
-                        onChange={(e) =>
-                          updateGroup(group.id, 'bg_position', e.target.value)
-                        }
-                        placeholder="ou digite custom (ex: 50% 20px)"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Previews with Device Switch */}
-                <div className="preview-header-row">
-                  <span className="preview-label">
-                    Pré-visualização do Grupo (Cor + 2ª Camada Sobreposta):
-                  </span>
-                  <button
-                    type="button"
-                    className="device-toggle-btn"
-                    onClick={() => toggleDevice(group.id)}
-                    title="Alternar simulação de dispositivo"
-                  >
-                    Simular: <strong>{isMobilePreview ? 'Mobile (Telas Pequenas)' : 'Desktop'}</strong>
-                  </button>
-                </div>
-
-                <div className="colorgroup-preview-container">
-                  {/* Modo Claro */}
-                  <div
-                    className="preview-card light"
-                    style={{
-                      backgroundColor:
-                        group.background_color_light || '#ffffff',
-                      backgroundImage: lightImgPreview,
-                      backgroundSize: group.bg_size || 'auto',
-                      backgroundRepeat: group.bg_repeat || 'repeat',
-                      backgroundPosition: group.bg_position || 'center',
-                      color: group.text_color_light || '#000000',
-                      fontFamily: group.font_family || 'inherit',
-                    }}
-                  >
-                    <span className="preview-badge">MODO CLARO</span>
-                    <h5
-                      style={{
-                        color: group.text_color_light || '#000000',
-                        margin: '0.4rem 0',
-                      }}
-                    >
-                      {group.name} Título
-                    </h5>
-                    <p
-                      style={{
-                        color: group.subtext_color_light || '#666666',
-                        fontSize: '0.85rem',
-                        margin: '0.2rem 0 0.6rem 0',
-                      }}
-                    >
-                      Cor de fundo com 2ª camada sobreposta.
-                    </p>
-                    <button
-                      type="button"
-                      style={{
-                        backgroundColor: group.accent_color_light || '#f4822c',
-                        color: '#ffffff',
-                        border: 'none',
-                        padding: '4px 10px',
-                        borderRadius: '4px',
-                        fontSize: '0.8rem',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Ação Accent
-                    </button>
-                  </div>
-
-                  {/* Modo Escuro */}
-                  <div
-                    className="preview-card dark"
-                    style={{
-                      backgroundColor: group.background_color_dark || '#000000',
-                      backgroundImage: darkImgPreview,
-                      backgroundSize: group.bg_size || 'auto',
-                      backgroundRepeat: group.bg_repeat || 'repeat',
-                      backgroundPosition: group.bg_position || 'center',
-                      color: group.text_color_dark || '#ffffff',
-                      fontFamily: group.font_family || 'inherit',
-                    }}
-                  >
-                    <span className="preview-badge dark-tag">MODO ESCURO</span>
-                    <h5
-                      style={{
-                        color: group.text_color_dark || '#ffffff',
-                        margin: '0.4rem 0',
-                      }}
-                    >
-                      {group.name} Título
-                    </h5>
-                    <p
-                      style={{
-                        color: group.subtext_color_dark || '#cccccc',
-                        fontSize: '0.85rem',
-                        margin: '0.2rem 0 0.6rem 0',
-                      }}
-                    >
-                      Cor de fundo com 2ª camada sobreposta.
-                    </p>
-                    <button
-                      type="button"
-                      style={{
-                        backgroundColor: group.accent_color_dark || '#f4822c',
-                        color: '#ffffff',
-                        border: 'none',
-                        padding: '4px 10px',
-                        borderRadius: '4px',
-                        fontSize: '0.8rem',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      Ação Accent
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {Object.values(groups).map((group) => (
+          <ColorGroupItem
+            key={group.id}
+            group={group}
+            isExpanded={!!expandedGroups[group.id]}
+            isBase={BASE_COLOR_GROUP_IDS.includes(group.id)}
+            isMobilePreview={previewDevice[group.id] === 'mobile'}
+            onToggleExpand={toggleExpand}
+            onToggleDevice={toggleDevice}
+            onUpdateGroup={updateGroup}
+            onUpdateGroupMultiple={updateGroupMultiple}
+            onApplyPreset={handleApplyPreset}
+            onFileUpload={handleFileUpload}
+            onDeleteGroup={handleDeleteGroup}
+          />
+        ))}
       </div>
 
       {/* Form to add a new ColorGroup */}
@@ -1653,13 +377,96 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
             />
           </div>
 
-          <div className="add-layer-controls-mini">
-            <div className="field-item">
-              <label htmlFor="new-cg-repeat">Repetição:</label>
-              <select
+          <div className="layer-controls-interactive add-layer-controls-interactive">
+            {/* Tamanho */}
+            <div className="control-group-box">
+              <span className="control-group-label">
+                Tamanho (background-size):
+              </span>
+              <div className="icon-button-group button-group-row">
+                {SIZE_OPTIONS.map((opt) => {
+                  const isActive = newBgSize === opt.value;
+                  const IconComp = opt.icon;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      className={`icon-btn ${isActive ? 'is-active' : ''}`}
+                      onClick={() => setNewBgSize(opt.value)}
+                      title={opt.title}
+                    >
+                      <IconComp />
+                      <span>{opt.shortLabel}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Quick pattern pixel sizes */}
+              <div className="pattern-pills-row">
+                <span className="pills-hint">Patterns CSS:</span>
+                {SIZE_PATTERN_PILLS.map((pill) => (
+                  <button
+                    key={pill.value}
+                    type="button"
+                    className={`pill-btn size-pill ${newBgSize === pill.value ? 'is-active' : ''}`}
+                    onClick={() => setNewBgSize(pill.value)}
+                    title={pill.title}
+                  >
+                    {pill.label}
+                  </button>
+                ))}
+              </div>
+
+              <input
+                id="new-cg-size"
+                type="text"
+                className="custom-input-compact"
+                value={newBgSize}
+                onChange={(e) => setNewBgSize(e.target.value)}
+                placeholder="ou digite custom (ex: 40px 40px)"
+              />
+            </div>
+
+            {/* Repetição */}
+            <div className="control-group-box">
+              <span className="control-group-label">
+                Repetição (background-repeat):
+              </span>
+              <div className="icon-button-group button-group-row">
+                {REPEAT_OPTIONS.map((opt) => {
+                  const isActive = newBgRepeat === opt.value;
+                  const IconComp = opt.icon;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      className={`icon-btn ${isActive ? 'is-active' : ''}`}
+                      onClick={() => setNewBgRepeat(opt.value)}
+                      title={opt.title}
+                    >
+                      <IconComp />
+                      <span>{opt.shortLabel}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <input
                 id="new-cg-repeat"
+                type="text"
+                className="custom-input-compact"
                 value={newBgRepeat}
                 onChange={(e) => setNewBgRepeat(e.target.value)}
+                placeholder="ou digite custom (ex: repeat space)"
+              />
+
+              <select
+                id="new-cg-repeat-select"
+                value={newBgRepeat}
+                onChange={(e) => setNewBgRepeat(e.target.value)}
+                className="sr-only"
+                style={{ display: 'none' }}
               >
                 <option value="repeat">repeat</option>
                 <option value="no-repeat">no-repeat</option>
@@ -1668,25 +475,36 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
               </select>
             </div>
 
-            <div className="field-item">
-              <label htmlFor="new-cg-size">Tamanho:</label>
-              <input
-                id="new-cg-size"
-                type="text"
-                value={newBgSize}
-                onChange={(e) => setNewBgSize(e.target.value)}
-                placeholder="auto, cover, 32px 32px"
-              />
-            </div>
-
-            <div className="field-item">
-              <label htmlFor="new-cg-pos">Posição:</label>
+            {/* Posição */}
+            <div className="control-group-box">
+              <span className="control-group-label">
+                Posição (background-position):
+              </span>
+              <div className="compass-grid-wrapper">
+                <div className="compass-grid">
+                  {POSITION_COMPASS.map((pos) => {
+                    const isActive = newBgPosition === pos.value;
+                    return (
+                      <button
+                        key={pos.value}
+                        type="button"
+                        className={`compass-cell-btn ${isActive ? 'is-active' : ''}`}
+                        onClick={() => setNewBgPosition(pos.value)}
+                        title={pos.label}
+                      >
+                        {pos.arrow}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               <input
                 id="new-cg-pos"
                 type="text"
+                className="custom-input-compact"
                 value={newBgPosition}
                 onChange={(e) => setNewBgPosition(e.target.value)}
-                placeholder="center, top left"
+                placeholder="ou digite custom (ex: 50% 20px)"
               />
             </div>
           </div>

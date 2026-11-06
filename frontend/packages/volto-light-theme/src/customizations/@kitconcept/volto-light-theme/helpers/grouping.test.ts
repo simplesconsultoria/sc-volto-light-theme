@@ -42,6 +42,19 @@ describe('groupByBGColor', () => {
     expect(result).toEqual([['b1'], ['b2']]);
   });
 
+  it('suporta legacy backgroundColor de versoes anteriores do VLT', () => {
+    const blocks: any = {
+      b1: { '@type': 'image', backgroundColor: 'alternative' },
+      b2: { '@type': 'slate', backgroundColor: 'default' },
+    };
+    const blocks_layout: any = {
+      items: ['b1', 'b2'],
+    };
+
+    const result = groupByBGColor(blocks, blocks_layout);
+    expect(result).toEqual([['b1'], ['b2']]);
+  });
+
   it('retorna array vazio quando layout ou blocks estiverem vazios', () => {
     expect(groupByBGColor({}, { items: [] } as any)).toEqual([]);
     expect(groupByBGColor(null as any, null as any)).toEqual([]);

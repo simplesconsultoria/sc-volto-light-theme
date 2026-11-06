@@ -1,10 +1,10 @@
 // =============================================================================
 // Borders System — sc-volto-light-theme
-// Fornece mixins e regras para posicionamento inteligente e desacoplado de bordas.
-// Os componentes gerenciam onde a borda é colocada (ex: imagem, texto, card ou container).
+// Provides mixins and rules for smart, decoupled border placement.
+// Components manage where the border applies (image, text, card, or container).
 // =============================================================================
 
-// Mixin universal para aplicar borda customizada definida pelo BorderWidget
+// Universal mixin to apply custom border defined by BorderWidget
 @mixin apply-block-border(
   $width: var(--cardBorderWidth),
   $color:
@@ -19,7 +19,7 @@
   border-color: $color !important;
 }
 
-// Mixin utilitário para desenvolvedores aplicarem bordas diretamente em elementos específicos
+// Utility mixin for developers to apply borders directly to targeted elements
 @mixin component-border($target-selector: null) {
   @if $target-selector {
     #{$target-selector} {
@@ -31,10 +31,10 @@
 }
 
 // -----------------------------------------------------------------------------
-// Aplicação Específica por Componente
+// Component-Specific Placement
 // -----------------------------------------------------------------------------
 
-// 1. Elementos com alvos customizados explícitos escolhidos pelo desenvolvedor
+// 1. Elements with explicit custom border targets set by developers
 [style*='--cardBorderWidth'] {
   .block-border-target,
   [data-border-target],
@@ -43,12 +43,13 @@
   }
 }
 
-// 2. Blocos de Imagem (image e mainImageBlock):
-// A borda é aplicada especificamente na imagem em si (img / figure img),
-// e não em volta do container inteiro do bloco ou das legendas
+// 2. Image blocks (image and mainImageBlock, and Aurora .block-image):
+// The border is applied specifically to the image element itself (img / figure img),
+// and not around the block container or captions.
 .block.image[style*='--cardBorderWidth'],
 .block.mainImageBlock[style*='--cardBorderWidth'],
 .main-image-block[style*='--cardBorderWidth'],
+.block-image[style*='--cardBorderWidth'],
 #page-edit [class*='block-editor-image'][style*='--cardBorderWidth'],
 #page-edit [class*='block-editor-mainImageBlock'][style*='--cardBorderWidth'],
 #page-add [class*='block-editor-image'][style*='--cardBorderWidth'],
@@ -59,9 +60,10 @@
   }
 }
 
-// 3. Bloco de Citação (Quote):
-// A borda é delegada para o elemento interno .quote-block
+// 3. Quote Block (and Aurora .block-quote):
+// Border is delegated to the inner .quote-block element
 .block.quoteBlock[style*='--cardBorderWidth'],
+.block-quote[style*='--cardBorderWidth'],
 #page-edit .block-editor-quoteBlock[style*='--cardBorderWidth'],
 #page-add .block-editor-quoteBlock[style*='--cardBorderWidth'] {
   .quote-block {
@@ -69,23 +71,44 @@
   }
 }
 
-// 4. Blocos comuns com container interno ou sem alvo específico:
-// Não aplica na camada mais alta (.block) se o bloco contiver .card, imagem,
-// citação ou alvo de borda explícito.
+// 4. Accordion Block (EEA and Aurora .block-accordion):
+.accordion-block[style*='--cardBorderWidth'],
+.block-accordion[style*='--cardBorderWidth'] {
+  .ui.accordion,
+  .block-accordion__panel {
+    @include apply-block-border;
+  }
+}
+
+// 5. Common blocks with inner container or default targets:
+// Avoid applying on top-level .block if it contains cards, images, quotes or explicit targets.
 .block[style*='--cardBorderWidth'],
 #page-edit [class*='block-editor-'][style*='--cardBorderWidth'],
 #page-add [class*='block-editor-'][style*='--cardBorderWidth'] {
-  &:not(:has(.card)):not(:has(figure img)):not(:has(img)):not(.image):not(
-      .mainImageBlock
-    ):not(.quoteBlock):not(:has(.quote-block)):not(
-      :has(.block-border-target)
-    ):not(:has([data-border-target])) {
-    // Se possuir .block-inner-container, aplica nele para manter o fundo sangrado
+  &:not(
+      .image,
+      .mainImageBlock,
+      .quoteBlock,
+      .accordion-block,
+      .block-accordion,
+      .block-image,
+      .block-quote
+    ):not(
+      :has(
+          .card,
+          figure img,
+          img,
+          .quote-block,
+          .block-border-target,
+          [data-border-target]
+        )
+    ) {
+    // If it has .block-inner-container, apply on it to maintain full bleed background
     & > .block-inner-container {
       @include apply-block-border;
     }
 
-    // Caso não possua container interno, aplica no próprio bloco
+    // Fallback: apply directly to block if no inner container exists
     &:not(:has(> .block-inner-container)) {
       @include apply-block-border;
     }

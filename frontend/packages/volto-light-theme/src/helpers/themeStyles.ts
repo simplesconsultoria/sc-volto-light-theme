@@ -529,12 +529,7 @@ export function themeStyleSheet(
     ? colorGroupResponsiveImageRules(settings.color_groups)
     : '';
 
-  return [
-    rootRule,
-    utilities,
-    blockThemeUtilities,
-    responsiveImageRules,
-  ]
+  return [rootRule, utilities, blockThemeUtilities, responsiveImageRules]
     .filter(Boolean)
     .join('\n');
 }

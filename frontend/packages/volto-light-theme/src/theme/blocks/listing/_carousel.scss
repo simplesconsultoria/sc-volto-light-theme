@@ -1,8 +1,8 @@
 // =============================================================================
 // Listing Carousel / Media Carousel Variation
-// Slider customizado com controles de navegacao, dots e autoplay.
-// Usa BEM-like naming: .listing-carousel__viewport, __track, __slide, etc.
-// Suporta imagem, video e embed como tipos de midia.
+// Custom slider with navigation controls, dots, and autoplay.
+// Uses BEM-like naming: .listing-carousel__viewport, __track, __slide, etc.
+// Supports image, video, and embed as media types.
 // =============================================================================
 
 &.carousel,
@@ -70,7 +70,23 @@
       height: auto !important;
       flex: 0 0 100%;
       flex-direction: column;
-      background: var(--theme-high-contrast-color);
+      background-color: var(--theme-high-contrast-color);
+      background-image: var(
+        --highground-bg-image,
+        var(--colorgroup-front-bg-image, none)
+      );
+      background-position: var(
+        --highground-bg-position,
+        var(--colorgroup-front-bg-position, center)
+      );
+      background-repeat: var(
+        --highground-bg-repeat,
+        var(--colorgroup-front-bg-repeat, repeat)
+      );
+      background-size: var(
+        --highground-bg-size,
+        var(--colorgroup-front-bg-size, auto)
+      );
 
       a {
         display: flex;

@@ -26,10 +26,7 @@ import LayoutSelector from './LayoutSelector';
 import config from '@plone/volto/registry';
 
 // ========================================================================
-import {
-  resolveBlockTheme,
-  type ThemeDefinition,
-} from '../../../config/blockThemes';
+import { resolveBlockTheme } from '../../../config/blockThemes';
 
 const messages = defineMessages({
   editParent: {
@@ -138,16 +135,6 @@ const buildColumnsForLayout = (layoutId: string) => {
   }
   return { blocks, blocks_layout: { items } };
 };
-
-function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
-  const blockThemes = blockType
-    ? (config.blocks?.blocksConfig as any)?.[blockType]?.themes
-    : undefined;
-
-  return (blockThemes ||
-    (config.blocks as any)?.themes ||
-    []) as ThemeDefinition[];
-}
 
 const CustomGridEdit = (props: any) => {
   const {
@@ -463,8 +450,6 @@ const CustomGridEdit = (props: any) => {
             colData = emptyBlocksForm();
           }
 
-          const blockType = data?.['@type'] as string | undefined;
-          const themeDefinitions = getThemeDefinitions(blockType);
           const colThemeValue = colData?.settings?.theme;
           const colBack = colData?.settings?.backColorGroup;
           const colFront = colData?.settings?.frontColorGroup;
@@ -475,7 +460,6 @@ const CustomGridEdit = (props: any) => {
                   typeof colThemeValue === 'string' ? colThemeValue : undefined,
                 backColorGroup: colBack,
                 frontColorGroup: colFront,
-                themeDefinitions,
               })
             : null;
 

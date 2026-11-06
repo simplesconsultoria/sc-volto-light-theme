@@ -133,42 +133,13 @@ export const SearchBlockViewComponent: React.FC<any> = (props: any) => {
   const blockWidthClass = `has--block-width--${blockWidth}`;
 
   // Theme resolution
-  const blockTheme = data?.theme || data?.styles?.theme || 'default';
-  const theme =
-    typeof blockTheme === 'object' && blockTheme !== null
-      ? blockTheme.theme || 'default'
-      : blockTheme || 'default';
-
-  let customBack: string | undefined;
-  let customFront: string | undefined;
-  if (typeof theme === 'string' && theme.startsWith('custom-')) {
-    const parts = theme.split('-');
-    customBack = parts[1];
-    customFront = parts[2];
-  }
-
-  const backColorGroup =
-    customBack ||
-    (typeof blockTheme === 'object' && blockTheme !== null
-      ? blockTheme.backColorGroup
-      : undefined) ||
-    data?.backColorGroup ||
-    data?.styles?.backColorGroup;
-
-  const frontColorGroup =
-    customFront ||
-    (typeof blockTheme === 'object' && blockTheme !== null
-      ? blockTheme.frontColorGroup
-      : undefined) ||
-    data?.frontColorGroup ||
-    data?.styles?.frontColorGroup;
-
-  const { style: blockThemeStyle, className: blockThemeClass } =
-    resolveBlockTheme({
-      theme,
-      backColorGroup,
-      frontColorGroup,
-    });
+  const {
+    style: blockThemeStyle,
+    className: blockThemeClass,
+    backColorGroup,
+    frontColorGroup,
+    theme,
+  } = resolveBlockTheme(data);
 
   // Border system variables
   const cardBorderWidth =

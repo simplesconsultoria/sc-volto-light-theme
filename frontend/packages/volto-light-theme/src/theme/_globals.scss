@@ -180,19 +180,20 @@ body .block.search .search-wrapper {
 
 .blocks-group-wrapper {
   display: flow-root;
-  clear: both;
   width: 100% !important;
   max-width: 100% !important;
   margin-right: 0 !important;
   margin-left: 0 !important;
+  clear: both;
 
-  // Em todos os blocos e containers intermediários agrupados:
-  // Se não for um elemento Highground, deve ter background-color: transparent (null)
-  // e background-image: none, pois margens e espaçamentos internos do conteúdo
-  // revelariam caixas de fundo cortadas sobre o wrapper contínuo.
+  // For all grouped blocks and intermediate containers:
+  // Non-highground elements must have transparent background-color and no background-image
+  // to prevent broken background boxes over the seamless group wrapper.
   & > .block,
   & > [class*='block-'],
-  .block:not(.is-highground):not(.card):not(.ui.card):not(.card-container):not(.hero-card):not(.has-highground-bg),
+  .block:not(.is-highground):not(.card):not(.ui.card):not(.card-container):not(
+      .hero-card
+    ):not(.has-highground-bg),
   .block-inner-container,
   .block-container:not(.card):not(.ui.card),
   .hero-block-container,
@@ -211,18 +212,47 @@ body .block.search .search-wrapper {
     background-image: none !important;
   }
 
-  // Preserva e garante a estilização de elementos que são Highground (cards, chips, botões)
+  // Preserve styling for highground elements (cards, chips, buttons)
   .card,
   .ui.card,
   .listing-item,
   .teaser-item,
   .grid-item,
+  .hero-card,
   .hero-card-info,
   .hero-card-image-wrapper,
   .is-highground,
   [data-ground='high'] {
-    background-color: var(--theme-high-contrast-color);
+    @include highground-surface();
   }
+}
+
+// Global surface rules for highground elements across all blocks
+.card,
+.ui.card,
+.listing-item,
+.teaser-item,
+.grid-item,
+.hero-card,
+.hero-card-info,
+.is-highground,
+[data-ground='high'] {
+  background-image: var(
+    --highground-bg-image,
+    var(--colorgroup-front-bg-image, none)
+  );
+  background-position: var(
+    --highground-bg-position,
+    var(--colorgroup-front-bg-position, center)
+  );
+  background-repeat: var(
+    --highground-bg-repeat,
+    var(--colorgroup-front-bg-repeat, repeat)
+  );
+  background-size: var(
+    --highground-bg-size,
+    var(--colorgroup-front-bg-size, auto)
+  );
 }
 
 #page-document {
@@ -231,10 +261,10 @@ body .block.search .search-wrapper {
   &.container {
     width: 100% !important;
     max-width: 100% !important;
-    margin-right: 0 !important;
-    margin-left: 0 !important;
     padding-right: 0 !important;
     padding-left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
   }
 
   .blocks-group-wrapper:last-child {
@@ -250,7 +280,7 @@ body .block.search .search-wrapper {
     margin-bottom: 40px;
   }
 
-  // Elementos diretos fora de blocks-group-wrapper (caso existam) respeitam a largura de layout
+  // Direct elements outside blocks-group-wrapper (if any) respect layout container width
   & > *:not(.blocks-group-wrapper) {
     max-width: var(--layout-container-width);
     margin-right: auto;
@@ -292,6 +322,15 @@ body .block.search .search-wrapper {
   }
 }
 
+// Visually hidden helper for screen readers only (WCAG 2.1 AA compliant)
 .sr-only {
-  display: none !important;
+  position: absolute !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  margin: -1px !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
 }

@@ -1,7 +1,7 @@
 // =============================================================================
 // Separator Block Styling — sc-volto-light-theme
-// Garante aplicação correta de largura (narrow, default, layout, full),
-// funcionamento do adjustMarginsToContainer e neutralização em colunas.
+// Ensures proper application of block width (narrow, default, layout, full),
+// adjustMarginsToContainer responsiveness, and lateral margin reset in columns.
 // =============================================================================
 
 .block.separator {
@@ -20,7 +20,7 @@
   }
 }
 
-// Reset para Separator dentro de colunas e containers
+// Reset for Separator within columns and containers
 .custom-grid-column,
 .block-column,
 .column,

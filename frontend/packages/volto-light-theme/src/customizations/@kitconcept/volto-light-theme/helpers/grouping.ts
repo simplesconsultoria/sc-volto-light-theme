@@ -1,8 +1,8 @@
 import type { BlocksData } from '@plone/types';
 
 /**
- * Agrupa blocos adjacentes por cor/tema de fundo.
- * Suporta tanto `block.theme` quanto `block.styles.theme`.
+ * Groups adjacent blocks by background theme/color.
+ * Supports both `block.theme` and `block.styles.theme`.
  */
 export function groupByBGColor(
   blocks: BlocksData['blocks'],
@@ -22,7 +22,10 @@ export function groupByBGColor(
   }
 
   blocks_layout.items.forEach((blockId) => {
-    const rawTheme = blocks[blockId]?.theme ?? blocks[blockId]?.styles?.theme;
+    const rawTheme =
+      blocks[blockId]?.theme ??
+      blocks[blockId]?.styles?.theme ??
+      blocks[blockId]?.backgroundColor;
     const currentBlockColor =
       typeof rawTheme === 'object' && rawTheme !== null
         ? rawTheme.theme || 'default'

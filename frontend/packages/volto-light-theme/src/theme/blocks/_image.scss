@@ -1,6 +1,6 @@
 // =============================================================================
 // Image & MainImageBlock System — sc-volto-light-theme
-// Unifica e otimiza a estilização de Image e MainImageBlock em modo visualização e edição.
+// Unifies and optimizes styling for Image and MainImageBlock in view and edit modes.
 // =============================================================================
 
 .block.image,
@@ -12,14 +12,14 @@
   --align-center: none;
   --align-right: right;
 
-  // Tamanhos de imagem flutuante, referenciados pela variável --media-size
+  // Floated image sizes, referenced by --media-size custom property
   --size-small: 220px;
   --size-medium: 300px;
   --size-large: calc(
     var(--block-width, var(--default-container-width)) / 2 - 10px
   );
 
-  // Mapeamento direto de tamanhos via classes
+  // Direct size mapping via CSS classes
   &.small,
   &.s {
     --media-size: var(--size-small);
@@ -33,7 +33,7 @@
     --media-size: var(--size-large);
   }
 
-  // Sobrescrita e garantia de --block-width e max-width baseados na classe has--block-width--*
+  // Override and enforce --block-width and max-width based on has--block-width--* class
   &.has--block-width--narrow {
     --block-width: var(--narrow-container-width) !important;
     max-width: var(--narrow-container-width) !important;
@@ -75,13 +75,13 @@
 }
 
 // -----------------------------------------------------------------------------
-// 1. Modo de Visualização (#page-document)
+// 1. View Mode (#page-document)
 // -----------------------------------------------------------------------------
 #page-document {
   .blocks-group-wrapper > .block.image,
   .blocks-group-wrapper > .block.mainImageBlock,
   .blocks-group-wrapper > .main-image-block {
-    // Margens responsivas por largura de container
+    // Responsive margins per container width
     &.has--block-width--narrow {
       @include adjustMarginsToContainer($narrow-container-width);
     }
@@ -92,7 +92,7 @@
       @include adjustMarginsToContainer($layout-container-width);
     }
 
-    // Alinhamento central
+    // Center alignment
     &.center,
     &.align.center,
     &.has--block-alignment--center {
@@ -111,7 +111,7 @@
       }
     }
 
-    // Alinhamento lateral (left / right) em Desktop
+    // Lateral alignment (left / right) on Desktop
     @media only screen and (min-width: #{$largest-mobile-screen + 1px}) {
       &.left,
       &.align.left,
@@ -146,7 +146,7 @@
       }
     }
 
-    // Alinhamento lateral em Mobile
+    // Lateral alignment on Mobile
     @media only screen and (max-width: #{$largest-mobile-screen}) {
       &.left,
       &.right,
@@ -197,13 +197,13 @@
 }
 
 // -----------------------------------------------------------------------------
-// 2. Modo de Edição (#page-edit, #page-add)
+// 2. Edit Mode (#page-edit, #page-add)
 // -----------------------------------------------------------------------------
 #page-edit,
 #page-add {
   .block-editor-image,
   .block-editor-mainImageBlock {
-    // Aplicação de respiros responsivos nos blocos de edição
+    // Responsive gutters on edit blocks
     &.has--block-width--narrow {
       @include adjustMarginsToEditContainer($narrow-container-width);
     }
@@ -218,7 +218,7 @@
       @include adjustEditContainerFullWidth();
     }
 
-    // Alinhamento central
+    // Center alignment
     &.center,
     &.has--block-alignment--center {
       figure.center,
@@ -229,7 +229,7 @@
       }
     }
 
-    // Alinhamento lateral em Desktop
+    // Lateral alignment on Desktop
     @media only screen and (min-width: #{$largest-mobile-screen + 1px}) {
       &.left,
       &.has--block-alignment--left {
@@ -254,7 +254,7 @@
       }
     }
 
-    // Propagação de largura para wrappers internos de blocos na edição
+    // Width propagation to internal block wrappers in edit mode
     .block.inner .block .block,
     .block.mainImageBlock {
       max-width: var(--block-width) !important;
@@ -265,7 +265,7 @@
 }
 
 // -----------------------------------------------------------------------------
-// 3. Imagens dentro de containers estruturais (CustomGrid, GridBlock, Accordion)
+// 3. Images inside structural containers (CustomGrid, GridBlock, Accordion)
 // -----------------------------------------------------------------------------
 .custom-grid-column,
 .block.gridBlock .column,

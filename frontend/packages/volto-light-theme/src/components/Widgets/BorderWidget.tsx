@@ -1,5 +1,17 @@
 import React, { useState, useEffect, useId, useCallback } from 'react';
 import FormFieldWrapper from '@plone/volto/components/manage/Widgets/FormFieldWrapper';
+import {
+  IconPresetNone,
+  IconPresetAll,
+  IconPresetTop,
+  IconPresetBottom,
+  IconPresetSides,
+  IconPresetTopLeft,
+  IconSideTop,
+  IconSideRight,
+  IconSideBottom,
+  IconSideLeft,
+} from './BorderWidget/icons';
 
 export interface BorderWidgetProps {
   id: string;
@@ -144,6 +156,98 @@ export function getBorderDescription(sides: BorderSides): string {
   return `Bordas em: ${activeNames.join(', ')}`;
 }
 
+type PresetKey = 'none' | 'all' | 'top' | 'bottom' | 'sides' | 'top-left';
+
+interface PresetDefinition {
+  key: PresetKey;
+  name: string;
+  tooltip: string;
+  icon: React.FC;
+  isActive: (sides: BorderSides) => boolean;
+}
+
+const PRESETS: PresetDefinition[] = [
+  {
+    key: 'none',
+    name: 'Sem borda',
+    tooltip: 'Sem borda (0px)',
+    icon: IconPresetNone,
+    isActive: (s) =>
+      s.top === 0 && s.right === 0 && s.bottom === 0 && s.left === 0,
+  },
+  {
+    key: 'all',
+    name: 'Completa',
+    tooltip: 'Borda completa em todos os 4 lados',
+    icon: IconPresetAll,
+    isActive: (s) => s.top > 0 && s.right > 0 && s.bottom > 0 && s.left > 0,
+  },
+  {
+    key: 'top',
+    name: 'Topo',
+    tooltip: 'Borda apenas no topo (superior)',
+    icon: IconPresetTop,
+    isActive: (s) =>
+      s.top > 0 && s.right === 0 && s.bottom === 0 && s.left === 0,
+  },
+  {
+    key: 'bottom',
+    name: 'Abaixo',
+    tooltip: 'Borda apenas abaixo (inferior)',
+    icon: IconPresetBottom,
+    isActive: (s) =>
+      s.top === 0 && s.right === 0 && s.bottom > 0 && s.left === 0,
+  },
+  {
+    key: 'sides',
+    name: 'Laterais',
+    tooltip: 'Bordas nas laterais (esquerda e direita)',
+    icon: IconPresetSides,
+    isActive: (s) => s.top === 0 && s.right > 0 && s.bottom === 0 && s.left > 0,
+  },
+  {
+    key: 'top-left',
+    name: 'Topo & Lateral',
+    tooltip: 'Bordas no topo e na lateral esquerda',
+    icon: IconPresetTopLeft,
+    isActive: (s) => s.top > 0 && s.right === 0 && s.bottom === 0 && s.left > 0,
+  },
+];
+
+interface SideDefinition {
+  key: keyof BorderSides;
+  label: string;
+  tooltip: string;
+  icon: React.FC;
+}
+
+const SIDE_CONFIGS: SideDefinition[] = [
+  {
+    key: 'top',
+    label: 'Topo',
+    tooltip: 'Borda Superior (topo)',
+    icon: IconSideTop,
+  },
+  {
+    key: 'right',
+    label: 'Direita',
+    tooltip: 'Borda Lateral Direita',
+    icon: IconSideRight,
+  },
+  {
+    key: 'bottom',
+    label: 'Abaixo',
+    tooltip: 'Borda Inferior (abaixo)',
+    icon: IconSideBottom,
+  },
+  {
+    key: 'left',
+    label: 'Esquerda',
+    tooltip: 'Borda Lateral Esquerda',
+    icon: IconSideLeft,
+  },
+];
+
 export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
   const { id, value, onChange } = props;
   const widgetId = useId();
@@ -177,9 +281,7 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
     [id, onChange, value],
   );
 
-  const handlePreset = (
-    preset: 'none' | 'all' | 'top' | 'bottom' | 'sides' | 'top-left',
-  ) => {
+  const handlePreset = (preset: PresetKey) => {
     const t = thickness > 0 ? thickness : 1;
     let newSides: BorderSides;
     let msg = '';
@@ -233,7 +335,7 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
     const valid = Math.max(0, Math.min(24, Math.round(newVal || 0)));
     setThickness(valid);
 
-    // Atualiza todos os lados ativos proporcionalmente
+    // Se houver lados ativos, atualiza todos os lados ativos proporcionalmente
     const activeSides = Object.entries(sides).some(([_, val]) => val > 0);
     if (activeSides) {
       const updated: BorderSides = {
@@ -258,8 +360,6 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
     );
   };
 
-  const currentSummary = getBorderDescription(sides);
-
   return (
     <FormFieldWrapper {...props} className="border-widget-field">
       <div
@@ -272,213 +372,53 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
           {announcement}
         </div>
 
-        {/* 1. Presets rápidos de posicionamento */}
-        <div
-          className="border-widget__presets-label"
-          id={`${widgetId}-presets-label`}
-        >
-          Predefinições rápidas:
-        </div>
-        <div
-          className="border-widget__presets"
-          role="toolbar"
-          aria-labelledby={`${widgetId}-presets-label`}
-        >
-          <button
-            type="button"
-            className={`border-widget__preset-btn ${
-              sides.top === 0 &&
-              sides.right === 0 &&
-              sides.bottom === 0 &&
-              sides.left === 0
-                ? 'is-active'
-                : ''
-            }`}
-            onClick={() => handlePreset('none')}
-            aria-pressed={
-              sides.top === 0 &&
-              sides.right === 0 &&
-              sides.bottom === 0 &&
-              sides.left === 0
-            }
-          >
-            Sem borda
-          </button>
-          <button
-            type="button"
-            className={`border-widget__preset-btn ${
-              sides.top > 0 &&
-              sides.right > 0 &&
-              sides.bottom > 0 &&
-              sides.left > 0
-                ? 'is-active'
-                : ''
-            }`}
-            onClick={() => handlePreset('all')}
-            aria-pressed={
-              sides.top > 0 &&
-              sides.right > 0 &&
-              sides.bottom > 0 &&
-              sides.left > 0
-            }
-          >
-            Completa
-          </button>
-          <button
-            type="button"
-            className={`border-widget__preset-btn ${
-              sides.top > 0 &&
-              sides.right === 0 &&
-              sides.bottom === 0 &&
-              sides.left === 0
-                ? 'is-active'
-                : ''
-            }`}
-            onClick={() => handlePreset('top')}
-            aria-pressed={
-              sides.top > 0 &&
-              sides.right === 0 &&
-              sides.bottom === 0 &&
-              sides.left === 0
-            }
-          >
-            Topo
-          </button>
-          <button
-            type="button"
-            className={`border-widget__preset-btn ${
-              sides.top === 0 &&
-              sides.right === 0 &&
-              sides.bottom > 0 &&
-              sides.left === 0
-                ? 'is-active'
-                : ''
-            }`}
-            onClick={() => handlePreset('bottom')}
-            aria-pressed={
-              sides.top === 0 &&
-              sides.right === 0 &&
-              sides.bottom > 0 &&
-              sides.left === 0
-            }
-          >
-            Abaixo
-          </button>
-          <button
-            type="button"
-            className={`border-widget__preset-btn ${
-              sides.top === 0 &&
-              sides.right > 0 &&
-              sides.bottom === 0 &&
-              sides.left > 0
-                ? 'is-active'
-                : ''
-            }`}
-            onClick={() => handlePreset('sides')}
-            aria-pressed={
-              sides.top === 0 &&
-              sides.right > 0 &&
-              sides.bottom === 0 &&
-              sides.left > 0
-            }
-          >
-            Laterais
-          </button>
-          <button
-            type="button"
-            className={`border-widget__preset-btn ${
-              sides.top > 0 &&
-              sides.right === 0 &&
-              sides.bottom === 0 &&
-              sides.left > 0
-                ? 'is-active'
-                : ''
-            }`}
-            onClick={() => handlePreset('top-left')}
-            aria-pressed={
-              sides.top > 0 &&
-              sides.right === 0 &&
-              sides.bottom === 0 &&
-              sides.left > 0
-            }
-          >
-            Topo & Lateral
-          </button>
-        </div>
-
-        {/* 2. Diagrama interativo de Caixa ("Box Model") */}
-        <div className="border-widget__diagram-wrapper">
+        {/* 1. Presets rápidos de posicionamento com ícones e tooltips acessíveis */}
+        <div className="border-widget__section">
           <div
-            className="border-widget__box-diagram"
-            aria-label="Controle interativo dos lados da borda. Clique em cada borda para alternar."
+            className="border-widget__presets-label"
+            id={`${widgetId}-presets-label`}
           >
-            {/* Lado Topo */}
-            <button
-              type="button"
-              className={`border-widget__side-btn border-widget__side-btn--top ${
-                sides.top > 0 ? 'is-active' : ''
-              }`}
-              onClick={() => toggleSide('top')}
-              aria-pressed={sides.top > 0}
-              aria-label={`Borda Superior: ${sides.top > 0 ? `${sides.top}px` : 'nenhuma'}`}
-              title="Alternar Borda Superior"
-            >
-              <span className="border-widget__side-indicator" />
-            </button>
+            Predefinições rápidas:
+          </div>
+          <div
+            className="border-widget__presets-toolbar"
+            role="toolbar"
+            aria-labelledby={`${widgetId}-presets-label`}
+          >
+            {PRESETS.map((preset) => {
+              const active = preset.isActive(sides);
+              const PresetIcon = preset.icon;
 
-            {/* Lado Esquerdo */}
-            <button
-              type="button"
-              className={`border-widget__side-btn border-widget__side-btn--left ${
-                sides.left > 0 ? 'is-active' : ''
-              }`}
-              onClick={() => toggleSide('left')}
-              aria-pressed={sides.left > 0}
-              aria-label={`Borda Esquerda: ${sides.left > 0 ? `${sides.left}px` : 'nenhuma'}`}
-              title="Alternar Borda Esquerda"
-            >
-              <span className="border-widget__side-indicator" />
-            </button>
-
-            {/* Centro / Resumo Visual */}
-            <div className="border-widget__box-center">
-              <span className="border-widget__box-title">Bloco</span>
-              <span className="border-widget__box-summary">
-                {currentSummary}
-              </span>
-            </div>
-
-            {/* Lado Direito */}
-            <button
-              type="button"
-              className={`border-widget__side-btn border-widget__side-btn--right ${
-                sides.right > 0 ? 'is-active' : ''
-              }`}
-              onClick={() => toggleSide('right')}
-              aria-pressed={sides.right > 0}
-              aria-label={`Borda Direita: ${sides.right > 0 ? `${sides.right}px` : 'nenhuma'}`}
-              title="Alternar Borda Direita"
-            >
-              <span className="border-widget__side-indicator" />
-            </button>
-
-            {/* Lado Abaixo */}
-            <button
-              type="button"
-              className={`border-widget__side-btn border-widget__side-btn--bottom ${
-                sides.bottom > 0 ? 'is-active' : ''
-              }`}
-              onClick={() => toggleSide('bottom')}
-              aria-pressed={sides.bottom > 0}
-              aria-label={`Borda Inferior: ${sides.bottom > 0 ? `${sides.bottom}px` : 'nenhuma'}`}
-              title="Alternar Borda Inferior"
-            >
-              <span className="border-widget__side-indicator" />
-            </button>
+              return (
+                <button
+                  key={preset.key}
+                  type="button"
+                  className={`border-widget__preset-btn ${active ? 'is-active' : ''}`}
+                  onClick={() => handlePreset(preset.key)}
+                  aria-pressed={active}
+                  aria-label={preset.name}
+                  title={preset.tooltip}
+                >
+                  <span
+                    className="border-widget__preset-icon"
+                    aria-hidden="true"
+                  >
+                    <PresetIcon />
+                  </span>
+                  <span
+                    className="border-widget__preset-tooltip"
+                    role="tooltip"
+                  >
+                    {preset.tooltip}
+                  </span>
+                  <span className="sr-only">{preset.name}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* 3. Controle Numérico de Espessura */}
+        {/* 2. Controle Numérico de Espessura ("Espessura da Borda") */}
         <div className="border-widget__thickness-section">
           <div className="border-widget__thickness-row">
             <label
@@ -487,64 +427,123 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
             >
               Espessura da Borda:
             </label>
-            <div className="border-widget__number-stepper">
+            <div className="border-widget__stepper-wrapper">
               <button
                 type="button"
-                className="border-widget__stepper-btn"
+                className="border-widget__stepper-btn border-widget__stepper-btn--dec"
                 onClick={() => handleThicknessChange(thickness - 1)}
                 disabled={thickness <= 0}
                 aria-label="Diminuir espessura em 1 pixel"
+                title="Diminuir espessura (-1px)"
               >
-                −
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  aria-hidden="true"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
               </button>
-              <input
-                id={`${widgetId}-thickness-input`}
-                type="number"
-                min="0"
-                max="24"
-                value={thickness}
-                onChange={(e) =>
-                  handleThicknessChange(parseInt(e.target.value, 10))
-                }
-                className="border-widget__number-input"
-                aria-describedby={`${widgetId}-thickness-unit`}
-              />
-              <span
-                id={`${widgetId}-thickness-unit`}
-                className="border-widget__unit"
-              >
-                px
-              </span>
+
+              <div className="border-widget__stepper-input-container">
+                <input
+                  id={`${widgetId}-thickness-input`}
+                  type="number"
+                  min="0"
+                  max="24"
+                  value={thickness}
+                  onChange={(e) => {
+                    const parsedVal = parseInt(e.target.value, 10);
+                    handleThicknessChange(
+                      Number.isNaN(parsedVal) ? 0 : parsedVal,
+                    );
+                  }}
+                  className="border-widget__number-input"
+                  aria-describedby={`${widgetId}-thickness-unit`}
+                />
+                <span
+                  id={`${widgetId}-thickness-unit`}
+                  className="border-widget__unit"
+                >
+                  px
+                </span>
+              </div>
+
               <button
                 type="button"
-                className="border-widget__stepper-btn"
+                className="border-widget__stepper-btn border-widget__stepper-btn--inc"
                 onClick={() => handleThicknessChange(thickness + 1)}
                 disabled={thickness >= 24}
                 aria-label="Aumentar espessura em 1 pixel"
+                title="Aumentar espessura (+1px)"
               >
-                +
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  aria-hidden="true"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
               </button>
             </div>
           </div>
 
           {/* Toggle para personalização detalhada por lado */}
-          <div className="border-widget__details-toggle">
+          <div className="border-widget__side-toggle-wrapper">
             <button
               type="button"
-              className="border-widget__toggle-btn"
+              className={`border-widget__side-toggle-btn ${
+                showDetailed ? 'is-expanded' : ''
+              }`}
               onClick={() => setShowDetailed(!showDetailed)}
               aria-expanded={showDetailed}
               aria-controls={`${widgetId}-detailed-sides`}
             >
-              <span>
-                {showDetailed
-                  ? '▾ Ocultar ajuste por lado'
-                  : '▸ Personalizar espessura por lado'}
+              <span
+                className="border-widget__toggle-chevron"
+                aria-hidden="true"
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
               </span>
+              <span className="border-widget__toggle-text">
+                {showDetailed
+                  ? 'Ocultar ajuste por lado'
+                  : 'Personalizar espessura por lado'}
+              </span>
+              {!showDetailed && !parsed.isUniform && (
+                <span
+                  className="border-widget__asymmetric-pill"
+                  title="Bordas possuem espessuras assimétricas"
+                >
+                  Assimétrico
+                </span>
+              )}
             </button>
           </div>
 
-          {/* Seção detalhada com 4 lados independentes */}
+          {/* Seção detalhada com 4 lados independentes, flex-wrap e inputs estilo Volto */}
           {showDetailed && (
             <div
               id={`${widgetId}-detailed-sides`}
@@ -552,78 +551,74 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
               role="region"
               aria-label="Ajuste independente de espessura por lado"
             >
-              <div className="border-widget__side-control">
-                <label htmlFor={`${widgetId}-side-top`}>Topo:</label>
-                <input
-                  id={`${widgetId}-side-top`}
-                  type="number"
-                  min="0"
-                  max="24"
-                  value={sides.top}
-                  onChange={(e) =>
-                    handleSideThicknessChange(
-                      'top',
-                      parseInt(e.target.value, 10),
-                    )
-                  }
-                  className="border-widget__side-input"
-                />
-                <span className="border-widget__unit">px</span>
-              </div>
-              <div className="border-widget__side-control">
-                <label htmlFor={`${widgetId}-side-right`}>Direita:</label>
-                <input
-                  id={`${widgetId}-side-right`}
-                  type="number"
-                  min="0"
-                  max="24"
-                  value={sides.right}
-                  onChange={(e) =>
-                    handleSideThicknessChange(
-                      'right',
-                      parseInt(e.target.value, 10),
-                    )
-                  }
-                  className="border-widget__side-input"
-                />
-                <span className="border-widget__unit">px</span>
-              </div>
-              <div className="border-widget__side-control">
-                <label htmlFor={`${widgetId}-side-bottom`}>Abaixo:</label>
-                <input
-                  id={`${widgetId}-side-bottom`}
-                  type="number"
-                  min="0"
-                  max="24"
-                  value={sides.bottom}
-                  onChange={(e) =>
-                    handleSideThicknessChange(
-                      'bottom',
-                      parseInt(e.target.value, 10),
-                    )
-                  }
-                  className="border-widget__side-input"
-                />
-                <span className="border-widget__unit">px</span>
-              </div>
-              <div className="border-widget__side-control">
-                <label htmlFor={`${widgetId}-side-left`}>Esquerda:</label>
-                <input
-                  id={`${widgetId}-side-left`}
-                  type="number"
-                  min="0"
-                  max="24"
-                  value={sides.left}
-                  onChange={(e) =>
-                    handleSideThicknessChange(
-                      'left',
-                      parseInt(e.target.value, 10),
-                    )
-                  }
-                  className="border-widget__side-input"
-                />
-                <span className="border-widget__unit">px</span>
-              </div>
+              {SIDE_CONFIGS.map(({ key, label, tooltip, icon: SideIcon }) => {
+                const isSideActive = sides[key] > 0;
+                const sideAriaName =
+                  key === 'top'
+                    ? 'Borda Superior'
+                    : key === 'right'
+                      ? 'Borda Direita'
+                      : key === 'bottom'
+                        ? 'Borda Inferior'
+                        : 'Borda Esquerda';
+
+                return (
+                  <div
+                    key={key}
+                    className={`border-widget__side-control ${
+                      isSideActive ? 'is-active' : ''
+                    }`}
+                  >
+                    <div className="border-widget__side-header">
+                      <button
+                        type="button"
+                        className={`border-widget__side-icon-btn ${
+                          isSideActive ? 'is-active' : ''
+                        }`}
+                        onClick={() => toggleSide(key)}
+                        aria-pressed={isSideActive}
+                        aria-label={`${sideAriaName}: ${sides[key] > 0 ? `${sides[key]}px` : 'nenhuma'}`}
+                        title={`Alternar ${sideAriaName}`}
+                      >
+                        <SideIcon />
+                      </button>
+                      <label
+                        htmlFor={`${widgetId}-side-${key}`}
+                        className="border-widget__side-label"
+                      >
+                        {label}:
+                      </label>
+                      <span
+                        className="border-widget__side-tooltip"
+                        role="tooltip"
+                      >
+                        {tooltip}
+                      </span>
+                    </div>
+
+                    <div className="border-widget__side-input-container">
+                      <input
+                        id={`${widgetId}-side-${key}`}
+                        type="number"
+                        min="0"
+                        max="24"
+                        value={sides[key]}
+                        onChange={(e) => {
+                          const parsedVal = parseInt(e.target.value, 10);
+                          handleSideThicknessChange(
+                            key,
+                            Number.isNaN(parsedVal) ? 0 : parsedVal,
+                          );
+                        }}
+                        className="border-widget__side-input"
+                        aria-label={`Espessura da borda ${label} em pixels`}
+                        title={tooltip}
+                      />
+                      <span className="border-widget__unit">px</span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

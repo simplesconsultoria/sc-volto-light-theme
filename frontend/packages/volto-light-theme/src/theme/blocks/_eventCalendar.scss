@@ -1,9 +1,9 @@
 // =============================================================================
 // Event Calendar Block
-// Bloco de calendário e busca de eventos (@kitconcept/volto-calendar-block).
-// Suporte ao sistema de temas (ground / foreground / accent) e adaptação
-// responsiva fluida dentro de containers estreitos e colunas de Custom Grid
-// ("versão para div pequena de tamanho").
+// Event calendar and search block (@kitconcept/volto-calendar-block).
+// Full support for the theme system (ground / foreground / accent) and fluid
+// responsive adaptation inside narrow containers and Custom Grid columns
+// ("compact / small-size container mode").
 // =============================================================================
 
 .block.eventCalendar,
@@ -32,10 +32,10 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 1. Integração com o Sistema de Temas
+  // 1. Theme System Integration
   // ---------------------------------------------------------------------------
 
-  // Círculo de Data (.date-inset)
+  // Date Inset (.date-inset)
   .date-inset {
     display: flex;
     flex-direction: column;
@@ -78,7 +78,7 @@
     }
   }
 
-  // Card do Evento
+  // Event Card
   .card-listing {
     .card-inner {
       gap: 20px;
@@ -122,7 +122,7 @@
     }
   }
 
-  // Controles de Busca e Filtros
+  // Search and Filter Controls
   .search-block-event {
     color: var(--theme-foreground-color, inherit);
 
@@ -194,7 +194,7 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 2. Layout Médio (Container Query <= 720px, ex: Custom Grid 50/50 ou tablets)
+  // 2. Medium Layout (Container Query <= 720px, e.g. Custom Grid 50/50 or tablets)
   // ---------------------------------------------------------------------------
   @container (max-width: 720px) {
     .search-block-event {
@@ -300,7 +300,7 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 3. Layout Pequeno / Div Pequena de Tamanho (Container Query <= 420px)
+  // 3. Small Layout / Compact Container (Container Query <= 420px)
   // ---------------------------------------------------------------------------
   @container (max-width: 420px) {
     .search-block-event {
@@ -537,7 +537,7 @@
 }
 
 // -----------------------------------------------------------------------------
-// 4. Adaptação Direta dentro de Colunas de Custom Grid e GridBlock
+// 4. Direct Adaptation inside Custom Grid Columns and GridBlock
 // -----------------------------------------------------------------------------
 :is(.custom-grid-column, .column) .block.eventCalendar {
   overflow: visible !important;
@@ -633,7 +633,7 @@
   }
 }
 
-// Para colunas muito estreitas de Custom Grid (ex: 20%, 25%, 33%)
+// Narrow Custom Grid columns (e.g. 20%, 25%, 33%)
 :is(
     .layout-1-4 .custom-grid-column:first-child,
     .layout-4-1 .custom-grid-column:last-child,

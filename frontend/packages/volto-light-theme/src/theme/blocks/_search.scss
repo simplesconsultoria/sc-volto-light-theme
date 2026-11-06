@@ -179,6 +179,22 @@
       var(--theme-border-color, currentColor)
     ) !important;
     background-color: var(--theme-high-contrast-color, #fff) !important;
+    background-image: var(
+      --highground-bg-image,
+      var(--colorgroup-front-bg-image, none)
+    ) !important;
+    background-position: var(
+      --highground-bg-position,
+      var(--colorgroup-front-bg-position, center)
+    ) !important;
+    background-repeat: var(
+      --highground-bg-repeat,
+      var(--colorgroup-front-bg-repeat, repeat)
+    ) !important;
+    background-size: var(
+      --highground-bg-size,
+      var(--colorgroup-front-bg-size, auto)
+    ) !important;
 
     .title {
       color: var(--theme-top-foreground-color, inherit) !important;

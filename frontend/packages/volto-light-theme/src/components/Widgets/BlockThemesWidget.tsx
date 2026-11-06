@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { BlockTheme, ColorGroup } from '../../types/theme';
 import {
   DEFAULT_BLOCK_THEMES,
@@ -36,109 +36,62 @@ const ColorGroupDropdownSelect: React.FC<ColorGroupDropdownSelectProps> = ({
   availableColorGroups,
   onChange,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const currentGroup =
-    availableColorGroups[value] || availableColorGroups.primary;
-  const currentBg = currentGroup?.background_color_light || '#ffffff';
   const groupKeys = Object.keys(availableColorGroups);
 
   return (
-    <div
-      className="select-control colorgroup-select-control"
-      ref={containerRef}
-    >
+    <div className="select-control colorgroup-select-control">
       <label htmlFor={id} className="control-label">
         {label}
       </label>
 
-      {/* Trigger Button */}
-      <div className="colorgroup-dropdown-wrapper">
-        <button
-          type="button"
-          className="colorgroup-trigger-btn"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-haspopup="listbox"
-          aria-expanded={isOpen}
-        >
-          <SolidColorCircle color={currentBg} size={18} />
-          <span className="trigger-label">
-            {currentGroup?.name || value} ({value})
-          </span>
-          <span className={`trigger-arrow ${isOpen ? 'open' : ''}`}>▾</span>
-        </button>
+      {/* Clickable Chips Palette com Ícones/Swatches (sem necessidade de abrir menu) */}
+      <div
+        className="colorgroup-chips-palette"
+        role="radiogroup"
+        aria-label="Paleta de Grupo de Cores"
+      >
+        {groupKeys.map((key) => {
+          const cg = availableColorGroups[key];
+          const bg = cg?.background_color_light || '#ffffff';
+          const isSelected = key === value;
 
-        {/* Hidden select for accessibility, screen readers, and automated testing */}
-        <select
-          id={id}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          tabIndex={-1}
-          aria-hidden="true"
-          style={{ display: 'none' }}
-        >
-          {groupKeys.map((key) => (
-            <option key={key} value={key}>
-              {availableColorGroups[key]?.name || key} ({key})
-            </option>
-          ))}
-        </select>
-
-        {/* Floating Menu */}
-        {isOpen && (
-          <div className="colorgroup-options-menu" role="listbox">
-            {groupKeys.map((key) => {
-              const cg = availableColorGroups[key];
-              const bg = cg?.background_color_light || '#ffffff';
-              const isSelected = key === value;
-
-              return (
-                <div
-                  key={key}
-                  className={`colorgroup-option-item ${isSelected ? 'selected' : ''}`}
-                  role="option"
-                  tabIndex={0}
-                  aria-selected={isSelected}
-                  onClick={() => {
-                    onChange(key);
-                    setIsOpen(false);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      onChange(key);
-                      setIsOpen(false);
-                    }
-                  }}
-                >
-                  <SolidColorCircle color={bg} size={16} />
-                  <span className="option-name">
-                    {cg?.name || key}{' '}
-                    <span className="option-key">({key})</span>
-                  </span>
-                  {isSelected && <span className="option-check">✓</span>}
-                </div>
-              );
-            })}
-          </div>
-        )}
+          return (
+            <button
+              key={key}
+              type="button"
+              role="radio"
+              aria-checked={isSelected}
+              className={`colorgroup-chip-btn ${isSelected ? 'is-selected' : ''}`}
+              onClick={() => onChange(key)}
+              title={`${cg?.name || key} (${key}): Fundo ${bg}`}
+            >
+              <SolidColorCircle color={bg} size={15} />
+              <span className="chip-label">{cg?.name || key}</span>
+              {isSelected && (
+                <span className="chip-check" aria-hidden="true">
+                  ✓
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
+
+      {/* Hidden select for accessibility, screen readers, and automated testing */}
+      <select
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        tabIndex={-1}
+        aria-hidden="true"
+        style={{ display: 'none' }}
+      >
+        {groupKeys.map((key) => (
+          <option key={key} value={key}>
+            {availableColorGroups[key]?.name || key} ({key})
+          </option>
+        ))}
+      </select>
     </div>
   );
 };

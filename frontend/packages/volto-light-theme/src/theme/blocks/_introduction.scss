@@ -1,10 +1,10 @@
 // =============================================================================
 // Introduction Block Styling — sc-volto-light-theme
-// Garante aplicação correta de largura (narrow, default, layout, full) e
-// neutralização completa de margens laterais quando contido em colunas e grids.
+// Ensures proper application of block width (narrow, default, layout, full) and
+// lateral margin neutralization when contained inside columns and grid blocks.
 // =============================================================================
 
-// Modo de visualização
+// View mode
 .block.introduction {
   &.has--block-width--narrow {
     .block-container {
@@ -32,7 +32,7 @@
   }
 }
 
-// Reset de margens e largura para Introduction dentro de colunas e containers
+// Reset margins and width for Introduction within columns and containers
 // (CustomGrid, GridBlock, Accordion, etc.)
 .custom-grid-column,
 .block-column,
@@ -56,7 +56,7 @@
   }
 }
 
-// Modo de edição (#page-edit e #page-add)
+// Edit mode (#page-edit and #page-add)
 #page-edit,
 #page-add {
   .block-editor-introduction,
@@ -116,7 +116,7 @@
     }
   }
 
-  // Reset total no modo de edição dentro de colunas e containers (customGrid, etc.)
+  // Full reset in edit mode within columns and containers (customGrid, etc.)
   .custom-grid-column,
   .block-column,
   .column,
@@ -138,7 +138,7 @@
       }
     }
 
-    // Neutraliza qualquer container query que injete margens laterais no edit mode
+    // Neutralize any container query applying lateral margins in edit mode
     @container (max-width: 1920px) {
       &,
       .block-editor-introduction,
@@ -153,7 +153,7 @@
   }
 }
 
-// Suporte a alinhamento de texto no bloco Introduction (via styles.align)
+// Support for text alignment in the Introduction block (via styles.align)
 .has--align--center.block-editor-introduction .block.introduction,
 .has--block-alignment--center.block-editor-introduction .block.introduction,
 body .block.introduction.has--align--center,

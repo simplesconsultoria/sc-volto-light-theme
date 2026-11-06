@@ -8,9 +8,7 @@ import {
   themeSettingsOf,
   themeCustomProperties,
   themeStyleSheet,
-  blockThemeUtilityClasses,
   formatBackgroundImage,
-  colorGroupResponsiveImageRules,
 } from './themeStyles';
 import type { SerializedTheme, ThemeSettings } from '../types/theme';
 

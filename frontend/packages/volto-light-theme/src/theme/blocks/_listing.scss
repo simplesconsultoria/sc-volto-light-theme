@@ -1,7 +1,7 @@
 // =============================================================================
-// Listing Block — Arquivo Indice
-// Importa os sub-arquivos de cada parte do bloco listing.
-// Sub-arquivos usam '&' para aninhar dentro do seletor raiz.
+// Listing Block — Index Stylesheet
+// Imports sub-files for each part of the listing block.
+// Sub-files use '&' to nest within the root selector.
 // =============================================================================
 
 body .block.listing,
@@ -79,11 +79,11 @@ body .block.listing,
 }
 
 // =============================================================================
-// Regras fora do seletor principal
-// Sao regras que precisam de seletores de escopo diferentes.
+// Rules outside main selector
+// Rules that require distinct scope selectors.
 // =============================================================================
 
-// Modo de edicao: mostra paginacao mobile e esconde desktop
+// Edit mode: show mobile pagination and hide desktop pagination
 #page-edit,
 #page-add {
   .listing {
@@ -101,7 +101,7 @@ body .block.listing,
   }
 }
 
-// Spacing entre blocos com backgrounds diferentes
+// Spacing between blocks with different backgrounds
 :not(.blocks-group-wrapper)
   > .block:not(.category-separator).previous--has--different--backgroundColor,
 :not(.blocks-group-wrapper)
@@ -109,7 +109,7 @@ body .block.listing,
   padding: $spacing-medium 0;
 }
 
-// Override: remove constraints de container para filhos do listing
+// Override: remove container constraints for listing children
 #page-document .blocks-group-wrapper > .block.listing {
   .listing-item,
   .emptyListing,
@@ -121,7 +121,7 @@ body .block.listing,
   }
 }
 
-// Full width containment: em telas pequenas o tamanho full nunca deve vazar da tela
+// Full width containment: prevent full-width overflow on small screens
 .block.listing.has--block-width--full {
   width: 100% !important;
   max-width: 100% !important;
@@ -139,9 +139,9 @@ body .block.listing,
 }
 
 // =============================================================================
-// Listing dentro de blocos de Grid (customGrid, custom-grid, gridBlock) e .contained
-// Reseta margens laterais sem usar width: 100% em todas as resoluções
-// (desktop e mobile), pois o bloco de grid pai já gerencia o container e respiros.
+// Listing inside Grid Blocks (customGrid, custom-grid, gridBlock) and .contained
+// Resets lateral margins without forcing width: 100% across all viewports,
+// since parent grid manages container layout and spacing.
 // =============================================================================
 .custom-grid,
 .customGrid,
@@ -204,9 +204,9 @@ body .block.listing,
 }
 
 // =============================================================================
-// Modo Edicao do Bloco de Grid (GridBlock no Volto)
-// Garante que cada celula/coluna no editor mantenha sua largura percentual
-// (100%, 50%, 33.3%, 25%) sem encolher nem colapsar devido ao flexbox do react-beautiful-dnd.
+// Grid Block Edit Mode (GridBlock in Volto)
+// Ensures each column/cell maintains its percentage width without collapsing
+// under react-beautiful-dnd flexbox containers.
 // =============================================================================
 .block-editor-gridBlock,
 .block.gridBlock {
@@ -248,7 +248,7 @@ body .block.listing,
   }
 }
 
-// Listing contido no editor (dentro de colunas ou grid)
+// Listing contained in editor mode (within columns or grid)
 .block-editor-listing.contained {
   min-width: 0 !important;
   box-sizing: border-box !important;

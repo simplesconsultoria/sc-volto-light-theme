@@ -1,7 +1,7 @@
 // =============================================================================
 // Listing Grid Variation
-// Card layout em grid para itens do listing, com suporte a person-listing.
-// Cores de borda via --cardBorderColor e --content-type-border-color.
+// Grid card layout for listing items, with support for person-listing.
+// Border colors via --cardBorderColor and --content-type-border-color.
 // =============================================================================
 
 &.grid,
@@ -26,6 +26,22 @@
         var(--content-type-border-color, var(--theme-border-color))
       );
       background-color: var(--theme-high-contrast-color);
+      background-image: var(
+        --highground-bg-image,
+        var(--colorgroup-front-bg-image, none)
+      );
+      background-position: var(
+        --highground-bg-position,
+        var(--colorgroup-front-bg-position, center)
+      );
+      background-repeat: var(
+        --highground-bg-repeat,
+        var(--colorgroup-front-bg-repeat, repeat)
+      );
+      background-size: var(
+        --highground-bg-size,
+        var(--colorgroup-front-bg-size, auto)
+      );
       font-family: var(--colorgroup-front-font, inherit);
 
       .card-inner {

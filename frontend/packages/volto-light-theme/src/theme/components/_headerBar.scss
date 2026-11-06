@@ -217,8 +217,8 @@ body header.header-wrapper {
   }
 }
 
-// Sobrescreve a cor dos icones sociais no header bar para
-// usar a cor do foreground secundario (branco sobre fundo azul escuro)
+// Override social network icon color in header bar to
+// use secondary foreground color (white on dark blue background)
 body header.header-wrapper .header-bar-wrapper .header-bar__social {
   .social-networks .social-network.icon {
     color: var(--secondary-foreground-color);

@@ -20,20 +20,20 @@ $hero-card-overlap: 60px;
   > .block:has(.hero-block-container.has--block-width--unset) {
   width: 100%;
   max-width: none;
-  margin-right: 0 !important;
-  margin-left: 0 !important;
   padding-right: 0 !important;
   padding-left: 0 !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
 }
 
 .block.heroBlock {
   background-color: transparent !important;
   color: var(--theme-foreground-color, inherit);
 
-  // Container type para permitir que fontes reajam à largura da coluna
+  // Container type to allow typography to react to column width
   container-type: inline-size;
 
-  // Quando o heroBlock externo possui imagem de fundo, evita duplicar o background no container interno
+  // When outer heroBlock has a background image, avoid duplicating it on inner container
   .hero-block-container {
     background-color: transparent !important;
     background-image: none !important;
@@ -525,6 +525,22 @@ $hero-card-overlap: 60px;
     justify-content: center;
     padding: $spacing-large;
     background-color: var(--theme-high-contrast-color);
+    background-image: var(
+      --highground-bg-image,
+      var(--colorgroup-front-bg-image, none)
+    );
+    background-position: var(
+      --highground-bg-position,
+      var(--colorgroup-front-bg-position, center)
+    );
+    background-repeat: var(
+      --highground-bg-repeat,
+      var(--colorgroup-front-bg-repeat, repeat)
+    );
+    background-size: var(
+      --highground-bg-size,
+      var(--colorgroup-front-bg-size, auto)
+    );
     color: var(--theme-top-foreground-color);
     gap: $spacing-small;
 
