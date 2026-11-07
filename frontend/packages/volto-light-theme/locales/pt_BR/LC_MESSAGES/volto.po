@@ -77,28 +77,15 @@ msgstr "Intervalo do auto-avanço (ms)"
 msgid "Back"
 msgstr "Voltar"
 
-#. Default: "Background color"
-#: components/Blocks/schema
-msgid "Background color"
-msgstr "Cor de fundo"
-
 #. Default: "Background style"
 #: components/Blocks/QuoteBlock/schema
 msgid "Background style"
 msgstr "Estilo do fundo"
 
 #. Default: "Block Width"
-#: components/Blocks/EventMetadata/schema
 #: components/Blocks/HeroBlock/schema
-#: components/Blocks/Listing/schema
-#: components/Blocks/MainImageBlock/schema
 msgid "Block Width"
 msgstr "Largura do bloco"
-
-#. Default: "Border color"
-#: components/Blocks/schema
-msgid "Border color"
-msgstr "Cor da borda"
 
 #. Default: "Brand"
 #: index
@@ -192,6 +179,11 @@ msgstr "Limpar estilo da coluna"
 #: components/Navigation/SCNavigation/SubMenu
 msgid "Close menu"
 msgstr "Fechar menu"
+
+#. Default: "Color"
+#: components/Blocks/Separator/schema
+msgid "Color"
+msgstr "Cor"
 
 #. Default: "Colours"
 #: components/Controlpanels/Themes/messages
@@ -339,11 +331,6 @@ msgstr "Imagem em largura total (encosta nas bordas)"
 msgid "Go to item {index}"
 msgstr "Ir para o item {index}"
 
-#. Default: "Grey"
-#: components/Blocks/CustomGrid/Schema
-msgid "Grey"
-msgstr "Cinza"
-
 #. Default: "Header text"
 #: components/Blocks/HeroBlock/schema
 msgid "Header text"
@@ -486,6 +473,16 @@ msgstr "Centro esquerdo"
 msgid "Left top"
 msgstr "Topo esquerdo"
 
+#. Default: "Line Alignment"
+#: components/Blocks/Separator/schema
+msgid "Line Alignment"
+msgstr "Alinhamento da linha"
+
+#. Default: "Line Width"
+#: components/Blocks/Separator/schema
+msgid "Line Width"
+msgstr "Largura da linha"
+
 #. Default: "Link settings"
 #: components/Blocks/MainImageBlock/schema
 msgid "Link settings"
@@ -614,7 +611,6 @@ msgid "Previous Page"
 msgstr "Página anterior"
 
 #. Default: "Primary"
-#: components/Blocks/CustomGrid/Schema
 #: index
 msgid "Primary"
 msgstr "Primária"
@@ -639,6 +635,11 @@ msgstr "Resultado"
 #: components/Widgets/QuerystringWidget
 msgid "Results limit"
 msgstr "Limite de resultados"
+
+#. Default: "Results template"
+#: components/Blocks/Search/SearchBlockEdit
+msgid "Results template"
+msgstr "Modelo de resultados"
 
 #. Default: "Reversed order"
 #: components/Widgets/QuerystringWidget
@@ -665,11 +666,6 @@ msgstr "Topo direito"
 msgid "Save"
 msgstr "Salvar"
 
-#. Default: "Secondary"
-#: components/Blocks/CustomGrid/Schema
-msgid "Secondary"
-msgstr "Secundária"
-
 #. Default: "Section"
 #: components/Navigation/SCNavigation/SubMenuSection
 msgid "Section"
@@ -684,6 +680,11 @@ msgstr "Selecione um item de destaque"
 #: components/Blocks/CustomGrid/LayoutSelector
 msgid "Select layout"
 msgstr "Selecione o layout"
+
+#. Default: "Separator"
+#: components/Blocks/Separator/schema
+msgid "Separator"
+msgstr "Separador"
 
 #. Default: "Show author"
 #: components/Blocks/DocumentByLine/schema
@@ -715,20 +716,10 @@ msgstr "Exibir data de publicação"
 msgid "Sort on"
 msgstr "Ordenar por"
 
-#. Default: "Styling"
-#: components/Blocks/MainImageBlock/schema
-msgid "Styling"
-msgstr "Estilo"
-
 #. Default: "Tags"
 #: components/Blocks/HeroBlock/schema
 msgid "Tags"
 msgstr "Tags"
-
-#. Default: "Tertiary"
-#: components/Blocks/CustomGrid/Schema
-msgid "Tertiary"
-msgstr "Terciária"
 
 #. Default: "Text side"
 #: components/Blocks/HeroBlock/schema
@@ -750,6 +741,11 @@ msgstr "Tema excluído"
 #: components/Controlpanels/Themes/messages
 msgid "Themes"
 msgstr "Temas"
+
+#. Default: "Thickness (px)"
+#: components/Blocks/Separator/schema
+msgid "Thickness (px)"
+msgstr "Espessura (px)"
 
 #. Default: "Title"
 #: components/Blocks/CustomGrid/Schema

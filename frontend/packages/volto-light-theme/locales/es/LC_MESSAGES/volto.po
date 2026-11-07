@@ -79,27 +79,14 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#. Default: "Background color"
-#: components/Blocks/schema
-msgid "Background color"
-msgstr ""
-
 #. Default: "Background style"
 #: components/Blocks/QuoteBlock/schema
 msgid "Background style"
 msgstr ""
 
 #. Default: "Block Width"
-#: components/Blocks/EventMetadata/schema
 #: components/Blocks/HeroBlock/schema
-#: components/Blocks/Listing/schema
-#: components/Blocks/MainImageBlock/schema
 msgid "Block Width"
-msgstr ""
-
-#. Default: "Border color"
-#: components/Blocks/schema
-msgid "Border color"
 msgstr ""
 
 #. Default: "Brand"
@@ -193,6 +180,11 @@ msgstr ""
 #. Default: "Close menu"
 #: components/Navigation/SCNavigation/SubMenu
 msgid "Close menu"
+msgstr ""
+
+#. Default: "Color"
+#: components/Blocks/Separator/schema
+msgid "Color"
 msgstr ""
 
 #. Default: "Colours"
@@ -341,11 +333,6 @@ msgstr ""
 msgid "Go to item {index}"
 msgstr ""
 
-#. Default: "Grey"
-#: components/Blocks/CustomGrid/Schema
-msgid "Grey"
-msgstr ""
-
 #. Default: "Header text"
 #: components/Blocks/HeroBlock/schema
 msgid "Header text"
@@ -488,6 +475,16 @@ msgstr ""
 msgid "Left top"
 msgstr ""
 
+#. Default: "Line Alignment"
+#: components/Blocks/Separator/schema
+msgid "Line Alignment"
+msgstr ""
+
+#. Default: "Line Width"
+#: components/Blocks/Separator/schema
+msgid "Line Width"
+msgstr ""
+
 #. Default: "Link settings"
 #: components/Blocks/MainImageBlock/schema
 msgid "Link settings"
@@ -616,7 +613,6 @@ msgid "Previous Page"
 msgstr ""
 
 #. Default: "Primary"
-#: components/Blocks/CustomGrid/Schema
 #: index
 msgid "Primary"
 msgstr ""
@@ -640,6 +636,11 @@ msgstr ""
 #. Default: "Results limit"
 #: components/Widgets/QuerystringWidget
 msgid "Results limit"
+msgstr ""
+
+#. Default: "Results template"
+#: components/Blocks/Search/SearchBlockEdit
+msgid "Results template"
 msgstr ""
 
 #. Default: "Reversed order"
@@ -667,11 +668,6 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#. Default: "Secondary"
-#: components/Blocks/CustomGrid/Schema
-msgid "Secondary"
-msgstr ""
-
 #. Default: "Section"
 #: components/Navigation/SCNavigation/SubMenuSection
 msgid "Section"
@@ -685,6 +681,11 @@ msgstr ""
 #. Default: "Select layout"
 #: components/Blocks/CustomGrid/LayoutSelector
 msgid "Select layout"
+msgstr ""
+
+#. Default: "Separator"
+#: components/Blocks/Separator/schema
+msgid "Separator"
 msgstr ""
 
 #. Default: "Show author"
@@ -717,19 +718,9 @@ msgstr ""
 msgid "Sort on"
 msgstr ""
 
-#. Default: "Styling"
-#: components/Blocks/MainImageBlock/schema
-msgid "Styling"
-msgstr ""
-
 #. Default: "Tags"
 #: components/Blocks/HeroBlock/schema
 msgid "Tags"
-msgstr ""
-
-#. Default: "Tertiary"
-#: components/Blocks/CustomGrid/Schema
-msgid "Tertiary"
 msgstr ""
 
 #. Default: "Text side"
@@ -751,6 +742,11 @@ msgstr ""
 #. Default: "Themes"
 #: components/Controlpanels/Themes/messages
 msgid "Themes"
+msgstr ""
+
+#. Default: "Thickness (px)"
+#: components/Blocks/Separator/schema
+msgid "Thickness (px)"
 msgstr ""
 
 #. Default: "Title"
