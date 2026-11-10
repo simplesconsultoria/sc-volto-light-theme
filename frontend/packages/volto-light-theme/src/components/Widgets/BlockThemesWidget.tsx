@@ -6,6 +6,7 @@ import {
   BASE_BLOCK_THEME_IDS,
 } from '../../config/blockThemes';
 import { SplitColorCircle, SolidColorCircle } from './BlockThemeWidget';
+import { CardHeader } from './shared/CardHeader';
 
 export interface BlockThemesWidgetProps {
   id: string;
@@ -96,87 +97,153 @@ const ColorGroupDropdownSelect: React.FC<ColorGroupDropdownSelectProps> = ({
   );
 };
 
-export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
-  id,
-  value,
-  onChange,
-  formData,
-}) => {
-  // Normalize value to a dictionary keyed by id
-  const blockThemes: Record<string, BlockTheme> = React.useMemo(() => {
-    if (!value) return { ...DEFAULT_BLOCK_THEMES };
-    if (Array.isArray(value)) {
-      const dict: Record<string, BlockTheme> = {};
-      value.forEach((bt) => {
-        if (bt && bt.id) dict[bt.id] = bt;
-      });
-      return Object.keys(dict).length > 0 ? dict : { ...DEFAULT_BLOCK_THEMES };
-    }
-    return Object.keys(value).length > 0 ? value : { ...DEFAULT_BLOCK_THEMES };
-  }, [value]);
+/** A theme's back group with the front group as a card on top of it. */
+const BlockThemePreview: React.FC<{
+  back?: ColorGroup;
+  front?: ColorGroup;
+  backId: string;
+  frontId: string;
+  style?: React.CSSProperties;
+}> = ({ back, front, backId, frontId, style }) => (
+  <div
+    className="blocktheme-preview"
+    style={{
+      backgroundColor: back?.background_color_light || '#ffffff',
+      color: back?.text_color_light || '#000000',
+      fontFamily: back?.font_family || 'inherit',
+      ...style,
+    }}
+  >
+    <div className="preview-back-bar">
+      <span className="preview-back-title">
+        Área de Trás: {back?.name || backId}
+      </span>
+      <span
+        className="preview-accent-badge"
+        style={{
+          backgroundColor: back?.accent_color_light || '#1971c2',
+          color: back?.background_color_light || '#ffffff',
+        }}
+      >
+        Botão Accent
+      </span>
+    </div>
 
-  // Extract available color groups from formData or defaults
-  const availableColorGroups: Record<string, ColorGroup> = React.useMemo(() => {
-    const fromForm = formData?.color_groups;
-    if (fromForm) {
-      if (Array.isArray(fromForm)) {
-        const dict: Record<string, ColorGroup> = {};
-        fromForm.forEach((cg) => {
-          if (cg && cg.id) dict[cg.id] = cg;
-        });
-        return { ...DEFAULT_COLOR_GROUPS, ...dict };
-      }
-      return { ...DEFAULT_COLOR_GROUPS, ...fromForm };
-    }
-    return DEFAULT_COLOR_GROUPS;
-  }, [formData?.color_groups]);
+    <div
+      className="preview-front-card"
+      style={{
+        backgroundColor: front?.background_color_light || '#f6f7f9',
+        color: front?.text_color_light || '#000000',
+        fontFamily: front?.font_family || 'inherit',
+      }}
+    >
+      <div className="preview-front-title">
+        Card na Área da Frente ({front?.name || frontId})
+      </div>
+      <div
+        className="preview-front-desc"
+        style={{ color: front?.subtext_color_light || '#666666' }}
+      >
+        Descrição do card e metadados usando a cor de subtexto.
+      </div>
+    </div>
+  </div>
+);
 
-  // Collapsible state for each BlockTheme (initially collapsed, matching ColorGroupsWidget)
-  const [expandedThemes, setExpandedThemes] = useState<Record<string, boolean>>(
-    {},
+/** The back and front groups of a theme, falling back to the base ones. */
+const groupsOf = (
+  colorGroups: Record<string, ColorGroup>,
+  back: string,
+  front: string,
+) => ({
+  back: colorGroups[back] || colorGroups.primary,
+  front: colorGroups[front] || colorGroups.neutral,
+});
+
+const BlockThemeCard: React.FC<{
+  theme: BlockTheme;
+  colorGroups: Record<string, ColorGroup>;
+  isExpanded: boolean;
+  onToggle: () => void;
+  onUpdate: (field: keyof BlockTheme, value: string) => void;
+  onDelete: () => void;
+}> = ({ theme: bt, colorGroups, isExpanded, onToggle, onUpdate, onDelete }) => {
+  const { back, front } = groupsOf(
+    colorGroups,
+    bt.back_color_group,
+    bt.front_color_group,
   );
+  const isBase = BASE_BLOCK_THEME_IDS.includes(bt.id);
+  const bodyId = `blocktheme-body-${bt.id}`;
+  return (
+    <div className={`blocktheme-card ${isExpanded ? 'is-expanded' : ''}`}>
+      <CardHeader
+        className="blocktheme-card-header"
+        isExpanded={isExpanded}
+        onToggle={onToggle}
+        controls={bodyId}
+        onDelete={isBase ? undefined : onDelete}
+        deleteClassName="delete-theme-btn"
+        deleteLabel={`Excluir o tema de bloco ${bt.name}`}
+        preview={
+          <SplitColorCircle
+            backColor={back?.background_color_light || '#ffffff'}
+            frontColor={front?.background_color_light || '#f6f7f9'}
+            size={22}
+          />
+        }
+      >
+        <strong className="theme-name">{bt.name}</strong>
+        <code className="theme-id">{bt.id}</code>
+        {isBase && <span className="base-tag">Padrão</span>}
+      </CardHeader>
 
-  const toggleExpand = (themeId: string) => {
-    setExpandedThemes((prev) => ({
-      ...prev,
-      [themeId]: !prev[themeId],
-    }));
-  };
+      <div
+        id={bodyId}
+        className="blocktheme-card-body"
+        style={{ display: isExpanded ? 'block' : 'none' }}
+      >
+        <div className="blocktheme-controls">
+          <ColorGroupDropdownSelect
+            id={`back-cg-${bt.id}`}
+            label="Área de Trás (Fundo):"
+            value={bt.back_color_group}
+            availableColorGroups={colorGroups}
+            onChange={(val) => onUpdate('back_color_group', val)}
+          />
+          <ColorGroupDropdownSelect
+            id={`front-cg-${bt.id}`}
+            label="Área da Frente (Cards):"
+            value={bt.front_color_group}
+            availableColorGroups={colorGroups}
+            onChange={(val) => onUpdate('front_color_group', val)}
+          />
+        </div>
 
+        <BlockThemePreview
+          back={back}
+          front={front}
+          backId={bt.back_color_group}
+          frontId={bt.front_color_group}
+        />
+      </div>
+    </div>
+  );
+};
+
+const NewBlockThemeForm: React.FC<{
+  colorGroups: Record<string, ColorGroup>;
+  existingIds: string[];
+  onAdd: (theme: BlockTheme) => void;
+}> = ({ colorGroups, existingIds, onAdd }) => {
   const [newId, setNewId] = useState('');
   const [newName, setNewName] = useState('');
   const [newBack, setNewBack] = useState('primary');
   const [newFront, setNewFront] = useState('neutral');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { back, front } = groupsOf(colorGroups, newBack, newFront);
 
-  const updateBlockTheme = (
-    themeId: string,
-    field: keyof BlockTheme,
-    val: string,
-  ) => {
-    const target = blockThemes[themeId];
-    if (!target) return;
-    const updated = {
-      ...blockThemes,
-      [themeId]: {
-        ...target,
-        [field]: val,
-      },
-    };
-    onChange(id, updated);
-  };
-
-  const handleDeleteBlockTheme = (themeId: string) => {
-    if (BASE_BLOCK_THEME_IDS.includes(themeId)) {
-      return;
-    }
-    const updated = { ...blockThemes };
-    delete updated[themeId];
-    onChange(id, updated);
-  };
-
-  const handleAddBlockTheme = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAdd = () => {
     const cleanId = newId
       .trim()
       .toLowerCase()
@@ -185,36 +252,165 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
       setErrorMsg('O ID do tema de bloco é obrigatório.');
       return;
     }
-    if (blockThemes[cleanId]) {
+    if (existingIds.includes(cleanId)) {
       setErrorMsg(`Um tema de bloco com o ID "${cleanId}" já existe.`);
       return;
     }
-
-    const newTheme: BlockTheme = {
+    onAdd({
       id: cleanId,
       name:
         newName.trim() || cleanId.charAt(0).toUpperCase() + cleanId.slice(1),
       back_color_group: newBack,
       front_color_group: newFront,
-    };
-
-    const updated = {
-      ...blockThemes,
-      [cleanId]: newTheme,
-    };
-
-    onChange(id, updated);
+    });
     setNewId('');
     setNewName('');
     setErrorMsg(null);
   };
 
-  const newBackCg =
-    availableColorGroups[newBack] || availableColorGroups.primary;
-  const newFrontCg =
-    availableColorGroups[newFront] || availableColorGroups.neutral;
-  const newBackBg = newBackCg?.background_color_light || '#ffffff';
-  const newFrontBg = newFrontCg?.background_color_light || '#f6f7f9';
+  return (
+    <div className="add-blocktheme-card">
+      <div className="add-card-header">
+        <SplitColorCircle
+          backColor={back?.background_color_light || '#ffffff'}
+          frontColor={front?.background_color_light || '#f6f7f9'}
+          size={22}
+        />
+        <h5>+ Adicionar Novo Tema de Bloco</h5>
+      </div>
+      <p className="help">
+        Crie um novo tema de bloco selecionando os ColorGroups para a área de
+        trás (fundo do bloco) e para a área da frente (cards e destaques).
+      </p>
+
+      {errorMsg && (
+        <div className="ui error message" role="alert">
+          {errorMsg}
+        </div>
+      )}
+
+      <div className="add-fields-grid">
+        <div className="field-item">
+          <label htmlFor="new-bt-id">ID do Tema (ex: destaque):</label>
+          <input
+            id="new-bt-id"
+            type="text"
+            value={newId}
+            onChange={(e) => setNewId(e.target.value)}
+            placeholder="ex: destaque"
+          />
+        </div>
+        <div className="field-item">
+          <label htmlFor="new-bt-name">Nome Exibido:</label>
+          <input
+            id="new-bt-name"
+            type="text"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            placeholder="ex: Destaque"
+          />
+        </div>
+        <div className="field-item">
+          <ColorGroupDropdownSelect
+            id="new-bt-back"
+            label="ColorGroup de Trás (Fundo):"
+            value={newBack}
+            availableColorGroups={colorGroups}
+            onChange={setNewBack}
+          />
+        </div>
+        <div className="field-item">
+          <ColorGroupDropdownSelect
+            id="new-bt-front"
+            label="ColorGroup da Frente (Cards):"
+            value={newFront}
+            availableColorGroups={colorGroups}
+            onChange={setNewFront}
+          />
+        </div>
+      </div>
+
+      <div className="preview-label">
+        Pré-visualização do Novo Tema de Bloco:
+      </div>
+      <BlockThemePreview
+        back={back}
+        front={front}
+        backId={newBack}
+        frontId={newFront}
+        style={{ marginBottom: '1.25rem' }}
+      />
+
+      <button
+        type="button"
+        className="ui button primary add-blocktheme-btn"
+        onClick={handleAdd}
+      >
+        Salvar Tema de Bloco
+      </button>
+    </div>
+  );
+};
+
+/** A stored mapping or list keyed by id; `fallback` when empty. */
+function byId<T extends { id: string }>(
+  value: Record<string, T> | T[] | undefined,
+  fallback: Record<string, T>,
+): Record<string, T> {
+  const dict: Record<string, T> = {};
+  if (Array.isArray(value)) {
+    for (const item of value) if (item?.id) dict[item.id] = item;
+  } else {
+    for (const [key, item] of Object.entries(value || {})) {
+      if (item) dict[key] = item.id ? item : { ...item, id: key };
+    }
+  }
+  return Object.keys(dict).length > 0 ? dict : { ...fallback };
+}
+
+export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
+  id,
+  value,
+  onChange,
+  formData,
+}) => {
+  const blockThemes = React.useMemo(
+    () => byId<BlockTheme>(value, DEFAULT_BLOCK_THEMES),
+    [value],
+  );
+
+  // Color groups being edited in the same form, over the defaults.
+  const availableColorGroups = React.useMemo(
+    () => ({
+      ...DEFAULT_COLOR_GROUPS,
+      ...(formData?.color_groups
+        ? byId<ColorGroup>(formData.color_groups, {})
+        : {}),
+    }),
+    [formData?.color_groups],
+  );
+
+  // Collapsible state for each BlockTheme (initially collapsed)
+  const [expandedThemes, setExpandedThemes] = useState<Record<string, boolean>>(
+    {},
+  );
+
+  const updateBlockTheme = (
+    themeId: string,
+    field: keyof BlockTheme,
+    val: string,
+  ) => {
+    const target = blockThemes[themeId];
+    if (!target) return;
+    onChange(id, { ...blockThemes, [themeId]: { ...target, [field]: val } });
+  };
+
+  const handleDeleteBlockTheme = (themeId: string) => {
+    if (BASE_BLOCK_THEME_IDS.includes(themeId)) return;
+    const updated = { ...blockThemes };
+    delete updated[themeId];
+    onChange(id, updated);
+  };
 
   return (
     <div className="blockthemes-widget">
@@ -229,289 +425,26 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
       </div>
 
       <div className="blockthemes-list">
-        {Object.values(blockThemes).map((bt) => {
-          const backCg =
-            availableColorGroups[bt.back_color_group] ||
-            availableColorGroups.primary;
-          const frontCg =
-            availableColorGroups[bt.front_color_group] ||
-            availableColorGroups.neutral;
-          const backBg = backCg?.background_color_light || '#ffffff';
-          const frontBg = frontCg?.background_color_light || '#f6f7f9';
-          const isBase = BASE_BLOCK_THEME_IDS.includes(bt.id);
-          const isExpanded = !!expandedThemes[bt.id];
-
-          return (
-            <div
-              key={bt.id}
-              className={`blocktheme-card ${isExpanded ? 'is-expanded' : ''}`}
-            >
-              <div
-                className="blocktheme-card-header"
-                onClick={() => toggleExpand(bt.id)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    toggleExpand(bt.id);
-                  }
-                }}
-              >
-                <div className="header-left">
-                  <span
-                    className={`accordion-chevron ${isExpanded ? 'rotated' : ''}`}
-                    aria-hidden="true"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="6 9 12 15 18 9" />
-                    </svg>
-                  </span>
-                  <strong className="theme-name">{bt.name}</strong>
-                  <code className="theme-id">{bt.id}</code>
-                  {isBase && <span className="base-tag">Padrão</span>}
-                </div>
-
-                <div className="header-right">
-                  <SplitColorCircle
-                    backColor={backBg}
-                    frontColor={frontBg}
-                    size={22}
-                  />
-                  {!isBase ? (
-                    <button
-                      type="button"
-                      className="delete-theme-btn"
-                      title="Excluir este tema de bloco"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteBlockTheme(bt.id);
-                      }}
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="3 6 5 6 21 6" />
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                      </svg>
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-
-              {/* Collapsible Body */}
-              <div
-                className="blocktheme-card-body"
-                style={{ display: isExpanded ? 'block' : 'none' }}
-              >
-                <div className="blocktheme-controls">
-                  <ColorGroupDropdownSelect
-                    id={`back-cg-${bt.id}`}
-                    label="Área de Trás (Fundo):"
-                    value={bt.back_color_group}
-                    availableColorGroups={availableColorGroups}
-                    onChange={(val) =>
-                      updateBlockTheme(bt.id, 'back_color_group', val)
-                    }
-                  />
-
-                  <ColorGroupDropdownSelect
-                    id={`front-cg-${bt.id}`}
-                    label="Área da Frente (Cards):"
-                    value={bt.front_color_group}
-                    availableColorGroups={availableColorGroups}
-                    onChange={(val) =>
-                      updateBlockTheme(bt.id, 'front_color_group', val)
-                    }
-                  />
-                </div>
-
-                {/* Visual Preview */}
-                <div
-                  className="blocktheme-preview"
-                  style={{
-                    backgroundColor: backBg,
-                    color: backCg?.text_color_light || '#000000',
-                    fontFamily: backCg?.font_family || 'inherit',
-                  }}
-                >
-                  <div className="preview-back-bar">
-                    <span className="preview-back-title">
-                      Área de Trás: {backCg?.name || bt.back_color_group}
-                    </span>
-                    <span
-                      className="preview-accent-badge"
-                      style={{
-                        backgroundColor:
-                          backCg?.accent_color_light || '#1971c2',
-                        color: backCg?.background_color_light || '#ffffff',
-                      }}
-                    >
-                      Botão Accent
-                    </span>
-                  </div>
-
-                  {/* Card Front Preview */}
-                  <div
-                    className="preview-front-card"
-                    style={{
-                      backgroundColor: frontBg,
-                      color: frontCg?.text_color_light || '#000000',
-                      fontFamily: frontCg?.font_family || 'inherit',
-                    }}
-                  >
-                    <div className="preview-front-title">
-                      Card na Área da Frente (
-                      {frontCg?.name || bt.front_color_group})
-                    </div>
-                    <div
-                      className="preview-front-desc"
-                      style={{
-                        color: frontCg?.subtext_color_light || '#666666',
-                      }}
-                    >
-                      Descrição do card e metadados usando a cor de subtexto.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Form to add a new BlockTheme */}
-      <div className="add-blocktheme-card">
-        <div className="add-card-header">
-          <SplitColorCircle
-            backColor={newBackBg}
-            frontColor={newFrontBg}
-            size={22}
+        {Object.values(blockThemes).map((bt) => (
+          <BlockThemeCard
+            key={bt.id}
+            theme={bt}
+            colorGroups={availableColorGroups}
+            isExpanded={!!expandedThemes[bt.id]}
+            onToggle={() =>
+              setExpandedThemes((prev) => ({ ...prev, [bt.id]: !prev[bt.id] }))
+            }
+            onUpdate={(field, val) => updateBlockTheme(bt.id, field, val)}
+            onDelete={() => handleDeleteBlockTheme(bt.id)}
           />
-          <h5>+ Adicionar Novo Tema de Bloco</h5>
-        </div>
-        <p className="help">
-          Crie um novo tema de bloco selecionando os ColorGroups para a área de
-          trás (fundo do bloco) e para a área da frente (cards e destaques).
-        </p>
-
-        {errorMsg && <div className="ui error message">{errorMsg}</div>}
-
-        <div className="add-fields-grid">
-          <div className="field-item">
-            <label htmlFor="new-bt-id">ID do Tema (ex: destaque):</label>
-            <input
-              id="new-bt-id"
-              type="text"
-              value={newId}
-              onChange={(e) => setNewId(e.target.value)}
-              placeholder="ex: destaque"
-            />
-          </div>
-
-          <div className="field-item">
-            <label htmlFor="new-bt-name">Nome Exibido:</label>
-            <input
-              id="new-bt-name"
-              type="text"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              placeholder="ex: Destaque"
-            />
-          </div>
-
-          <div className="field-item">
-            <ColorGroupDropdownSelect
-              id="new-bt-back"
-              label="ColorGroup de Trás (Fundo):"
-              value={newBack}
-              availableColorGroups={availableColorGroups}
-              onChange={(val) => setNewBack(val)}
-            />
-          </div>
-
-          <div className="field-item">
-            <ColorGroupDropdownSelect
-              id="new-bt-front"
-              label="ColorGroup da Frente (Cards):"
-              value={newFront}
-              availableColorGroups={availableColorGroups}
-              onChange={(val) => setNewFront(val)}
-            />
-          </div>
-        </div>
-
-        {/* Live Preview of the new theme being configured */}
-        <div className="preview-label">
-          Pré-visualização do Novo Tema de Bloco:
-        </div>
-        <div
-          className="blocktheme-preview"
-          style={{
-            backgroundColor: newBackBg,
-            color: newBackCg?.text_color_light || '#000000',
-            fontFamily: newBackCg?.font_family || 'inherit',
-            marginBottom: '1.25rem',
-          }}
-        >
-          <div className="preview-back-bar">
-            <span className="preview-back-title">
-              Área de Trás: {newBackCg?.name || newBack}
-            </span>
-            <span
-              className="preview-accent-badge"
-              style={{
-                backgroundColor: newBackCg?.accent_color_light || '#1971c2',
-                color: newBackCg?.background_color_light || '#ffffff',
-              }}
-            >
-              Botão Accent
-            </span>
-          </div>
-
-          <div
-            className="preview-front-card"
-            style={{
-              backgroundColor: newFrontBg,
-              color: newFrontCg?.text_color_light || '#000000',
-              fontFamily: newFrontCg?.font_family || 'inherit',
-            }}
-          >
-            <div className="preview-front-title">
-              Card na Área da Frente ({newFrontCg?.name || newFront})
-            </div>
-            <div
-              className="preview-front-desc"
-              style={{ color: newFrontCg?.subtext_color_light || '#666666' }}
-            >
-              Descrição do card e metadados usando a cor de subtexto.
-            </div>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          className="ui button primary add-blocktheme-btn"
-          onClick={handleAddBlockTheme}
-        >
-          Salvar Tema de Bloco
-        </button>
+        ))}
       </div>
+
+      <NewBlockThemeForm
+        colorGroups={availableColorGroups}
+        existingIds={Object.keys(blockThemes)}
+        onAdd={(theme) => onChange(id, { ...blockThemes, [theme.id]: theme })}
+      />
     </div>
   );
 };

@@ -1,8 +1,12 @@
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import cx from 'classnames';
 import { useSelector } from 'react-redux';
 import type { GetSiteResponse } from '@plone/types';
-import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers/Url/Url';
+import { isInternalURL } from '@plone/volto/helpers/Url/Url';
+import {
+  resolveImageUrlSrc,
+  resolveItemImageSrc,
+} from '@simplesconsultoria/volto-light-theme/helpers/itemImage';
 import DefaultSummary from '@kitconcept/volto-light-theme/components/Summary/DefaultSummary';
 import type { SummaryComponentType } from '@kitconcept/volto-light-theme/components/Summary/DefaultSummary';
 import Card from '@kitconcept/volto-light-theme/primitives/Card/Card';
@@ -13,81 +17,11 @@ type FormState = {
   site: { data: GetSiteResponse };
 };
 
-const TeaserDefaultTemplate = (props) => {
-  const site = useSelector<FormState, GetSiteResponse>(
-    (state) => state.site?.data,
-  );
-  const showProfileLinks = site?.['kitconcept.clickable_profile_links'];
-  const { data, isEditMode, isContainer } = props;
-  const columns = useContext(GridContext);
-  const sizes = config.blocks.blocksConfig.teaser?.getSizes?.({
-    data,
-    inGrid: isContainer,
-    columns,
-  });
-  const href = data.href?.[0] || {};
-  const image = data.preview_image?.[0];
-  const url = data.preview_image?.[0]?.['@id'];
-
-  const Image = config.getComponent('Image').component;
-  const Summary = (config.getComponent({
-    name: 'Summary',
-    dependencies: [href['@type']],
-  }).component || DefaultSummary) as SummaryComponentType;
-  let showLink =
-    !Summary.hideLink &&
-    !isEditMode &&
-    !!(href['@id'] || href.href || href.url);
-  if (href['@type'] === 'Person' && showProfileLinks !== undefined) {
-    showLink =
-      showProfileLinks &&
-      !isEditMode &&
-      !!(href['@id'] || href.href || href.url);
-  }
-  const { openExternalLinkInNewTab } = config.settings;
-  const openLinkInNewTab =
-    data.openLinkInNewTab ||
-    (openExternalLinkInNewTab && !isInternalURL(href['@id']));
-
-  // Ensures that overridden fields are used when "overwrite" is true
-  // and fallbacks to empty strings if they are not provided to ensure no undefined
-  // values are passed
-  const localOverrides = {
-    title: data.title || '',
-    description: data.description || '',
-    head_title: data.head_title || '',
-  };
-
-  const placeholderSrc = config.settings.placeholderImages?.[href['@type']];
-
-  // Resolve direct URL fallback safely
-  const targetItem = data.overwrite
-    ? image
-    : href?.hasPreviewImage || href?.image_field
-      ? href
-      : image;
-  let resolvedSrc: string | undefined;
-  if (targetItem?.['@id']) {
-    const scales = targetItem.image_scales;
-    const imageField = targetItem.image_field || 'image';
-    const scaleObj =
-      scales?.[imageField]?.[0] || (scales && Object.values(scales)?.[0]?.[0]);
-    if (scaleObj?.download) {
-      resolvedSrc = `${flattenToAppURL(targetItem['@id'])}/${scaleObj.download.replace(/^\//, '')}`;
-    } else {
-      resolvedSrc = `${flattenToAppURL(targetItem['@id'])}/@@images/image`;
-    }
-  } else if (url) {
-    const flatUrl = flattenToAppURL(url);
-    resolvedSrc =
-      !flatUrl.includes('@@images') &&
-      !flatUrl.includes('@@download') &&
-      !/\.(jpe?g|png|gif|svg|webp)($|\?)/i.test(flatUrl)
-        ? `${flatUrl.replace(/\/$/, '')}/@@images/image`
-        : flatUrl;
-  }
-
-  // Safe wrapper for Image component ensuring an image element is always returned
+/**
+ * Image component for the teaser card: the configured `Image` when it can
+ * render the item, otherwise a plain `<img>` of `fallbackSrc`.
+ */
+function makeSafeImage(Image: any, fallbackSrc?: string) {
   const SafeImage = (imageProps: any) => {
     if (imageProps.src) {
       return Image ? (
@@ -102,10 +36,10 @@ const TeaserDefaultTemplate = (props) => {
     } catch {
       // Fallback on scale rendering error
     }
-    if (resolvedSrc) {
+    if (fallbackSrc) {
       return (
         <img
-          src={resolvedSrc}
+          src={fallbackSrc}
           alt={imageProps.alt || ''}
           loading={imageProps.loading || 'lazy'}
           className={imageProps.responsive ? 'responsive' : undefined}
@@ -114,6 +48,97 @@ const TeaserDefaultTemplate = (props) => {
     }
     return null;
   };
+  return SafeImage;
+}
+
+/**
+ * Whether the teaser card links to its target. Person teasers follow the
+ * site's `kitconcept.clickable_profile_links` setting when it is defined.
+ */
+function shouldShowLink(
+  href: any,
+  isEditMode: boolean,
+  Summary: SummaryComponentType,
+  showProfileLinks: boolean | undefined,
+): boolean {
+  const hasTarget = !!(href['@id'] || href.href || href.url);
+  const linkAllowed =
+    href['@type'] === 'Person' && showProfileLinks !== undefined
+      ? showProfileLinks
+      : !Summary.hideLink;
+  return !!linkAllowed && !isEditMode && hasTarget;
+}
+
+/** Direct image URL used as fallback by the teaser card image. */
+function resolveTeaserImageSrc(
+  data: any,
+  href: any,
+  image: any,
+): string | undefined {
+  const usesHrefImage =
+    !data.overwrite && (href?.hasPreviewImage || href?.image_field);
+  const targetItem = usesHrefImage ? href : image;
+  if (targetItem?.['@id']) return resolveItemImageSrc(targetItem);
+  const url = image?.['@id'];
+  return url ? resolveImageUrlSrc(url) : undefined;
+}
+
+function useTeaserSizes(data: any, isContainer: boolean) {
+  const columns = useContext(GridContext);
+  return config.blocks.blocksConfig.teaser?.getSizes?.({
+    data,
+    inGrid: isContainer,
+    columns,
+  });
+}
+
+function useShowProfileLinks() {
+  const site = useSelector<FormState, GetSiteResponse>(
+    (state) => state.site?.data,
+  );
+  return site?.['kitconcept.clickable_profile_links'];
+}
+
+const TeaserDefaultTemplate = (props) => {
+  const showProfileLinks = useShowProfileLinks();
+  const { data, isEditMode, isContainer } = props;
+  const sizes = useTeaserSizes(data, isContainer);
+  const href = data.href?.[0] || {};
+  const image = data.preview_image?.[0];
+
+  const Image = config.getComponent('Image').component;
+  const Summary = (config.getComponent({
+    name: 'Summary',
+    dependencies: [href['@type']],
+  }).component || DefaultSummary) as SummaryComponentType;
+  const showLink = shouldShowLink(href, isEditMode, Summary, showProfileLinks);
+  const { openExternalLinkInNewTab } = config.settings;
+  const openLinkInNewTab =
+    data.openLinkInNewTab ||
+    (openExternalLinkInNewTab && !isInternalURL(href['@id']));
+
+  // Ensures that overridden fields are used when "overwrite" is true
+  // and fallbacks to empty strings if they are not provided to ensure no undefined
+  // values are passed
+  const localOverrides = {
+    title: data.title || '',
+    description: data.description || '',
+    head_title: data.head_title || '',
+  };
+  const item = !data.overwrite ? href : { ...href, ...localOverrides };
+
+  const placeholderSrc = config.settings.placeholderImages?.[href['@type']];
+
+  // Resolve direct URL fallback safely
+  const resolvedSrc = resolveTeaserImageSrc(data, href, image);
+  const usesImageField = image?.image_field || href?.image_field;
+
+  // Stable per (Image, src): a component defined inline would be a new type
+  // on every render and remount the image.
+  const SafeImage = useMemo(
+    () => makeSafeImage(Image, resolvedSrc),
+    [Image, resolvedSrc],
+  );
 
   return (
     <Card
@@ -122,12 +147,8 @@ const TeaserDefaultTemplate = (props) => {
       openLinkInNewTab={openLinkInNewTab}
     >
       <Card.Image
-        src={
-          resolvedSrc && !image?.image_field && !href?.image_field
-            ? resolvedSrc
-            : undefined
-        }
-        item={!data.overwrite ? href : { ...href, ...localOverrides }}
+        src={usesImageField ? undefined : resolvedSrc}
+        item={item}
         image={data.overwrite ? image : undefined}
         imageComponent={SafeImage}
         showPlaceholderImage={Boolean(placeholderSrc)}
@@ -135,10 +156,7 @@ const TeaserDefaultTemplate = (props) => {
         sizes={sizes}
       />
       <Card.Summary>
-        <Summary
-          item={!data.overwrite ? href : { ...href, ...localOverrides }}
-          hide_description={props.data?.hide_description}
-        />
+        <Summary item={item} hide_description={props.data?.hide_description} />
       </Card.Summary>
     </Card>
   );

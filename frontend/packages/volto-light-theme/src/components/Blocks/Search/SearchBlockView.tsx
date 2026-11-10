@@ -12,6 +12,12 @@ import TopSideFacets from '@plone/volto/components/manage/Blocks/Search/layout/T
 import ListingBody from '@kitconcept/volto-light-theme/components/Blocks/Listing/ListingBody';
 import { resolveBlockTheme } from '../../../config/blockThemes';
 import { normalizeBlockWidth } from '../../../helpers/blockWidth';
+import {
+  buildEnrichedListingData,
+  getCardBorder,
+  getListingPagination,
+  resolveSearchVariation,
+} from './searchBlockData';
 
 const compose =
   (...funcs: any[]) =>
@@ -87,28 +93,11 @@ const applyDefaults = (data: any = {}, root = '', blockQuery: any = []) => {
   };
 };
 
-export const SearchBlockViewComponent: React.FC<any> = (props: any) => {
-  const {
-    id,
-    data = {},
-    searchData,
-    mode = 'view',
-    variation,
-    className,
-  } = props;
-
-  // Defensive variation resolution to prevent SSR "TypeError: cannot read properties of undefined (reading 'view')"
-  const searchVariations =
-    config.blocks?.blocksConfig?.search?.variations || [];
-  const validVariation = variation?.view
-    ? variation
-    : searchVariations.find((v: any) => v.id === data?.variation) ||
-      searchVariations.find((v: any) => v.id === 'facetsTopSide') ||
-      searchVariations.find((v: any) => v.isDefault) ||
-      searchVariations[0] || { id: 'facetsTopSide', view: TopSideFacets };
-
-  const Layout = validVariation?.view || TopSideFacets;
-
+/**
+ * Listing view selected in the search block; follows the block data while
+ * editing.
+ */
+const useSelectedView = (data: any, mode: string) => {
   const dataListingBodyVariation = getListingBodyVariation(data).id;
   const [selectedView, setSelectedView] = React.useState(
     dataListingBodyVariation,
@@ -120,6 +109,24 @@ export const SearchBlockViewComponent: React.FC<any> = (props: any) => {
     }
   }, [dataListingBodyVariation, mode]);
 
+  return [selectedView, setSelectedView] as const;
+};
+
+export const SearchBlockViewComponent: React.FC<any> = (props: any) => {
+  const {
+    id,
+    data = {},
+    searchData,
+    mode = 'view',
+    variation,
+    className,
+  } = props;
+
+  const validVariation = resolveSearchVariation(variation, data);
+  const Layout = validVariation?.view || TopSideFacets;
+
+  const [selectedView, setSelectedView] = useSelectedView(data, mode);
+
   const root = useSelector((state: any) => state.breadcrumbs?.root);
   const listingBodyData = applyDefaults(searchData, root, data?.query?.query);
 
@@ -130,7 +137,6 @@ export const SearchBlockViewComponent: React.FC<any> = (props: any) => {
 
   // Block Width resolution
   const blockWidth = normalizeBlockWidth(data);
-  const blockWidthClass = `has--block-width--${blockWidth}`;
 
   // Theme resolution
   const {
@@ -141,62 +147,37 @@ export const SearchBlockViewComponent: React.FC<any> = (props: any) => {
     theme,
   } = resolveBlockTheme(data);
 
-  // Border system variables
-  const cardBorderWidth =
-    data?.['--cardBorderWidth'] || data?.styles?.['--cardBorderWidth'] || '';
-  const cardBorderColor =
-    data?.['--cardBorderColor'] || data?.styles?.['--cardBorderColor'] || '';
-
-  const borderStyles: Record<string, string> = {
-    ...(cardBorderWidth ? { '--cardBorderWidth': cardBorderWidth } : {}),
-    ...(cardBorderColor ? { '--cardBorderColor': cardBorderColor } : {}),
-  };
-
   const mergedStyle = {
     ...blockThemeStyle,
-    ...borderStyles,
+    ...getCardBorder(data).borderStyles,
     ...(props.style || {}),
   };
 
-  const enrichedListingData = {
-    ...data,
-    ...listingBodyData,
-    variation: selectedView,
-    listingBodyTemplate: selectedView,
-    theme: theme,
-    backColorGroup: backColorGroup,
-    frontColorGroup: frontColorGroup,
-    blockWidth: blockWidth,
-    styles: {
-      ...data?.styles,
-      ...listingBodyData?.styles,
-      variation: selectedView,
-      listingBodyTemplate: selectedView,
-      theme: theme,
-      backColorGroup: backColorGroup,
-      frontColorGroup: frontColorGroup,
-      'blockWidth:noprefix': blockWidth,
-      ...(cardBorderWidth ? { '--cardBorderWidth': cardBorderWidth } : {}),
-      ...(cardBorderColor ? { '--cardBorderColor': cardBorderColor } : {}),
-    },
-    '--cardBorderWidth': cardBorderWidth,
-    '--cardBorderColor': cardBorderColor,
-  };
+  const enrichedListingData = buildEnrichedListingData({
+    data,
+    listingBodyData,
+    selectedView,
+    blockWidth,
+    theme,
+    backColorGroup,
+    frontColorGroup,
+  });
 
-  const totalPages =
-    Math.ceil(props.totalItems / (data?.b_size || searchData?.b_size || 25)) ||
-    1;
-  const currentPage = props.currentPage || 1;
-  const onPaginationChange = props.onPaginationChange || (() => {});
-  const listingItems = props.items || [];
-  const total = props.totalItems || listingItems.length;
+  const {
+    totalPages,
+    currentPage,
+    onPaginationChange,
+    listingItems,
+    totalItems,
+  } = getListingPagination(props, data, searchData);
+  const isEditMode = mode === 'edit';
 
   return (
     <div
       className={cx(
         'block search',
         selectedView,
-        blockWidthClass,
+        `has--block-width--${blockWidth}`,
         blockThemeClass,
         { 'has-theme': !!data?.theme || !!data?.styles?.theme },
         className,
@@ -210,7 +191,7 @@ export const SearchBlockViewComponent: React.FC<any> = (props: any) => {
           ...(props.querystring || {}),
         }}
         variation={validVariation}
-        isEditMode={mode === 'edit'}
+        isEditMode={isEditMode}
         selectedView={selectedView}
         setSelectedView={setSelectedView}
       >
@@ -219,13 +200,13 @@ export const SearchBlockViewComponent: React.FC<any> = (props: any) => {
           data={enrichedListingData}
           items={listingItems}
           listingItems={listingItems}
-          isEditMode={mode === 'edit'}
+          isEditMode={isEditMode}
           variation={listingBodyVariation}
           path={props.path}
           totalPages={totalPages}
           currentPage={currentPage}
           onPaginationChange={onPaginationChange}
-          totalItems={total}
+          totalItems={totalItems}
         />
       </Layout>
     </div>

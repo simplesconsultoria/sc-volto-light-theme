@@ -86,13 +86,23 @@ export const Highlight: Story = { args: { data: listing('teaser') } };
 
 export const Events: Story = { args: { data: listing('events') } };
 
-/**
- * The calendar template reads a `start` date from every item and throws on one
- * without, so this story seeds Events only.
- */
+/** The calendar template: each event with its date inset. */
 export const EventCalendar: Story = {
   args: { data: listing('eventCalendar') },
   decorators: [withBlockStore({ items: events })],
+};
+
+/**
+ * Events mixed with items that have no dates (a page, a file). Upstream threw
+ * on these; the shadowed `EventTemplate` renders them as plain cards.
+ */
+export const EventCalendarMixedItems: Story = {
+  args: { data: listing('eventCalendar') },
+  decorators: [
+    withBlockStore({
+      items: [...events.slice(0, 2), ...listingItems.slice(2)],
+    }),
+  ],
 };
 
 /** A headline link, which the grid and carousel templates render. */

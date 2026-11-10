@@ -11,13 +11,16 @@ import {
   withQueryString,
 } from '@plone/volto/components/manage/Blocks/Search/hocs';
 import { SearchBlockViewComponent } from './SearchBlockView';
+import { cloneSchema } from '../../../helpers/cloneSchema';
 
 const compose =
   (...funcs: any[]) =>
   (x: any) =>
     funcs.reduceRight((composed, f) => f(composed), x);
 
-const cloneDeep = (obj: any) => (obj ? JSON.parse(JSON.stringify(obj)) : obj);
+// Stable defaults: a new `{}` per render would defeat memoization below.
+const NO_DATA = {};
+const NO_QUERYSTRING = {};
 
 const messages = defineMessages({
   template: {
@@ -31,13 +34,13 @@ const SearchBlockEdit: React.FC<any> = (props: any) => {
     block,
     blocksErrors,
     onChangeBlock,
-    data = {},
+    data = NO_DATA,
     selected,
     intl,
     navRoot,
     contentType,
     onTriggerSearch,
-    querystring = {},
+    querystring = NO_QUERYSTRING,
   } = props;
   const { sortable_indexes = {} } = querystring;
 
@@ -59,7 +62,7 @@ const SearchBlockEdit: React.FC<any> = (props: any) => {
   const listingSchemaEnhancer = activeItem?.schemaEnhancer;
   if (listingSchemaEnhancer) {
     schema = listingSchemaEnhancer({
-      schema: cloneDeep(schema),
+      schema: cloneSchema(schema),
       data,
       intl,
     });

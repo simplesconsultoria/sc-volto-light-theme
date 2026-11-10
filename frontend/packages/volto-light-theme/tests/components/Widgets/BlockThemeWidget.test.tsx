@@ -1,7 +1,9 @@
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render } from '@testing-library/react';
-import BlockThemeWidget from '@simplesconsultoria/volto-light-theme/components/Widgets/BlockThemeWidget';
+import BlockThemeWidget, {
+  parseThemeValue,
+} from '@simplesconsultoria/volto-light-theme/components/Widgets/BlockThemeWidget';
 
 describe('BlockThemeWidget', () => {
   it('renders with default block theme and split circle', () => {
@@ -126,5 +128,37 @@ describe('BlockThemeWidget', () => {
     expect(optionValues).toContain('default');
     expect(optionValues).toContain('alternative');
     expect(optionValues).not.toContain('festivo');
+  });
+});
+
+describe('parseThemeValue', () => {
+  it('defaults to the default theme', () => {
+    expect(parseThemeValue(undefined)).toEqual({ themeId: 'default' });
+  });
+
+  it('reads a named theme, including the legacy brand alias', () => {
+    expect(parseThemeValue('alternative')).toEqual({ themeId: 'alternative' });
+    expect(parseThemeValue('brand')).toEqual({ themeId: 'brand' });
+  });
+
+  it('decodes custom-<back>-<front>', () => {
+    expect(parseThemeValue('custom-secondary-accent')).toEqual({
+      themeId: 'custom',
+      back: 'secondary',
+      front: 'accent',
+    });
+  });
+
+  it('falls back to the theme stored in the form data or styles', () => {
+    expect(parseThemeValue(undefined, { styles: { theme: 'x' } })).toEqual({
+      themeId: 'x',
+    });
+  });
+
+  it('reads the theme of an object value', () => {
+    expect(parseThemeValue({ theme: 'alternative' })).toEqual({
+      themeId: 'alternative',
+    });
+    expect(parseThemeValue({})).toEqual({ themeId: 'default' });
   });
 });

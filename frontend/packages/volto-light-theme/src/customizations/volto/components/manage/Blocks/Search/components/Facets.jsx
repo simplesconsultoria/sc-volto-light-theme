@@ -83,18 +83,16 @@ const Facets = (props) => {
           const index = querystring?.indexes?.[field] || {};
           const { values = {} } = index;
 
+          // Values the base query allows for this field, if it restricts any.
+          const allowed = query_to_values[field]
+            ? new Set(query_to_values[field])
+            : null;
           let choices = Object.keys(values)
             .map((name) => ({
               value: name,
               label: values[name].title,
             }))
-            // filter the available values based on the allowed values in the
-            // base query
-            .filter(({ value }) =>
-              query_to_values[field]
-                ? query_to_values[field].includes(value)
-                : true,
-            );
+            .filter(({ value }) => !allowed || allowed.has(value));
 
           choices = sortFacetChoices(choices);
 

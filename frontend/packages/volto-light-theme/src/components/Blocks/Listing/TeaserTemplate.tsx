@@ -66,7 +66,7 @@ const TeaserTemplate: React.FC<TeaserTemplateProps & Record<string, any>> = ({
         [`has--align--${align}`]: align,
       })}
     >
-      {items.map((item, index) => {
+      {items.map((item) => {
         const date = formatDate(
           item?.Date || item?.effective || item?.CreationDate || item?.created,
           intl.locale,
@@ -77,7 +77,7 @@ const TeaserTemplate: React.FC<TeaserTemplateProps & Record<string, any>> = ({
 
         return (
           <div
-            key={item['@id'] || index}
+            key={item['@id'] || item.UID || item.url}
             className={cx('listing-item', 'teaser-item', {
               [`has--align--${align}`]: align,
             })}

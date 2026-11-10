@@ -156,9 +156,10 @@ const SliderView = (props) => {
             </div>
             {data.slides?.length > 1 && (
               <div className="slider-dots">
-                {scrollSnaps.map((_, index) => (
+                {scrollSnaps.map((snap, index) => (
                   <DotButton
-                    key={index}
+                    // Snap positions are unique, unlike a reused index.
+                    key={snap}
                     index={index}
                     onClick={() => scrollTo(index)}
                     className={'slider-dot'.concat(

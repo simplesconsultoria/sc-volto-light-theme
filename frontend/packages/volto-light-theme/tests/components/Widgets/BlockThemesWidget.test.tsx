@@ -100,7 +100,7 @@ describe('BlockThemesWidget', () => {
     );
 
     // Base themes should not have a delete button, only the custom one
-    const deleteButtons = queryAllByTitle('Excluir este tema de bloco');
+    const deleteButtons = queryAllByTitle(/^Excluir o tema de bloco /);
     expect(deleteButtons).toHaveLength(1);
 
     fireEvent.click(deleteButtons[0]);

@@ -45,4 +45,19 @@ describe('Separator View', () => {
     const hr = container.querySelector('hr');
     expect(hr).toHaveStyle({ borderColor: '#ff0000' });
   });
+
+  it('renders the upstream short line (styles.shortLine)', () => {
+    const { container } = render(
+      <View data={{ styles: { shortLine: true, 'align:noprefix': 'left' } }} />,
+    );
+    const hr = container.querySelector('hr');
+    expect(hr).toHaveStyle({ width: '165px', marginLeft: '0px' });
+  });
+
+  it('prefers an explicit width over the upstream short line', () => {
+    const { container } = render(
+      <View data={{ width: '50%', styles: { shortLine: true } }} />,
+    );
+    expect(container.querySelector('hr')).toHaveStyle({ width: '50%' });
+  });
 });

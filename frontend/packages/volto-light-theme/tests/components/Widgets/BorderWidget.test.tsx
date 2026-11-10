@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import {
   BorderWidget,
+  toThickness,
   parseBorderValue,
   formatBorderValue,
   getBorderDescription,
@@ -274,5 +275,24 @@ describe('BorderWidget Component', () => {
 
     const topBtn = screen.getByRole('button', { name: /Borda Superior/i });
     expect(topBtn).toHaveAttribute('title', 'Alternar Borda Superior');
+  });
+});
+
+describe('toThickness', () => {
+  it('reads a typed number and rounds it', () => {
+    expect(toThickness('3')).toBe(3);
+    expect(toThickness('2.6')).toBe(3);
+  });
+
+  it('treats anything that is not a finite number as 0', () => {
+    expect(toThickness('')).toBe(0);
+    expect(toThickness('-')).toBe(0);
+    expect(toThickness('e')).toBe(0);
+    expect(toThickness(Number.NaN)).toBe(0);
+  });
+
+  it('clamps to 0..24', () => {
+    expect(toThickness('-5')).toBe(0);
+    expect(toThickness('99')).toBe(24);
   });
 });

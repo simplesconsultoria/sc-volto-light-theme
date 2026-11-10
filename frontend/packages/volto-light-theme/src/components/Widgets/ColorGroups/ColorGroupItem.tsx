@@ -2,6 +2,7 @@ import React from 'react';
 import type { ColorGroup } from '../../../types/theme';
 import type { CssPatternPreset } from '../../../config/blockThemes';
 import { formatBackgroundImage } from '../../../helpers/themeStyles';
+import { CardHeader } from '../shared/CardHeader';
 import { PatternLayerControls } from './PatternLayerControls';
 
 export interface ColorGroupItemProps {
@@ -29,6 +30,167 @@ export interface ColorGroupItemProps {
   onDeleteGroup: (groupId: string) => void;
 }
 
+type ColorRole = 'background' | 'text' | 'subtext' | 'accent';
+type Mode = 'light' | 'dark';
+
+/** The four colour roles of a group, with the fallback each picker shows. */
+const COLOR_ROWS: {
+  role: ColorRole;
+  label: string;
+  fallback: Record<Mode, string>;
+}[] = [
+  {
+    role: 'background',
+    label: '1ª Camada: Fundo (Background Color)',
+    fallback: { light: '#ffffff', dark: '#000000' },
+  },
+  {
+    role: 'text',
+    label: 'Texto (Text Color)',
+    fallback: { light: '#000000', dark: '#ffffff' },
+  },
+  {
+    role: 'subtext',
+    label: 'Subtexto (Subtext)',
+    fallback: { light: '#666666', dark: '#cccccc' },
+  },
+  {
+    role: 'accent',
+    label: 'Accent',
+    fallback: { light: '#1971c2', dark: '#74c0fc' },
+  },
+];
+
+const MODE_LABEL: Record<Mode, string> = { light: 'Claro', dark: 'Escuro' };
+
+const colorField = (role: ColorRole, mode: Mode) =>
+  `${role}_color_${mode}` as keyof ColorGroup;
+
+/** Colour picker plus hex text field for one role in one mode. */
+const ColorInput: React.FC<{
+  group: ColorGroup;
+  role: ColorRole;
+  mode: Mode;
+  label: string;
+  fallback: string;
+  onUpdateGroup: ColorGroupItemProps['onUpdateGroup'];
+}> = ({ group, role, mode, label, fallback, onUpdateGroup }) => {
+  const field = colorField(role, mode);
+  const value = (group[field] as string | undefined) || '';
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    onUpdateGroup(group.id, field, e.target.value);
+  const name = `${label} (${MODE_LABEL[mode]})`;
+  return (
+    <div className="mode-input">
+      <span className="mode-tag" aria-hidden="true">
+        {MODE_LABEL[mode]}
+      </span>
+      <input
+        type="color"
+        aria-label={name}
+        value={value || fallback}
+        onChange={onChange}
+      />
+      <input
+        type="text"
+        className="hex-input"
+        aria-label={`${name}, hexadecimal`}
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  );
+};
+
+const PREVIEW_FALLBACK: Record<Mode, Record<ColorRole, string>> = {
+  light: {
+    background: '#ffffff',
+    text: '#000000',
+    subtext: '#666666',
+    accent: '#1971c2',
+  },
+  dark: {
+    background: '#000000',
+    text: '#ffffff',
+    subtext: '#cccccc',
+    accent: '#74c0fc',
+  },
+};
+
+/** The group rendered as a sample card in one mode. */
+const PreviewCard: React.FC<{
+  group: ColorGroup;
+  mode: Mode;
+  backgroundImage: string;
+}> = ({ group, mode, backgroundImage }) => {
+  const color = (role: ColorRole) =>
+    (group[colorField(role, mode)] as string | undefined) ||
+    PREVIEW_FALLBACK[mode][role];
+  return (
+    <div
+      className={`preview-card ${mode}`}
+      style={{
+        backgroundColor: color('background'),
+        backgroundImage,
+        backgroundSize: group.bg_size || 'auto',
+        backgroundRepeat: group.bg_repeat || 'repeat',
+        backgroundPosition: group.bg_position || 'center',
+        color: color('text'),
+        fontFamily: group.font_family || 'inherit',
+      }}
+    >
+      <span className={`preview-badge ${mode === 'dark' ? 'dark-tag' : ''}`}>
+        {mode === 'dark' ? 'MODO ESCURO' : 'MODO CLARO'}
+      </span>
+      <h5 style={{ color: color('text'), margin: '0.4rem 0' }}>
+        {group.name} Título
+      </h5>
+      <p
+        style={{
+          color: color('subtext'),
+          fontSize: '0.85rem',
+          margin: '0.2rem 0 0.6rem 0',
+        }}
+      >
+        Cor de fundo com 2ª camada sobreposta.
+      </p>
+      {/* Decorative sample of the accent colour, not an action. */}
+      <span
+        className="preview-accent-sample"
+        style={{
+          display: 'inline-block',
+          backgroundColor: color('accent'),
+          color: '#ffffff',
+          padding: '4px 10px',
+          borderRadius: '4px',
+          fontSize: '0.8rem',
+          fontWeight: 600,
+        }}
+      >
+        Ação Accent
+      </span>
+    </div>
+  );
+};
+
+/** The image layer shown in the preview, honouring the simulated device. */
+function previewImages(group: ColorGroup, isMobile: boolean) {
+  const lightDesktop = group.bg_image_light_desktop;
+  const lightMobile = group.bg_image_light_mobile;
+  const darkDesktop = group.bg_image_dark_desktop;
+  const darkMobile = group.bg_image_dark_mobile;
+  return {
+    light: formatBackgroundImage(
+      isMobile ? lightMobile || lightDesktop : lightDesktop,
+    ),
+    dark: formatBackgroundImage(
+      isMobile
+        ? darkMobile || darkDesktop || lightMobile || lightDesktop
+        : darkDesktop || lightDesktop,
+    ),
+  };
+}
+
 export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
   group,
   isExpanded,
@@ -37,7 +199,6 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
   onToggleExpand,
   onToggleDevice,
   onUpdateGroup,
-  onUpdateGroupMultiple,
   onApplyPreset,
   onFileUpload,
   onDeleteGroup,
@@ -48,138 +209,56 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
     group.bg_image_dark_desktop ||
     group.bg_image_dark_mobile
   );
-
-  // Active preview images
-  const lightImgPreview = formatBackgroundImage(
-    isMobilePreview
-      ? group.bg_image_light_mobile || group.bg_image_light_desktop
-      : group.bg_image_light_desktop,
-  );
-  const darkImgPreview = formatBackgroundImage(
-    isMobilePreview
-      ? group.bg_image_dark_mobile ||
-          group.bg_image_dark_desktop ||
-          group.bg_image_light_mobile ||
-          group.bg_image_light_desktop
-      : group.bg_image_dark_desktop || group.bg_image_light_desktop,
-  );
+  const images = previewImages(group, isMobilePreview);
+  const bodyId = `colorgroup-body-${group.id}`;
 
   return (
     <div
-      key={group.id}
       className={`colorgroup-card ${isExpanded ? 'is-expanded' : 'is-collapsed'}`}
     >
-      {/* Collapsed Header / Bar */}
-      <div
+      <CardHeader
         className="colorgroup-card-header"
-        onClick={() => onToggleExpand(group.id)}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            onToggleExpand(group.id);
-          }
-        }}
-      >
-        <div className="header-left">
-          <span
-            className={`accordion-chevron ${isExpanded ? 'rotated' : ''}`}
-            aria-hidden="true"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </span>
-          <strong className="group-name">{group.name}</strong>
-          <code className="group-id">{group.id}</code>
-          {isBase && (
-            <span className="base-tag" title="Grupo base protegido">
-              Base
-            </span>
-          )}
-          {hasImageLayer && (
-            <span
-              className="layer-tag"
-              title="Possui 2ª camada de imagem/padrão configurada"
-            >
-              2ª Camada Ativa
-            </span>
-          )}
-        </div>
-
-        <div className="header-right">
-          {/* 4 Mini Color Swatch Dots */}
-          <div className="color-swatches-preview">
-            <span
-              className="swatch-dot"
-              style={{
-                backgroundColor: group.background_color_light || '#ffffff',
-              }}
-              title={`Fundo: ${group.background_color_light}`}
-            />
-            <span
-              className="swatch-dot"
-              style={{
-                backgroundColor: group.text_color_light || '#000000',
-              }}
-              title={`Texto: ${group.text_color_light}`}
-            />
-            <span
-              className="swatch-dot"
-              style={{
-                backgroundColor: group.subtext_color_light || '#666666',
-              }}
-              title={`Subtexto: ${group.subtext_color_light}`}
-            />
-            <span
-              className="swatch-dot"
-              style={{
-                backgroundColor: group.accent_color_light || '#1971c2',
-              }}
-              title={`Accent: ${group.accent_color_light}`}
-            />
+        isExpanded={isExpanded}
+        onToggle={() => onToggleExpand(group.id)}
+        controls={bodyId}
+        onDelete={isBase ? undefined : () => onDeleteGroup(group.id)}
+        deleteClassName="delete-group-btn"
+        deleteLabel={`Excluir o ColorGroup ${group.name}`}
+        preview={
+          <div className="color-swatches-preview" aria-hidden="true">
+            {COLOR_ROWS.map(({ role, label, fallback }) => {
+              const value = group[colorField(role, 'light')] as string;
+              return (
+                <span
+                  key={role}
+                  className="swatch-dot"
+                  style={{ backgroundColor: value || fallback.light }}
+                  title={`${label}: ${value}`}
+                />
+              );
+            })}
           </div>
+        }
+      >
+        <strong className="group-name">{group.name}</strong>
+        <code className="group-id">{group.id}</code>
+        {isBase && (
+          <span className="base-tag" title="Grupo base protegido">
+            Base
+          </span>
+        )}
+        {hasImageLayer && (
+          <span
+            className="layer-tag"
+            title="Possui 2ª camada de imagem/padrão configurada"
+          >
+            2ª Camada Ativa
+          </span>
+        )}
+      </CardHeader>
 
-          {/* Delete button only for custom groups */}
-          {!isBase ? (
-            <button
-              type="button"
-              className="delete-group-btn"
-              title="Excluir este ColorGroup"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDeleteGroup(group.id);
-              }}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="3 6 5 6 21 6" />
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-              </svg>
-            </button>
-          ) : null}
-        </div>
-      </div>
-
-      {/* Expandable Editor and Previews */}
       <div
+        id={bodyId}
         className="colorgroup-card-body"
         style={{ display: isExpanded ? 'block' : 'none' }}
       >
@@ -197,215 +276,24 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
         </div>
 
         <div className="colorgroup-colors-grid">
-          <div className="color-row">
-            <span className="color-label">
-              1ª Camada: Fundo (Background Color):
-            </span>
-            <div className="color-inputs">
-              <div className="mode-input">
-                <span className="mode-tag">Claro</span>
-                <input
-                  type="color"
-                  value={group.background_color_light || '#ffffff'}
-                  onChange={(e) =>
-                    onUpdateGroup(
-                      group.id,
-                      'background_color_light',
-                      e.target.value,
-                    )
-                  }
-                />
-                <input
-                  type="text"
-                  className="hex-input"
-                  value={group.background_color_light || ''}
-                  onChange={(e) =>
-                    onUpdateGroup(
-                      group.id,
-                      'background_color_light',
-                      e.target.value,
-                    )
-                  }
-                />
-              </div>
-              <div className="mode-input">
-                <span className="mode-tag">Escuro</span>
-                <input
-                  type="color"
-                  value={group.background_color_dark || '#000000'}
-                  onChange={(e) =>
-                    onUpdateGroup(
-                      group.id,
-                      'background_color_dark',
-                      e.target.value,
-                    )
-                  }
-                />
-                <input
-                  type="text"
-                  className="hex-input"
-                  value={group.background_color_dark || ''}
-                  onChange={(e) =>
-                    onUpdateGroup(
-                      group.id,
-                      'background_color_dark',
-                      e.target.value,
-                    )
-                  }
-                />
+          {COLOR_ROWS.map(({ role, label, fallback }) => (
+            <div className="color-row" key={role}>
+              <span className="color-label">{label}:</span>
+              <div className="color-inputs">
+                {(['light', 'dark'] as Mode[]).map((mode) => (
+                  <ColorInput
+                    key={mode}
+                    group={group}
+                    role={role}
+                    mode={mode}
+                    label={label}
+                    fallback={fallback[mode]}
+                    onUpdateGroup={onUpdateGroup}
+                  />
+                ))}
               </div>
             </div>
-          </div>
-
-          <div className="color-row">
-            <span className="color-label">Texto (Text Color):</span>
-            <div className="color-inputs">
-              <div className="mode-input">
-                <span className="mode-tag">Claro</span>
-                <input
-                  type="color"
-                  value={group.text_color_light || '#000000'}
-                  onChange={(e) =>
-                    onUpdateGroup(group.id, 'text_color_light', e.target.value)
-                  }
-                />
-                <input
-                  type="text"
-                  className="hex-input"
-                  value={group.text_color_light || ''}
-                  onChange={(e) =>
-                    onUpdateGroup(group.id, 'text_color_light', e.target.value)
-                  }
-                />
-              </div>
-              <div className="mode-input">
-                <span className="mode-tag">Escuro</span>
-                <input
-                  type="color"
-                  value={group.text_color_dark || '#ffffff'}
-                  onChange={(e) =>
-                    onUpdateGroup(group.id, 'text_color_dark', e.target.value)
-                  }
-                />
-                <input
-                  type="text"
-                  className="hex-input"
-                  value={group.text_color_dark || ''}
-                  onChange={(e) =>
-                    onUpdateGroup(group.id, 'text_color_dark', e.target.value)
-                  }
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="color-row">
-            <span className="color-label">Subtexto (Subtext):</span>
-            <div className="color-inputs">
-              <div className="mode-input">
-                <span className="mode-tag">Claro</span>
-                <input
-                  type="color"
-                  value={group.subtext_color_light || '#666666'}
-                  onChange={(e) =>
-                    onUpdateGroup(
-                      group.id,
-                      'subtext_color_light',
-                      e.target.value,
-                    )
-                  }
-                />
-                <input
-                  type="text"
-                  className="hex-input"
-                  value={group.subtext_color_light || ''}
-                  onChange={(e) =>
-                    onUpdateGroup(
-                      group.id,
-                      'subtext_color_light',
-                      e.target.value,
-                    )
-                  }
-                />
-              </div>
-              <div className="mode-input">
-                <span className="mode-tag">Escuro</span>
-                <input
-                  type="color"
-                  value={group.subtext_color_dark || '#cccccc'}
-                  onChange={(e) =>
-                    onUpdateGroup(
-                      group.id,
-                      'subtext_color_dark',
-                      e.target.value,
-                    )
-                  }
-                />
-                <input
-                  type="text"
-                  className="hex-input"
-                  value={group.subtext_color_dark || ''}
-                  onChange={(e) =>
-                    onUpdateGroup(
-                      group.id,
-                      'subtext_color_dark',
-                      e.target.value,
-                    )
-                  }
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="color-row">
-            <span className="color-label">Accent:</span>
-            <div className="color-inputs">
-              <div className="mode-input">
-                <span className="mode-tag">Claro</span>
-                <input
-                  type="color"
-                  value={group.accent_color_light || '#1971c2'}
-                  onChange={(e) =>
-                    onUpdateGroup(
-                      group.id,
-                      'accent_color_light',
-                      e.target.value,
-                    )
-                  }
-                />
-                <input
-                  type="text"
-                  className="hex-input"
-                  value={group.accent_color_light || ''}
-                  onChange={(e) =>
-                    onUpdateGroup(
-                      group.id,
-                      'accent_color_light',
-                      e.target.value,
-                    )
-                  }
-                />
-              </div>
-              <div className="mode-input">
-                <span className="mode-tag">Escuro</span>
-                <input
-                  type="color"
-                  value={group.accent_color_dark || '#74c0fc'}
-                  onChange={(e) =>
-                    onUpdateGroup(group.id, 'accent_color_dark', e.target.value)
-                  }
-                />
-                <input
-                  type="text"
-                  className="hex-input"
-                  value={group.accent_color_dark || ''}
-                  onChange={(e) =>
-                    onUpdateGroup(group.id, 'accent_color_dark', e.target.value)
-                  }
-                />
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* 2nd Background Layer: Image and CSS Patterns Section */}
@@ -435,101 +323,16 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
         </div>
 
         <div className="colorgroup-preview-container">
-          {/* Light Mode */}
-          <div
-            className="preview-card light"
-            style={{
-              backgroundColor: group.background_color_light || '#ffffff',
-              backgroundImage: lightImgPreview,
-              backgroundSize: group.bg_size || 'auto',
-              backgroundRepeat: group.bg_repeat || 'repeat',
-              backgroundPosition: group.bg_position || 'center',
-              color: group.text_color_light || '#000000',
-              fontFamily: group.font_family || 'inherit',
-            }}
-          >
-            <span className="preview-badge">MODO CLARO</span>
-            <h5
-              style={{
-                color: group.text_color_light || '#000000',
-                margin: '0.4rem 0',
-              }}
-            >
-              {group.name} Título
-            </h5>
-            <p
-              style={{
-                color: group.subtext_color_light || '#666666',
-                fontSize: '0.85rem',
-                margin: '0.2rem 0 0.6rem 0',
-              }}
-            >
-              Cor de fundo com 2ª camada sobreposta.
-            </p>
-            <button
-              type="button"
-              style={{
-                backgroundColor: group.accent_color_light || '#1971c2',
-                color: '#ffffff',
-                border: 'none',
-                padding: '4px 10px',
-                borderRadius: '4px',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              Ação Accent
-            </button>
-          </div>
-
-          {/* Dark Mode */}
-          <div
-            className="preview-card dark"
-            style={{
-              backgroundColor: group.background_color_dark || '#000000',
-              backgroundImage: darkImgPreview,
-              backgroundSize: group.bg_size || 'auto',
-              backgroundRepeat: group.bg_repeat || 'repeat',
-              backgroundPosition: group.bg_position || 'center',
-              color: group.text_color_dark || '#ffffff',
-              fontFamily: group.font_family || 'inherit',
-            }}
-          >
-            <span className="preview-badge dark-tag">MODO ESCURO</span>
-            <h5
-              style={{
-                color: group.text_color_dark || '#ffffff',
-                margin: '0.4rem 0',
-              }}
-            >
-              {group.name} Título
-            </h5>
-            <p
-              style={{
-                color: group.subtext_color_dark || '#cccccc',
-                fontSize: '0.85rem',
-                margin: '0.2rem 0 0.6rem 0',
-              }}
-            >
-              Cor de fundo com 2ª camada sobreposta.
-            </p>
-            <button
-              type="button"
-              style={{
-                backgroundColor: group.accent_color_dark || '#74c0fc',
-                color: '#ffffff',
-                border: 'none',
-                padding: '4px 10px',
-                borderRadius: '4px',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
-              Ação Accent
-            </button>
-          </div>
+          <PreviewCard
+            group={group}
+            mode="light"
+            backgroundImage={images.light}
+          />
+          <PreviewCard
+            group={group}
+            mode="dark"
+            backgroundImage={images.dark}
+          />
         </div>
       </div>
     </div>

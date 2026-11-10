@@ -1,6 +1,5 @@
 import React, {
   useState,
-  useRef,
   useEffect,
   useContext,
   useSyncExternalStore,
@@ -18,6 +17,7 @@ import {
   NATAL_BLOCK_THEMES,
   NATAL_COLOR_GROUPS,
 } from '../../config/blockThemes';
+import { SwatchDropdown, type SwatchOption } from './shared/SwatchDropdown';
 
 const EMPTY_STATE = {};
 const DUMMY_STORE = {
@@ -125,6 +125,136 @@ export const SolidColorCircle: React.FC<{
   </svg>
 );
 
+type GroupKind = 'backColorGroup' | 'frontColorGroup';
+
+/**
+ * Theme id stored on a block, with the back/front groups a
+ * `custom-<back>-<front>` value encodes.
+ */
+export function parseThemeValue(
+  value: any,
+  formData?: any,
+  objectvalue?: any,
+): { themeId: string; back?: string; front?: string } {
+  const raw =
+    typeof value === 'object' && value !== null
+      ? value.theme
+      : value ||
+        formData?.theme ||
+        formData?.styles?.theme ||
+        objectvalue?.theme ||
+        'default';
+  if (typeof raw !== 'string') return { themeId: 'default' };
+  if (raw.startsWith('custom-')) {
+    const [, back, front] = raw.split('-');
+    return { themeId: 'custom', back, front };
+  }
+  return { themeId: raw };
+}
+
+/** A back/front group stored next to the theme, wherever the form put it. */
+function storedGroup(
+  kind: GroupKind,
+  value: any,
+  formData?: any,
+  objectvalue?: any,
+): string | undefined {
+  return (
+    formData?.[kind] ||
+    formData?.styles?.[kind] ||
+    objectvalue?.[kind] ||
+    (typeof value === 'object' ? value?.[kind] : undefined)
+  );
+}
+
+const PencilIcon: React.FC = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+  </svg>
+);
+
+/** The block themes and color groups the site theme makes available. */
+function useAvailableThemes(
+  siteTheme: SerializedTheme | undefined,
+  formData: any,
+  objectvalue: any,
+) {
+  const isNatal = siteTheme?.token === 'natal';
+  const baseColorGroups = isNatal ? NATAL_COLOR_GROUPS : DEFAULT_COLOR_GROUPS;
+  const baseBlockThemes = isNatal ? NATAL_BLOCK_THEMES : DEFAULT_BLOCK_THEMES;
+
+  const colorGroups: Record<string, ColorGroup> = React.useMemo(
+    () => ({
+      ...baseColorGroups,
+      ...(siteTheme?.value?.color_groups || {}),
+      ...(formData?.color_groups || {}),
+      ...(objectvalue?.color_groups || {}),
+    }),
+    [
+      baseColorGroups,
+      siteTheme?.value?.color_groups,
+      formData?.color_groups,
+      objectvalue?.color_groups,
+    ],
+  );
+
+  const blockThemes: Record<string, BlockTheme> = React.useMemo(
+    () => ({
+      ...baseBlockThemes,
+      ...(siteTheme?.value?.block_themes || {}),
+      ...(formData?.block_themes || {}),
+      ...(objectvalue?.block_themes || {}),
+    }),
+    [
+      baseBlockThemes,
+      siteTheme?.value?.block_themes,
+      formData?.block_themes,
+      objectvalue?.block_themes,
+    ],
+  );
+
+  // Keep config.blocks.blockThemes and colorGroups updated with available themes
+  useEffect(() => {
+    const blocks = (config as any)?.blocks;
+    if (!blocks) return;
+    blocks.blockThemes = {
+      ...DEFAULT_BLOCK_THEMES,
+      ...(blocks.blockThemes || {}),
+      ...blockThemes,
+    };
+    blocks.colorGroups = {
+      ...DEFAULT_COLOR_GROUPS,
+      ...(blocks.colorGroups || {}),
+      ...colorGroups,
+    };
+  }, [blockThemes, colorGroups]);
+
+  return { colorGroups, blockThemes };
+}
+
+/** The active site theme, from props or the Redux store when there is one. */
+function useSiteTheme(fromProps?: SerializedTheme) {
+  const reduxContext = useContext(ReactReduxContext);
+  const store = reduxContext?.store || DUMMY_STORE;
+  const storeState = useSyncExternalStore(
+    store.subscribe,
+    store.getState,
+    store.getState,
+  ) as any;
+  return fromProps || getActiveSiteTheme(storeState);
+}
+
 export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
   const {
     id = 'theme',
@@ -138,196 +268,48 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
     onChangeBlock,
   } = props;
   const [isEditing, setIsEditing] = useState(false);
-  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
-  const [isBackMenuOpen, setIsBackMenuOpen] = useState(false);
-  const [isFrontMenuOpen, setIsFrontMenuOpen] = useState(false);
-
-  const themeDropdownRef = useRef<HTMLDivElement>(null);
-  const backDropdownRef = useRef<HTMLDivElement>(null);
-  const frontDropdownRef = useRef<HTMLDivElement>(null);
-
-  const reduxContext = useContext(ReactReduxContext);
-  const store = reduxContext?.store || DUMMY_STORE;
-  const storeState = useSyncExternalStore(
-    store.subscribe,
-    store.getState,
-    store.getState,
-  ) as any;
-
-  const siteTheme = props.siteTheme || getActiveSiteTheme(storeState);
-  const themeToken = siteTheme?.token;
-  const isNatal = themeToken === 'natal';
-
-  const baseDefaults = isNatal
-    ? {
-        colorGroups: NATAL_COLOR_GROUPS,
-        blockThemes: NATAL_BLOCK_THEMES,
-      }
-    : {
-        colorGroups: DEFAULT_COLOR_GROUPS,
-        blockThemes: DEFAULT_BLOCK_THEMES,
-      };
-
-  // Close floating menus on click outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        themeDropdownRef.current &&
-        !themeDropdownRef.current.contains(e.target as Node)
-      ) {
-        setIsThemeMenuOpen(false);
-      }
-      if (
-        backDropdownRef.current &&
-        !backDropdownRef.current.contains(e.target as Node)
-      ) {
-        setIsBackMenuOpen(false);
-      }
-      if (
-        frontDropdownRef.current &&
-        !frontDropdownRef.current.contains(e.target as Node)
-      ) {
-        setIsFrontMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  // Available ColorGroups and BlockThemes (merging active site theme data, props or defaults)
-  const availableColorGroups: Record<string, ColorGroup> = React.useMemo(() => {
-    return {
-      ...baseDefaults.colorGroups,
-      ...(siteTheme?.value?.color_groups || {}),
-      ...(formData?.color_groups || {}),
-      ...(objectvalue?.color_groups || {}),
-    };
-  }, [
-    baseDefaults.colorGroups,
-    siteTheme?.value?.color_groups,
-    formData?.color_groups,
-    objectvalue?.color_groups,
-  ]);
-
-  const availableBlockThemes: Record<string, BlockTheme> = React.useMemo(() => {
-    return {
-      ...baseDefaults.blockThemes,
-      ...(siteTheme?.value?.block_themes || {}),
-      ...(formData?.block_themes || {}),
-      ...(objectvalue?.block_themes || {}),
-    };
-  }, [
-    baseDefaults.blockThemes,
-    siteTheme?.value?.block_themes,
-    formData?.block_themes,
-    objectvalue?.block_themes,
-  ]);
-
-  // Keep config.blocks.blockThemes and colorGroups updated with available themes
-  useEffect(() => {
-    if (availableBlockThemes && (config as any)?.blocks) {
-      (config as any).blocks.blockThemes = {
-        ...DEFAULT_BLOCK_THEMES,
-        ...((config as any).blocks.blockThemes || {}),
-        ...availableBlockThemes,
-      };
-    }
-    if (availableColorGroups && (config as any)?.blocks) {
-      (config as any).blocks.colorGroups = {
-        ...DEFAULT_COLOR_GROUPS,
-        ...((config as any).blocks.colorGroups || {}),
-        ...availableColorGroups,
-      };
-    }
-  }, [availableBlockThemes, availableColorGroups]);
-
   const [customBack, setCustomBack] = useState<string | null>(null);
   const [customFront, setCustomFront] = useState<string | null>(null);
 
-  // Parse theme value
-  const rawTheme =
-    typeof value === 'object' && value !== null
-      ? value.theme
-      : value ||
-        formData?.theme ||
-        formData?.styles?.theme ||
-        objectvalue?.theme ||
-        'default';
+  const siteTheme = useSiteTheme(props.siteTheme);
+  const { colorGroups, blockThemes } = useAvailableThemes(
+    siteTheme,
+    formData,
+    objectvalue,
+  );
 
-  let initialThemeId = 'default';
-  let parsedBack: string | undefined;
-  let parsedFront: string | undefined;
+  const parsed = parseThemeValue(value, formData, objectvalue);
+  const currentThemeId = parsed.themeId;
+  // A named theme dictates its groups; a custom one keeps what was picked.
+  const named =
+    currentThemeId === 'custom' ? undefined : blockThemes[currentThemeId];
+  const currentBack =
+    named?.back_color_group ||
+    customBack ||
+    parsed.back ||
+    storedGroup('backColorGroup', value, formData, objectvalue) ||
+    'primary';
+  const currentFront =
+    named?.front_color_group ||
+    customFront ||
+    parsed.front ||
+    storedGroup('frontColorGroup', value, formData, objectvalue) ||
+    'neutral';
 
-  if (typeof rawTheme === 'string') {
-    if (rawTheme.startsWith('custom-')) {
-      initialThemeId = 'custom';
-      const parts = rawTheme.split('-');
-      parsedBack = parts[1];
-      parsedFront = parts[2];
-    } else {
-      initialThemeId = rawTheme;
-    }
-  }
-
-  const currentThemeId = initialThemeId;
-  const isCustomTheme =
-    currentThemeId === 'custom' || currentThemeId.startsWith('custom-');
-
-  const currentBack = isCustomTheme
-    ? customBack ||
-      parsedBack ||
-      formData?.backColorGroup ||
-      formData?.styles?.backColorGroup ||
-      objectvalue?.backColorGroup ||
-      (typeof value === 'object' ? value?.backColorGroup : undefined) ||
-      'primary'
-    : availableBlockThemes[currentThemeId]?.back_color_group ||
-      customBack ||
-      parsedBack ||
-      formData?.backColorGroup ||
-      formData?.styles?.backColorGroup ||
-      objectvalue?.backColorGroup ||
-      (typeof value === 'object' ? value?.backColorGroup : undefined) ||
-      'primary';
-
-  const currentFront = isCustomTheme
-    ? customFront ||
-      parsedFront ||
-      formData?.frontColorGroup ||
-      formData?.styles?.frontColorGroup ||
-      objectvalue?.frontColorGroup ||
-      (typeof value === 'object' ? value?.frontColorGroup : undefined) ||
-      'neutral'
-    : availableBlockThemes[currentThemeId]?.front_color_group ||
-      customFront ||
-      parsedFront ||
-      formData?.frontColorGroup ||
-      formData?.styles?.frontColorGroup ||
-      objectvalue?.frontColorGroup ||
-      (typeof value === 'object' ? value?.frontColorGroup : undefined) ||
-      'neutral';
-
-  const getGroupBg = (groupId: string): string => {
-    return (
-      availableColorGroups[groupId]?.background_color_light ||
-      DEFAULT_COLOR_GROUPS[groupId]?.background_color_light ||
-      '#ffffff'
-    );
-  };
+  const getGroupBg = (groupId: string): string =>
+    colorGroups[groupId]?.background_color_light ||
+    DEFAULT_COLOR_GROUPS[groupId]?.background_color_light ||
+    '#ffffff';
 
   const applyChanges = (
     newThemeValue: string,
     newBack: string,
     newFront: string,
   ) => {
-    const formattedTheme =
-      newThemeValue === 'custom' || newThemeValue.startsWith('custom')
-        ? `custom-${newBack}-${newFront}`
-        : newThemeValue;
+    const formattedTheme = newThemeValue.startsWith('custom')
+      ? `custom-${newBack}-${newFront}`
+      : newThemeValue;
 
-    // Notify standard onChange
     onChange(id, formattedTheme);
 
     const onChangeField = (props as any)?.onChangeField;
@@ -336,22 +318,18 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
       onChangeField('frontColorGroup', newFront);
     }
 
-    // Propagate to parent block and styles object if onChangeBlock or onChangeFormData is available
+    // Propagate to the parent block (or form) and its styles object.
     const parentOnChangeBlock = onChangeBlock || (props as any)?.onChangeBlock;
     const parentOnChangeFormData = (props as any)?.onChangeFormData;
-
-    const currentStyles = formData?.styles || objectvalue || {};
-    const updatedData = {
-      ...formData,
+    const groups = {
       theme: formattedTheme,
       backColorGroup: newBack,
       frontColorGroup: newFront,
-      styles: {
-        ...currentStyles,
-        theme: formattedTheme,
-        backColorGroup: newBack,
-        frontColorGroup: newFront,
-      },
+    };
+    const updatedData = {
+      ...formData,
+      ...groups,
+      styles: { ...(formData?.styles || objectvalue || {}), ...groups },
     };
 
     if (parentOnChangeBlock && block) {
@@ -361,51 +339,93 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
     }
   };
 
+  const selectGroups = (themeValue: string, back: string, front: string) => {
+    setCustomBack(back);
+    setCustomFront(front);
+    applyChanges(themeValue, back, front);
+  };
+
   const handleSelectTheme = (themeId: string) => {
-    setIsThemeMenuOpen(false);
-    if (themeId === 'custom' || themeId.startsWith('custom-')) {
-      let b = currentBack;
-      let f = currentFront;
-      if (themeId.startsWith('custom-')) {
-        const parts = themeId.split('-');
-        b = parts[1] || currentBack;
-        f = parts[2] || currentFront;
-      }
-      const customThemeValue = `custom-${b}-${f}`;
-      setCustomBack(b);
-      setCustomFront(f);
-      applyChanges(customThemeValue, b, f);
+    if (themeId.startsWith('custom')) {
+      const [, back, front] = themeId.split('-');
+      selectGroups('custom', back || currentBack, front || currentFront);
       setIsEditing(true);
       return;
     }
-    const targetTheme = availableBlockThemes[themeId];
-    const newBack = targetTheme?.back_color_group || 'primary';
-    const newFront = targetTheme?.front_color_group || 'neutral';
-    setCustomBack(newBack);
-    setCustomFront(newFront);
-    applyChanges(themeId, newBack, newFront);
+    const target = blockThemes[themeId];
+    selectGroups(
+      themeId,
+      target?.back_color_group || 'primary',
+      target?.front_color_group || 'neutral',
+    );
   };
 
-  const handleSelectBack = (groupId: string) => {
-    setIsBackMenuOpen(false);
-    setCustomBack(groupId);
-    const customThemeValue = `custom-${groupId}-${currentFront}`;
-    applyChanges(customThemeValue, groupId, currentFront);
+  const themeLabel = (themeId: string) => {
+    if (themeId === 'custom') return 'Personalizado';
+    if (themeId === 'default') return 'Padrão';
+    return blockThemes[themeId]?.name || themeId;
   };
 
-  const handleSelectFront = (groupId: string) => {
-    setIsFrontMenuOpen(false);
-    setCustomFront(groupId);
-    const customThemeValue = `custom-${currentBack}-${groupId}`;
-    applyChanges(customThemeValue, currentBack, groupId);
-  };
+  const themeOptions: SwatchOption[] = Object.values(blockThemes).map((bt) => ({
+    id: bt.id,
+    label: themeLabel(bt.id),
+    swatch: (
+      <SplitColorCircle
+        backColor={getGroupBg(bt.back_color_group)}
+        frontColor={getGroupBg(bt.front_color_group)}
+        size={18}
+      />
+    ),
+  }));
+  if (currentThemeId === 'custom') {
+    themeOptions.push({
+      id: 'custom',
+      label: 'Personalizado',
+      swatch: (
+        <SplitColorCircle
+          backColor={getGroupBg(currentBack)}
+          frontColor={getGroupBg(currentFront)}
+          size={18}
+        />
+      ),
+    });
+  }
 
-  const currentThemeTitle =
-    currentThemeId === 'custom'
-      ? 'Personalizado'
-      : currentThemeId === 'default'
-        ? 'Padrão'
-        : availableBlockThemes[currentThemeId]?.name || currentThemeId;
+  const groupOptions: SwatchOption[] = Object.values(colorGroups).map((cg) => ({
+    id: cg.id,
+    label: cg.name || cg.id,
+    swatch: <SolidColorCircle color={getGroupBg(cg.id)} size={16} />,
+  }));
+
+  const groupPicker = (
+    kind: 'back' | 'front',
+    label: string,
+    current: string,
+  ) => (
+    <div className="colorgroup-field-group">
+      <span className="field-group-label">{label}:</span>
+      <SwatchDropdown
+        variant="colorgroup"
+        value={current}
+        options={groupOptions}
+        onSelect={(groupId) =>
+          kind === 'back'
+            ? selectGroups('custom', groupId, currentFront)
+            : selectGroups('custom', currentBack, groupId)
+        }
+        triggerSwatch={
+          <SolidColorCircle color={getGroupBg(current)} size={16} />
+        }
+        triggerLabel={colorGroups[current]?.name || current}
+        triggerLabelClassName="cg-label"
+        ariaLabel={label}
+        hiddenSelect={{
+          testId: `${kind}-cg-hidden-select`,
+          className: `${kind}-cg-hidden-select`,
+        }}
+      />
+    </div>
+  );
 
   return (
     <div className="block-theme-widget">
@@ -416,290 +436,55 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
         {description && <p className="help">{description}</p>}
       </div>
 
-      {/* Main Block Theme Selector Row */}
       <div className="block-theme-selector-row">
-        <div className="theme-dropdown-container" ref={themeDropdownRef}>
-          <button
-            type="button"
-            className="theme-dropdown-trigger"
-            onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
-            aria-haspopup="listbox"
-            aria-expanded={isThemeMenuOpen}
-            id={`field-${id}`}
-          >
+        <SwatchDropdown
+          variant="theme"
+          value={currentThemeId}
+          options={themeOptions}
+          onSelect={handleSelectTheme}
+          triggerSwatch={
             <SplitColorCircle
               backColor={getGroupBg(currentBack)}
               frontColor={getGroupBg(currentFront)}
               size={18}
             />
-            <span className="theme-name-label">{currentThemeTitle}</span>
-            <span className={`dropdown-arrow ${isThemeMenuOpen ? 'open' : ''}`}>
-              ▾
-            </span>
-          </button>
+          }
+          triggerLabel={themeLabel(currentThemeId)}
+          triggerLabelClassName="theme-name-label"
+          triggerId={`field-${id}`}
+          hiddenSelect={{
+            testId: 'block-theme-hidden-select',
+            className: 'block-theme-hidden-select',
+            extraOptions: [
+              { value: 'custom', label: 'Personalizado' },
+              {
+                value: `custom-${currentBack}-${currentFront}`,
+                label: `Personalizado (${currentBack}/${currentFront})`,
+              },
+            ],
+          }}
+        />
 
-          {/* Accessible hidden select for testing and screen readers */}
-          <select
-            className="sr-only block-theme-hidden-select"
-            data-testid="block-theme-hidden-select"
-            value={currentThemeId}
-            onChange={(e) => handleSelectTheme(e.target.value)}
-            tabIndex={-1}
-            aria-hidden="true"
-            style={{ display: 'none' }}
-          >
-            {Object.values(availableBlockThemes).map((bt) => (
-              <option key={bt.id} value={bt.id}>
-                {bt.name || bt.id}
-              </option>
-            ))}
-            <option value="custom">Personalizado</option>
-            <option value={`custom-${currentBack}-${currentFront}`}>
-              Personalizado ({currentBack}/{currentFront})
-            </option>
-          </select>
-
-          {isThemeMenuOpen && (
-            <div className="theme-dropdown-menu" role="listbox">
-              {Object.values(availableBlockThemes).map((bt) => {
-                const bBg = getGroupBg(bt.back_color_group);
-                const fBg = getGroupBg(bt.front_color_group);
-                const isSelected = currentThemeId === bt.id;
-                const displayName =
-                  bt.id === 'default' ? 'Padrão' : bt.name || bt.id;
-
-                return (
-                  <div
-                    key={bt.id}
-                    className={`theme-dropdown-item ${isSelected ? 'selected' : ''}`}
-                    role="option"
-                    tabIndex={0}
-                    aria-selected={isSelected}
-                    onClick={() => handleSelectTheme(bt.id)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleSelectTheme(bt.id);
-                      }
-                    }}
-                  >
-                    <SplitColorCircle
-                      backColor={bBg}
-                      frontColor={fBg}
-                      size={18}
-                    />
-                    <span className="item-label">{displayName}</span>
-                    {isSelected && <span className="check-mark">✓</span>}
-                  </div>
-                );
-              })}
-
-              {currentThemeId === 'custom' && (
-                <div
-                  className="theme-dropdown-item selected"
-                  role="option"
-                  tabIndex={0}
-                  aria-selected={true}
-                  onClick={() => handleSelectTheme('custom')}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleSelectTheme('custom');
-                    }
-                  }}
-                >
-                  <SplitColorCircle
-                    backColor={getGroupBg(currentBack)}
-                    frontColor={getGroupBg(currentFront)}
-                    size={18}
-                  />
-                  <span className="item-label">Personalizado</span>
-                  <span className="check-mark">✓</span>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Edit Pencil Button */}
         <button
           type="button"
           className={`theme-edit-btn ${isEditing ? 'is-active' : ''}`}
           title="Editar ColorGroups do tema"
           aria-label="Editar ColorGroups do tema"
+          aria-pressed={isEditing}
           onClick={() => setIsEditing(!isEditing)}
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-          </svg>
+          <PencilIcon />
         </button>
       </div>
 
-      {/* Expanded ColorGroups Details Section */}
       {isEditing && (
         <div className="theme-colorgroups-details">
           <p className="details-help">
             Personalize as cores deste bloco selecionando os ColorGroups para
             fundo e elementos da frente.
           </p>
-
-          {/* Área de Trás (Back ColorGroup) */}
-          <div className="colorgroup-field-group">
-            <span className="field-group-label">
-              Área de Trás (Color Group):
-            </span>
-            <div
-              className="colorgroup-dropdown-container"
-              ref={backDropdownRef}
-            >
-              <button
-                type="button"
-                className="colorgroup-dropdown-trigger"
-                onClick={() => setIsBackMenuOpen(!isBackMenuOpen)}
-                aria-haspopup="listbox"
-                aria-expanded={isBackMenuOpen}
-                aria-label="Área de Trás (Color Group)"
-              >
-                <SolidColorCircle color={getGroupBg(currentBack)} size={16} />
-                <span className="cg-label">
-                  {availableColorGroups[currentBack]?.name || currentBack}
-                </span>
-                <span
-                  className={`dropdown-arrow ${isBackMenuOpen ? 'open' : ''}`}
-                >
-                  ▾
-                </span>
-              </button>
-
-              <select
-                className="sr-only back-cg-hidden-select"
-                data-testid="back-cg-hidden-select"
-                value={currentBack}
-                onChange={(e) => handleSelectBack(e.target.value)}
-                tabIndex={-1}
-                aria-hidden="true"
-                style={{ display: 'none' }}
-              >
-                {Object.values(availableColorGroups).map((cg) => (
-                  <option key={cg.id} value={cg.id}>
-                    {cg.name || cg.id}
-                  </option>
-                ))}
-              </select>
-
-              {isBackMenuOpen && (
-                <div className="colorgroup-dropdown-menu" role="listbox">
-                  {Object.values(availableColorGroups).map((cg) => {
-                    const isSelected = currentBack === cg.id;
-                    return (
-                      <div
-                        key={cg.id}
-                        className={`colorgroup-dropdown-item ${isSelected ? 'selected' : ''}`}
-                        role="option"
-                        tabIndex={0}
-                        aria-selected={isSelected}
-                        onClick={() => handleSelectBack(cg.id)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            handleSelectBack(cg.id);
-                          }
-                        }}
-                      >
-                        <SolidColorCircle color={getGroupBg(cg.id)} size={16} />
-                        <span className="item-label">{cg.name || cg.id}</span>
-                        {isSelected && <span className="check-mark">✓</span>}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Área da Frente (Front ColorGroup) */}
-          <div className="colorgroup-field-group">
-            <span className="field-group-label">
-              Área da Frente (Color Group):
-            </span>
-            <div
-              className="colorgroup-dropdown-container"
-              ref={frontDropdownRef}
-            >
-              <button
-                type="button"
-                className="colorgroup-dropdown-trigger"
-                onClick={() => setIsFrontMenuOpen(!isFrontMenuOpen)}
-                aria-haspopup="listbox"
-                aria-expanded={isFrontMenuOpen}
-                aria-label="Área da Frente (Color Group)"
-              >
-                <SolidColorCircle color={getGroupBg(currentFront)} size={16} />
-                <span className="cg-label">
-                  {availableColorGroups[currentFront]?.name || currentFront}
-                </span>
-                <span
-                  className={`dropdown-arrow ${isFrontMenuOpen ? 'open' : ''}`}
-                >
-                  ▾
-                </span>
-              </button>
-
-              <select
-                className="sr-only front-cg-hidden-select"
-                data-testid="front-cg-hidden-select"
-                value={currentFront}
-                onChange={(e) => handleSelectFront(e.target.value)}
-                tabIndex={-1}
-                aria-hidden="true"
-                style={{ display: 'none' }}
-              >
-                {Object.values(availableColorGroups).map((cg) => (
-                  <option key={cg.id} value={cg.id}>
-                    {cg.name || cg.id}
-                  </option>
-                ))}
-              </select>
-
-              {isFrontMenuOpen && (
-                <div className="colorgroup-dropdown-menu" role="listbox">
-                  {Object.values(availableColorGroups).map((cg) => {
-                    const isSelected = currentFront === cg.id;
-                    return (
-                      <div
-                        key={cg.id}
-                        className={`colorgroup-dropdown-item ${isSelected ? 'selected' : ''}`}
-                        role="option"
-                        tabIndex={0}
-                        aria-selected={isSelected}
-                        onClick={() => handleSelectFront(cg.id)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            handleSelectFront(cg.id);
-                          }
-                        }}
-                      >
-                        <SolidColorCircle color={getGroupBg(cg.id)} size={16} />
-                        <span className="item-label">{cg.name || cg.id}</span>
-                        {isSelected && <span className="check-mark">✓</span>}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
+          {groupPicker('back', 'Área de Trás (Color Group)', currentBack)}
+          {groupPicker('front', 'Área da Frente (Color Group)', currentFront)}
         </div>
       )}
     </div>

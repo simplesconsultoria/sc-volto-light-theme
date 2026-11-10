@@ -3,6 +3,7 @@ import cx from 'classnames';
 import FormattedDate from '@plone/volto/components/theme/FormattedDate/FormattedDate';
 import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
 import type { HeroBlockData } from './types';
+import { getHeroButtonProps, shouldShowHeroDate } from './heroContent';
 
 interface HeroBlockContentProps {
   data: HeroBlockData;
@@ -16,6 +17,78 @@ interface HeroBlockContentProps {
   };
 }
 
+type HeroButtonData = NonNullable<HeroBlockData['buttons']>[number];
+
+const HeroHeaderText = ({
+  headerText,
+  date,
+}: {
+  headerText?: string;
+  date: string | null;
+}) => {
+  if (!headerText && !date) return null;
+  return (
+    <p className="hero-header-text">
+      {headerText}
+      {headerText && date && ' - '}
+      {date && (
+        <time dateTime={date}>
+          {/* @ts-expect-error Volto FormattedDate types are incomplete */}
+          <FormattedDate date={date} />
+        </time>
+      )}
+    </p>
+  );
+};
+
+const HeroButton = ({
+  button,
+  defaultHref,
+  displayTitle,
+  isEditMode,
+}: {
+  button: HeroButtonData;
+  defaultHref: string;
+  displayTitle: string;
+  isEditMode?: boolean;
+}) => {
+  const { link, text, themeClass } = getHeroButtonProps(button, defaultHref);
+
+  if (isEditMode) {
+    return (
+      <div className={cx('hero-cta', themeClass)}>
+        <span className="hero-button item" aria-hidden="true">
+          {text}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <ConditionalLink
+      condition={!!link}
+      href={link}
+      className={cx('hero-cta', themeClass)}
+      aria-label={`${text} sobre ${displayTitle}`}
+    >
+      <span className="hero-button item">{text}</span>
+    </ConditionalLink>
+  );
+};
+
+const HeroTags = ({ tags }: { tags?: string[] }) => {
+  if (!tags || tags.length === 0) return null;
+  return (
+    <ul className="hero-tags" aria-label="Tags">
+      {tags.map((tag: string) => (
+        <li key={tag} className="hero-tag">
+          {tag}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
 const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
   data,
   isEditMode,
@@ -27,26 +100,13 @@ const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
     TitleTag,
   },
 }) => {
+  const visibleDate = shouldShowHeroDate(date, data.showDate) ? date : null;
+  const buttons = data.buttons || [];
+
   return (
     <>
       <header className="hero-header">
-        {(data.headerText ||
-          (date && date !== 'None' && data.showDate !== false)) && (
-          <p className="hero-header-text">
-            {data.headerText}
-            {data.headerText &&
-              date &&
-              date !== 'None' &&
-              data.showDate !== false &&
-              ' - '}
-            {date && date !== 'None' && data.showDate !== false && (
-              <time dateTime={date}>
-                {/* @ts-expect-error Volto FormattedDate types are incomplete */}
-                <FormattedDate date={date} />
-              </time>
-            )}
-          </p>
-        )}
+        <HeroHeaderText headerText={data.headerText} date={visibleDate} />
         {data.fileType && <p className="hero-file-type">{data.fileType}</p>}
         {displayTitle && (
           <TitleTag className={cx('hero-title', `is-${TitleTag}`)}>
@@ -59,41 +119,21 @@ const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
         <p className="hero-description">{displayDescription}</p>
       )}
 
-      {data.buttons && data.buttons.length > 0 && (
+      {buttons.length > 0 && (
         <div
           className="hero-cta-group"
           style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
         >
-          {data.buttons.map((btn, index) => {
-            const btnLink = btn.buttonLink?.[0]?.['@id'] || defaultHref;
-            const btnText = btn.buttonText || 'Saiba mais';
-            const themeClass = btn.theme
-              ? `theme-${btn.theme}`
-              : 'theme-primary';
-
-            if (isEditMode) {
-              return (
-                <div
-                  key={btnText + String(btnLink)}
-                  className={cx('hero-cta', themeClass)}
-                >
-                  <span className="hero-button item" aria-hidden="true">
-                    {btnText}
-                  </span>
-                </div>
-              );
-            }
-
+          {buttons.map((btn) => {
+            const { link, text } = getHeroButtonProps(btn, defaultHref);
             return (
-              <ConditionalLink
-                key={btnText + String(btnLink)}
-                condition={!!btnLink}
-                href={btnLink}
-                className={cx('hero-cta', themeClass)}
-                aria-label={`${btnText} sobre ${displayTitle}`}
-              >
-                <span className="hero-button item">{btnText}</span>
-              </ConditionalLink>
+              <HeroButton
+                key={text + String(link)}
+                button={btn}
+                defaultHref={defaultHref}
+                displayTitle={displayTitle}
+                isEditMode={isEditMode}
+              />
             );
           })}
         </div>
@@ -101,15 +141,7 @@ const HeroBlockContent: React.FC<HeroBlockContentProps> = ({
 
       {data.footerText && <p className="hero-footer-text">{data.footerText}</p>}
 
-      {data.tags && data.tags.length > 0 && (
-        <ul className="hero-tags" aria-label="Tags">
-          {data.tags.map((tag: string) => (
-            <li key={tag} className="hero-tag">
-              {tag}
-            </li>
-          ))}
-        </ul>
-      )}
+      <HeroTags tags={data.tags} />
     </>
   );
 };

@@ -1,0 +1,1 @@
+The listing Event Calendar template no longer crashes the block on items without a `start` date: they render as plain cards, and an event with only an end date shows that date. The `EventTemplate` of `@kitconcept/volto-light-theme` is shadowed for this. @Humanaice

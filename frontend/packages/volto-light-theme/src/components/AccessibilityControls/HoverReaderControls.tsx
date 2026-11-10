@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 
@@ -63,6 +63,30 @@ const HoverReaderControls: React.FC = () => {
       window.speechSynthesis.speak(utterance);
     },
     [rate],
+  );
+
+  // Hover speech is debounced. The module-level timer is shared by every
+  // instance so only the latest hover speaks; this ref is the one this
+  // instance scheduled, so unmounting cancels it.
+  const hoverTimer = useRef<number | null>(null);
+
+  const cancelScheduledSpeech = useCallback(() => {
+    if (hoverTimer.current === null) return;
+    window.clearTimeout(hoverTimer.current);
+    if (globalHoverTimeout === hoverTimer.current) globalHoverTimeout = null;
+    hoverTimer.current = null;
+  }, []);
+
+  const scheduleSpeech = useCallback(
+    (text: string) => {
+      if (globalHoverTimeout !== null) window.clearTimeout(globalHoverTimeout);
+      hoverTimer.current = window.setTimeout(() => {
+        globalLastHoverText = text;
+        speakText(text);
+      }, 250);
+      globalHoverTimeout = hoverTimer.current;
+    },
+    [speakText],
   );
 
   useEffect(() => {
@@ -161,25 +185,21 @@ const HoverReaderControls: React.FC = () => {
       if (!text || text.length < 3 || text.length > 3000) return;
       if (text === globalLastHoverText) return;
 
-      if (globalHoverTimeout !== null) {
-        window.clearTimeout(globalHoverTimeout);
-      }
-
-      globalHoverTimeout = window.setTimeout(() => {
-        globalLastHoverText = text;
-        speakText(text);
-      }, 250);
+      scheduleSpeech(text);
     };
 
     document.body.addEventListener('mouseover', onMouseOver);
 
     return () => {
       document.body.removeEventListener('mouseover', onMouseOver);
-      if (globalHoverTimeout !== null) {
-        window.clearTimeout(globalHoverTimeout);
-      }
+      cancelScheduledSpeech();
     };
-  }, [hoverReaderEnabled, speakText, speechSupported]);
+  }, [
+    hoverReaderEnabled,
+    scheduleSpeech,
+    cancelScheduledSpeech,
+    speechSupported,
+  ]);
 
   const onToggleHoverReader = useCallback(() => {
     const next = !hoverReaderEnabled;

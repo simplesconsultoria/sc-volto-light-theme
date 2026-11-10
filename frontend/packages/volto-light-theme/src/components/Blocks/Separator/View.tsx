@@ -2,6 +2,9 @@ import React from 'react';
 import cx from 'classnames';
 import { normalizeBlockWidth } from '../../../helpers/blockWidth';
 
+/** Width of the upstream separator's short line (`styles.shortLine`). */
+export const SHORT_LINE_WIDTH = '165px';
+
 // Estilos de margem conforme o alinhamento selecionado
 const getMarginStyle = (alignment: string) => {
   switch (alignment) {
@@ -26,8 +29,13 @@ const SeparatorView = (props: any) => {
     (data?.styles?.['--cardBorderWidth']
       ? parseInt(data?.styles?.['--cardBorderWidth'], 10)
       : 1);
-  // Largura do separador (100% por padrão)
-  const width = data?.width || data?.styles?.width || '100%';
+  // Largura do separador (100% por padrão). Blocos salvos pelo separador
+  // upstream (@kitconcept/volto-separator-block) usam `styles.shortLine`
+  // para a linha curta, que lá mede 165px.
+  const width =
+    data?.width ||
+    data?.styles?.width ||
+    (data?.styles?.shortLine ? SHORT_LINE_WIDTH : '100%');
   // Alinhamento horizontal (center por padrão)
   const alignment =
     data?.alignment ||

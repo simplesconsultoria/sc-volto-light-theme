@@ -365,6 +365,26 @@
         cursor: pointer;
         user-select: none;
 
+        // The toggle is a <button> (see Widgets/shared/CardHeader.tsx):
+        // reset it so it keeps looking like the title row.
+        .card-toggle {
+          min-width: 0;
+          flex: 1;
+          padding: 0;
+          border: 0;
+          margin: 0;
+          background: none;
+          color: inherit;
+          cursor: pointer;
+          font: inherit;
+          text-align: left;
+
+          &:focus-visible {
+            outline: 2px solid var(--accent-color, currentColor);
+            outline-offset: 2px;
+          }
+        }
+
         .header-left {
           display: flex;
           align-items: center;

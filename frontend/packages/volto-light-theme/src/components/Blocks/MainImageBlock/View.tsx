@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import withBlockExtensions from '@plone/volto/helpers/Extensions/withBlockExtensions';
 import Image from '@plone/volto/components/theme/Image/Image';
-import defaultPlaceholderSVG from '@plone/volto/components/manage/Blocks/Listing/default-image.svg';
 import config from '@plone/volto/registry';
 import { FormattedMessage } from 'react-intl';
 import cx from 'classnames';
@@ -10,6 +9,13 @@ import type { MainImageBlockData } from './index';
 import Layout, { type MainImageAlign, type MainImageSize } from './Layout';
 import { resolveBlockTheme } from '../../../config/blockThemes';
 import { ReactReduxContext, useSelector } from 'react-redux';
+import {
+  findPreviewImage,
+  resolveEffectivePreview,
+  resolveMainImage,
+  resolvePageContent,
+  resolveThemeStyle,
+} from './helpers';
 
 interface MainImageBlockViewProps {
   data: MainImageBlockData;
@@ -22,24 +28,24 @@ interface MainImageBlockViewProps {
   [key: string]: any;
 }
 
-function unwrapCandidate(candidate: any): any {
-  if (!candidate) return undefined;
-  if (Array.isArray(candidate)) {
-    return candidate.length > 0 ? unwrapCandidate(candidate[0]) : undefined;
-  }
-  return candidate;
-}
+/** The page content from the Redux store (state or store snapshot). */
+const useStateContent = () => {
+  const reduxContext = useContext(ReactReduxContext);
+  const reduxContent = useSelector((state: any) => state.content?.data);
+  return reduxContent || reduxContext?.store?.getState()?.content?.data;
+};
 
-function getPreviewCandidate(item: any) {
-  if (!item || typeof item !== 'object') return undefined;
-  const raw =
-    item.preview_image_link ||
-    item.preview_image ||
-    item.image ||
-    item.url ||
-    (item.image_scales ? item : undefined);
-  return unwrapCandidate(raw);
-}
+const EmptyMainImage: React.FC<{
+  className?: string;
+  style?: React.CSSProperties;
+}> = ({ className, style }) => (
+  <div className={cx('main-image-block', 'empty', className)} style={style}>
+    <FormattedMessage
+      id="No preview image found on this page."
+      defaultMessage="No preview image found on this page. Add a preview image to the page to display it in this block."
+    />
+  </div>
+);
 
 const MainImageBlockView: React.FC<MainImageBlockViewProps> = (props) => {
   const {
@@ -52,144 +58,61 @@ const MainImageBlockView: React.FC<MainImageBlockViewProps> = (props) => {
     metadata,
   } = props;
 
-  const reduxContext = useContext(ReactReduxContext);
-  const reduxContent = useSelector((state: any) => state.content?.data);
-  const stateContent =
-    reduxContent || reduxContext?.store?.getState()?.content?.data;
+  const stateContent = useStateContent();
 
   // Resolves preview image across block data, top-level page, Redux store, and nested containers
   // (GridBlock, CustomGrid, Accordion) where metadata holds the page document.
-  const previewImage =
-    getPreviewCandidate(data) ||
-    getPreviewCandidate(metadata) ||
-    getPreviewCandidate(properties) ||
-    getPreviewCandidate(content) ||
-    getPreviewCandidate(stateContent);
-
-  const pageContent: Content =
-    (metadata && Object.keys(metadata).length > 0 ? metadata : null) ||
-    (properties && Object.keys(properties).length > 0 ? properties : null) ||
-    (content && Object.keys(content).length > 0 ? content : null) ||
-    stateContent ||
-    ({} as Content);
-
-  const themeValue = (data as any)?.theme ?? (data as any)?.styles?.theme;
-  const resolved = resolveBlockTheme(data);
-
-  const themeStyle =
-    typeof themeValue === 'object' && themeValue !== null
-      ? (themeValue as React.CSSProperties)
-      : resolved.style;
-
-  const mergedStyle: React.CSSProperties = {
-    ...(style || {}),
-    ...themeStyle,
-  };
-
-  const effectivePreview =
-    previewImage ||
-    (data.title || data.description || (pageContent as any)?.title
-      ? {
-          title: data.title || (pageContent as any)?.title || 'Lead Image',
-          description:
-            data.description ||
-            (pageContent as any)?.preview_caption_link ||
-            (pageContent as any)?.description ||
-            '',
-          url: defaultPlaceholderSVG,
-          download: defaultPlaceholderSVG,
-        }
-      : undefined);
+  const previewImage = findPreviewImage([
+    data,
+    metadata,
+    properties,
+    content,
+    stateContent,
+  ]);
+  const pageContent: Content = resolvePageContent(
+    metadata,
+    properties,
+    content,
+    stateContent,
+  );
+  const effectivePreview = resolveEffectivePreview(
+    previewImage,
+    data,
+    pageContent,
+  );
 
   if (!effectivePreview) {
     return isEditMode ? (
-      <div className={cx('main-image-block', 'empty', className)} style={style}>
-        <FormattedMessage
-          id="No preview image found on this page."
-          defaultMessage="No preview image found on this page. Add a preview image to the page to display it in this block."
-        />
-      </div>
+      <EmptyMainImage className={className} style={style} />
     ) : null;
   }
 
-  // Use custom title/description when provided; otherwise default to preview image or page metadata
-  const imageTitle =
-    data.title !== undefined && data.title !== ''
-      ? data.title
-      : (effectivePreview as any)?.title || (pageContent as any)?.title || '';
-
-  const imageDescription =
-    data.description !== undefined && data.description !== ''
-      ? data.description
-      : (pageContent as any)?.preview_caption_link ||
-        (pageContent as any)?.preview_caption ||
-        (pageContent as any)?.image_caption ||
-        (effectivePreview as any)?.description ||
-        (pageContent as any)?.description ||
-        '';
-
-  const altText =
-    data.altText ||
-    imageTitle ||
-    (effectivePreview as any)?.title ||
-    imageDescription ||
-    'Imagem principal';
-
-  const imageFieldToUse =
-    (effectivePreview as any)?.image_field ||
-    ((pageContent as any)?.preview_image_link ? undefined : 'preview_image');
-
-  const hasItemScales = Boolean(
-    effectivePreview &&
-      typeof effectivePreview === 'object' &&
-      (effectivePreview as any).image_scales &&
-      (imageFieldToUse
-        ? (effectivePreview as any).image_scales[imageFieldToUse]
-        : (effectivePreview as any).image_scales.preview_image ||
-          (effectivePreview as any).image_scales.image),
-  );
-
-  const rawCandidate =
-    typeof effectivePreview === 'string'
-      ? effectivePreview
-      : (effectivePreview as any)?.download ||
-        (effectivePreview as any)?.url ||
-        (effectivePreview as any)?.['@id'] ||
-        (effectivePreview as any)?.image?.download ||
-        (pageContent as any)?.preview_image_link ||
-        (pageContent as any)?.preview_image ||
-        defaultPlaceholderSVG;
-
-  const unwrapped = unwrapCandidate(rawCandidate);
-  const candidateUrl =
-    typeof unwrapped === 'string'
-      ? unwrapped
-      : unwrapped?.['@id'] ||
-        unwrapped?.url ||
-        unwrapped?.download ||
-        defaultPlaceholderSVG;
-
-  const imageElement = (
-    <Image
-      item={hasItemScales ? effectivePreview : undefined}
-      src={!hasItemScales && candidateUrl ? candidateUrl : undefined}
-      imageField={imageFieldToUse}
-      alt={altText}
-      loading="lazy"
-      responsive={true}
-      sizes={(config.blocks.blocksConfig as any).image?.getSizes?.(data)}
-    />
-  );
+  const resolved = resolveBlockTheme(data);
+  const mergedStyle: React.CSSProperties = {
+    ...(style || {}),
+    ...resolveThemeStyle(data, resolved.style),
+  };
+  const image = resolveMainImage(data, effectivePreview, pageContent);
 
   return (
     <Layout
       align={data.align as MainImageAlign | undefined}
       size={data.size as MainImageSize | undefined}
-      title={imageTitle}
-      description={imageDescription}
+      title={image.title}
+      description={image.description}
       className={cx(className, resolved.className)}
       style={mergedStyle}
-      image={imageElement}
+      image={
+        <Image
+          item={image.item}
+          src={image.src}
+          imageField={image.imageField}
+          alt={image.alt}
+          loading="lazy"
+          responsive={true}
+          sizes={(config.blocks.blocksConfig as any).image?.getSizes?.(data)}
+        />
+      }
     />
   );
 };

@@ -164,6 +164,10 @@ interface PresetDefinition {
   tooltip: string;
   icon: React.FC;
   isActive: (sides: BorderSides) => boolean;
+  /** The sides this preset sets for a thickness `t`. */
+  apply: (t: number) => BorderSides;
+  /** What the live region announces. */
+  announce: (t: number) => string;
 }
 
 const PRESETS: PresetDefinition[] = [
@@ -174,6 +178,8 @@ const PRESETS: PresetDefinition[] = [
     icon: IconPresetNone,
     isActive: (s) =>
       s.top === 0 && s.right === 0 && s.bottom === 0 && s.left === 0,
+    apply: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
+    announce: () => 'Nenhuma borda selecionada',
   },
   {
     key: 'all',
@@ -181,6 +187,8 @@ const PRESETS: PresetDefinition[] = [
     tooltip: 'Borda completa em todos os 4 lados',
     icon: IconPresetAll,
     isActive: (s) => s.top > 0 && s.right > 0 && s.bottom > 0 && s.left > 0,
+    apply: (t) => ({ top: t, right: t, bottom: t, left: t }),
+    announce: (t) => `Borda completa ativada com ${t} pixels`,
   },
   {
     key: 'top',
@@ -189,6 +197,8 @@ const PRESETS: PresetDefinition[] = [
     icon: IconPresetTop,
     isActive: (s) =>
       s.top > 0 && s.right === 0 && s.bottom === 0 && s.left === 0,
+    apply: (t) => ({ top: t, right: 0, bottom: 0, left: 0 }),
+    announce: (t) => `Borda no topo ativada com ${t} pixels`,
   },
   {
     key: 'bottom',
@@ -197,6 +207,8 @@ const PRESETS: PresetDefinition[] = [
     icon: IconPresetBottom,
     isActive: (s) =>
       s.top === 0 && s.right === 0 && s.bottom > 0 && s.left === 0,
+    apply: (t) => ({ top: 0, right: 0, bottom: t, left: 0 }),
+    announce: (t) => `Borda abaixo ativada com ${t} pixels`,
   },
   {
     key: 'sides',
@@ -204,6 +216,8 @@ const PRESETS: PresetDefinition[] = [
     tooltip: 'Bordas nas laterais (esquerda e direita)',
     icon: IconPresetSides,
     isActive: (s) => s.top === 0 && s.right > 0 && s.bottom === 0 && s.left > 0,
+    apply: (t) => ({ top: 0, right: t, bottom: 0, left: t }),
+    announce: (t) => `Bordas laterais ativadas com ${t} pixels`,
   },
   {
     key: 'top-left',
@@ -211,6 +225,9 @@ const PRESETS: PresetDefinition[] = [
     tooltip: 'Bordas no topo e na lateral esquerda',
     icon: IconPresetTopLeft,
     isActive: (s) => s.top > 0 && s.right === 0 && s.bottom === 0 && s.left > 0,
+    apply: (t) => ({ top: t, right: 0, bottom: 0, left: t }),
+    announce: (t) =>
+      `Bordas no topo e na lateral esquerda ativadas com ${t} pixels`,
   },
 ];
 
@@ -219,6 +236,10 @@ interface SideDefinition {
   label: string;
   tooltip: string;
   icon: React.FC;
+  /** Accessible name of the side's toggle. */
+  ariaName: string;
+  /** Adjective used in announcements ("Borda superior ativada"). */
+  announceName: string;
 }
 
 const SIDE_CONFIGS: SideDefinition[] = [
@@ -227,26 +248,172 @@ const SIDE_CONFIGS: SideDefinition[] = [
     label: 'Topo',
     tooltip: 'Borda Superior (topo)',
     icon: IconSideTop,
+    ariaName: 'Borda Superior',
+    announceName: 'superior',
   },
   {
     key: 'right',
     label: 'Direita',
     tooltip: 'Borda Lateral Direita',
     icon: IconSideRight,
+    ariaName: 'Borda Direita',
+    announceName: 'direita',
   },
   {
     key: 'bottom',
     label: 'Abaixo',
     tooltip: 'Borda Inferior (abaixo)',
     icon: IconSideBottom,
+    ariaName: 'Borda Inferior',
+    announceName: 'inferior',
   },
   {
     key: 'left',
     label: 'Esquerda',
     tooltip: 'Borda Lateral Esquerda',
     icon: IconSideLeft,
+    ariaName: 'Borda Esquerda',
+    announceName: 'esquerda',
   },
 ];
+
+/** Thickest border the widget allows, in pixels. */
+const MAX_THICKNESS = 24;
+
+/**
+ * Read a thickness typed into a number field: anything that is not a finite
+ * number (empty field, `-`, `e`) counts as 0, and the result is clamped.
+ */
+export function toThickness(raw: string | number): number {
+  const n = typeof raw === 'number' ? raw : Number(raw);
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.min(MAX_THICKNESS, Math.round(n)));
+}
+
+const StepIcon: React.FC<{ plus?: boolean }> = ({ plus }) => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    aria-hidden="true"
+  >
+    {plus && <line x1="12" y1="5" x2="12" y2="19" />}
+    <line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+);
+
+/** "Espessura da Borda" number field with -1 / +1 buttons. */
+const ThicknessStepper: React.FC<{
+  widgetId: string;
+  thickness: number;
+  onChange: (value: number) => void;
+}> = ({ widgetId, thickness, onChange }) => (
+  <div className="border-widget__thickness-row">
+    <label
+      htmlFor={`${widgetId}-thickness-input`}
+      className="border-widget__thickness-label"
+    >
+      Espessura da Borda:
+    </label>
+    <div className="border-widget__stepper-wrapper">
+      <button
+        type="button"
+        className="border-widget__stepper-btn border-widget__stepper-btn--dec"
+        onClick={() => onChange(thickness - 1)}
+        disabled={thickness <= 0}
+        aria-label="Diminuir espessura em 1 pixel"
+        title="Diminuir espessura (-1px)"
+      >
+        <StepIcon />
+      </button>
+
+      <div className="border-widget__stepper-input-container">
+        <input
+          id={`${widgetId}-thickness-input`}
+          type="number"
+          min="0"
+          max={MAX_THICKNESS}
+          value={thickness}
+          onChange={(e) => onChange(toThickness(e.target.value))}
+          className="border-widget__number-input"
+          aria-describedby={`${widgetId}-thickness-unit`}
+        />
+        <span id={`${widgetId}-thickness-unit`} className="border-widget__unit">
+          px
+        </span>
+      </div>
+
+      <button
+        type="button"
+        className="border-widget__stepper-btn border-widget__stepper-btn--inc"
+        onClick={() => onChange(thickness + 1)}
+        disabled={thickness >= MAX_THICKNESS}
+        aria-label="Aumentar espessura em 1 pixel"
+        title="Aumentar espessura (+1px)"
+      >
+        <StepIcon plus />
+      </button>
+    </div>
+  </div>
+);
+
+/** One side in the detailed grid: an on/off toggle and its own thickness. */
+const SideControl: React.FC<{
+  widgetId: string;
+  side: SideDefinition;
+  value: number;
+  onToggle: () => void;
+  onChange: (value: number) => void;
+}> = ({ widgetId, side, value, onToggle, onChange }) => {
+  const { key, label, tooltip, icon: SideIcon, ariaName } = side;
+  const isActive = value > 0;
+  return (
+    <div
+      className={`border-widget__side-control ${isActive ? 'is-active' : ''}`}
+    >
+      <div className="border-widget__side-header">
+        <button
+          type="button"
+          className={`border-widget__side-icon-btn ${isActive ? 'is-active' : ''}`}
+          onClick={onToggle}
+          aria-pressed={isActive}
+          aria-label={`${ariaName}: ${isActive ? `${value}px` : 'nenhuma'}`}
+          title={`Alternar ${ariaName}`}
+        >
+          <SideIcon />
+        </button>
+        <label
+          htmlFor={`${widgetId}-side-${key}`}
+          className="border-widget__side-label"
+        >
+          {label}:
+        </label>
+        <span className="border-widget__side-tooltip" role="tooltip">
+          {tooltip}
+        </span>
+      </div>
+
+      <div className="border-widget__side-input-container">
+        <input
+          id={`${widgetId}-side-${key}`}
+          type="number"
+          min="0"
+          max={MAX_THICKNESS}
+          value={value}
+          onChange={(e) => onChange(toThickness(e.target.value))}
+          className="border-widget__side-input"
+          aria-label={`Espessura da borda ${label} em pixels`}
+          title={tooltip}
+        />
+        <span className="border-widget__unit">px</span>
+      </div>
+    </div>
+  );
+};
 
 export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
   const { id, value, onChange } = props;
@@ -281,70 +448,34 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
     [id, onChange, value],
   );
 
-  const handlePreset = (preset: PresetKey) => {
-    const t = thickness > 0 ? thickness : 1;
-    let newSides: BorderSides;
-    let msg = '';
+  const baseThickness = thickness > 0 ? thickness : 1;
 
-    switch (preset) {
-      case 'none':
-        newSides = { top: 0, right: 0, bottom: 0, left: 0 };
-        msg = 'Nenhuma borda selecionada';
-        break;
-      case 'all':
-        newSides = { top: t, right: t, bottom: t, left: t };
-        msg = `Borda completa ativada com ${t} pixels`;
-        break;
-      case 'top':
-        newSides = { top: t, right: 0, bottom: 0, left: 0 };
-        msg = `Borda no topo ativada com ${t} pixels`;
-        break;
-      case 'bottom':
-        newSides = { top: 0, right: 0, bottom: t, left: 0 };
-        msg = `Borda abaixo ativada com ${t} pixels`;
-        break;
-      case 'sides':
-        newSides = { top: 0, right: t, bottom: 0, left: t };
-        msg = `Bordas laterais ativadas com ${t} pixels`;
-        break;
-      case 'top-left':
-        newSides = { top: t, right: 0, bottom: 0, left: t };
-        msg = `Bordas no topo e na lateral esquerda ativadas com ${t} pixels`;
-        break;
-    }
+  const handlePreset = (preset: PresetDefinition) =>
+    updateSides(preset.apply(baseThickness), preset.announce(baseThickness));
 
-    updateSides(newSides, msg);
-  };
-
-  const toggleSide = (sideKey: keyof BorderSides) => {
-    const current = sides[sideKey];
-    const t = thickness > 0 ? thickness : 1;
-    const nextVal = current > 0 ? 0 : t;
-    const newSides = { ...sides, [sideKey]: nextVal };
-    const sideNames = {
-      top: 'superior',
-      right: 'direita',
-      bottom: 'inferior',
-      left: 'esquerda',
-    };
+  const toggleSide = ({ key, announceName }: SideDefinition) => {
+    const nextVal = sides[key] > 0 ? 0 : baseThickness;
     const action = nextVal > 0 ? `ativada com ${nextVal} pixels` : 'desativada';
-    updateSides(newSides, `Borda ${sideNames[sideKey]} ${action}`);
+    updateSides(
+      { ...sides, [key]: nextVal },
+      `Borda ${announceName} ${action}`,
+    );
   };
 
   const handleThicknessChange = (newVal: number) => {
-    const valid = Math.max(0, Math.min(24, Math.round(newVal || 0)));
+    const valid = toThickness(newVal);
     setThickness(valid);
-
-    // Se houver lados ativos, atualiza todos os lados ativos proporcionalmente
-    const activeSides = Object.entries(sides).some(([_, val]) => val > 0);
-    if (activeSides) {
-      const updated: BorderSides = {
-        top: sides.top > 0 ? valid : 0,
-        right: sides.right > 0 ? valid : 0,
-        bottom: sides.bottom > 0 ? valid : 0,
-        left: sides.left > 0 ? valid : 0,
-      };
-      updateSides(updated, `Espessura alterada para ${valid} pixels`);
+    // Every active side follows the shared thickness.
+    if (Object.values(sides).some((val) => val > 0)) {
+      updateSides(
+        {
+          top: sides.top > 0 ? valid : 0,
+          right: sides.right > 0 ? valid : 0,
+          bottom: sides.bottom > 0 ? valid : 0,
+          left: sides.left > 0 ? valid : 0,
+        },
+        `Espessura alterada para ${valid} pixels`,
+      );
     }
   };
 
@@ -352,10 +483,9 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
     sideKey: keyof BorderSides,
     newVal: number,
   ) => {
-    const valid = Math.max(0, Math.min(24, Math.round(newVal || 0)));
-    const updated = { ...sides, [sideKey]: valid };
+    const valid = toThickness(newVal);
     updateSides(
-      updated,
+      { ...sides, [sideKey]: valid },
       `Espessura da borda ${sideKey} alterada para ${valid} pixels`,
     );
   };
@@ -394,7 +524,7 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
                   key={preset.key}
                   type="button"
                   className={`border-widget__preset-btn ${active ? 'is-active' : ''}`}
-                  onClick={() => handlePreset(preset.key)}
+                  onClick={() => handlePreset(preset)}
                   aria-pressed={active}
                   aria-label={preset.name}
                   title={preset.tooltip}
@@ -420,84 +550,11 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
 
         {/* 2. Controle Numérico de Espessura ("Espessura da Borda") */}
         <div className="border-widget__thickness-section">
-          <div className="border-widget__thickness-row">
-            <label
-              htmlFor={`${widgetId}-thickness-input`}
-              className="border-widget__thickness-label"
-            >
-              Espessura da Borda:
-            </label>
-            <div className="border-widget__stepper-wrapper">
-              <button
-                type="button"
-                className="border-widget__stepper-btn border-widget__stepper-btn--dec"
-                onClick={() => handleThicknessChange(thickness - 1)}
-                disabled={thickness <= 0}
-                aria-label="Diminuir espessura em 1 pixel"
-                title="Diminuir espessura (-1px)"
-              >
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  aria-hidden="true"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                </svg>
-              </button>
-
-              <div className="border-widget__stepper-input-container">
-                <input
-                  id={`${widgetId}-thickness-input`}
-                  type="number"
-                  min="0"
-                  max="24"
-                  value={thickness}
-                  onChange={(e) => {
-                    const parsedVal = parseInt(e.target.value, 10);
-                    handleThicknessChange(
-                      Number.isNaN(parsedVal) ? 0 : parsedVal,
-                    );
-                  }}
-                  className="border-widget__number-input"
-                  aria-describedby={`${widgetId}-thickness-unit`}
-                />
-                <span
-                  id={`${widgetId}-thickness-unit`}
-                  className="border-widget__unit"
-                >
-                  px
-                </span>
-              </div>
-
-              <button
-                type="button"
-                className="border-widget__stepper-btn border-widget__stepper-btn--inc"
-                onClick={() => handleThicknessChange(thickness + 1)}
-                disabled={thickness >= 24}
-                aria-label="Aumentar espessura em 1 pixel"
-                title="Aumentar espessura (+1px)"
-              >
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  aria-hidden="true"
-                >
-                  <line x1="12" y1="5" x2="12" y2="19" />
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                </svg>
-              </button>
-            </div>
-          </div>
+          <ThicknessStepper
+            widgetId={widgetId}
+            thickness={thickness}
+            onChange={handleThicknessChange}
+          />
 
           {/* Toggle para personalização detalhada por lado */}
           <div className="border-widget__side-toggle-wrapper">
@@ -551,74 +608,16 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
               role="region"
               aria-label="Ajuste independente de espessura por lado"
             >
-              {SIDE_CONFIGS.map(({ key, label, tooltip, icon: SideIcon }) => {
-                const isSideActive = sides[key] > 0;
-                const sideAriaName =
-                  key === 'top'
-                    ? 'Borda Superior'
-                    : key === 'right'
-                      ? 'Borda Direita'
-                      : key === 'bottom'
-                        ? 'Borda Inferior'
-                        : 'Borda Esquerda';
-
-                return (
-                  <div
-                    key={key}
-                    className={`border-widget__side-control ${
-                      isSideActive ? 'is-active' : ''
-                    }`}
-                  >
-                    <div className="border-widget__side-header">
-                      <button
-                        type="button"
-                        className={`border-widget__side-icon-btn ${
-                          isSideActive ? 'is-active' : ''
-                        }`}
-                        onClick={() => toggleSide(key)}
-                        aria-pressed={isSideActive}
-                        aria-label={`${sideAriaName}: ${sides[key] > 0 ? `${sides[key]}px` : 'nenhuma'}`}
-                        title={`Alternar ${sideAriaName}`}
-                      >
-                        <SideIcon />
-                      </button>
-                      <label
-                        htmlFor={`${widgetId}-side-${key}`}
-                        className="border-widget__side-label"
-                      >
-                        {label}:
-                      </label>
-                      <span
-                        className="border-widget__side-tooltip"
-                        role="tooltip"
-                      >
-                        {tooltip}
-                      </span>
-                    </div>
-
-                    <div className="border-widget__side-input-container">
-                      <input
-                        id={`${widgetId}-side-${key}`}
-                        type="number"
-                        min="0"
-                        max="24"
-                        value={sides[key]}
-                        onChange={(e) => {
-                          const parsedVal = parseInt(e.target.value, 10);
-                          handleSideThicknessChange(
-                            key,
-                            Number.isNaN(parsedVal) ? 0 : parsedVal,
-                          );
-                        }}
-                        className="border-widget__side-input"
-                        aria-label={`Espessura da borda ${label} em pixels`}
-                        title={tooltip}
-                      />
-                      <span className="border-widget__unit">px</span>
-                    </div>
-                  </div>
-                );
-              })}
+              {SIDE_CONFIGS.map((side) => (
+                <SideControl
+                  key={side.key}
+                  widgetId={widgetId}
+                  side={side}
+                  value={sides[side.key]}
+                  onToggle={() => toggleSide(side)}
+                  onChange={(val) => handleSideThicknessChange(side.key, val)}
+                />
+              ))}
             </div>
           )}
         </div>

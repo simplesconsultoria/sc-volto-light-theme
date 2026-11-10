@@ -135,7 +135,7 @@ describe('ColorGroupsWidget', () => {
     );
 
     const header = container.querySelector(
-      '.colorgroup-card-header',
+      '.colorgroup-card-header .card-toggle',
     ) as HTMLElement;
     const body = container.querySelector(
       '.colorgroup-card-body',
@@ -158,7 +158,7 @@ describe('ColorGroupsWidget', () => {
 
     // Expand primary group
     const header = container.querySelector(
-      '.colorgroup-card-header',
+      '.colorgroup-card-header .card-toggle',
     ) as HTMLElement;
     fireEvent.click(header);
 
@@ -187,7 +187,7 @@ describe('ColorGroupsWidget', () => {
 
     // Expand primary group
     const header = container.querySelector(
-      '.colorgroup-card-header',
+      '.colorgroup-card-header .card-toggle',
     ) as HTMLElement;
     fireEvent.click(header);
 
@@ -258,7 +258,7 @@ describe('ColorGroupsWidget', () => {
 
     // Expand primary group
     const header = container.querySelector(
-      '.colorgroup-card-header',
+      '.colorgroup-card-header .card-toggle',
     ) as HTMLElement;
     fireEvent.click(header);
 
@@ -315,7 +315,7 @@ describe('ColorGroupsWidget', () => {
     );
 
     const header = container.querySelector(
-      '.colorgroup-card-header',
+      '.colorgroup-card-header .card-toggle',
     ) as HTMLElement;
     fireEvent.click(header);
 
@@ -330,5 +330,30 @@ describe('ColorGroupsWidget', () => {
 
     fireEvent.click(deviceBtn);
     expect(deviceBtn.textContent).toContain('Desktop');
+  });
+
+  it('exposes the card toggle and every colour input to assistive tech', () => {
+    const { container } = render(
+      <ColorGroupsWidget id="color_groups" onChange={vi.fn()} />,
+    );
+
+    const toggle = container.querySelector(
+      '.colorgroup-card-header .card-toggle',
+    ) as HTMLButtonElement;
+    expect(toggle.tagName).toBe('BUTTON');
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+
+    // No focusable control nested inside the toggle
+    expect(toggle.querySelector('button, input, a')).toBeNull();
+
+    // Every colour field of the card has an accessible name
+    const card = toggle.closest('.colorgroup-card') as HTMLElement;
+    const colorInputs = card.querySelectorAll('.colorgroup-colors-grid input');
+    expect(colorInputs.length).toBe(16);
+    colorInputs.forEach((input) =>
+      expect(input.getAttribute('aria-label')).toBeTruthy(),
+    );
   });
 });
