@@ -1,0 +1,1 @@
+Color Groups can carry a second background layer: a responsive image (desktop/mobile, light/dark) or a CSS pattern preset (dots, grid, diagonal stripes, waves, blueprint, zigzag, radial mesh), with icon controls for size, repeat and position. The layer is inherited by cards in listings, teasers and carousels, and full-width blocks render it edge to edge. @Humanaice

@@ -685,4 +685,42 @@ describe('Block Width and Borders Schema Enhancer', () => {
     expect(resolved.className).toContain('has-back-colorgroup-red');
     expect(resolved.className).toContain('has-front-colorgroup-neutral');
   });
+
+  it('enhances banner block schema with size:noprefix using image_size widget', () => {
+    const mockConfig: any = {
+      settings: {},
+      blocks: {
+        blocksConfig: {
+          banner: {
+            id: 'banner',
+            blockSchema: () => ({
+              fieldsets: [{ id: 'default', title: 'Default', fields: [] }],
+              properties: {},
+            }),
+          },
+        },
+      },
+    };
+
+    install(mockConfig);
+
+    const schema = mockConfig.blocks.blocksConfig.banner.schemaEnhancer({
+      schema: {
+        fieldsets: [{ id: 'default', title: 'Default', fields: [] }],
+        properties: {},
+      },
+      formData: {},
+      intl: { formatMessage: ({ defaultMessage }: any) => defaultMessage },
+    });
+
+    expect(
+      schema.properties.styles.schema.properties['size:noprefix'],
+    ).toBeDefined();
+    expect(
+      schema.properties.styles.schema.properties['size:noprefix'].widget,
+    ).toBe('image_size');
+    expect(
+      schema.properties.styles.schema.properties['size:noprefix'].default,
+    ).toBe('m');
+  });
 });

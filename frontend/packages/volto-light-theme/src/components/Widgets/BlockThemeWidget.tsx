@@ -72,7 +72,7 @@ export const SplitColorCircle: React.FC<{
   className?: string;
 }> = ({
   backColor = '#ffffff',
-  frontColor = '#edeff0',
+  frontColor = '#f6f7f9',
   size = 18,
   className = '',
 }) => (

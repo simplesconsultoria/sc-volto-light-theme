@@ -8,18 +8,18 @@ type SubMenuItemsProps = {
 };
 
 const SubMenuItems = ({ items, pathname, closeMenu }: SubMenuItemsProps) => {
+  const visibleItems = items ? items.slice(0, 8) : [];
+
   return (
     <div className="submenu-items">
-      {items &&
-        items.length > 0 &&
-        items.map((subitem) => (
-          <SubMenuItem
-            key={subitem.url}
-            item={subitem}
-            pathname={pathname}
-            closeMenu={closeMenu}
-          />
-        ))}
+      {visibleItems.map((subitem) => (
+        <SubMenuItem
+          key={subitem.url}
+          item={subitem}
+          pathname={pathname}
+          closeMenu={closeMenu}
+        />
+      ))}
     </div>
   );
 };

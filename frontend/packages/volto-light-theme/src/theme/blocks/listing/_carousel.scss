@@ -87,6 +87,8 @@
         --highground-bg-size,
         var(--colorgroup-front-bg-size, auto)
       );
+      color: var(--theme-top-foreground-color);
+      font-family: var(--colorgroup-front-font, inherit);
 
       a {
         display: flex;
@@ -133,6 +135,18 @@
 
     &.listing-media-carousel {
       background-color: inherit;
+
+      .listing-carousel__slide {
+        background-color: inherit;
+
+        &:hover {
+          background-color: inherit !important;
+
+          .listing-carousel__image {
+            transform: none !important;
+          }
+        }
+      }
 
       .listing-carousel__slideInner {
         display: flex;
@@ -323,7 +337,7 @@
       height: 0.75rem;
       flex-shrink: 0;
       padding: 0;
-      border: 2px solid var(--theme-top-foreground-color);
+      border: 2px solid var(--theme-foreground-color);
       border-radius: 9999px;
       background: color-mix(
         in srgb,
@@ -334,7 +348,7 @@
 
       &:focus,
       &:focus-visible {
-        outline: 2px solid var(--theme-top-high-contrast-foreground-color);
+        outline: 2px solid var(--theme-foreground-color);
         outline-offset: 3px;
       }
 

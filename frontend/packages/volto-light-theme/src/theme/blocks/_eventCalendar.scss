@@ -7,15 +7,21 @@
 // =============================================================================
 
 .block.eventCalendar,
-.block.eventsearch,
-.search-block-event {
-  width: 100%;
+.block.eventsearch {
+  width: auto;
   min-width: 0;
   max-width: 100%;
   box-sizing: border-box;
   color: var(--theme-foreground-color, inherit);
   container-type: inline-size;
   font-family: var(--colorgroup-back-font, inherit);
+
+  .search-block-event {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
 
   .first-row,
   .react-aria-DateRangePicker,
@@ -42,28 +48,28 @@
     align-items: center;
     justify-content: center;
     border: 3px solid
-      var(--theme-foreground-accent-color, var(--primary-accent-color, #f4822c)) !important;
+      var(--theme-foreground-accent-color, var(--primary-accent-color, #1971c2)) !important;
     border-radius: 50% !important;
-    background-color: var(--theme-high-contrast-color, #ffffff) !important;
+    background-color: var(--theme-color, #ffffff) !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     color: var(
-      --theme-top-foreground-color,
-      var(--theme-foreground-color, #000000)
+      --theme-foreground-color,
+      var(--theme-top-foreground-color, #000000)
     ) !important;
     transition: all 0.2s ease;
 
     .day {
       color: var(
-        --theme-top-foreground-color,
-        var(--theme-foreground-color, #000000)
+        --theme-foreground-color,
+        var(--theme-top-foreground-color, #000000)
       );
       font-weight: 700;
     }
 
     .month {
       color: var(
-        --theme-top-accent-color,
-        var(--theme-foreground-accent-color, #f4822c)
+        --theme-foreground-accent-color,
+        var(--theme-top-accent-color, #1971c2)
       );
       font-weight: 600;
       text-transform: uppercase;
@@ -72,7 +78,7 @@
     .separator {
       background: color-mix(
         in srgb,
-        var(--theme-top-foreground-color, #000000) 25%,
+        var(--theme-foreground-color, #000000) 25%,
         transparent
       ) !important;
     }
@@ -80,6 +86,13 @@
 
   // Event Card
   .card-listing {
+    .card,
+    .event-card {
+      background-color: transparent !important;
+      background-image: none !important;
+      color: var(--theme-foreground-color, inherit) !important;
+    }
+
     .card-inner {
       gap: 20px;
     }
@@ -135,21 +148,21 @@
             transparent
           );
         border-radius: 4px;
-        background-color: var(--theme-high-contrast-color, #ffffff);
+        background-color: var(--theme-color, #ffffff);
       }
 
       .react-aria-DateInput span {
         color: var(
-          --theme-top-foreground-color,
-          var(--theme-foreground-color, #000000)
+          --theme-foreground-color,
+          var(--theme-top-foreground-color, #000000)
         );
       }
 
       .react-aria-Button {
         background: transparent;
         color: var(
-          --theme-top-foreground-color,
-          var(--theme-foreground-color, #000000)
+          --theme-foreground-color,
+          var(--theme-top-foreground-color, #000000)
         );
 
         svg {
@@ -170,10 +183,10 @@
           transparent
         );
       border-radius: 4px;
-      background-color: var(--theme-high-contrast-color, #ffffff);
+      background-color: var(--theme-color, #ffffff);
       color: var(
-        --theme-top-foreground-color,
-        var(--theme-foreground-color, #000000)
+        --theme-foreground-color,
+        var(--theme-top-foreground-color, #000000)
       );
     }
 
@@ -184,10 +197,10 @@
           var(--theme-foreground-color, currentColor) 25%,
           transparent
         );
-        background-color: var(--theme-high-contrast-color, #ffffff);
+        background-color: var(--theme-color, #ffffff);
         color: var(
-          --theme-top-foreground-color,
-          var(--theme-foreground-color, #000000)
+          --theme-foreground-color,
+          var(--theme-top-foreground-color, #000000)
         );
       }
     }

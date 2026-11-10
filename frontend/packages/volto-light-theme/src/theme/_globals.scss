@@ -213,11 +213,7 @@ body .block.search .search-wrapper {
   }
 
   // Preserve styling for highground elements (cards, chips, buttons)
-  .card,
-  .ui.card,
-  .listing-item,
   .teaser-item,
-  .grid-item,
   .hero-card,
   .hero-card-info,
   .hero-card-image-wrapper,
@@ -228,11 +224,7 @@ body .block.search .search-wrapper {
 }
 
 // Global surface rules for highground elements across all blocks
-.card,
-.ui.card,
-.listing-item,
 .teaser-item,
-.grid-item,
 .hero-card,
 .hero-card-info,
 .is-highground,

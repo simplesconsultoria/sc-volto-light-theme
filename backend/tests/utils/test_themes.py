@@ -310,7 +310,7 @@ class TestThemeUtils:
         def test_cannot_delete_base_color_group(self):
             for bg in ("primary", "secondary", "accent", "neutral"):
                 with pytest.raises(
-                    ValueError, match="Base color group .* cannot be deleted"
+                    ValueError, match=r"Base color group .* cannot be deleted"
                 ):
                     themes.delete_color_group(
                         themes.DEFAULT_THEME_ID, bg, registry=self.registry
@@ -319,7 +319,7 @@ class TestThemeUtils:
         def test_cannot_delete_base_block_theme(self):
             for bt in ("default", "alternative"):
                 with pytest.raises(
-                    ValueError, match="Base block theme .* cannot be deleted"
+                    ValueError, match=r"Base block theme .* cannot be deleted"
                 ):
                     themes.delete_block_theme(
                         themes.DEFAULT_THEME_ID, bt, registry=self.registry

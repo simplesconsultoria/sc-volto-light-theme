@@ -41,6 +41,8 @@ describe('Listing Block Variations & Responsiveness SCSS', () => {
 
     // Must include imageGallery alongside grid
     expect(gridScss).toContain('&.imageGallery');
+    expect(gridScss).toContain("&:has(.items[class*='grid-cols-'])");
+    expect(gridScss).toContain('background-color: var(');
 
     // Must remove bottom border on listing-item
     expect(gridScss).toMatch(
@@ -179,11 +181,11 @@ describe('Listing Block Variations & Responsiveness SCSS', () => {
     // Must define container-type
     expect(calendarScss).toContain('container-type: inline-size;');
 
-    // Must use theme tokens for date-inset and cards
+    // Must use theme tokens for date-inset and cards (background color group)
     expect(calendarScss).toContain('.date-inset');
     expect(calendarScss).toContain('var(--theme-foreground-accent-color');
-    expect(calendarScss).toContain('var(--theme-high-contrast-color');
-    expect(calendarScss).toContain('var(--theme-top-foreground-color');
+    expect(calendarScss).toContain('var(--theme-color');
+    expect(calendarScss).toContain('var(--theme-foreground-color');
 
     // Must support container queries for small div / narrow container
     expect(calendarScss).toContain('@container (max-width: 420px)');

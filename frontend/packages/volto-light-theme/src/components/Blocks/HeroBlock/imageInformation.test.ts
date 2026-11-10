@@ -144,5 +144,36 @@ describe('imageInfoFromHeroBlock', () => {
       );
       expect(result.imageSrc).toBe('/new/banner');
     });
+
+    it('supports preview_image as a raw string URL', () => {
+      const result = imageInfoFromHeroBlock(
+        heroData({
+          overwrite: true,
+          preview_image: `${BACKEND}/image.jpg` as any,
+        }),
+      );
+      expect(result.imageItem).toBeNull();
+      expect(result.imageSrc).toBe('/image.jpg');
+      expect(result.hasImage).toBe(true);
+    });
+
+    it('normalizes image_field when scale key differs from image_field', () => {
+      const previewWithCustomKey = {
+        '@id': '/photo',
+        image_scales: {
+          leadImage: [{ download: '/photo/@@images/leadImage' }],
+        },
+      } as unknown as ObjectBrowserItem;
+
+      const result = imageInfoFromHeroBlock(
+        heroData({
+          overwrite: true,
+          preview_image: [previewWithCustomKey],
+        }),
+      );
+      expect(result.imageItem).not.toBeNull();
+      expect(result.imageItem?.image_field).toBe('leadImage');
+      expect(result.hasImage).toBe(true);
+    });
   });
 });

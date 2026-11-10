@@ -551,13 +551,16 @@ export function enhanceBlockConfig(
     // Remove legacy redundant fields and root-level blockWidth
     delete schema.properties.backgroundColor;
     delete schema.properties.blockWidth;
+    delete schema.properties.logos_container_width;
     if (schema.fieldsets) {
       // Remove blockWidth from default or layout fieldsets (kept only in styles)
       schema.fieldsets.forEach((f: any) => {
         if (f.fields) {
           f.fields = f.fields.filter(
             (field: string) =>
-              field !== 'backgroundColor' && field !== 'blockWidth',
+              field !== 'backgroundColor' &&
+              field !== 'blockWidth' &&
+              field !== 'logos_container_width',
           );
         }
       });
@@ -830,6 +833,42 @@ export default function install(config: ConfigType) {
     ) => {
       const schema = prevEnhancer ? prevEnhancer(args) : args.schema;
       return listingSchemaEnhancer({ ...args, schema });
+    };
+  }
+
+  // Banner: add size (height) widget matching Image block pattern (s, m, l)
+  if ((config.blocks.blocksConfig as any).banner) {
+    const prevBannerEnhancer = (config.blocks.blocksConfig as any).banner
+      .schemaEnhancer;
+    (config.blocks.blocksConfig as any).banner.schemaEnhancer = (args: any) => {
+      let schema = prevBannerEnhancer
+        ? prevBannerEnhancer(args)
+        : (config.blocks.blocksConfig as any).banner.blockSchema
+          ? (config.blocks.blocksConfig as any).banner.blockSchema(args)
+          : args.schema;
+
+      addStyling({ schema, intl: args.intl });
+
+      if (schema?.properties?.styles?.schema) {
+        const fields = schema.properties.styles.schema.fieldsets[0].fields;
+        if (!fields.includes('size:noprefix')) {
+          schema.properties.styles.schema.fieldsets[0].fields = [
+            'size:noprefix',
+            ...fields,
+          ];
+        }
+        schema.properties.styles.schema.properties['size:noprefix'] = {
+          widget: 'image_size',
+          title: args.intl
+            ? args.intl.formatMessage({
+                id: 'Height',
+                defaultMessage: 'Height',
+              })
+            : 'Height',
+          default: 'm',
+        };
+      }
+      return schema;
     };
   }
 

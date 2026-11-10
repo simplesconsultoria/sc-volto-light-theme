@@ -1,0 +1,1 @@
+Banner, Highlight, Logos, Slider, Carousel, Table, Accordion, Search, Listing, Teaser, Image, Introduction, Separator, TOC, Video and Event Calendar blocks now follow the block theme, width and border settings, also when used inside Vanilla Volto, `@kitconcept/volto-light-theme` and Aurora (Plate) containers. @Humanaice

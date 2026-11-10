@@ -214,7 +214,7 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
   const newFrontCg =
     availableColorGroups[newFront] || availableColorGroups.neutral;
   const newBackBg = newBackCg?.background_color_light || '#ffffff';
-  const newFrontBg = newFrontCg?.background_color_light || '#edeff0';
+  const newFrontBg = newFrontCg?.background_color_light || '#f6f7f9';
 
   return (
     <div className="blockthemes-widget">
@@ -237,7 +237,7 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
             availableColorGroups[bt.front_color_group] ||
             availableColorGroups.neutral;
           const backBg = backCg?.background_color_light || '#ffffff';
-          const frontBg = frontCg?.background_color_light || '#edeff0';
+          const frontBg = frontCg?.background_color_light || '#f6f7f9';
           const isBase = BASE_BLOCK_THEME_IDS.includes(bt.id);
           const isExpanded = !!expandedThemes[bt.id];
 
@@ -358,7 +358,7 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
                       className="preview-accent-badge"
                       style={{
                         backgroundColor:
-                          backCg?.accent_color_light || '#f4822c',
+                          backCg?.accent_color_light || '#1971c2',
                         color: backCg?.background_color_light || '#ffffff',
                       }}
                     >
@@ -476,7 +476,7 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
             <span
               className="preview-accent-badge"
               style={{
-                backgroundColor: newBackCg?.accent_color_light || '#f4822c',
+                backgroundColor: newBackCg?.accent_color_light || '#1971c2',
                 color: newBackCg?.background_color_light || '#ffffff',
               }}
             >

@@ -1,172 +1,212 @@
-@mixin compact-slider {
-  .block.slider {
-    display: flex;
-    overflow: hidden;
+// =============================================================================
+// Slider Block Styles — sc-volto-light-theme
+// Standalone hero slider and compact card slider embedded in GridBlock,
+// CustomGrid, and Accordion.
+//
+// Standalone / Wide containers (>= 768px):
+// - Renders as a full-bleed hero banner with a dark translucent flag
+//   (rgba(0, 0, 0, 0.75)) and high-contrast white typography.
+//
+// Embedded / Narrow containers (< 768px or multi-column grids):
+// - Renders as a vertical card layout: image on top (16/9 cover fit)
+//   and text card below with the block's theme contrast and background.
+// - flex-direction is strictly column so pagination dots stay at the bottom.
+//
+// BorderWidget:
+// - Border is applied around .slider-viewport (wrapping image + card/flag),
+//   leaving pagination dots neatly outside.
+// =============================================================================
+
+$sliderImagesAspectRatio: var(--slider-images-aspect-ratio, 16 / 9);
+
+// -----------------------------------------------------------------------------
+// 1. Universal Base Styles for Slider Block
+// -----------------------------------------------------------------------------
+.block.slider {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  container-type: inline-size;
+
+  .slider-wrapper {
+    position: relative;
     width: 100%;
     max-width: 100%;
-    height: 100%;
-    border: solid var(--cardBorderColor, var(--theme-border-color));
-    border-width: var(--cardBorderWidth, var(--theme-border-width, 0));
+  }
 
-    // Configure container for parent width reactivity
-    container-type: inline-size;
+  .slider-viewport {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    margin-bottom: $spacing-small;
+  }
 
-    .slider-wrapper {
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-    }
+  .slider-container {
+    display: flex;
+    width: 100%;
+  }
 
-    .slider-viewport {
-      display: flex;
-      flex: 1 1 auto;
-      flex-direction: column;
-      margin-bottom: 0;
-    }
+  .slider-slide {
+    min-width: 0;
+    flex: 0 0 100%;
+  }
 
-    .slider-container {
-      display: flex;
-      flex: 1 1 auto;
-      align-items: stretch;
-    }
+  .highlight-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
 
-    .slider-slide {
-      display: flex;
-      align-items: stretch;
-    }
-
-    .grid-teaser-item {
-      display: flex;
+    img {
+      display: block;
       width: 100%;
-      align-items: stretch;
+      aspect-ratio: var(--slider-images-aspect-ratio, 16 / 9);
+      object-fit: cover;
     }
+  }
 
-    .teaser-item.top {
-      position: relative;
-      display: flex;
+  .slider-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-small 0;
+    margin: 0;
+    gap: 8px;
+  }
+
+  .slider-dot {
+    display: flex;
+    width: 36px;
+    height: 16px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+
+    &::after {
       width: 100%;
-      flex: 1 1 auto;
-      flex-direction: column;
-
-      a {
-        display: flex;
-        width: 100%;
-        flex: 1 1 auto;
-        flex-direction: column;
-        color: inherit;
-        text-decoration: none;
-        &:focus,
-        &:focus-visible {
-          @include focus-ring(
-            var(--theme-top-high-contrast-foreground-color, currentColor)
-          );
-        }
-      }
-
-      .highlight-image-wrapper {
-        position: relative;
-        width: 100%;
-        flex-shrink: 0;
-
-        &.gradient::after {
-          display: none;
-        }
-
-        img {
-          width: 100%;
-          height: auto;
-          object-fit: cover;
-        }
-      }
-
-      .teaser-item-title {
-        position: static !important;
-        display: flex;
-        width: 100% !important;
-        min-height: auto !important;
-        flex: 1 1 auto;
-        flex-direction: column;
-        justify-content: flex-start;
-        padding: $spacing-small !important;
-        background: var(
-          --theme-high-contrast-color,
-          var(--accent-color)
-        ) !important;
-        color: var(
-          --theme-top-foreground-color,
-          var(--accent-foreground-color)
-        ) !important;
-        gap: $spacing-small;
-        transform: none !important;
-
-        .title h2 {
-          margin: 0 !important;
-          color: var(
-            --theme-top-foreground-color,
-            var(--accent-foreground-color)
-          ) !important;
-          @include text-heading-h3();
-
-          @container (max-width: 600px) {
-            font-size: map-get($font-sizes, m) !important;
-            line-height: map-get($line-heights, m) !important;
-          }
-        }
-
-        p {
-          display: -webkit-box;
-          overflow: hidden;
-          margin: 0;
-          -webkit-box-orient: vertical;
-          color: var(
-            --theme-top-low-contrast-foreground-color,
-            var(--accent-foreground-color)
-          ) !important;
-          -webkit-line-clamp: 3;
-          line-clamp: 3;
-          text-overflow: ellipsis;
-          @include body-text();
-
-          @container (max-width: 600px) {
-            font-size: map-get($font-sizes, s) !important;
-            line-height: map-get($line-heights, s) !important;
-          }
-        }
-
-        button {
-          border: var(--theme-foreground-color) 1px solid;
-          background-color: var(--theme-high-contrast-color);
-          color: var(--theme-top-foreground-color);
-          &:hover {
-            border: var(--theme-top-foreground-color) 1px solid;
-            background-color: var(--theme-foreground-color);
-            color: var(--theme-high-contrast-color);
-          }
-        }
-      }
+      height: 6px;
+      border: none !important;
+      border-radius: 3px;
+      background: var(
+        --slider-dots-bg,
+        color-mix(
+          in srgb,
+          var(--theme-foreground-color, currentColor) 25%,
+          transparent
+        )
+      );
+      content: '';
     }
 
-    .slider-dots {
-      padding: $spacing-small 0;
+    &.slider-dot--selected::after {
+      background: var(
+        --theme-foreground-color,
+        var(--slider-dots-selected-bg, #000)
+      );
     }
 
-    .slider-button {
-      z-index: 2;
+    &:focus,
+    &:focus-visible {
+      @include focus-ring(
+        var(--theme-top-high-contrast-foreground-color, currentColor),
+        2px,
+        2px
+      );
+    }
+  }
+
+  .slider-button {
+    z-index: 2;
+    background: color-mix(
+      in srgb,
+      var(--theme-high-contrast-color, #000) 65%,
+      transparent
+    );
+    color: var(--theme-top-foreground-color, #fff);
+    transition: background 200ms ease;
+
+    &:hover {
       background: color-mix(
         in srgb,
-        var(--theme-high-contrast-color, #000) 65%,
+        var(--theme-high-contrast-color, #000) 85%,
         transparent
       );
-      color: var(--theme-top-foreground-color, #fff);
-      transition: background 200ms ease;
+    }
 
-      &:hover {
-        background: color-mix(
-          in srgb,
-          var(--theme-high-contrast-color, #000) 85%,
-          transparent
-        );
-      }
+    &:focus,
+    &:focus-visible {
+      @include focus-ring(
+        var(--theme-top-high-contrast-foreground-color, currentColor)
+      );
+    }
+
+    svg.icon {
+      color: inherit;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 2. Compact Slider Mixin (For Columns, Grids, and Narrow Viewports)
+// -----------------------------------------------------------------------------
+@mixin compact-slider-rules {
+  display: flex !important;
+  overflow: hidden;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100%;
+  flex-direction: column !important;
+
+  .slider-wrapper {
+    display: flex;
+    width: 100%;
+    flex: 1 1 auto;
+    flex-direction: column;
+  }
+
+  .slider-viewport {
+    display: flex;
+    width: 100%;
+    flex: 1 1 auto;
+    flex-direction: column;
+    margin-bottom: 0;
+  }
+
+  .slider-container {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: stretch;
+  }
+
+  .slider-slide {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .grid-teaser-item {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .teaser-item.top {
+    position: relative;
+    display: flex;
+    width: 100%;
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    a {
+      display: flex;
+      width: 100%;
+      flex: 1 1 auto;
+      flex-direction: column;
+      color: inherit;
+      text-decoration: none;
 
       &:focus,
       &:focus-visible {
@@ -174,71 +214,253 @@
           var(--theme-top-high-contrast-foreground-color, currentColor)
         );
       }
+    }
 
-      svg.icon {
-        color: inherit;
+    .highlight-image-wrapper {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      flex-shrink: 0;
+      aspect-ratio: 16 / 9;
+
+      &.gradient::after {
+        display: none !important;
+      }
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover !important;
       }
     }
 
-    .slider-dot {
-      &:focus,
-      &:focus-visible {
-        @include focus-ring(
-          var(--theme-top-high-contrast-foreground-color, currentColor),
-          2px,
-          2px
-        );
+    .teaser-item-title {
+      position: static !important;
+      display: flex;
+      width: 100% !important;
+      min-height: auto !important;
+      flex: 1 1 auto;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: $spacing-medium !important;
+      background: var(
+        --theme-high-contrast-color,
+        var(--card-bg, #fff)
+      ) !important;
+      color: var(--theme-foreground-color, inherit) !important;
+      gap: $spacing-small;
+      transform: none !important;
+
+      .title {
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+
+        .supertitle {
+          display: block !important;
+          margin-bottom: 4px !important;
+          color: var(
+            --theme-foreground-accent-color,
+            var(--accent-color, inherit)
+          ) !important;
+          font-size: 0.75rem !important;
+          font-weight: 700 !important;
+          letter-spacing: 1px !important;
+          text-transform: uppercase !important;
+        }
+
+        h2 {
+          margin: 0 !important;
+          color: var(--theme-foreground-color, inherit) !important;
+          @include text-heading-h3();
+        }
       }
 
-      &::after {
-        background: color-mix(
-          in srgb,
-          var(--theme-foreground-color, currentColor) 30%,
-          transparent
-        );
+      p {
+        display: -webkit-box;
+        overflow: hidden;
+        margin: 0 !important;
+        -webkit-box-orient: vertical;
+        color: var(--theme-low-contrast-foreground-color, inherit) !important;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        text-overflow: ellipsis;
+        @include body-text();
       }
 
-      &.slider-dot--selected::after {
-        background: var(
-          --theme-foreground-color,
-          var(--carousel-dots-selected-bg, #000)
-        );
+      button {
+        @include button-style;
+        align-self: flex-start;
+        margin-top: auto;
+      }
+    }
+  }
+
+  // Arrows in compact view
+  .slider-button {
+    width: 36px;
+    height: calc(
+      var(--slider-container-width) /
+        var(--slider-images-aspect-ratio, 1.7777777778)
+    );
+
+    svg.icon {
+      width: 24px !important;
+      height: 24px !important;
+    }
+  }
+
+  @container (max-width: 480px) {
+    .slider-button {
+      display: none !important;
+    }
+
+    .teaser-item.top .teaser-item-title {
+      padding: $spacing-small !important;
+
+      .title h2 {
+        font-size: map-get($font-sizes, m) !important;
+        line-height: map-get($line-heights, m) !important;
+      }
+
+      p {
+        font-size: map-get($font-sizes, s) !important;
+        line-height: map-get($line-heights, s) !important;
       }
     }
   }
 }
 
+@mixin compact-slider {
+  @include compact-slider-rules;
+}
+
+// -----------------------------------------------------------------------------
+// 3. Application of Compact Rules
+// -----------------------------------------------------------------------------
+// Applied inside multi-column grids or when slider is contained in columns
 :is(
     .block.gridBlock:not(.one),
+    .gridBlock:not(.one),
+    .grid-items:not(.one),
+    .grid-item,
+    .column,
+    .block.customGrid:not(.layout-1),
     .block.custom-grid:not(.layout-1),
-    .grid-items:not(.one)
-  ) {
+    .customGrid:not(.layout-1),
+    .custom-grid:not(.layout-1),
+    .custom-grid-column
+  )
+  .block.slider {
   @include compact-slider;
 }
 
-@media only screen and (max-width: 768px) {
-  :is(.block.gridBlock.one, .block.custom-grid.layout-1, .grid-items.one) {
+// Automatic container query: any slider whose rendered width is < 768px becomes compact
+@container (max-width: 767px) {
+  .block.slider {
     @include compact-slider;
   }
 }
 
-.slider-dot::after {
-  height: 8px;
-  border: 1px solid var(--theme-border-color);
+// Responsive viewport fallback for small screens
+@media only screen and (max-width: 768px) {
+  .block.slider {
+    @include compact-slider;
+  }
 }
 
-// Restores flag background for standalone sliders
-.block.slider:not(.gridBlock *, .custom-grid *) {
-  .teaser-item-title {
-    background: rgba(0, 0, 0, 0.75) !important;
+// -----------------------------------------------------------------------------
+// 4. Hero Banner Mode (Standalone and Wide Containers >= 768px)
+// -----------------------------------------------------------------------------
+// Applies when the slider is standalone or in a full-width container
+.block.slider:not(
+    :is(
+        .gridBlock:not(.one),
+        .grid-items:not(.one),
+        .grid-item,
+        .column,
+        .customGrid:not(.layout-1),
+        .custom-grid:not(.layout-1),
+        .custom-grid-column
+      )
+      *
+  ) {
+  @container (min-width: 768px) {
+    .teaser-item.top {
+      position: relative;
 
-    .title h2,
-    .supertitle {
-      color: #ffffff !important;
-    }
+      .teaser-item-title {
+        position: absolute !important;
+        top: 50% !important;
+        width: min(570px, 60%) !important;
+        min-height: auto !important;
+        box-sizing: border-box !important;
+        padding: 40px 40px 40px 60px !important;
+        background: rgba(0, 0, 0, 0.75) !important;
+        transform: translateY(-50%) !important;
 
-    p {
-      color: #f3f3f3 !important;
+        &.has--slider--flagAlign--right {
+          right: 0 !important;
+          left: auto !important;
+        }
+
+        &.has--slider--flagAlign--left {
+          right: auto !important;
+          left: 0 !important;
+        }
+
+        .title {
+          padding: 0 !important;
+          border: none !important;
+          background: transparent !important;
+          box-shadow: none !important;
+
+          .supertitle {
+            display: inline-block !important;
+            margin-bottom: $spacing-small !important;
+            color: #fff !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            letter-spacing: 1px !important;
+            text-transform: uppercase !important;
+          }
+
+          h2 {
+            margin-top: 0 !important;
+            margin-bottom: $spacing-small !important;
+            color: #fff !important;
+            @include text-heading-h2();
+          }
+        }
+
+        p {
+          margin-bottom: $spacing-medium !important;
+          color: #f3f3f3 !important;
+          @include introduction();
+        }
+
+        button {
+          display: inline-block !important;
+          padding: 8px 20px !important;
+          border: 1px solid #fff !important;
+          border-radius: 0 !important;
+          background: transparent !important;
+          color: #fff !important;
+          cursor: pointer;
+          font-size: 16px !important;
+          font-weight: 900 !important;
+          line-height: 20px !important;
+          text-align: center !important;
+
+          &:hover {
+            background: #fff !important;
+            color: #000 !important;
+          }
+        }
+      }
     }
   }
 }

@@ -1,0 +1,24 @@
+// =============================================================================
+// Highlight Block Styling — sc-volto-light-theme
+// Provides horizontal padding on .highlight-description to prevent text from
+// sticking to card borders, ensures container overflow containment,
+// and ensures clean border and theme integration.
+// =============================================================================
+
+.block.highlight,
+.block-editor-highlight,
+.block-highlight {
+  .highlight-description {
+    padding-right: $spacing-medium !important;
+    padding-left: $spacing-medium !important;
+
+    @container (max-width: 768px) {
+      padding-right: $spacing-small !important;
+      padding-left: $spacing-small !important;
+    }
+  }
+
+  .teaser-item {
+    overflow: hidden;
+  }
+}

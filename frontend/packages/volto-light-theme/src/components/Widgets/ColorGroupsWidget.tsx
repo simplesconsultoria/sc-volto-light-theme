@@ -70,13 +70,13 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
   const [newName, setNewName] = useState('');
   const [newFont, setNewFont] = useState('Inter, sans-serif');
   const [newBgLight, setNewBgLight] = useState('#ffffff');
-  const [newBgDark, setNewBgDark] = useState('#1e1e1e');
-  const [newTextLight, setNewTextLight] = useState('#000000');
-  const [newTextDark, setNewTextDark] = useState('#ffffff');
-  const [newSubtextLight, setNewSubtextLight] = useState('#666666');
-  const [newSubtextDark, setNewSubtextDark] = useState('#cccccc');
-  const [newAccentLight, setNewAccentLight] = useState('#f4822c');
-  const [newAccentDark, setNewAccentDark] = useState('#f4822c');
+  const [newBgDark, setNewBgDark] = useState('#14171c');
+  const [newTextLight, setNewTextLight] = useState('#1d2129');
+  const [newTextDark, setNewTextDark] = useState('#f1f3f5');
+  const [newSubtextLight, setNewSubtextLight] = useState('#4a5260');
+  const [newSubtextDark, setNewSubtextDark] = useState('#b4bcc8');
+  const [newAccentLight, setNewAccentLight] = useState('#1971c2');
+  const [newAccentDark, setNewAccentDark] = useState('#74c0fc');
 
   // Background layer fields for new group
   const [newBgImageLightDesk, setNewBgImageLightDesk] = useState('');

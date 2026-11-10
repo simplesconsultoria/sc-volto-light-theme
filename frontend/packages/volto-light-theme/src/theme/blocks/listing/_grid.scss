@@ -6,7 +6,12 @@
 
 &.grid,
 &.imageGallery,
-&.image-gallery {
+&.image-gallery,
+&[class*='grid'],
+&[class*='imageGallery'],
+&[class*='image-gallery'],
+&:has(.items[class*='grid-cols-']),
+&:has([class*='grid-cols-']) {
   .listing-item,
   .listing-item.news-listing,
   .listing-item.item-listing,
@@ -18,14 +23,25 @@
       border: solid var(--cardBorderColor, var(--theme-border-color));
       border-width: var(
         --cardBorderWidth,
-        var(--theme-border-width)
+        var(--theme-border-width, 0px)
       ) !important;
       border-color: var(--cardBorderColor, var(--theme-border-color));
+      border-top-width: var(
+        --cardBorderWidth,
+        var(--theme-border-width, 3px)
+      ) !important;
+      border-top-style: solid !important;
       border-top-color: var(
         --cardBorderColor,
-        var(--content-type-border-color, var(--theme-border-color))
+        var(
+          --content-type-border-color,
+          var(--theme-border-color, var(--primary-accent-color, #f4822c))
+        )
+      ) !important;
+      background-color: var(
+        --theme-high-contrast-color,
+        var(--colorgroup-neutral-bg, var(--neutral-color, #f0f0f0))
       );
-      background-color: var(--theme-high-contrast-color);
       background-image: var(
         --highground-bg-image,
         var(--colorgroup-front-bg-image, none)
@@ -42,6 +58,7 @@
         --highground-bg-size,
         var(--colorgroup-front-bg-size, auto)
       );
+      color: var(--theme-top-foreground-color);
       font-family: var(--colorgroup-front-font, inherit);
 
       .card-inner {

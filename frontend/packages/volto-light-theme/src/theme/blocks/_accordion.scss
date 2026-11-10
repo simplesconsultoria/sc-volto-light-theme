@@ -159,7 +159,12 @@
       .block.eventsearch,
       .block.teaser,
       .block.search,
-      .block.listing {
+      .block.listing,
+      .block.slider,
+      .block-slider,
+      .block-editor-slider,
+      .teaser-item,
+      .teaser-item-title {
         .title {
           padding: 0 !important;
           border: none !important;
@@ -207,6 +212,37 @@
         }
       }
 
+      // Preserve prominent editorial title appearance for Highlight block inside accordion
+      .block.highlight,
+      .block-highlight,
+      .block-editor-highlight {
+        .highlight-description {
+          .title,
+          .title h2 {
+            padding: 0 !important;
+            border: none !important;
+            margin-bottom: 1.5rem !important;
+            background: transparent !important;
+            color: inherit !important;
+            font-size: clamp(1.75rem, 3.5vw, 2.5rem) !important;
+            font-weight: 700 !important;
+            line-height: 1.2 !important;
+
+            @media only screen and (max-width: $largest-mobile-screen) {
+              margin-bottom: 1rem !important;
+              font-size: 1.5rem !important;
+              line-height: 1.25 !important;
+            }
+
+            @container (max-width: #{$largest-mobile-screen}) {
+              margin-bottom: 1rem !important;
+              font-size: 1.5rem !important;
+              line-height: 1.25 !important;
+            }
+          }
+        }
+      }
+
       // Restore normal dimensions for listing cards and items inside accordion
       .card-summary,
       .card,
@@ -220,6 +256,82 @@
         .description {
           font-size: 0.875rem !important;
           line-height: 1.35 !important;
+        }
+      }
+
+      // Proportional dimensions for highlight blocks inside accordion
+      .block.highlight,
+      .block-highlight,
+      .block-editor-highlight {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        .block-inner-container {
+          max-width: 100% !important;
+        }
+
+        .highlight-description {
+          padding: $spacing-medium $spacing-small !important;
+
+          @container (max-width: 768px) {
+            padding: $spacing-small !important;
+          }
+
+          .headtitle div {
+            margin-bottom: $spacing-small !important;
+            font-size: 0.95rem !important;
+            line-height: 1.3 !important;
+          }
+
+          .title {
+            h2 {
+              margin-bottom: $spacing-small !important;
+              font-size: 1.5rem !important;
+              line-height: 1.8rem !important;
+            }
+          }
+
+          .description {
+            margin-bottom: $spacing-small !important;
+
+            p {
+              font-size: 1rem !important;
+              line-height: 1.45 !important;
+            }
+          }
+
+          .button {
+            margin-top: $spacing-small;
+          }
+        }
+      }
+
+      // Preserve clean appearance for Slider block inside accordion
+      .block.slider,
+      .block-slider,
+      .block-editor-slider {
+        overflow: hidden;
+        width: 100% !important;
+        max-width: 100% !important;
+
+        .teaser-item.top {
+          .teaser-item-title {
+            .title {
+              padding: 0 !important;
+              border: none !important;
+              background: transparent !important;
+              background-color: transparent !important;
+              box-shadow: none !important;
+
+              .supertitle {
+                background: transparent !important;
+              }
+
+              h2 {
+                background: transparent !important;
+              }
+            }
+          }
         }
       }
 

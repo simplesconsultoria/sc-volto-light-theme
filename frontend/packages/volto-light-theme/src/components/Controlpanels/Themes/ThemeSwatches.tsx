@@ -95,7 +95,7 @@ const ThemeSwatches: React.FC<ThemeSwatchesProps> = ({ theme }) => {
             groupsMap[bt.back_color_group]?.background_color_light || '#ffffff';
           const frontBg =
             groupsMap[bt.front_color_group]?.background_color_light ||
-            '#edeff0';
+            '#f6f7f9';
           return (
             <span
               key={bt.id}

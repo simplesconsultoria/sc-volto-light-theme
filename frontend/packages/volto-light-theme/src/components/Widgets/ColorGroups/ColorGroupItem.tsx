@@ -143,7 +143,7 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
             <span
               className="swatch-dot"
               style={{
-                backgroundColor: group.accent_color_light || '#f4822c',
+                backgroundColor: group.accent_color_light || '#1971c2',
               }}
               title={`Accent: ${group.accent_color_light}`}
             />
@@ -364,7 +364,7 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
                 <span className="mode-tag">Claro</span>
                 <input
                   type="color"
-                  value={group.accent_color_light || '#f4822c'}
+                  value={group.accent_color_light || '#1971c2'}
                   onChange={(e) =>
                     onUpdateGroup(
                       group.id,
@@ -390,7 +390,7 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
                 <span className="mode-tag">Escuro</span>
                 <input
                   type="color"
-                  value={group.accent_color_dark || '#f4822c'}
+                  value={group.accent_color_dark || '#74c0fc'}
                   onChange={(e) =>
                     onUpdateGroup(group.id, 'accent_color_dark', e.target.value)
                   }
@@ -469,7 +469,7 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
             <button
               type="button"
               style={{
-                backgroundColor: group.accent_color_light || '#f4822c',
+                backgroundColor: group.accent_color_light || '#1971c2',
                 color: '#ffffff',
                 border: 'none',
                 padding: '4px 10px',
@@ -517,7 +517,7 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
             <button
               type="button"
               style={{
-                backgroundColor: group.accent_color_dark || '#f4822c',
+                backgroundColor: group.accent_color_dark || '#74c0fc',
                 color: '#ffffff',
                 border: 'none',
                 padding: '4px 10px',

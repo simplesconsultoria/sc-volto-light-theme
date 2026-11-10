@@ -9,6 +9,7 @@ Every theme occupies records named
 """
 
 from plone.registry.interfaces import IRegistry
+from sc.voltolighttheme import logger
 from sc.voltolighttheme.interfaces import ISCVLTThemeDefinition
 from zope.component import getUtility
 from zope.schema import getFieldNames
@@ -44,13 +45,13 @@ DEFAULT_COLOR_GROUPS = {
         "name": "Primary",
         "font_family": "Inter, sans-serif",
         "background_color_light": "#ffffff",
-        "background_color_dark": "#000000",
-        "text_color_light": "#000000",
-        "text_color_dark": "#ffffff",
-        "subtext_color_light": "#333333",
-        "subtext_color_dark": "#f8f8f8",
-        "accent_color_light": "#b55e1c",
-        "accent_color_dark": "#f4822c",
+        "background_color_dark": "#14171c",
+        "text_color_light": "#1d2129",
+        "text_color_dark": "#f1f3f5",
+        "subtext_color_light": "#4a5260",
+        "subtext_color_dark": "#b4bcc8",
+        "accent_color_light": "#1971c2",
+        "accent_color_dark": "#74c0fc",
         "bg_image_light_desktop": "",
         "bg_image_light_mobile": "",
         "bg_image_dark_desktop": "",
@@ -63,14 +64,14 @@ DEFAULT_COLOR_GROUPS = {
         "id": "secondary",
         "name": "Secondary",
         "font_family": "Inter, sans-serif",
-        "background_color_light": "#000000",
-        "background_color_dark": "#ffffff",
-        "text_color_light": "#ffffff",
-        "text_color_dark": "#000000",
-        "subtext_color_light": "#e6e6e6",
-        "subtext_color_dark": "#333333",
-        "accent_color_light": "#f4822c",
-        "accent_color_dark": "#f4822c",
+        "background_color_light": "#eceff3",
+        "background_color_dark": "#1c2027",
+        "text_color_light": "#1d2129",
+        "text_color_dark": "#f1f3f5",
+        "subtext_color_light": "#4a5260",
+        "subtext_color_dark": "#b4bcc8",
+        "accent_color_light": "#1864ab",
+        "accent_color_dark": "#74c0fc",
         "bg_image_light_desktop": "",
         "bg_image_light_mobile": "",
         "bg_image_dark_desktop": "",
@@ -83,14 +84,14 @@ DEFAULT_COLOR_GROUPS = {
         "id": "accent",
         "name": "Accent",
         "font_family": "Inter, sans-serif",
-        "background_color_light": "#f4822c",
-        "background_color_dark": "#b55e1c",
-        "text_color_light": "#000000",
-        "text_color_dark": "#ffffff",
-        "subtext_color_light": "#333333",
-        "subtext_color_dark": "#f8f8f8",
-        "accent_color_light": "#000000",
-        "accent_color_dark": "#ffffff",
+        "background_color_light": "#a5d8ff",
+        "background_color_dark": "#1c3a57",
+        "text_color_light": "#0b2239",
+        "text_color_dark": "#e7f5ff",
+        "subtext_color_light": "#1f3f5c",
+        "subtext_color_dark": "#b8d7ef",
+        "accent_color_light": "#0b2239",
+        "accent_color_dark": "#a5d8ff",
         "bg_image_light_desktop": "",
         "bg_image_light_mobile": "",
         "bg_image_dark_desktop": "",
@@ -103,14 +104,14 @@ DEFAULT_COLOR_GROUPS = {
         "id": "neutral",
         "name": "Neutral",
         "font_family": "Inter, sans-serif",
-        "background_color_light": "#edeff0",
-        "background_color_dark": "#333333",
-        "text_color_light": "#000000",
-        "text_color_dark": "#ffffff",
-        "subtext_color_light": "#333333",
-        "subtext_color_dark": "#e6e6e6",
-        "accent_color_light": "#f4822c",
-        "accent_color_dark": "#f4822c",
+        "background_color_light": "#f6f7f9",
+        "background_color_dark": "#242932",
+        "text_color_light": "#1d2129",
+        "text_color_dark": "#f1f3f5",
+        "subtext_color_light": "#4a5260",
+        "subtext_color_dark": "#c3cad4",
+        "accent_color_light": "#1971c2",
+        "accent_color_dark": "#74c0fc",
         "bg_image_light_desktop": "",
         "bg_image_light_mobile": "",
         "bg_image_dark_desktop": "",
@@ -134,6 +135,14 @@ DEFAULT_BLOCK_THEMES = {
         "back_color_group": "accent",
         "front_color_group": "primary",
     },
+}
+
+#: Values given to a color group created without them, or copied into a theme
+#: that lacks a group defined elsewhere. Mirrors the default "primary" group.
+FALLBACK_COLOR_GROUP = {
+    key: value
+    for key, value in DEFAULT_COLOR_GROUPS["primary"].items()
+    if key not in ("id", "name")
 }
 
 NATAL_COLOR_GROUPS = {
@@ -308,7 +317,7 @@ def ensure_theme_records(theme_id: str, registry=None) -> None:
     try:
         registry.registerInterface(ISCVLTThemeDefinition, prefix=prefix)
     except Exception:
-        pass
+        logger.exception("Could not register records for theme %r", theme_id)
 
 
 def default_color_groups_for_theme(theme_id: str, registry=None) -> dict:
@@ -422,79 +431,64 @@ def sync_color_groups_across_themes(registry=None) -> None:
     all other site themes (e.g. 'default') receive that color group initialized
     with default fallback values.
     """
-    registry = _registry(registry)
-    all_tids = theme_ids(registry)
-    if not all_tids:
-        return
 
-    for tid in all_tids:
-        ensure_theme_records(tid, registry)
+    def missing_group(gid: str, template: dict) -> dict:
+        return {
+            "id": gid,
+            "name": template.get("name", gid.capitalize()),
+            **FALLBACK_COLOR_GROUP,
+            "font_family": template.get(
+                "font_family", FALLBACK_COLOR_GROUP["font_family"]
+            ),
+        }
 
-    # 1. Discover all unique color group definitions across all themes
-    discovered: dict[str, dict] = {}
-    for gid, gdata in DEFAULT_COLOR_GROUPS.items():
-        discovered[gid] = dict(gdata)
-
-    for tid in all_tids:
-        theme_groups = get_theme_color_groups(tid, registry)
-        for gid, gdata in theme_groups.items():
-            if gid not in discovered:
-                discovered[gid] = dict(gdata)
-
-    # 2. For each theme, ensure every discovered group exists
-    for tid in all_tids:
-        theme_groups = dict(get_theme_color_groups(tid, registry))
-        changed = False
-        for gid, template in discovered.items():
-            if gid not in theme_groups:
-                fallback = {
-                    "id": gid,
-                    "name": template.get("name", gid.capitalize()),
-                    "font_family": template.get("font_family", "Inter, sans-serif"),
-                    "background_color_light": "#ffffff",
-                    "background_color_dark": "#000000",
-                    "text_color_light": "#000000",
-                    "text_color_dark": "#ffffff",
-                    "subtext_color_light": "#757575",
-                    "subtext_color_dark": "#9e9e9e",
-                    "accent_color_light": "#f4822c",
-                    "accent_color_dark": "#f4822c",
-                }
-                theme_groups[gid] = fallback
-                changed = True
-        if changed:
-            save_theme_color_groups(tid, theme_groups, registry)
+    _sync_across_themes(
+        DEFAULT_COLOR_GROUPS,
+        get_theme_color_groups,
+        save_theme_color_groups,
+        missing_group,
+        registry,
+    )
 
 
 def sync_block_themes_across_themes(registry=None) -> None:
     """Ensure every theme has all block themes defined across all themes."""
+    _sync_across_themes(
+        DEFAULT_BLOCK_THEMES,
+        get_theme_block_themes,
+        save_theme_block_themes,
+        lambda _btid, template: dict(template),
+        registry,
+    )
+
+
+def _sync_across_themes(defaults, read, save, make_missing, registry=None) -> None:
+    """Copy every definition found on any theme into the themes that lack it.
+
+    :param defaults: definitions every theme must have.
+    :param read: ``read(theme_id, registry)`` returns a theme's definitions.
+    :param save: ``save(theme_id, definitions, registry)`` stores them.
+    :param make_missing: ``make_missing(id, template)`` builds the copy.
+    """
     registry = _registry(registry)
     all_tids = theme_ids(registry)
-    if not all_tids:
-        return
-
     for tid in all_tids:
         ensure_theme_records(tid, registry)
 
-    discovered: dict[str, dict] = {}
-    for btid, btdata in DEFAULT_BLOCK_THEMES.items():
-        discovered[btid] = dict(btdata)
+    discovered = {key: dict(data) for key, data in defaults.items()}
+    for tid in all_tids:
+        for key, data in read(tid, registry).items():
+            discovered.setdefault(key, dict(data))
 
     for tid in all_tids:
-        theme_bts = get_theme_block_themes(tid, registry)
-        for btid, btdata in theme_bts.items():
-            if btid not in discovered:
-                discovered[btid] = dict(btdata)
-
-    for tid in all_tids:
-        theme_bts = dict(get_theme_block_themes(tid, registry))
-        changed = False
-        for btid, template in discovered.items():
-            if btid not in theme_bts:
-                theme_bts[btid] = dict(template)
-                changed = True
-        if changed:
-            save_theme_block_themes(tid, theme_bts, registry)
+        current = dict(read(tid, registry))
+        missing = {
+            key: make_missing(key, template)
+            for key, template in discovered.items()
+            if key not in current
+        }
+        if missing:
+            save(tid, {**current, **missing}, registry)
 
 
 def create_color_group(theme_id: str, group_data: dict, registry=None) -> dict:
@@ -514,22 +508,10 @@ def create_color_group(theme_id: str, group_data: dict, registry=None) -> dict:
     normalized = {
         "id": gid,
         "name": group_data.get("name", gid.capitalize()),
-        "font_family": group_data.get("font_family", "Inter, sans-serif"),
-        "background_color_light": group_data.get("background_color_light", "#ffffff"),
-        "background_color_dark": group_data.get("background_color_dark", "#000000"),
-        "text_color_light": group_data.get("text_color_light", "#000000"),
-        "text_color_dark": group_data.get("text_color_dark", "#ffffff"),
-        "subtext_color_light": group_data.get("subtext_color_light", "#757575"),
-        "subtext_color_dark": group_data.get("subtext_color_dark", "#9e9e9e"),
-        "accent_color_light": group_data.get("accent_color_light", "#f4822c"),
-        "accent_color_dark": group_data.get("accent_color_dark", "#f4822c"),
-        "bg_image_light_desktop": group_data.get("bg_image_light_desktop", ""),
-        "bg_image_light_mobile": group_data.get("bg_image_light_mobile", ""),
-        "bg_image_dark_desktop": group_data.get("bg_image_dark_desktop", ""),
-        "bg_image_dark_mobile": group_data.get("bg_image_dark_mobile", ""),
-        "bg_size": group_data.get("bg_size", "auto"),
-        "bg_repeat": group_data.get("bg_repeat", "repeat"),
-        "bg_position": group_data.get("bg_position", "center"),
+        **{
+            key: group_data.get(key, default)
+            for key, default in FALLBACK_COLOR_GROUP.items()
+        },
     }
     groups[gid] = normalized
     save_theme_color_groups(theme_id, groups, registry)
@@ -585,7 +567,7 @@ def delete_color_group(theme_id: str, group_id: str, registry=None) -> None:
         # 2. Revert any block theme references to 'primary'
         bts = dict(get_theme_block_themes(tid, registry))
         bt_changed = False
-        for btid, bt in bts.items():
+        for bt in bts.values():
             if bt.get("back_color_group") == group_id:
                 bt["back_color_group"] = "primary"
                 bt_changed = True
@@ -729,6 +711,37 @@ def create_theme(theme_id: str, values: dict | None = None, registry=None) -> di
     return theme_values(theme_id, registry)
 
 
+def _as_mapping(value) -> dict:
+    """Normalize a list of ``{"id": ...}`` items, or a dict, to a dict by id."""
+    if isinstance(value, list):
+        return {
+            item["id"]: item
+            for item in value
+            if isinstance(item, dict) and "id" in item
+        }
+    if isinstance(value, dict):
+        return dict(value)
+    return {}
+
+
+def _merge_collection(theme_id, value, bases, defaults, read, delete, registry):
+    """Prepare a color group / block theme collection for storage.
+
+    Base entries are restored if missing, and custom entries absent from
+    ``value`` are deleted (cascading across all themes).
+    """
+    value = _as_mapping(value)
+    for base_id in bases:
+        if base_id not in value and base_id in defaults:
+            value[base_id] = dict(defaults[base_id])
+    removed = [
+        key for key in read(theme_id, registry) if key not in value and key not in bases
+    ]
+    for key in removed:
+        delete(theme_id, key, registry)
+    return value
+
+
 def update_theme(theme_id: str, values: dict, registry=None) -> dict:
     """Write field values onto an existing theme.
 
@@ -752,60 +765,26 @@ def update_theme(theme_id: str, values: dict, registry=None) -> dict:
     for name, value in values.items():
         if name not in known:
             continue
-        # Normalize list format to dict for registry storage
         if name == "color_groups":
-            if isinstance(value, list):
-                value = {
-                    item["id"]: item
-                    for item in value
-                    if isinstance(item, dict) and "id" in item
-                }
-            elif isinstance(value, dict):
-                value = dict(value)
-            else:
-                value = {}
-
-            # Enforce base color groups cannot be deleted
-            for bg_id in BASE_COLOR_GROUPS:
-                if bg_id not in value and bg_id in DEFAULT_COLOR_GROUPS:
-                    value[bg_id] = dict(DEFAULT_COLOR_GROUPS[bg_id])
-
-            # Detect deleted custom color groups and cascade deletion across all themes
-            current_groups = get_theme_color_groups(theme_id, registry)
-            deleted_groups = [
-                gid
-                for gid in current_groups
-                if gid not in value and gid not in BASE_COLOR_GROUPS
-            ]
-            for gid in deleted_groups:
-                delete_color_group(theme_id, gid, registry)
-
+            value = _merge_collection(
+                theme_id,
+                value,
+                BASE_COLOR_GROUPS,
+                DEFAULT_COLOR_GROUPS,
+                get_theme_color_groups,
+                delete_color_group,
+                registry,
+            )
         elif name == "block_themes":
-            if isinstance(value, list):
-                value = {
-                    item["id"]: item
-                    for item in value
-                    if isinstance(item, dict) and "id" in item
-                }
-            elif isinstance(value, dict):
-                value = dict(value)
-            else:
-                value = {}
-
-            # Enforce base block themes cannot be deleted
-            for bt_id in BASE_BLOCK_THEMES:
-                if bt_id not in value and bt_id in DEFAULT_BLOCK_THEMES:
-                    value[bt_id] = dict(DEFAULT_BLOCK_THEMES[bt_id])
-
-            # Detect deleted custom block themes and cascade deletion across all themes
-            current_bts = get_theme_block_themes(theme_id, registry)
-            deleted_bts = [
-                btid
-                for btid in current_bts
-                if btid not in value and btid not in BASE_BLOCK_THEMES
-            ]
-            for btid in deleted_bts:
-                delete_block_theme(theme_id, btid, registry)
+            value = _merge_collection(
+                theme_id,
+                value,
+                BASE_BLOCK_THEMES,
+                DEFAULT_BLOCK_THEMES,
+                get_theme_block_themes,
+                delete_block_theme,
+                registry,
+            )
         rec = record_name(theme_id, name)
         if rec not in registry.records:
             ensure_theme_records(theme_id, registry)

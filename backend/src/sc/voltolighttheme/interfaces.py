@@ -45,8 +45,9 @@ class ISCVLTThemeDefinition(model.Schema):
     color_groups = JSONField(
         title=_("Color Groups"),
         description=_(
-            "Mapping of color groups configured for this theme. Each color group defines "
-            "a font and 4 colors (background, text, subtext, accent) with dark mode variations."
+            "Mapping of color groups configured for this theme. Each color group "
+            "defines a font and 4 colors (background, text, subtext, accent) "
+            "with dark mode variations."
         ),
         required=False,
     )

@@ -61,6 +61,27 @@
     margin-right: auto !important;
     margin-left: auto !important;
   }
+
+  // Border styling: delegates border strictly to table element,
+  // preventing border stretching on outer .block-inner-container.
+  &[style*='--cardBorderWidth'] {
+    border: none !important;
+
+    & > .block-inner-container,
+    .block-inner-container {
+      border: none !important;
+    }
+
+    table.slate-table-block,
+    table.ui.table {
+      border-width: var(--cardBorderWidth) !important;
+      border-style: solid;
+      border-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, var(--primary-accent-color, #007bc1))
+      ) !important;
+    }
+  }
 }
 
 // Specific support in Edit Mode

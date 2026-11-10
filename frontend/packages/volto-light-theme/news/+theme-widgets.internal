@@ -1,0 +1,1 @@
+Split the theme widgets into smaller modules (`ColorGroups/`, `BorderWidget/icons.tsx`, `_blockThemeWidget.scss`, `_borderWidget.scss`), centralized theme resolution in `config/blockThemes.ts`, replaced the `Theming.tsx` shadow with a slot registration, and added unit tests for widgets, block width, borders and themed block styles. @Humanaice

@@ -53,6 +53,28 @@ describe('SlateTable / Table Block Width & Styling Integration', () => {
     expect(viewSection).not.toContain('.slate-table-block,');
   });
 
+  it('_borders.scss and _table.scss: applies card border strictly to table element, not block-inner-container', () => {
+    const bordersScss = readThemeFile('theme/blocks/_borders.scss');
+    const tableScss = readThemeFile('theme/blocks/_table.scss');
+
+    // _borders.scss delegates border to table element and resets container
+    expect(bordersScss).toContain(
+      ".block.slateTable[style*='--cardBorderWidth']",
+    );
+    expect(bordersScss).toContain(
+      '& > .block-inner-container,\n  .block-inner-container {\n    border: none !important;\n  }',
+    );
+    expect(bordersScss).toContain(
+      'table,\n  table.slate-table-block,\n  table.ui.table {\n    @include apply-block-border;\n  }',
+    );
+
+    // _table.scss also reinforces border on table element
+    expect(tableScss).toContain("&[style*='--cardBorderWidth']");
+    expect(tableScss).toContain(
+      'table.slate-table-block,\n    table.ui.table {\n      border-width: var(--cardBorderWidth) !important;',
+    );
+  });
+
   it('_main.scss: imports table block styles', () => {
     const scss = readThemeFile('theme/_main.scss');
 

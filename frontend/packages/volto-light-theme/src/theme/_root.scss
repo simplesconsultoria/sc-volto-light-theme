@@ -5,89 +5,108 @@
   --layout-container-width: 1440px !important;
 
   // Base colors
+  // Pure values stay literal: high-contrast mode and a few overrides rely on them.
   --pure-white: #fff;
   --pure-black: #000;
-  --gray-02: #f8f8f8;
-  --gray-cool-05: #edeff0;
-  --gray-10: #e6e6e6;
-  --gray-50: #757575;
-  --gray-80: #333;
 
-  // Brand colors
-  --brand-color: #f4822c;
-  --brand-color-dark: #b55e1c;
-  --brand-color-darker: #af5009;
+  // Neutral scale (cool gray) — light surfaces and ink
+  --gray-02: #f6f7f9; // neutral surface
+  --gray-cool-05: #eceff3; // secondary surface (footer, strong bands)
+  --gray-10: #dde2e8; // borders, dividers
+  --gray-50: #6b7280; // disabled / decorative only (not for body text)
+  --gray-70: #4a5260; // low-contrast text on light surfaces
+  --gray-80: #333;
+  --gray-90: #1d2129; // ink: body text on light surfaces
+
+  // Neutral scale — dark mode surfaces and ink
+  --gray-dark-bg: #14171c; // page / primary surface
+  --gray-dark-surface: #1c2027; // secondary surface
+  --gray-dark-raised: #242932; // neutral surface (cards, high ground)
+  --gray-dark-text: #f1f3f5;
+  --gray-dark-low-text: #b4bcc8;
+  --gray-dark-low-text-raised: #c3cad4;
+
+  // Brand colors (light blue). Names kept for backward compatibility.
+  --brand-color: #a5d8ff; // light blue surface (accent group, breadcrumbs)
+  --brand-color-light: #74c0fc; // accent text/links on dark surfaces
+  --brand-color-dark: #1971c2; // accent text/links on white / near-white
+  --brand-color-darker: #1864ab; // accent text/links on gray surfaces
+  --brand-color-deep: #1c3a57; // accent surface in dark mode
+  --brand-ink: #0b2239; // text on the light blue surface
+  --brand-ink-low: #1f3f5c;
+  --brand-pale: #e7f5ff; // text on the deep blue surface
+  --brand-pale-low: #b8d7ef;
 
   // Semantic colors
   --primary-color: light-dark(
     var(--primary-color-light, var(--pure-white)),
-    var(--primary-color-dark, var(--pure-black))
+    var(--primary-color-dark, var(--gray-dark-bg))
   );
   --primary-foreground-color: light-dark(
-    var(--primary-foreground-color-light, var(--pure-black)),
-    var(--primary-foreground-color-dark, var(--pure-white))
+    var(--primary-foreground-color-light, var(--gray-90)),
+    var(--primary-foreground-color-dark, var(--gray-dark-text))
   );
   --primary-low-foreground-color: light-dark(
-    var(--primary-low-foreground-color-light, var(--gray-80)),
-    var(--primary-low-foreground-color-dark, var(--gray-02))
+    var(--primary-low-foreground-color-light, var(--gray-70)),
+    var(--primary-low-foreground-color-dark, var(--gray-dark-low-text))
   );
   --primary-accent-color: light-dark(
     var(--primary-accent-color-light, var(--brand-color-dark)),
-    var(--primary-accent-color-dark, var(--brand-color))
+    var(--primary-accent-color-dark, var(--brand-color-light))
   );
 
   --secondary-color: light-dark(
-    var(--secondary-color-light, var(--pure-black)),
-    var(--secondary-color-dark, var(--pure-white))
+    var(--secondary-color-light, var(--gray-cool-05)),
+    var(--secondary-color-dark, var(--gray-dark-surface))
   );
   --secondary-foreground-color: light-dark(
-    var(--secondary-foreground-color-light, var(--pure-white)),
-    var(--secondary-foreground-color-dark, var(--pure-black))
+    var(--secondary-foreground-color-light, var(--gray-90)),
+    var(--secondary-foreground-color-dark, var(--gray-dark-text))
   );
   --secondary-low-foreground-color: light-dark(
-    var(--secondary-low-foreground-color-light, var(--gray-10)),
-    var(--secondary-low-foreground-color-dark, var(--gray-80))
+    var(--secondary-low-foreground-color-light, var(--gray-70)),
+    var(--secondary-low-foreground-color-dark, var(--gray-dark-low-text))
   );
   --secondary-accent-color: light-dark(
-    var(--secondary-accent-color-light, var(--brand-color)),
-    var(--secondary-accent-color-dark, var(--brand-color-dark))
+    var(--secondary-accent-color-light, var(--brand-color-darker)),
+    var(--secondary-accent-color-dark, var(--brand-color-light))
   );
 
   --accent-color: light-dark(
     var(--accent-color-light, var(--brand-color)),
-    var(--accent-color-dark, var(--brand-color-dark))
+    var(--accent-color-dark, var(--brand-color-deep))
   );
   --accent-foreground-color: light-dark(
-    var(--accent-foreground-color-light, var(--pure-black)),
-    var(--accent-foreground-color-dark, var(--pure-white))
+    var(--accent-foreground-color-light, var(--brand-ink)),
+    var(--accent-foreground-color-dark, var(--brand-pale))
   );
   --accent-low-foreground-color: light-dark(
-    var(--accent-low-foreground-color-light, var(--gray-80)),
-    var(--accent-low-foreground-color-dark, var(--gray-02))
+    var(--accent-low-foreground-color-light, var(--brand-ink-low)),
+    var(--accent-low-foreground-color-dark, var(--brand-pale-low))
   );
   --accent-accent-color: light-dark(
-    var(--accent-accent-color-light, var(--pure-black)),
-    var(--accent-accent-color-dark, var(--pure-white))
+    var(--accent-accent-color-light, var(--brand-ink)),
+    var(--accent-accent-color-dark, var(--brand-color))
   );
 
   --neutral-color: light-dark(
-    var(--neutral-color-light, var(--gray-cool-05)),
-    var(--neutral-color-dark, var(--gray-80))
+    var(--neutral-color-light, var(--gray-02)),
+    var(--neutral-color-dark, var(--gray-dark-raised))
   );
   --neutral-foreground-color: light-dark(
-    var(--neutral-foreground-color-light, var(--pure-black)),
-    var(--neutral-foreground-color-dark, var(--pure-white))
+    var(--neutral-foreground-color-light, var(--gray-90)),
+    var(--neutral-foreground-color-dark, var(--gray-dark-text))
   );
   --neutral-low-foreground-color: light-dark(
-    var(--neutral-low-foreground-color-light, var(--gray-80)),
-    var(--neutral-low-foreground-color-dark, var(--gray-10))
+    var(--neutral-low-foreground-color-light, var(--gray-70)),
+    var(--neutral-low-foreground-color-dark, var(--gray-dark-low-text-raised))
   );
   --neutral-accent-color: light-dark(
-    var(--neutral-accent-color-light, var(--brand-color-darker)),
-    var(--neutral-accent-color-dark, var(--brand-color))
+    var(--neutral-accent-color-light, var(--brand-color-dark)),
+    var(--neutral-accent-color-dark, var(--brand-color-light))
   );
 
-  --link-foreground-color: var(--brand-color);
+  --link-foreground-color: var(--primary-accent-color);
 
   // Content Types
   --news-item-color: var(--pure-black);
@@ -142,40 +161,40 @@
   );
   --block-theme-default-text: var(
     --colorgroup-primary-text,
-    var(--primary-foreground-color, #000000)
+    var(--primary-foreground-color, #1d2129)
   );
   --block-theme-default-high-contrast: var(
     --colorgroup-primary-text,
-    var(--primary-foreground-color, #000000)
+    var(--primary-foreground-color, #1d2129)
   );
   --block-theme-default-low-contrast: var(
     --colorgroup-primary-subtext,
-    var(--primary-low-foreground-color, #333333)
+    var(--primary-low-foreground-color, #4a5260)
   );
   --block-theme-default-accent-color: var(
     --colorgroup-primary-accent,
-    var(--primary-accent-color, #b55e1c)
+    var(--primary-accent-color, #1971c2)
   );
   // High Ground
   --block-theme-default-high-bg: var(
     --colorgroup-neutral-bg,
-    var(--neutral-color, #edeff0)
+    var(--neutral-color, #f6f7f9)
   );
   --block-theme-default-top-text: var(
     --colorgroup-neutral-text,
-    var(--neutral-foreground-color, #000000)
+    var(--neutral-foreground-color, #1d2129)
   );
   --block-theme-default-top-high-contrast: var(
     --colorgroup-neutral-text,
-    var(--neutral-foreground-color, #000000)
+    var(--neutral-foreground-color, #1d2129)
   );
   --block-theme-default-top-low-contrast: var(
     --colorgroup-neutral-subtext,
-    var(--neutral-low-foreground-color, #333333)
+    var(--neutral-low-foreground-color, #4a5260)
   );
   --block-theme-default-top-accent-color: var(
     --colorgroup-neutral-accent,
-    var(--neutral-accent-color, #f4822c)
+    var(--neutral-accent-color, #1971c2)
   );
   // Border
   --block-theme-default-border: var(--accent-color);
@@ -188,23 +207,23 @@
   // Ground
   --block-theme-alternative-bg: var(
     --colorgroup-accent-bg,
-    var(--accent-color, #f4822c)
+    var(--accent-color, #a5d8ff)
   );
   --block-theme-alternative-text: var(
     --colorgroup-accent-text,
-    var(--accent-foreground-color, #000000)
+    var(--accent-foreground-color, #0b2239)
   );
   --block-theme-alternative-high-contrast: var(
     --colorgroup-accent-text,
-    var(--accent-foreground-color, #000000)
+    var(--accent-foreground-color, #0b2239)
   );
   --block-theme-alternative-low-contrast: var(
     --colorgroup-accent-subtext,
-    var(--accent-low-foreground-color, #333333)
+    var(--accent-low-foreground-color, #1f3f5c)
   );
   --block-theme-alternative-accent-color: var(
     --colorgroup-accent-accent,
-    var(--accent-accent-color, #000000)
+    var(--accent-accent-color, #0b2239)
   );
   // High Ground
   --block-theme-alternative-high-bg: var(
@@ -213,19 +232,19 @@
   );
   --block-theme-alternative-top-text: var(
     --colorgroup-primary-text,
-    var(--primary-foreground-color, #000000)
+    var(--primary-foreground-color, #1d2129)
   );
   --block-theme-alternative-top-high-contrast: var(
     --colorgroup-primary-text,
-    var(--primary-foreground-color, #000000)
+    var(--primary-foreground-color, #1d2129)
   );
   --block-theme-alternative-top-low-contrast: var(
     --colorgroup-primary-subtext,
-    var(--primary-low-foreground-color, #333333)
+    var(--primary-low-foreground-color, #4a5260)
   );
   --block-theme-alternative-top-accent-color: var(
     --colorgroup-primary-accent,
-    var(--primary-accent-color, #b55e1c)
+    var(--primary-accent-color, #1971c2)
   );
   // Border
   --block-theme-alternative-border: unset;
@@ -292,10 +311,10 @@
   --colorgroup-front-font: inherit;
 
   // Links
-  --link-color: var(--brand-color);
-  --link-color-hover: var(--brand-color-dark);
-  --color-link: var(--brand-color);
-  --color-link-hover: var(--brand-color-dark);
+  --link-color: var(--primary-accent-color);
+  --link-color-hover: light-dark(var(--brand-color-darker), var(--brand-color));
+  --color-link: var(--link-color);
+  --color-link-hover: var(--link-color-hover);
 }
 
 .has-back-colorgroup-primary {

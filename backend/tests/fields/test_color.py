@@ -7,6 +7,7 @@ without a persistent equivalent.
 
 from plone.registry.interfaces import IPersistentField
 from plone.registry.interfaces import IRegistry
+from plone.supermodel import model
 from sc.voltolighttheme.fields import Color
 from sc.voltolighttheme.fields import PersistentColor
 from sc.voltolighttheme.fields.color import InvalidColor
@@ -17,9 +18,6 @@ import pytest
 
 
 PREFIX = "sc.voltolighttheme.theme.test-theme"
-
-
-from plone.supermodel import model
 
 
 class IDummyColorSchema(model.Schema):

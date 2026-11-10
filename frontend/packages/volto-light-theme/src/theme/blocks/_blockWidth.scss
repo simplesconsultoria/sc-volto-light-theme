@@ -10,7 +10,7 @@
 // on screens <= width + 2*20px, lateral 20px margins prevail, preventing margin: auto
 // from stripping the safety gutters.
 @mixin adjustMarginsToContainer($width) {
-  @container (max-width: #{$width + 2 * $horizontal-space-small-screens}) {
+  @container page-document (max-width: #{$width + 2 * $horizontal-space-small-screens}) {
     margin-right: $horizontal-space-small-screens !important;
     margin-left: $horizontal-space-small-screens !important;
   }
@@ -21,7 +21,11 @@
 }
 
 @mixin adjustMarginsToEditContainer($width) {
-  @container (max-width: #{$width + 2 * $spacing-medium}) {
+  @container page-document (max-width: #{$width + 2 * $spacing-medium}) {
+    margin-right: $spacing-medium !important;
+    margin-left: $spacing-medium !important;
+  }
+  @media (max-width: #{$width + 2 * $spacing-medium}) {
     margin-right: $spacing-medium !important;
     margin-left: $spacing-medium !important;
   }
@@ -29,6 +33,7 @@
 
 @mixin apply-narrow-width {
   @include narrow-container-width();
+  width: auto !important;
   max-width: var(--narrow-container-width) !important;
   margin-right: auto;
   margin-left: auto;
@@ -37,6 +42,7 @@
 
 @mixin apply-default-width {
   @include default-container-width();
+  width: auto !important;
   max-width: var(--default-container-width) !important;
   margin-right: auto;
   margin-left: auto;
@@ -45,6 +51,7 @@
 
 @mixin apply-layout-width {
   @include layout-container-width();
+  width: auto !important;
   max-width: var(--layout-container-width) !important;
   margin-right: auto;
   margin-left: auto;
@@ -157,9 +164,19 @@
 // - Introduction (.block-container)
 // - Event Calendar (.search-block-event)
 // - Table of Contents (.table-of-contents)
-#page-document .blocks-group-wrapper > .block:not(.contained),
-#page-document .blocks-group-wrapper > [class*='block-']:not(.contained),
-.block:not(.contained):not(.column .block):not(.custom-grid-column .block) {
+#page-document
+  .blocks-group-wrapper
+  > .block:not(.heroBlock):not(.block-editor-heroBlock):not(.customGrid):not(
+    .block-editor-customGrid
+  ):not(.contained),
+#page-document
+  .blocks-group-wrapper
+  > [class*='block-']:not(.heroBlock):not(.block-editor-heroBlock):not(
+    .customGrid
+  ):not(.block-editor-customGrid):not(.contained),
+.block:not(.heroBlock):not(.block-editor-heroBlock):not(.customGrid):not(
+    .block-editor-customGrid
+  ):not(.contained):not(.column .block):not(.custom-grid-column .block) {
   &.has--block-width--narrow {
     &,
     > .block-inner-container,
@@ -400,6 +417,9 @@
 // 4. Container Queries Configuration on Document (#page-document)
 // -----------------------------------------------------------------------------
 #page-document,
-#page-document .blocks-group-wrapper {
+#page-document .blocks-group-wrapper,
+#page-edit,
+#page-add {
+  container-name: page-document;
   container-type: inline-size;
 }

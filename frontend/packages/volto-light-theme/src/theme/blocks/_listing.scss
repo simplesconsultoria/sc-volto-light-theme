@@ -5,7 +5,9 @@
 // =============================================================================
 
 body .block.listing,
-#page-edit .block-editor-listing .block.listing,
+#page-edit .block.listing,
+#page-edit [class*='block-editor-listing'],
+.block-editor-listing,
 .block.search {
   background-color: transparent;
   color: var(--theme-foreground-color, inherit);
@@ -18,6 +20,22 @@ body .block.listing,
   @import 'listing/columns';
   @import 'listing/events';
   @import 'listing/teaser';
+
+  // Base listing items use background color group (transparent inheritance)
+  &:not(.grid):not(.variation-grid):not(.imageGallery):not(.image-gallery):not(
+      .variation-imageGallery
+    ):not(.carousel):not(.variation-carousel):not(.mediaCarousel):not(
+      .variation-mediaCarousel
+    ):not(.teaser):not(.variation-teaser):not(:has(.listing-carousel)):not(
+      :has(.image-gallery)
+    ):not(:has(.items[class*='grid-cols-'])):not(:has([class*='grid-cols-'])) {
+    .listing-item,
+    .listing-item .card {
+      background-color: transparent !important;
+      background-image: none !important;
+      color: var(--theme-foreground-color, inherit);
+    }
+  }
 
   .listing-block-container {
     width: auto;

@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import cx from 'classnames';
 import { useSelector } from 'react-redux';
 import type { GetSiteResponse } from '@plone/types';
-import { isInternalURL } from '@plone/volto/helpers/Url/Url';
+import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 import DefaultSummary from '@kitconcept/volto-light-theme/components/Summary/DefaultSummary';
 import type { SummaryComponentType } from '@kitconcept/volto-light-theme/components/Summary/DefaultSummary';
 import Card from '@kitconcept/volto-light-theme/primitives/Card/Card';
@@ -60,6 +60,61 @@ const TeaserDefaultTemplate = (props) => {
 
   const placeholderSrc = config.settings.placeholderImages?.[href['@type']];
 
+  // Resolve direct URL fallback safely
+  const targetItem = data.overwrite
+    ? image
+    : href?.hasPreviewImage || href?.image_field
+      ? href
+      : image;
+  let resolvedSrc: string | undefined;
+  if (targetItem?.['@id']) {
+    const scales = targetItem.image_scales;
+    const imageField = targetItem.image_field || 'image';
+    const scaleObj =
+      scales?.[imageField]?.[0] || (scales && Object.values(scales)?.[0]?.[0]);
+    if (scaleObj?.download) {
+      resolvedSrc = `${flattenToAppURL(targetItem['@id'])}/${scaleObj.download.replace(/^\//, '')}`;
+    } else {
+      resolvedSrc = `${flattenToAppURL(targetItem['@id'])}/@@images/image`;
+    }
+  } else if (url) {
+    const flatUrl = flattenToAppURL(url);
+    resolvedSrc =
+      !flatUrl.includes('@@images') &&
+      !flatUrl.includes('@@download') &&
+      !/\.(jpe?g|png|gif|svg|webp)($|\?)/i.test(flatUrl)
+        ? `${flatUrl.replace(/\/$/, '')}/@@images/image`
+        : flatUrl;
+  }
+
+  // Safe wrapper for Image component ensuring an image element is always returned
+  const SafeImage = (imageProps: any) => {
+    if (imageProps.src) {
+      return Image ? (
+        <Image {...imageProps} />
+      ) : (
+        <img {...imageProps} alt={imageProps.alt || ''} />
+      );
+    }
+    try {
+      const res = Image ? Image(imageProps) : null;
+      if (res) return res;
+    } catch {
+      // Fallback on scale rendering error
+    }
+    if (resolvedSrc) {
+      return (
+        <img
+          src={resolvedSrc}
+          alt={imageProps.alt || ''}
+          loading={imageProps.loading || 'lazy'}
+          className={imageProps.responsive ? 'responsive' : undefined}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <Card
       className={cx({ 'no-link': !showLink })}
@@ -67,10 +122,14 @@ const TeaserDefaultTemplate = (props) => {
       openLinkInNewTab={openLinkInNewTab}
     >
       <Card.Image
-        src={url && !image?.image_field ? url : undefined}
+        src={
+          resolvedSrc && !image?.image_field && !href?.image_field
+            ? resolvedSrc
+            : undefined
+        }
         item={!data.overwrite ? href : { ...href, ...localOverrides }}
         image={data.overwrite ? image : undefined}
-        imageComponent={Image}
+        imageComponent={SafeImage}
         showPlaceholderImage={Boolean(placeholderSrc)}
         placeholderSrc={placeholderSrc}
         sizes={sizes}

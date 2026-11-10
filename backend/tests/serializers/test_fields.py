@@ -6,6 +6,8 @@ emits the `{token, title, value}` shape every Volto choice widget expects.
 
 from plone import api
 from plone.registry.interfaces import IRegistry
+from sc.voltolighttheme.fields import Color
+from sc.voltolighttheme.serializers.fields import ColorJsonSchemaProvider
 from sc.voltolighttheme.utils import themes
 from zope.component import getUtility
 
@@ -137,10 +139,6 @@ class TestThemeFieldRoundTrip:
         self.api.patch("/site", json={"theme": None})
         transaction.commit()
         assert self.api.get("/site").json()["theme"] is None
-
-
-from sc.voltolighttheme.fields import Color
-from sc.voltolighttheme.serializers.fields import ColorJsonSchemaProvider
 
 
 class TestColorJsonSchemaProvider:
