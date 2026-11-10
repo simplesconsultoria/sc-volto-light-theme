@@ -31,7 +31,7 @@ const HeroBlockView: React.FC<HeroBlockViewProps> = (props) => {
 
   const variation = data.variation || 'flex';
   const typeHref = data?.href?.[0]?.['@type'] || '';
-  const normalizedWidth = normalizeBlockWidth(data) || 'layout';
+  const normalizedWidth = normalizeBlockWidth(data, 'layout');
   const blockWidthClass = `has--block-width--${normalizedWidth}`;
   const imageSize = data.imageSize || '50%';
 

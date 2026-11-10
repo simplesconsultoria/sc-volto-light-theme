@@ -30,10 +30,17 @@ export interface ResolveBlockWidthParams {
  * - object with style key: { '--block-width': '...' } or { value: '...' }
  *
  * Always returns a valid string: 'narrow' | 'default' | 'layout' | 'full'.
- * Default fallback: 'default'.
+ *
+ * @param fallback width of a block with no width stored, or an unreadable
+ *   one. Defaults to `default`; blocks that rendered at `layout` before the
+ *   width system (Hero, Custom Grid) pass `layout` so existing content keeps
+ *   its size.
  */
-export function normalizeBlockWidth(data: any): BlockWidth {
-  if (!data) return 'default';
+export function normalizeBlockWidth(
+  data: any,
+  fallback: BlockWidth = 'default',
+): BlockWidth {
+  if (!data) return fallback;
 
   let raw =
     data.styles?.['blockWidth:noprefix'] ??
@@ -89,7 +96,7 @@ export function normalizeBlockWidth(data: any): BlockWidth {
     }
   }
 
-  return 'default';
+  return fallback;
 }
 
 /**

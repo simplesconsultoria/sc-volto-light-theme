@@ -14,17 +14,13 @@ interface MainImageBlockEditProps {
 }
 
 const MainImageBlockEdit: React.FC<MainImageBlockEditProps> = (props) => {
-  const { data, onChangeBlock, block, selected } = props;
+  const { selected } = props;
 
   return (
     <>
       <MainImageBlockView {...props} isEditMode />
       <SidebarPortal selected={selected}>
-        <MainImageBlockDataForm
-          data={data}
-          block={block}
-          onChangeBlock={onChangeBlock}
-        />
+        <MainImageBlockDataForm {...props} />
       </SidebarPortal>
     </>
   );

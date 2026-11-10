@@ -97,6 +97,24 @@ describe('normalizeBlockWidth', () => {
   });
 });
 
+describe('normalizeBlockWidth fallback', () => {
+  it('uses the fallback only when no width is stored', () => {
+    expect(normalizeBlockWidth({}, 'layout')).toBe('layout');
+    expect(normalizeBlockWidth(undefined, 'layout')).toBe('layout');
+    expect(
+      normalizeBlockWidth(
+        { styles: { 'blockWidth:noprefix': 'narrow' } },
+        'layout',
+      ),
+    ).toBe('narrow');
+    expect(normalizeBlockWidth({ blockWidth: 'full' }, 'layout')).toBe('full');
+  });
+
+  it('defaults to default', () => {
+    expect(normalizeBlockWidth({})).toBe('default');
+  });
+});
+
 describe('resolveBlockWidthForBlock', () => {
   it('retorna largura própria quando o bloco não for imagem alinhada lateralmente', () => {
     expect(

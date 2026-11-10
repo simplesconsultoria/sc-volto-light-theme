@@ -1,4 +1,5 @@
 import type React from 'react';
+import { normalizeBlockWidth } from '../../../helpers/blockWidth';
 import cx from 'classnames';
 import { resolveBlockTheme } from '../../../config/blockThemes';
 
@@ -164,16 +165,13 @@ export const normalizeColumnFormData = (formData: AnyRecord): AnyRecord => {
   return { ...formData, blocks: {}, blocks_layout: { items: [] } };
 };
 
-/** Class name for the grid width; object values come from width widgets. */
-export const getBlockWidthClass = (blockWidth: unknown): string => {
-  let raw: any = blockWidth;
-  if (typeof raw === 'object' && raw !== null) {
-    raw = raw.value || raw.id || Object.values(raw)[0];
-  }
-  return raw && typeof raw === 'string'
-    ? `has--block-width--${raw}`
-    : 'has--block-width--layout';
-};
+/**
+ * Class name for the grid width, read like the view does: the width in
+ * `styles` (the Block Width control), or a legacy top-level `blockWidth`.
+ * A grid with no width stored renders at `layout`, as it always did.
+ */
+export const getBlockWidthClass = (data: AnyRecord | undefined): string =>
+  `has--block-width--${normalizeBlockWidth(data, 'layout')}`;
 
 const VOLTO_WIDTH_CLASSES = ['full', 'narrow', 'layout', 'default'];
 

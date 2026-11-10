@@ -72,6 +72,37 @@ describe('Block Width and Borders Schema Enhancer', () => {
     );
   });
 
+  it('adds width and borders to a block that declares its own styling fieldset', () => {
+    // Volto's addStyling skips blocks that already have a 'styling'
+    // fieldset (Event Metadata declares one for its theme), which used to
+    // leave them without `styles`, so without width and border controls.
+    const blockConfig: any = { id: 'eventMetadata' };
+    const config: any = {
+      blocks: { widths: [], blocksConfig: { eventMetadata: blockConfig } },
+      settings: { borderExcludedBlocks: DEFAULT_BORDER_EXCLUDED_BLOCKS },
+    };
+    enhanceBlockConfig(blockConfig, 'eventMetadata', config);
+
+    const enhanced = blockConfig.schemaEnhancer({
+      schema: {
+        fieldsets: [
+          { id: 'default', title: 'Default', fields: ['location'] },
+          { id: 'styling', title: 'Styling', fields: ['theme'] },
+        ],
+        properties: { location: { title: 'Location' } },
+      },
+      formData: {},
+      intl: { formatMessage: (m: any) => m.defaultMessage },
+    });
+
+    const styles = enhanced.properties.styles.schema.properties;
+    expect(styles['blockWidth:noprefix']).toBeDefined();
+    expect(styles['--cardBorderColor']).toBeDefined();
+    expect(styles['--cardBorderWidth'].widget).toBe('border_widget');
+    const styling = enhanced.fieldsets.find((f: any) => f.id === 'styling');
+    expect(styling.fields).toEqual(expect.arrayContaining(['theme', 'styles']));
+  });
+
   it('respeita borderExcludedBlocks e não injeta bordas para o bloco separator', () => {
     const mockSeparatorConfig: any = {
       id: 'separator',

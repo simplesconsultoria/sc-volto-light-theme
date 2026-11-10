@@ -8,6 +8,26 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0-alpha.14 (2026-10-30)
+
+### Bugfix
+
+- Added the accessible label to the mobile pagination of the Listing block, as already done on desktop. @ericof [#37](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/37)
+
+### Internal
+
+- Upgraded `@kitconcept/volto-light-theme` to 8.1.2, `@eeacms/volto-accordion-block` to 13.1.1, `@plone-collective/volto-image-editor` to 1.2.0, `@kitconcept/volto-social-blocks` to 1.1.0, and the other `@kitconcept` block add-ons to their latest releases, moving seven of them from alpha to final versions. The Event Calendar block stays available, but upstream no longer offers it as a Listing block variation. @ericof [#37](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/37)
+
+## 1.0.0-alpha.13 (2026-10-30)
+
+### Feature
+
+- Added documentation for the blocks of the add-on (Hero, Main Image, Quote, Byline, Custom Grid and Event Metadata), served by the `@blocks-schema` endpoint, so agents can write their data correctly. The sidebar forms of these blocks now read their schema from the block configuration. @ericof [#33](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/33)
+
+### Internal
+
+- Upgraded `@plonegovbr/volto-social-media` to 3.1.0. @ericof [#35](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/35)
+
 ## 1.0.0-alpha.12 (2026-10-21)
 
 ### Bugfix

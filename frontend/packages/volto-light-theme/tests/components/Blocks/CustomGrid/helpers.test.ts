@@ -181,16 +181,19 @@ describe('CustomGrid helpers', () => {
   });
 
   it('resolves the block width class', () => {
-    expect(getBlockWidthClass('full')).toBe('has--block-width--full');
-    expect(getBlockWidthClass({ value: 'narrow' })).toBe(
+    // The Block Width control stores the width in styles
+    expect(
+      getBlockWidthClass({ styles: { 'blockWidth:noprefix': 'full' } }),
+    ).toBe('has--block-width--full');
+    // A legacy top-level blockWidth, plain or from a width widget object
+    expect(getBlockWidthClass({ blockWidth: 'narrow' })).toBe(
       'has--block-width--narrow',
     );
-    expect(getBlockWidthClass({ id: 'layout' })).toBe(
-      'has--block-width--layout',
-    );
-    expect(getBlockWidthClass({ foo: 'default' })).toBe(
+    expect(getBlockWidthClass({ blockWidth: { value: 'default' } })).toBe(
       'has--block-width--default',
     );
+    // No width stored: layout, as on main
+    expect(getBlockWidthClass({})).toBe('has--block-width--layout');
     expect(getBlockWidthClass(undefined)).toBe('has--block-width--layout');
   });
 

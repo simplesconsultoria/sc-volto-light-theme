@@ -90,7 +90,7 @@ const CustomGridEdit = (props: any) => {
       <div
         className={cx(
           'block custom-grid',
-          getBlockWidthClass(data.blockWidth),
+          getBlockWidthClass(data),
           `layout-${layout}`,
         )}
       >
@@ -140,6 +140,7 @@ const CustomGridEdit = (props: any) => {
         <CustomGridSidebar
           selected={selected}
           data={data}
+          blockProps={props}
           activeColumn={activeColumn}
           onChangeGridField={changes.handleLayoutChangeFromSidebar}
           onEditParent={selection.openGridSettings}

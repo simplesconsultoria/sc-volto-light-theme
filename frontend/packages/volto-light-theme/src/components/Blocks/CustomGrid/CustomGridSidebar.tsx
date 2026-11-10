@@ -4,7 +4,8 @@ import { Segment, Button } from 'semantic-ui-react';
 import { SidebarPortal, BlockDataForm, Icon } from '@plone/volto/components';
 import upSVG from '@plone/volto/icons/up.svg';
 import clearSVG from '@plone/volto/icons/clear.svg';
-import { CustomGridSchema, ColumnSchema } from './Schema';
+import { ColumnSchema } from './Schema';
+import CustomGridDataForm from './Data';
 import { messages } from './messages';
 
 type AnyRecord = Record<string, any>;
@@ -80,6 +81,8 @@ interface CustomGridSidebarProps
   data: AnyRecord;
   activeColumn: string | null;
   onChangeGridField: (id: string, value: any) => void;
+  /** The block's own props, for the grid settings form (`Data.tsx`). */
+  blockProps: AnyRecord;
 }
 
 /** Sidebar: shows grid settings or the active column settings. */
@@ -88,9 +91,9 @@ const CustomGridSidebar = ({
   data,
   activeColumn,
   onChangeGridField,
+  blockProps,
   ...columnProps
 }: CustomGridSidebarProps) => {
-  const intl = useIntl();
   return (
     <SidebarPortal selected={selected}>
       {activeColumn ? (
@@ -100,11 +103,10 @@ const CustomGridSidebar = ({
           {...columnProps}
         />
       ) : (
-        <BlockDataForm
-          schema={CustomGridSchema({ intl })}
-          title="Custom Grid"
+        <CustomGridDataForm
+          {...(blockProps as any)}
+          data={data}
           onChangeField={onChangeGridField}
-          formData={data}
         />
       )}
     </SidebarPortal>

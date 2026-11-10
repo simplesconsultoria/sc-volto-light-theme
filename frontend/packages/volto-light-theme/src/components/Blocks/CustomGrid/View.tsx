@@ -68,7 +68,7 @@ const CustomGridView = (props: any) => {
   };
 
   // Block width classes
-  const normalizedWidth = normalizeBlockWidth(data) || 'layout';
+  const normalizedWidth = normalizeBlockWidth(data, 'layout');
   const blockWidthClass = `has--block-width--${normalizedWidth}`;
 
   // Remove Volto's injected width classes to prevent conflicts with our custom logic

@@ -5,7 +5,7 @@
  * so the sc-vlt theme and border systems apply to the Slider block in view
  * and edit mode.
  * FILE: @kitconcept/volto-slider-block/src/components/View.jsx
- * FILE VERSION: 7.0.0-alpha.1
+ * FILE VERSION: 7.0.0
  */
 import React, { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';

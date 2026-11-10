@@ -59,6 +59,7 @@ const messages = defineMessages({
   // Listing variation title: Volto translates it using the title as the
   // message id, so it is declared here for `pnpm i18n` to extract it.
   events: { id: 'Events', defaultMessage: 'Events' },
+  styling: { id: 'Styling', defaultMessage: 'Styling' },
 });
 
 declare module '@plone/types' {
@@ -554,6 +555,21 @@ export function enhanceBlockConfig(
 
     // Ensure the 'styling' fieldset and schema.properties.styles.schema exist
     addStyling({ schema, intl: args.intl });
+    // Volto's addStyling adds `styles` only when there is no 'styling'
+    // fieldset yet. A block that declares that fieldset itself (Event
+    // Metadata does, for its theme) would otherwise get no width or border.
+    schema.properties = schema.properties || {};
+    if (!schema.properties.styles?.schema) {
+      schema.properties.styles = {
+        widget: 'object',
+        title: args.intl.formatMessage(messages.styling),
+        schema: {
+          fieldsets: [{ id: 'default', title: 'Default', fields: [] }],
+          properties: {},
+          required: [],
+        },
+      };
+    }
 
     // Ensure unified Block Theme widget is present on the style root
     schema.properties = schema.properties || {};

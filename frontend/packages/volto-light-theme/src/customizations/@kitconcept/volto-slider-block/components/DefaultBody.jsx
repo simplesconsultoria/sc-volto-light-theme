@@ -4,7 +4,7 @@
  * and SafeImage fallback when image scale metadata is missing or fails to resolve.
  * Ensures the Slider block always renders the slide image instead of an empty box.
  * FILE: @kitconcept/volto-slider-block/src/components/DefaultBody.jsx
- * FILE VERSION: 7.0.0-alpha.1
+ * FILE VERSION: 7.0.0
  */
 
 import React from 'react';
@@ -225,6 +225,7 @@ const SliderBody = ({
             condition={!isEditMode}
             as={UniversalLink}
             href={hrefId}
+            className="link-container"
             target={getSlideLinkTarget(data, hrefId)}
             tabIndex={!isActive ? '-1' : null}
           >

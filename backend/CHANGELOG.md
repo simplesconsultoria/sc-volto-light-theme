@@ -9,6 +9,20 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a14 (2026-10-30)
+
+
+### Internal:
+
+- Upgraded `kitconcept.voltolighttheme` to 8.1.2. @ericof [#37](https://github.com/simplesconsultoria/sc-volto-light-theme/issues/37)
+
+## 1.0.0a13 (2026-10-30)
+
+
+### Internal:
+
+- Upgraded `plonegovbr.socialmedia` to 3.1.0. @ericof [#35](https://github.com/simplesconsultoria/sc-volto-light-theme/issues/35)
+
 ## 1.0.0a12 (2026-10-21)
 
 

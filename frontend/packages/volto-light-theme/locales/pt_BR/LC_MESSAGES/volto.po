@@ -1584,6 +1584,7 @@ msgstr "Esticada na largura total (100% auto)"
 
 #. Default: "Styling"
 #: components/Blocks/EventMetadata/schema
+#: config/blocks
 msgid "Styling"
 msgstr "Estilo"
 

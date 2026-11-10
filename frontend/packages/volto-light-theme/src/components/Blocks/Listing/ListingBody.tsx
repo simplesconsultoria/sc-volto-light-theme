@@ -148,17 +148,15 @@ const ListingPagination: React.FC<ListingPaginationProps> = ({
     onPaginationChange(e as React.MouseEvent, data);
   };
   const { first, last } = getResultRange(currentPage, batch_size, itemCount);
+  // Both paginations are navigation landmarks; each needs the same name.
+  const paginationLabel = headline
+    ? intl.formatMessage(messages.PaginationNavigationFor, { headline })
+    : intl.formatMessage(messages.PaginationNavigation);
 
   return (
     <div className="pagination-wrapper">
       <Pagination
-        aria-label={
-          headline
-            ? intl.formatMessage(messages.PaginationNavigationFor, {
-                headline,
-              })
-            : intl.formatMessage(messages.PaginationNavigation)
-        }
+        aria-label={paginationLabel}
         className="desktop-pagination"
         activePage={currentPage}
         totalPages={totalPages}
@@ -186,6 +184,7 @@ const ListingPagination: React.FC<ListingPaginationProps> = ({
         }}
       />
       <Pagination
+        aria-label={paginationLabel}
         className="mobile-pagination"
         activePage={currentPage}
         totalPages={totalPages}

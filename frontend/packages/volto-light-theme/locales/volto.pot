@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Plone\n"
-"POT-Creation-Date: 2026-11-10T22:32:10.745Z\n"
+"POT-Creation-Date: 2026-11-10T23:12:55.441Z\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -1581,6 +1581,7 @@ msgstr ""
 
 #. Default: "Styling"
 #: components/Blocks/EventMetadata/schema
+#: config/blocks
 msgid "Styling"
 msgstr ""
 

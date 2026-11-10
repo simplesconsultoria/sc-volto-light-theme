@@ -6,7 +6,7 @@
  * dates). Items without dates now render as a plain card, and items are keyed
  * by their `@id` instead of their position.
  * FILE: @kitconcept/volto-light-theme/src/components/Blocks/EventCalendar/Search/components/EventTemplate.tsx
- * FILE VERSION: 8.0.0
+ * FILE VERSION: 8.1.4
  * NOTE: the listing's Event Calendar variation and the Event Calendar block
  * use this copy, not the near-identical one in @kitconcept/volto-calendar-block.
  */

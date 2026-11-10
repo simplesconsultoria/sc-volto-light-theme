@@ -1579,6 +1579,7 @@ msgstr ""
 
 #. Default: "Styling"
 #: components/Blocks/EventMetadata/schema
+#: config/blocks
 msgid "Styling"
 msgstr ""
 

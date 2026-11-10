@@ -41,6 +41,10 @@ const addonAliases = {
     __dirname,
     '../../core/packages/volto/node_modules/react-popper',
   ),
+  'github-slugger': path.resolve(
+    __dirname,
+    '../../core/packages/volto/node_modules/github-slugger',
+  ),
   '@testing-library/jest-dom': path.resolve(
     __dirname,
     '../../core/packages/volto/node_modules/@testing-library/jest-dom',

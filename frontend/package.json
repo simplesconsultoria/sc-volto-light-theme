@@ -1,6 +1,6 @@
 {
   "name": "@simplesconsultoria/volto-light-theme-dev",
-  "version": "1.0.0-alpha.12",
+  "version": "1.0.0-alpha.14",
   "description": "Opinionated enhancements for @kitconcept/volto-light-theme",
   "author": "Simples Consultoria",
   "homepage": "https://github.com/simplesconsultoria/sc-volto-light-theme",
@@ -45,7 +45,8 @@
   "pnpm": {
     "overrides": {
       "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
-      "react-refresh": "^0.14.2"
+      "react-refresh": "^0.14.2",
+      "webpack": "catalog:"
     },
     "ignoredBuiltDependencies": [
       "@parcel/watcher"
