@@ -1,0 +1,1 @@
+New block theme system built on Color Groups and Block Themes, with block width and border controls on every block. Themes saved by earlier releases keep their colours, and an upgrade step (profile version 1002) migrates them; the theme widgets are translatable and translated to Brazilian Portuguese. @Humanaice
