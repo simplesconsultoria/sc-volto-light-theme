@@ -3,6 +3,7 @@ import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import Wrapper from '@plone/volto/storybook';
 
 import View from './View';
+import { matrixStory } from '../../../storybook/blockStyling';
 import heroImage from '../../../storybook/images/hero.jpg';
 
 const withWrapper: Decorator = (Story, context) => {
@@ -94,4 +95,38 @@ export const CardRight: Story = {
       imageFit: 'cover',
     },
   },
+};
+
+/*
+ * The stories above render `View` on its own, which shows the variations but
+ * none of the block styling: theme, width and border reach a block through
+ * `RenderBlocks`. These render through it, once per value.
+ */
+const styled = {
+  ...sampleData,
+  variation: 'card',
+  textSide: 'left',
+  imageSize: '50%',
+  imageFit: 'cover',
+};
+
+export const Themes: Story = {
+  ...matrixStory('theme'),
+  args: { data: styled },
+};
+
+export const Widths: Story = {
+  ...matrixStory('width'),
+  args: { data: styled },
+};
+
+export const Borders: Story = {
+  ...matrixStory('border'),
+  args: { data: styled },
+};
+
+/** The card is high ground, so the front-layer sample patterns it. */
+export const BackgroundLayers: Story = {
+  ...matrixStory('layer'),
+  args: { data: styled },
 };

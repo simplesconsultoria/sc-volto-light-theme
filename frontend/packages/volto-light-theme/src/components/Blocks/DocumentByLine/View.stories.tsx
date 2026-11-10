@@ -3,16 +3,22 @@ import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import Wrapper from '@plone/volto/storybook';
 
 import View from './View';
+import { matrixStory } from '../../../storybook/blockStyling';
 
 const withWrapper: Decorator = (Story, context) => {
   return (
     <Wrapper anonymous>
-      <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-        <Story />
-      </div>
+      <Story />
     </Wrapper>
   );
 };
+
+/** The measure the view-only stories are shown at. */
+const contained: Decorator = (Story) => (
+  <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+    <Story />
+  </div>
+);
 
 const meta = {
   title: 'Blocks/DocumentByLineBlock',
@@ -38,6 +44,7 @@ const sampleProperties = {
 };
 
 export const Default: Story = {
+  decorators: [contained],
   args: {
     data: {
       '@type': 'documentByline',
@@ -50,6 +57,7 @@ export const Default: Story = {
 };
 
 export const OnlyAuthor: Story = {
+  decorators: [contained],
   args: {
     data: {
       '@type': 'documentByline',
@@ -62,6 +70,7 @@ export const OnlyAuthor: Story = {
 };
 
 export const NoAuthor: Story = {
+  decorators: [contained],
   args: {
     data: {
       '@type': 'documentByline',
@@ -71,4 +80,31 @@ export const NoAuthor: Story = {
     },
     properties: sampleProperties,
   },
+};
+
+/*
+ * Theme, width and border reach the block through `RenderBlocks`, not through
+ * `View`'s props, so these render through it against the gallery content item,
+ * which carries the dates and creators the byline reads.
+ */
+const styled = {
+  '@type': 'documentByline',
+  showModified: true,
+  showPublished: true,
+  showAuthor: true,
+};
+
+export const Themes: Story = {
+  ...matrixStory('theme'),
+  args: { data: styled },
+};
+
+export const Widths: Story = {
+  ...matrixStory('width'),
+  args: { data: styled },
+};
+
+export const Borders: Story = {
+  ...matrixStory('border'),
+  args: { data: styled },
 };

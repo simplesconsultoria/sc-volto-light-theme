@@ -8,9 +8,18 @@ Every theme occupies records named
 ``sc.voltolighttheme.theme.<theme-id>.<field-name>``.
 """
 
+from plone.registry import Record
+from plone.registry.field import TextLine
 from plone.registry.interfaces import IRegistry
 from sc.voltolighttheme import logger
 from sc.voltolighttheme.interfaces import ISCVLTThemeDefinition
+from sc.voltolighttheme.utils.legacy_themes import color_groups_from_legacy
+from sc.voltolighttheme.utils.legacy_themes import has_legacy_colors
+from sc.voltolighttheme.utils.legacy_themes import LEGACY_COLOR_FIELDS
+from sc.voltolighttheme.utils.legacy_themes import LEGACY_FIELDS
+from sc.voltolighttheme.utils.legacy_themes import LEGACY_FONT_FIELD
+from sc.voltolighttheme.utils.legacy_themes import LEGACY_MIGRATED_FIELDS
+from sc.voltolighttheme.utils.legacy_themes import LEGACY_PASSTHROUGH_FIELDS
 from zope.component import getUtility
 from zope.schema import getFieldNames
 
@@ -327,69 +336,115 @@ def default_color_groups_for_theme(theme_id: str, registry=None) -> dict:
     return {gid: dict(gdata) for gid, gdata in DEFAULT_COLOR_GROUPS.items()}
 
 
-def get_theme_color_groups(theme_id: str, registry=None) -> dict:
-    """Get the mapping of ColorGroups for one theme."""
+def _stored_collection(theme_id: str, field: str, defaults: dict, registry) -> dict:
+    """Read a stored color group / block theme mapping, completed with defaults.
+
+    :returns: entries by id, each carrying its ``id``; empty when nothing is
+        stored, so the caller can decide on a fallback.
+    """
+    rec = record_name(theme_id, field)
+    stored = registry[rec] if rec in registry.records else None
+    if not stored:
+        return {}
+    result = {}
+    for key, data in _as_mapping(stored).items():
+        if isinstance(data, dict):
+            result[key] = {"id": key, **data}
+    for base_id, base_data in defaults.items():
+        result.setdefault(base_id, dict(base_data))
+    return result
+
+
+def legacy_theme_values(theme_id: str, registry=None) -> dict:
+    """Read the pre-Color-Group fields still stored for a theme.
+
+    :returns: old field name -> value, only for records that exist.
+    """
     registry = _registry(registry)
-    rec = record_name(theme_id, "color_groups")
-    if rec in registry.records and registry[rec]:
-        stored = registry[rec]
-        if isinstance(stored, list):
-            result = {
-                item["id"]: dict(item)
-                for item in stored
-                if isinstance(item, dict) and "id" in item
-            }
-        elif isinstance(stored, dict):
-            # Ensure id property inside each dict
-            result = {}
-            for k, v in stored.items():
-                if isinstance(v, dict):
-                    grp = dict(v)
-                    grp.setdefault("id", k)
-                    result[k] = grp
-        else:
-            result = {}
-        base_defaults = (
-            NATAL_COLOR_GROUPS if theme_id == "natal" else DEFAULT_COLOR_GROUPS
-        )
-        for base_id, base_data in base_defaults.items():
-            if base_id not in result:
-                result[base_id] = dict(base_data)
-        return result
-    return default_color_groups_for_theme(theme_id, registry)
+    values = {}
+    for name in LEGACY_FIELDS:
+        rec = record_name(theme_id, name)
+        if rec in registry.records:
+            values[name] = registry[rec]
+    return values
+
+
+def get_theme_color_groups(theme_id: str, registry=None) -> dict:
+    """Get the mapping of ColorGroups for one theme.
+
+    A theme saved before Color Groups existed, and not yet migrated, has its
+    groups derived from its old per-colour records, so its colours survive an
+    update of the code before the upgrade step runs.
+    """
+    registry = _registry(registry)
+    defaults = NATAL_COLOR_GROUPS if theme_id == "natal" else DEFAULT_COLOR_GROUPS
+    stored = _stored_collection(theme_id, "color_groups", defaults, registry)
+    if stored:
+        return stored
+    base = default_color_groups_for_theme(theme_id, registry)
+    legacy = legacy_theme_values(theme_id, registry)
+    if has_legacy_colors(legacy):
+        return color_groups_from_legacy(legacy, base)
+    return base
 
 
 def get_theme_block_themes(theme_id: str, registry=None) -> dict:
     """Get the mapping of BlockThemes for one theme."""
     registry = _registry(registry)
-    rec = record_name(theme_id, "block_themes")
-    if rec in registry.records and registry[rec]:
-        stored = registry[rec]
-        if isinstance(stored, list):
-            result = {
-                item["id"]: dict(item)
-                for item in stored
-                if isinstance(item, dict) and "id" in item
-            }
-        elif isinstance(stored, dict):
-            result = {}
-            for k, v in stored.items():
-                if isinstance(v, dict):
-                    bt = dict(v)
-                    bt.setdefault("id", k)
-                    result[k] = bt
-        else:
-            result = {}
-        base_defaults = (
-            NATAL_BLOCK_THEMES if theme_id == "natal" else DEFAULT_BLOCK_THEMES
-        )
-        for base_id, base_data in base_defaults.items():
-            if base_id not in result:
-                result[base_id] = dict(base_data)
-        return result
-    if theme_id == "natal":
-        return {k: dict(v) for k, v in NATAL_BLOCK_THEMES.items()}
-    return {k: dict(v) for k, v in DEFAULT_BLOCK_THEMES.items()}
+    defaults = NATAL_BLOCK_THEMES if theme_id == "natal" else DEFAULT_BLOCK_THEMES
+    stored = _stored_collection(theme_id, "block_themes", defaults, registry)
+    return stored or {key: dict(data) for key, data in defaults.items()}
+
+
+def migrate_legacy_theme(theme_id: str, registry=None) -> bool:
+    """Fold a theme's old per-colour records into its ``color_groups`` record.
+
+    Records listed in ``LEGACY_PASSTHROUGH_FIELDS`` are kept, since nothing
+    else stores them. Running it again on a migrated theme does nothing.
+
+    :returns: whether anything was migrated.
+    """
+    registry = _registry(registry)
+    legacy = legacy_theme_values(theme_id, registry)
+    if not has_legacy_colors(legacy):
+        return False
+    ensure_theme_records(theme_id, registry)
+    save_theme_color_groups(
+        theme_id, get_theme_color_groups(theme_id, registry), registry
+    )
+    for name in LEGACY_MIGRATED_FIELDS:
+        rec = record_name(theme_id, name)
+        if rec in registry.records:
+            del registry.records[rec]
+    return True
+
+
+def _with_legacy_fields(theme_id: str, values: dict, registry) -> dict:
+    """Accept the old per-colour fields in a theme update.
+
+    Clients written for 1.0.0a14 and earlier keep working: their colours are
+    folded into ``color_groups`` (unless groups are sent too), and the fields
+    with no Color Group equivalent are stored as they are.
+
+    :returns: ``values``, with ``color_groups`` added when derived.
+    """
+    _write_passthrough(theme_id, values, registry)
+    legacy_keys = set(LEGACY_COLOR_FIELDS) | {LEGACY_FONT_FIELD}
+    if "color_groups" in values or not legacy_keys.intersection(values):
+        return values
+    current = get_theme_color_groups(theme_id, registry)
+    return {**values, "color_groups": color_groups_from_legacy(values, current)}
+
+
+def _write_passthrough(theme_id: str, values: dict, registry) -> None:
+    """Store the old fields that have no Color Group equivalent."""
+    for name in LEGACY_PASSTHROUGH_FIELDS:
+        if name not in values:
+            continue
+        rec = record_name(theme_id, name)
+        if rec not in registry.records:
+            registry.records[rec] = Record(TextLine(required=False))
+        registry[rec] = values[name] or None
 
 
 def save_theme_color_groups(theme_id: str, color_groups: dict, registry=None) -> None:
@@ -623,6 +678,12 @@ def theme_values(theme_id: str, registry=None) -> dict:
     if not values:
         return {}
 
+    # Old fields with no Color Group equivalent keep reaching the frontend.
+    for name in LEGACY_PASSTHROUGH_FIELDS:
+        record = record_name(theme_id, name)
+        if record in registry.records and registry[record]:
+            values[name] = registry[record]
+
     # Ensure color_groups and block_themes are populated
     if "color_groups" not in values or not values["color_groups"]:
         values["color_groups"] = get_theme_color_groups(theme_id, registry)
@@ -761,6 +822,8 @@ def update_theme(theme_id: str, values: dict, registry=None) -> dict:
 
     ensure_theme_records(theme_id, registry)
 
+    values = _with_legacy_fields(theme_id, values, registry)
+
     known = set(theme_field_names())
     for name, value in values.items():
         if name not in known:
@@ -813,7 +876,9 @@ def delete_theme(theme_id: str, registry=None) -> None:
     if not theme_exists(theme_id, registry):
         raise KeyError(theme_id)
 
-    for name in theme_field_names():
-        record = record_name(theme_id, name)
-        if record in registry.records:
-            del registry.records[record]
+    # Every record under the theme's prefix, not only the current fields:
+    # a leftover record from an older definition would otherwise make
+    # :func:`theme_ids` list the deleted theme again.
+    prefix = record_name(theme_id, "")
+    for record in [name for name in registry.records if name.startswith(prefix)]:
+        del registry.records[record]

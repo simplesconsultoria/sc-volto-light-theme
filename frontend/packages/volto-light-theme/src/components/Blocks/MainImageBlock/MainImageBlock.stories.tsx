@@ -3,6 +3,7 @@ import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import Wrapper from '@plone/volto/storybook';
 
 import Layout from './Layout';
+import { matrixStory, withBlockStore } from '../../../storybook/blockStyling';
 import mainImage from '../../../storybook/images/main-image.jpg';
 
 type StoryParams = {
@@ -56,7 +57,6 @@ const withWrapper: Decorator = (Story, context) => {
 const meta = {
   title: 'Blocks/MainImageBlock',
   component: Layout,
-  decorators: [withWrapper],
   parameters: {
     layout: 'centered',
   },
@@ -79,6 +79,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  decorators: [withWrapper],
   args: {
     align: 'center',
     size: 'm',
@@ -89,6 +90,7 @@ export const Default: Story = {
 };
 
 export const FullWithCaption: Story = {
+  decorators: [withWrapper],
   parameters: {
     containerWidth: 1080,
   },
@@ -103,6 +105,7 @@ export const FullWithCaption: Story = {
 };
 
 export const LeftSmall: Story = {
+  decorators: [withWrapper],
   args: {
     align: 'left',
     size: 's',
@@ -113,6 +116,7 @@ export const LeftSmall: Story = {
 };
 
 export const RightMedium: Story = {
+  decorators: [withWrapper],
   args: {
     align: 'right',
     size: 'm',
@@ -123,6 +127,7 @@ export const RightMedium: Story = {
 };
 
 export const CenterWithOverlay: Story = {
+  decorators: [withWrapper],
   parameters: {
     containerWidth: 800,
   },
@@ -133,4 +138,35 @@ export const CenterWithOverlay: Story = {
     description: 'The description sits over the lower edge of the image.',
     image: sampleImage,
   },
+};
+
+/*
+ * The stories above render `Layout` with a hand-built image and stand-in CSS
+ * variables. These render the registered `mainImageBlock` through
+ * `RenderBlocks` against a content item with a `preview_image_link`, so the real
+ * stylesheet, theme, width and border all apply. `withWrapper` is per story
+ * rather than on the meta so it does not cap these at 960px.
+ */
+const styled = {
+  '@type': 'mainImageBlock',
+  align: 'center',
+  size: 'l',
+  title: 'Public session attended by dozens of citizens',
+  description: 'The council welcomed residents for the 2026 budget debate.',
+};
+
+export const Themes: StoryObj = {
+  ...matrixStory('theme', { data: styled }),
+  decorators: [withBlockStore()],
+};
+
+export const Widths: StoryObj = {
+  ...matrixStory('width', { data: styled }),
+  decorators: [withBlockStore()],
+};
+
+/** The border goes on the `<img>`, not around the caption (`_borders.scss`). */
+export const Borders: StoryObj = {
+  ...matrixStory('border', { data: styled }),
+  decorators: [withBlockStore()],
 };

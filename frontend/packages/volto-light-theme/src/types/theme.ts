@@ -64,6 +64,10 @@ export type ThemeSettings = {
   image_color_light?: string;
   image_color_dark?: string;
 
+  /** Pre-Color-Group fonts, still served for themes from sc-vlt <= 1.0.0a14. */
+  font_family_primary?: string;
+  font_family_secondary?: string;
+
   header_foreground_color?: string;
   color_groups?: Record<string, ColorGroup>;
   block_themes?: Record<string, BlockTheme>;

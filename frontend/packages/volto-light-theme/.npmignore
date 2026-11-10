@@ -11,6 +11,7 @@ build/
 # Claude Design export; a project installing this package renders none of them.
 *.stories.tsx
 *.test.*
+tests/
 
 # Story-support modules. They import the bundled photographs, which are excluded
 # above, so shipping them would publish broken imports — and no project renders

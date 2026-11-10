@@ -204,7 +204,7 @@ Adding a third in a downstream project is a one-liner plus a matching
 
 All 14 suffixes are defined in `_root.scss` for both themes as of 2026-09-01. Four of
 them previously were not, which silently dropped 12 declarations — including six focus
-outlines. The mapping is now enforced by `src/theme/blockThemes.test.ts`.
+outlines. The mapping is now enforced by `tests/theme/blockThemes.test.ts`.
 
 ### 4.1 Which `--theme-*` properties are consumed
 

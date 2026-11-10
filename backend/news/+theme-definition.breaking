@@ -1,1 +1,0 @@
-Theme definitions now store their colors in two JSON registry fields, `color_groups` and `block_themes`, replacing the per-color fields (`primary_color_light`, `font_family_primary` and the like). Existing theme records using the old fields are not migrated automatically. @Humanaice

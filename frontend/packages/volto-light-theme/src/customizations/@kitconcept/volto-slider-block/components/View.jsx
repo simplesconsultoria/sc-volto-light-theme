@@ -88,6 +88,14 @@ const SliderView = (props) => {
     emblaApi.on('reInit', onInit);
     emblaApi.on('reInit', onSelect);
     emblaApi.on('select', onSelect);
+
+    // Upstream never unsubscribes; without this every re-run of the effect
+    // (onInit/onSelect identity change, remount) stacks another listener.
+    return () => {
+      emblaApi.off('reInit', onInit);
+      emblaApi.off('reInit', onSelect);
+      emblaApi.off('select', onSelect);
+    };
   }, [emblaApi, onInit, onSelect]);
 
   useEffect(() => {

@@ -97,7 +97,7 @@ downstream is one line plus a matching token block in `_root.scss`:
 createThemeDefinition('purple', 'Purple')
 ```
 
-> **The contract is enforced by a test.** `src/theme/blockThemes.test.ts` fails if the
+> **The contract is enforced by a test.** `tests/theme/blockThemes.test.ts` fails if the
 > factory maps a property `_root.scss` does not declare in its `:root` block, or if a
 > stylesheet reads a `--theme-*` no theme supplies. It exists because the failure is
 > otherwise silent — a `var()` with no definition and no fallback is invalid at

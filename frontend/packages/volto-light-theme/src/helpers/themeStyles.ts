@@ -479,6 +479,9 @@ export function themeStyleSheet(
 
     if (groupsById.primary?.font_family) {
       const font = groupsById.primary.font_family.trim();
+      // `body` derives its fonts from `--font-family-primary` (_globals.scss),
+      // so without it the primary group font would stop at `:root`.
+      properties['--font-family-primary'] = font;
       properties['--font-sans'] = font;
       properties['--custom-font'] = font;
       properties['--custom-main-font'] = font;

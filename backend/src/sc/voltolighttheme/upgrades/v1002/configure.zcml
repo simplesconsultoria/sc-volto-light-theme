@@ -1,0 +1,18 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    >
+
+  <genericsetup:upgradeSteps
+      profile="sc.voltolighttheme:default"
+      source="1001"
+      destination="1002"
+      >
+    <genericsetup:upgradeStep
+        title="Migrate theme colours to Color Groups"
+        description="Folds the per-colour theme records into color_groups and registers block_themes."
+        handler=".migrate_themes_to_color_groups"
+        />
+  </genericsetup:upgradeSteps>
+
+</configure>

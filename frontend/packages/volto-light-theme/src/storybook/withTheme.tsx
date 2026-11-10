@@ -159,11 +159,18 @@ function ThemedStory({
 
   return (
     <div style={style}>
-      <div
-        style={{ maxWidth: 'var(--default-container-width)', margin: '0 auto' }}
-      >
-        {children}
-      </div>
+      {fullBleed ? (
+        children
+      ) : (
+        <div
+          style={{
+            maxWidth: 'var(--default-container-width)',
+            margin: '0 auto',
+          }}
+        >
+          {children}
+        </div>
+      )}
     </div>
   );
 }

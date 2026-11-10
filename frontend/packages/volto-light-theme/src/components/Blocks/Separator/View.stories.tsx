@@ -1,6 +1,7 @@
 import React from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import type { Meta, StoryFn, StoryObj } from '@storybook/react';
 import View from './View';
+import { matrixStory, withBlockStore } from '../../../storybook/blockStyling';
 
 /**
  * Separator Block — divisor horizontal configuravel.
@@ -51,4 +52,29 @@ ShortLineRight.args = {
 export const ThickWide = Template.bind({});
 ThickWide.args = {
   data: { width: '75%', alignment: 'center', thickness: 5 },
+};
+
+/*
+ * Theme and width reach the block through `RenderBlocks`, not through `View`'s
+ * props, so these render through it. There is no border matrix: `separator` is
+ * in `DEFAULT_BORDER_EXCLUDED_BLOCKS`, and the view reads
+ * `--cardBorderWidth` / `--cardBorderColor` as its own thickness and colour.
+ */
+const styled = {
+  data: {
+    '@type': 'separator',
+    width: '50%',
+    alignment: 'center',
+    thickness: 3,
+  },
+};
+
+export const Themes: StoryObj = {
+  ...matrixStory('theme', styled),
+  decorators: [withBlockStore()],
+};
+
+export const Widths: StoryObj = {
+  ...matrixStory('width', styled),
+  decorators: [withBlockStore()],
 };

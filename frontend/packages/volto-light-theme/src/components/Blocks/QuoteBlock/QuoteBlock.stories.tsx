@@ -3,16 +3,22 @@ import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import Wrapper from '@plone/volto/storybook';
 
 import View from './View';
+import { matrixStory } from '../../../storybook/blockStyling';
 
 const withWrapper: Decorator = (Story, context) => {
   return (
     <Wrapper anonymous>
-      <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-        <Story />
-      </div>
+      <Story />
     </Wrapper>
   );
 };
+
+/** The measure the view-only stories below are shown at. */
+const contained: Decorator = (Story) => (
+  <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+    <Story />
+  </div>
+);
 
 const meta = {
   title: 'Blocks/QuoteBlock',
@@ -42,6 +48,7 @@ const sampleSlateData = [
 ];
 
 export const DefaultTransparent: Story = {
+  decorators: [contained],
   args: {
     data: {
       '@type': 'quoteBlock',
@@ -53,6 +60,7 @@ export const DefaultTransparent: Story = {
 };
 
 export const FilledBackground: Story = {
+  decorators: [contained],
   args: {
     data: {
       '@type': 'quoteBlock',
@@ -64,6 +72,7 @@ export const FilledBackground: Story = {
 };
 
 export const NoAuthor: Story = {
+  decorators: [contained],
   args: {
     data: {
       '@type': 'quoteBlock',
@@ -71,4 +80,31 @@ export const NoAuthor: Story = {
       backgroundStyle: 'transparent',
     },
   },
+};
+
+/*
+ * Theme, width and border reach a block through `RenderBlocks`, not through
+ * `View`'s props, so these render through it — once per value.
+ */
+const styled = {
+  '@type': 'quoteBlock',
+  value: sampleSlateData,
+  author: 'Communications Specialist',
+  backgroundStyle: 'filled',
+};
+
+export const Themes: Story = {
+  ...matrixStory('theme'),
+  args: { data: styled },
+};
+
+export const Widths: Story = {
+  ...matrixStory('width'),
+  args: { data: styled },
+};
+
+/** The border goes on the inner `.quote-block` (`_borders.scss`). */
+export const Borders: Story = {
+  ...matrixStory('border'),
+  args: { data: styled },
 };

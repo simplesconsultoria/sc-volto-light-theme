@@ -2,6 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import Wrapper from '@plone/volto/storybook';
 import CustomGridView from './View';
+import { matrixStory } from '../../../storybook/blockStyling';
 
 /** Utility to build a Slate text value for demo content */
 const slate = (text: string) => [{ type: 'p', children: [{ text }] }];
@@ -15,10 +16,15 @@ const slate = (text: string) => [{ type: 'p', children: [{ text }] }];
 
 const withWrapper = (Story: any) => (
   <Wrapper anonymous location="/custom-grid-story">
-    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <Story />
-    </div>
+    <Story />
   </Wrapper>
+);
+
+/** The measure the view-only stories are shown at. */
+const contained = (Story: any) => (
+  <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+    <Story />
+  </div>
 );
 
 const meta: Meta<typeof CustomGridView> = {
@@ -46,6 +52,7 @@ const fakeColumn = (theme: string, text: string) => ({
 });
 
 export const FullWidth: Story = {
+  decorators: [contained],
   name: '100%',
   args: {
     data: {
@@ -61,6 +68,7 @@ export const FullWidth: Story = {
 };
 
 export const TwoColumns5050: Story = {
+  decorators: [contained],
   name: '50 / 50',
   args: {
     data: {
@@ -80,6 +88,7 @@ export const TwoColumns5050: Story = {
 };
 
 export const TwoColumns3366: Story = {
+  decorators: [contained],
   name: '33 / 66',
   args: {
     data: {
@@ -99,6 +108,7 @@ export const TwoColumns3366: Story = {
 };
 
 export const TwoColumns6040: Story = {
+  decorators: [contained],
   name: '60 / 40',
   args: {
     data: {
@@ -115,6 +125,7 @@ export const TwoColumns6040: Story = {
 };
 
 export const ThreeColumns: Story = {
+  decorators: [contained],
   name: '33 / 33 / 33',
   args: {
     data: {
@@ -135,6 +146,7 @@ export const ThreeColumns: Story = {
 };
 
 export const ThreeColumnsAsym: Story = {
+  decorators: [contained],
   name: '50 / 25 / 25',
   args: {
     data: {
@@ -152,6 +164,7 @@ export const ThreeColumnsAsym: Story = {
 };
 
 export const FourColumns: Story = {
+  decorators: [contained],
   name: '25 / 25 / 25 / 25',
   args: {
     data: {
@@ -167,4 +180,42 @@ export const FourColumns: Story = {
       },
     },
   },
+};
+
+/*
+ * Theme, width and border reach the block through `RenderBlocks`, not through
+ * the view's props — these render through it, once per value. The columns keep
+ * no theme of their own, so the block's theme is what shows.
+ */
+const styled = {
+  '@type': 'customGrid',
+  layout: '1-1-1',
+  data: {
+    blocks_layout: { items: ['col1', 'col2', 'col3'] },
+    blocks: {
+      col1: fakeColumn('', 'First column (33%).'),
+      col2: fakeColumn('', 'Second column (33%).'),
+      col3: fakeColumn('', 'Third column (33%).'),
+    },
+  },
+};
+
+export const Themes: Story = {
+  ...matrixStory('theme'),
+  args: { data: styled },
+};
+
+export const Widths: Story = {
+  ...matrixStory('width'),
+  args: { data: styled },
+};
+
+export const Borders: Story = {
+  ...matrixStory('border'),
+  args: { data: styled },
+};
+
+export const BackgroundLayers: Story = {
+  ...matrixStory('layer'),
+  args: { data: styled },
 };
