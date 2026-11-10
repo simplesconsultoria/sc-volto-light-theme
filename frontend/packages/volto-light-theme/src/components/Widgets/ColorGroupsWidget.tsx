@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useIntl } from 'react-intl';
 import type { ColorGroup } from '../../types/theme';
 import {
   DEFAULT_COLOR_GROUPS,
@@ -7,6 +8,7 @@ import {
 } from '../../config/blockThemes';
 import { ColorGroupItem } from './ColorGroups/ColorGroupItem';
 import { NewColorGroupForm } from './ColorGroups/NewColorGroupForm';
+import { messages } from './ColorGroups/messages';
 
 export interface ColorGroupsWidgetProps {
   id: string;
@@ -49,6 +51,7 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
   value,
   onChange,
 }) => {
+  const intl = useIntl();
   const groups = React.useMemo(() => normalizeGroups(value), [value]);
 
   // Collapsible state and simulated device per group (initially collapsed,
@@ -122,12 +125,8 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
   return (
     <div className="colorgroups-widget">
       <div className="colorgroups-header">
-        <h4>Color Groups</h4>
-        <p className="help">
-          Um ColorGroup define um conjunto de 4 cores (fundo, texto, subtexto e
-          accent), uma camada de imagem/padrão CSS sobreposta à cor de fundo, e
-          uma fonte de texto. Clique em um grupo para expandir e editar.
-        </p>
+        <h4>{intl.formatMessage(messages.colorGroups)}</h4>
+        <p className="help">{intl.formatMessage(messages.colorGroupsHelp)}</p>
       </div>
 
       <div className="colorgroups-list">

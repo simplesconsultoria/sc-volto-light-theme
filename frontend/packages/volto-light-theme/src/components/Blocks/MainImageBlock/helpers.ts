@@ -1,5 +1,11 @@
 import type React from 'react';
+import { defineMessages, type IntlShape } from 'react-intl';
 import defaultPlaceholderSVG from '@plone/volto/components/manage/Blocks/Listing/default-image.svg';
+
+const messages = defineMessages({
+  /** Alt text of last resort, when the image has no title or description. */
+  mainImage: { id: 'Main Image', defaultMessage: 'Main Image' },
+});
 
 export function unwrapCandidate(candidate: any): any {
   if (!candidate) return undefined;
@@ -173,6 +179,7 @@ export function resolveMainImage(
   data: any,
   preview: any,
   pageContent: any,
+  intl: IntlShape,
 ): MainImageProps {
   const title = resolveImageTitle(data, preview, pageContent);
   const description = resolveImageDescription(data, preview, pageContent);
@@ -188,7 +195,7 @@ export function resolveMainImage(
       title ||
       preview?.title ||
       description ||
-      'Imagem principal',
+      intl.formatMessage(messages.mainImage),
     imageField,
     item: withScales ? preview : undefined,
     src: !withScales && url ? url : undefined,

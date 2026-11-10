@@ -1,10 +1,12 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import type { ThemeItem, ColorGroup, BlockTheme } from '../../../types/theme';
 import {
   DEFAULT_COLOR_GROUPS,
   DEFAULT_BLOCK_THEMES,
 } from '../../../config/blockThemes';
 import { SplitColorCircle } from '../../Widgets/BlockThemeWidget';
+import { messages } from './messages';
 
 export type ThemeSwatchesProps = {
   /** The theme whose settings become the chips. */
@@ -17,6 +19,7 @@ export type ThemeSwatchesProps = {
  * followed by each BlockTheme as a split circle.
  */
 const ThemeSwatches: React.FC<ThemeSwatchesProps> = ({ theme }) => {
+  const intl = useIntl();
   // Normalize color_groups
   const rawGroups = theme?.color_groups || (theme as any)?.value?.color_groups;
   const groupsList: ColorGroup[] = React.useMemo(() => {
@@ -66,7 +69,10 @@ const ThemeSwatches: React.FC<ThemeSwatchesProps> = ({ theme }) => {
                 border: '1px solid rgba(0,0,0,0.15)',
                 display: 'inline-block',
               }}
-              title={`ColorGroup: ${cg.name || cg.id} (${bg})`}
+              title={intl.formatMessage(messages.swatchColorGroup, {
+                name: cg.name || cg.id,
+                color: bg,
+              })}
             />
           );
         })}
@@ -99,7 +105,11 @@ const ThemeSwatches: React.FC<ThemeSwatchesProps> = ({ theme }) => {
           return (
             <span
               key={bt.id}
-              title={`Tema de Bloco: ${bt.name || bt.id} (${bt.back_color_group} / ${bt.front_color_group})`}
+              title={intl.formatMessage(messages.swatchBlockTheme, {
+                name: bt.name || bt.id,
+                back: bt.back_color_group,
+                front: bt.front_color_group,
+              })}
               style={{ display: 'inline-flex', alignItems: 'center' }}
             >
               <SplitColorCircle

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { defineMessages, useIntl } from 'react-intl';
 import type { BlockTheme, ColorGroup } from '../../types/theme';
 import {
   DEFAULT_BLOCK_THEMES,
@@ -7,6 +8,80 @@ import {
 } from '../../config/blockThemes';
 import { SplitColorCircle, SolidColorCircle } from './BlockThemeWidget';
 import { CardHeader } from './shared/CardHeader';
+
+const messages = defineMessages({
+  palette: { id: 'Color group palette', defaultMessage: 'Color group palette' },
+  chipTitle: {
+    id: '{name} ({id}): background {color}',
+    defaultMessage: '{name} ({id}): background {color}',
+  },
+  previewBack: { id: 'Back area: {name}', defaultMessage: 'Back area: {name}' },
+  previewAccent: { id: 'Accent button', defaultMessage: 'Accent button' },
+  previewFront: {
+    id: 'Card in the front area ({name})',
+    defaultMessage: 'Card in the front area ({name})',
+  },
+  previewDesc: {
+    id: 'Card description and metadata using the subtext color.',
+    defaultMessage: 'Card description and metadata using the subtext color.',
+  },
+  default: { id: 'Default', defaultMessage: 'Default' },
+  deleteTheme: {
+    id: 'Delete block theme {name}',
+    defaultMessage: 'Delete block theme {name}',
+  },
+  backArea: {
+    id: 'Back area (background)',
+    defaultMessage: 'Back area (background)',
+  },
+  frontArea: { id: 'Front area (cards)', defaultMessage: 'Front area (cards)' },
+  idRequired: {
+    id: 'The block theme ID is required.',
+    defaultMessage: 'The block theme ID is required.',
+  },
+  idExists: {
+    id: 'A block theme with the ID "{id}" already exists.',
+    defaultMessage: 'A block theme with the ID "{id}" already exists.',
+  },
+  addNew: { id: 'Add new block theme', defaultMessage: 'Add new block theme' },
+  addHelp: {
+    id: 'Create a new block theme by selecting the Color Groups for the back area (block background) and the front area (cards and highlights).',
+    defaultMessage:
+      'Create a new block theme by selecting the Color Groups for the back area (block background) and the front area (cards and highlights).',
+  },
+  themeId: {
+    id: 'Theme ID (e.g. highlight)',
+    defaultMessage: 'Theme ID (e.g. highlight)',
+  },
+  themeIdPlaceholder: {
+    id: 'e.g. highlight',
+    defaultMessage: 'e.g. highlight',
+  },
+  displayName: { id: 'Display name', defaultMessage: 'Display name' },
+  displayNamePlaceholder: {
+    id: 'e.g. Highlight',
+    defaultMessage: 'e.g. Highlight',
+  },
+  backGroup: {
+    id: 'Back Color Group (background)',
+    defaultMessage: 'Back Color Group (background)',
+  },
+  frontGroup: {
+    id: 'Front Color Group (cards)',
+    defaultMessage: 'Front Color Group (cards)',
+  },
+  newPreview: {
+    id: 'New block theme preview',
+    defaultMessage: 'New block theme preview',
+  },
+  save: { id: 'Save block theme', defaultMessage: 'Save block theme' },
+  title: { id: 'Block themes', defaultMessage: 'Block themes' },
+  help: {
+    id: 'A block theme is a predefined pair of Color Groups: the back area (block background, listing title) and the front area (cards, chips and highlights). Click a theme to expand and edit it.',
+    defaultMessage:
+      'A block theme is a predefined pair of Color Groups: the back area (block background, listing title) and the front area (cards, chips and highlights). Click a theme to expand and edit it.',
+  },
+});
 
 export interface BlockThemesWidgetProps {
   id: string;
@@ -37,19 +112,20 @@ const ColorGroupDropdownSelect: React.FC<ColorGroupDropdownSelectProps> = ({
   availableColorGroups,
   onChange,
 }) => {
+  const intl = useIntl();
   const groupKeys = Object.keys(availableColorGroups);
 
   return (
     <div className="select-control colorgroup-select-control">
       <label htmlFor={id} className="control-label">
-        {label}
+        {label}:
       </label>
 
       {/* Clickable Chips Palette com Ícones/Swatches (sem necessidade de abrir menu) */}
       <div
         className="colorgroup-chips-palette"
         role="radiogroup"
-        aria-label="Paleta de Grupo de Cores"
+        aria-label={intl.formatMessage(messages.palette)}
       >
         {groupKeys.map((key) => {
           const cg = availableColorGroups[key];
@@ -64,7 +140,11 @@ const ColorGroupDropdownSelect: React.FC<ColorGroupDropdownSelectProps> = ({
               aria-checked={isSelected}
               className={`colorgroup-chip-btn ${isSelected ? 'is-selected' : ''}`}
               onClick={() => onChange(key)}
-              title={`${cg?.name || key} (${key}): Fundo ${bg}`}
+              title={intl.formatMessage(messages.chipTitle, {
+                name: cg?.name || key,
+                id: key,
+                color: bg,
+              })}
             >
               <SolidColorCircle color={bg} size={15} />
               <span className="chip-label">{cg?.name || key}</span>
@@ -104,51 +184,58 @@ const BlockThemePreview: React.FC<{
   backId: string;
   frontId: string;
   style?: React.CSSProperties;
-}> = ({ back, front, backId, frontId, style }) => (
-  <div
-    className="blocktheme-preview"
-    style={{
-      backgroundColor: back?.background_color_light || '#ffffff',
-      color: back?.text_color_light || '#000000',
-      fontFamily: back?.font_family || 'inherit',
-      ...style,
-    }}
-  >
-    <div className="preview-back-bar">
-      <span className="preview-back-title">
-        Área de Trás: {back?.name || backId}
-      </span>
-      <span
-        className="preview-accent-badge"
-        style={{
-          backgroundColor: back?.accent_color_light || '#1971c2',
-          color: back?.background_color_light || '#ffffff',
-        }}
-      >
-        Botão Accent
-      </span>
-    </div>
-
+}> = ({ back, front, backId, frontId, style }) => {
+  const intl = useIntl();
+  return (
     <div
-      className="preview-front-card"
+      className="blocktheme-preview"
       style={{
-        backgroundColor: front?.background_color_light || '#f6f7f9',
-        color: front?.text_color_light || '#000000',
-        fontFamily: front?.font_family || 'inherit',
+        backgroundColor: back?.background_color_light || '#ffffff',
+        color: back?.text_color_light || '#000000',
+        fontFamily: back?.font_family || 'inherit',
+        ...style,
       }}
     >
-      <div className="preview-front-title">
-        Card na Área da Frente ({front?.name || frontId})
+      <div className="preview-back-bar">
+        <span className="preview-back-title">
+          {intl.formatMessage(messages.previewBack, {
+            name: back?.name || backId,
+          })}
+        </span>
+        <span
+          className="preview-accent-badge"
+          style={{
+            backgroundColor: back?.accent_color_light || '#1971c2',
+            color: back?.background_color_light || '#ffffff',
+          }}
+        >
+          {intl.formatMessage(messages.previewAccent)}
+        </span>
       </div>
+
       <div
-        className="preview-front-desc"
-        style={{ color: front?.subtext_color_light || '#666666' }}
+        className="preview-front-card"
+        style={{
+          backgroundColor: front?.background_color_light || '#f6f7f9',
+          color: front?.text_color_light || '#000000',
+          fontFamily: front?.font_family || 'inherit',
+        }}
       >
-        Descrição do card e metadados usando a cor de subtexto.
+        <div className="preview-front-title">
+          {intl.formatMessage(messages.previewFront, {
+            name: front?.name || frontId,
+          })}
+        </div>
+        <div
+          className="preview-front-desc"
+          style={{ color: front?.subtext_color_light || '#666666' }}
+        >
+          {intl.formatMessage(messages.previewDesc)}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 /** The back and front groups of a theme, falling back to the base ones. */
 const groupsOf = (
@@ -168,6 +255,7 @@ const BlockThemeCard: React.FC<{
   onUpdate: (field: keyof BlockTheme, value: string) => void;
   onDelete: () => void;
 }> = ({ theme: bt, colorGroups, isExpanded, onToggle, onUpdate, onDelete }) => {
+  const intl = useIntl();
   const { back, front } = groupsOf(
     colorGroups,
     bt.back_color_group,
@@ -184,7 +272,9 @@ const BlockThemeCard: React.FC<{
         controls={bodyId}
         onDelete={isBase ? undefined : onDelete}
         deleteClassName="delete-theme-btn"
-        deleteLabel={`Excluir o tema de bloco ${bt.name}`}
+        deleteLabel={intl.formatMessage(messages.deleteTheme, {
+          name: bt.name,
+        })}
         preview={
           <SplitColorCircle
             backColor={back?.background_color_light || '#ffffff'}
@@ -195,7 +285,11 @@ const BlockThemeCard: React.FC<{
       >
         <strong className="theme-name">{bt.name}</strong>
         <code className="theme-id">{bt.id}</code>
-        {isBase && <span className="base-tag">Padrão</span>}
+        {isBase && (
+          <span className="base-tag">
+            {intl.formatMessage(messages.default)}
+          </span>
+        )}
       </CardHeader>
 
       <div
@@ -206,14 +300,14 @@ const BlockThemeCard: React.FC<{
         <div className="blocktheme-controls">
           <ColorGroupDropdownSelect
             id={`back-cg-${bt.id}`}
-            label="Área de Trás (Fundo):"
+            label={intl.formatMessage(messages.backArea)}
             value={bt.back_color_group}
             availableColorGroups={colorGroups}
             onChange={(val) => onUpdate('back_color_group', val)}
           />
           <ColorGroupDropdownSelect
             id={`front-cg-${bt.id}`}
-            label="Área da Frente (Cards):"
+            label={intl.formatMessage(messages.frontArea)}
             value={bt.front_color_group}
             availableColorGroups={colorGroups}
             onChange={(val) => onUpdate('front_color_group', val)}
@@ -236,6 +330,7 @@ const NewBlockThemeForm: React.FC<{
   existingIds: string[];
   onAdd: (theme: BlockTheme) => void;
 }> = ({ colorGroups, existingIds, onAdd }) => {
+  const intl = useIntl();
   const [newId, setNewId] = useState('');
   const [newName, setNewName] = useState('');
   const [newBack, setNewBack] = useState('primary');
@@ -249,11 +344,11 @@ const NewBlockThemeForm: React.FC<{
       .toLowerCase()
       .replace(/[^a-z0-9-]/g, '-');
     if (!cleanId) {
-      setErrorMsg('O ID do tema de bloco é obrigatório.');
+      setErrorMsg(intl.formatMessage(messages.idRequired));
       return;
     }
     if (existingIds.includes(cleanId)) {
-      setErrorMsg(`Um tema de bloco com o ID "${cleanId}" já existe.`);
+      setErrorMsg(intl.formatMessage(messages.idExists, { id: cleanId }));
       return;
     }
     onAdd({
@@ -276,12 +371,9 @@ const NewBlockThemeForm: React.FC<{
           frontColor={front?.background_color_light || '#f6f7f9'}
           size={22}
         />
-        <h5>+ Adicionar Novo Tema de Bloco</h5>
+        <h5>+ {intl.formatMessage(messages.addNew)}</h5>
       </div>
-      <p className="help">
-        Crie um novo tema de bloco selecionando os ColorGroups para a área de
-        trás (fundo do bloco) e para a área da frente (cards e destaques).
-      </p>
+      <p className="help">{intl.formatMessage(messages.addHelp)}</p>
 
       {errorMsg && (
         <div className="ui error message" role="alert">
@@ -291,29 +383,33 @@ const NewBlockThemeForm: React.FC<{
 
       <div className="add-fields-grid">
         <div className="field-item">
-          <label htmlFor="new-bt-id">ID do Tema (ex: destaque):</label>
+          <label htmlFor="new-bt-id">
+            {intl.formatMessage(messages.themeId)}:
+          </label>
           <input
             id="new-bt-id"
             type="text"
             value={newId}
             onChange={(e) => setNewId(e.target.value)}
-            placeholder="ex: destaque"
+            placeholder={intl.formatMessage(messages.themeIdPlaceholder)}
           />
         </div>
         <div className="field-item">
-          <label htmlFor="new-bt-name">Nome Exibido:</label>
+          <label htmlFor="new-bt-name">
+            {intl.formatMessage(messages.displayName)}:
+          </label>
           <input
             id="new-bt-name"
             type="text"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
-            placeholder="ex: Destaque"
+            placeholder={intl.formatMessage(messages.displayNamePlaceholder)}
           />
         </div>
         <div className="field-item">
           <ColorGroupDropdownSelect
             id="new-bt-back"
-            label="ColorGroup de Trás (Fundo):"
+            label={intl.formatMessage(messages.backGroup)}
             value={newBack}
             availableColorGroups={colorGroups}
             onChange={setNewBack}
@@ -322,7 +418,7 @@ const NewBlockThemeForm: React.FC<{
         <div className="field-item">
           <ColorGroupDropdownSelect
             id="new-bt-front"
-            label="ColorGroup da Frente (Cards):"
+            label={intl.formatMessage(messages.frontGroup)}
             value={newFront}
             availableColorGroups={colorGroups}
             onChange={setNewFront}
@@ -331,7 +427,7 @@ const NewBlockThemeForm: React.FC<{
       </div>
 
       <div className="preview-label">
-        Pré-visualização do Novo Tema de Bloco:
+        {intl.formatMessage(messages.newPreview)}:
       </div>
       <BlockThemePreview
         back={back}
@@ -346,7 +442,7 @@ const NewBlockThemeForm: React.FC<{
         className="ui button primary add-blocktheme-btn"
         onClick={handleAdd}
       >
-        Salvar Tema de Bloco
+        {intl.formatMessage(messages.save)}
       </button>
     </div>
   );
@@ -374,6 +470,7 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
   onChange,
   formData,
 }) => {
+  const intl = useIntl();
   const blockThemes = React.useMemo(
     () => byId<BlockTheme>(value, DEFAULT_BLOCK_THEMES),
     [value],
@@ -415,13 +512,8 @@ export const BlockThemesWidget: React.FC<BlockThemesWidgetProps> = ({
   return (
     <div className="blockthemes-widget">
       <div className="blockthemes-header">
-        <h4>Temas de Bloco (Block Themes)</h4>
-        <p className="help">
-          Um Tema de Bloco é um conjunto predefinido de dois ColorGroups: a área
-          de trás (fundo do bloco, título da listagem) e a área da frente
-          (cartões, chips e destaques). Clique em um tema para expandir e
-          editar.
-        </p>
+        <h4>{intl.formatMessage(messages.title)}</h4>
+        <p className="help">{intl.formatMessage(messages.help)}</p>
       </div>
 
       <div className="blockthemes-list">

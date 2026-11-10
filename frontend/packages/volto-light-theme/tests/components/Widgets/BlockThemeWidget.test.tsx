@@ -1,6 +1,7 @@
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
+import { renderWithIntl } from '../../support/intl';
 import BlockThemeWidget, {
   parseThemeValue,
 } from '@simplesconsultoria/volto-light-theme/components/Widgets/BlockThemeWidget';
@@ -8,34 +9,34 @@ import BlockThemeWidget, {
 describe('BlockThemeWidget', () => {
   it('renders with default block theme and split circle', () => {
     const onChange = vi.fn();
-    const { container, getByText } = render(
+    const { container, getByText } = renderWithIntl(
       <BlockThemeWidget id="theme" onChange={onChange} value="default" />,
     );
 
-    expect(getByText('Padrão')).toBeInTheDocument();
+    expect(getByText('Default')).toBeInTheDocument();
     const splitCircle = container.querySelector('.split-color-circle');
     expect(splitCircle).toBeInTheDocument();
   });
 
   it('toggles ColorGroups editor when edit pencil is clicked', () => {
     const onChange = vi.fn();
-    const { queryByText, getByTitle } = render(
+    const { queryByText, getByTitle } = renderWithIntl(
       <BlockThemeWidget id="theme" onChange={onChange} value="default" />,
     );
 
-    expect(queryByText(/Área de Trás/i)).not.toBeInTheDocument();
+    expect(queryByText(/Back area/i)).not.toBeInTheDocument();
 
-    const editBtn = getByTitle('Editar ColorGroups do tema');
+    const editBtn = getByTitle('Edit theme Color Groups');
     fireEvent.click(editBtn);
 
-    expect(queryByText(/Área de Trás/i)).toBeInTheDocument();
-    expect(queryByText(/Área da Frente/i)).toBeInTheDocument();
+    expect(queryByText(/Back area/i)).toBeInTheDocument();
+    expect(queryByText(/Front area/i)).toBeInTheDocument();
   });
 
   it('selects another preset block theme', () => {
     const onChange = vi.fn();
     const onChangeBlock = vi.fn();
-    const { getByTestId } = render(
+    const { getByTestId } = renderWithIntl(
       <BlockThemeWidget
         id="theme"
         block="123"
@@ -62,7 +63,7 @@ describe('BlockThemeWidget', () => {
   it('sets theme to custom when changing a ColorGroup', () => {
     const onChange = vi.fn();
     const onChangeBlock = vi.fn();
-    const { getByTitle, getByTestId } = render(
+    const { getByTitle, getByTestId } = renderWithIntl(
       <BlockThemeWidget
         id="theme"
         block="123"
@@ -73,7 +74,7 @@ describe('BlockThemeWidget', () => {
     );
 
     // Open edit mode
-    const editBtn = getByTitle('Editar ColorGroups do tema');
+    const editBtn = getByTitle('Edit theme Color Groups');
     fireEvent.click(editBtn);
 
     // Change back color group to 'secondary'
@@ -93,7 +94,7 @@ describe('BlockThemeWidget', () => {
 
   it('includes alternative block theme option for parity across all themes', () => {
     const onChange = vi.fn();
-    const { getByTestId } = render(
+    const { getByTestId } = renderWithIntl(
       <BlockThemeWidget id="theme" onChange={onChange} value="default" />,
     );
     const hiddenSelect = getByTestId(
@@ -108,7 +109,7 @@ describe('BlockThemeWidget', () => {
 
   it('uses Natal block themes and color groups when siteTheme is natal', () => {
     const onChange = vi.fn();
-    const { getByTestId } = render(
+    const { getByTestId } = renderWithIntl(
       <BlockThemeWidget
         id="theme"
         onChange={onChange}
@@ -160,5 +161,31 @@ describe('parseThemeValue', () => {
       themeId: 'alternative',
     });
     expect(parseThemeValue({})).toEqual({ themeId: 'default' });
+  });
+});
+
+describe('BlockThemeWidget translations', () => {
+  it('renders the labels of the current locale', () => {
+    const { getByText, getByTitle } = renderWithIntl(
+      <BlockThemeWidget
+        id="theme"
+        onChange={vi.fn()}
+        value="custom-accent-neutral"
+      />,
+      {
+        locale: 'pt-BR',
+        messages: {
+          Custom: 'Personalizado',
+          'Edit theme Color Groups': 'Editar Color Groups do tema',
+          'Back area (Color Group)': 'Área de trás (Color Group)',
+        },
+      },
+    );
+
+    expect(
+      getByText('Personalizado', { selector: '.theme-name-label' }),
+    ).toBeInTheDocument();
+    fireEvent.click(getByTitle('Editar Color Groups do tema'));
+    expect(getByText('Área de trás (Color Group):')).toBeInTheDocument();
   });
 });

@@ -1,9 +1,11 @@
 import React from 'react';
+import { useIntl, type MessageDescriptor } from 'react-intl';
 import type { ColorGroup } from '../../../types/theme';
 import type { CssPatternPreset } from '../../../config/blockThemes';
 import { formatBackgroundImage } from '../../../helpers/themeStyles';
 import { CardHeader } from '../shared/CardHeader';
 import { PatternLayerControls } from './PatternLayerControls';
+import { messages } from './messages';
 
 export interface ColorGroupItemProps {
   group: ColorGroup;
@@ -36,32 +38,35 @@ type Mode = 'light' | 'dark';
 /** The four colour roles of a group, with the fallback each picker shows. */
 const COLOR_ROWS: {
   role: ColorRole;
-  label: string;
+  label: MessageDescriptor;
   fallback: Record<Mode, string>;
 }[] = [
   {
     role: 'background',
-    label: '1ª Camada: Fundo (Background Color)',
+    label: messages.backgroundLayer,
     fallback: { light: '#ffffff', dark: '#000000' },
   },
   {
     role: 'text',
-    label: 'Texto (Text Color)',
+    label: messages.text,
     fallback: { light: '#000000', dark: '#ffffff' },
   },
   {
     role: 'subtext',
-    label: 'Subtexto (Subtext)',
+    label: messages.subtext,
     fallback: { light: '#666666', dark: '#cccccc' },
   },
   {
     role: 'accent',
-    label: 'Accent',
+    label: messages.accent,
     fallback: { light: '#1971c2', dark: '#74c0fc' },
   },
 ];
 
-const MODE_LABEL: Record<Mode, string> = { light: 'Claro', dark: 'Escuro' };
+const MODE_LABEL: Record<Mode, MessageDescriptor> = {
+  light: messages.light,
+  dark: messages.dark,
+};
 
 const colorField = (role: ColorRole, mode: Mode) =>
   `${role}_color_${mode}` as keyof ColorGroup;
@@ -75,26 +80,33 @@ const ColorInput: React.FC<{
   fallback: string;
   onUpdateGroup: ColorGroupItemProps['onUpdateGroup'];
 }> = ({ group, role, mode, label, fallback, onUpdateGroup }) => {
+  const intl = useIntl();
   const field = colorField(role, mode);
   const value = (group[field] as string | undefined) || '';
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     onUpdateGroup(group.id, field, e.target.value);
-  const name = `${label} (${MODE_LABEL[mode]})`;
+  const modeLabel = intl.formatMessage(MODE_LABEL[mode]);
   return (
     <div className="mode-input">
       <span className="mode-tag" aria-hidden="true">
-        {MODE_LABEL[mode]}
+        {modeLabel}
       </span>
       <input
         type="color"
-        aria-label={name}
+        aria-label={intl.formatMessage(messages.colorInMode, {
+          label,
+          mode: modeLabel,
+        })}
         value={value || fallback}
         onChange={onChange}
       />
       <input
         type="text"
         className="hex-input"
-        aria-label={`${name}, hexadecimal`}
+        aria-label={intl.formatMessage(messages.colorInModeHex, {
+          label,
+          mode: modeLabel,
+        })}
         value={value}
         onChange={onChange}
       />
@@ -123,6 +135,7 @@ const PreviewCard: React.FC<{
   mode: Mode;
   backgroundImage: string;
 }> = ({ group, mode, backgroundImage }) => {
+  const intl = useIntl();
   const color = (role: ColorRole) =>
     (group[colorField(role, mode)] as string | undefined) ||
     PREVIEW_FALLBACK[mode][role];
@@ -140,10 +153,14 @@ const PreviewCard: React.FC<{
       }}
     >
       <span className={`preview-badge ${mode === 'dark' ? 'dark-tag' : ''}`}>
-        {mode === 'dark' ? 'MODO ESCURO' : 'MODO CLARO'}
+        {intl
+          .formatMessage(
+            mode === 'dark' ? messages.darkMode : messages.lightMode,
+          )
+          .toLocaleUpperCase(intl.locale)}
       </span>
       <h5 style={{ color: color('text'), margin: '0.4rem 0' }}>
-        {group.name} Título
+        {intl.formatMessage(messages.previewTitle, { name: group.name })}
       </h5>
       <p
         style={{
@@ -152,7 +169,7 @@ const PreviewCard: React.FC<{
           margin: '0.2rem 0 0.6rem 0',
         }}
       >
-        Cor de fundo com 2ª camada sobreposta.
+        {intl.formatMessage(messages.previewText)}
       </p>
       {/* Decorative sample of the accent colour, not an action. */}
       <span
@@ -167,7 +184,7 @@ const PreviewCard: React.FC<{
           fontWeight: 600,
         }}
       >
-        Ação Accent
+        {intl.formatMessage(messages.previewAccent)}
       </span>
     </div>
   );
@@ -203,6 +220,7 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
   onFileUpload,
   onDeleteGroup,
 }) => {
+  const intl = useIntl();
   const hasImageLayer = !!(
     group.bg_image_light_desktop ||
     group.bg_image_light_mobile ||
@@ -223,7 +241,9 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
         controls={bodyId}
         onDelete={isBase ? undefined : () => onDeleteGroup(group.id)}
         deleteClassName="delete-group-btn"
-        deleteLabel={`Excluir o ColorGroup ${group.name}`}
+        deleteLabel={intl.formatMessage(messages.deleteColorGroup, {
+          name: group.name,
+        })}
         preview={
           <div className="color-swatches-preview" aria-hidden="true">
             {COLOR_ROWS.map(({ role, label, fallback }) => {
@@ -233,7 +253,10 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
                   key={role}
                   className="swatch-dot"
                   style={{ backgroundColor: value || fallback.light }}
-                  title={`${label}: ${value}`}
+                  title={intl.formatMessage(messages.swatchTitle, {
+                    label: intl.formatMessage(label),
+                    value,
+                  })}
                 />
               );
             })}
@@ -243,16 +266,19 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
         <strong className="group-name">{group.name}</strong>
         <code className="group-id">{group.id}</code>
         {isBase && (
-          <span className="base-tag" title="Grupo base protegido">
-            Base
+          <span
+            className="base-tag"
+            title={intl.formatMessage(messages.baseGroupTitle)}
+          >
+            {intl.formatMessage(messages.baseGroup)}
           </span>
         )}
         {hasImageLayer && (
           <span
             className="layer-tag"
-            title="Possui 2ª camada de imagem/padrão configurada"
+            title={intl.formatMessage(messages.layerActiveTitle)}
           >
-            2ª Camada Ativa
+            {intl.formatMessage(messages.layerActive)}
           </span>
         )}
       </CardHeader>
@@ -263,7 +289,9 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
         style={{ display: isExpanded ? 'block' : 'none' }}
       >
         <div className="group-font-row">
-          <label htmlFor={`font-${group.id}`}>Fonte (Font Family):</label>
+          <label htmlFor={`font-${group.id}`}>
+            {intl.formatMessage(messages.fontFamily)}:
+          </label>
           <input
             id={`font-${group.id}`}
             type="text"
@@ -271,14 +299,16 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
             onChange={(e) =>
               onUpdateGroup(group.id, 'font_family', e.target.value)
             }
-            placeholder="ex: Inter, sans-serif"
+            placeholder={intl.formatMessage(messages.example, {
+              example: 'Inter, sans-serif',
+            })}
           />
         </div>
 
         <div className="colorgroup-colors-grid">
           {COLOR_ROWS.map(({ role, label, fallback }) => (
             <div className="color-row" key={role}>
-              <span className="color-label">{label}:</span>
+              <span className="color-label">{intl.formatMessage(label)}:</span>
               <div className="color-inputs">
                 {(['light', 'dark'] as Mode[]).map((mode) => (
                   <ColorInput
@@ -286,7 +316,7 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
                     group={group}
                     role={role}
                     mode={mode}
-                    label={label}
+                    label={intl.formatMessage(label)}
                     fallback={fallback[mode]}
                     onUpdateGroup={onUpdateGroup}
                   />
@@ -307,18 +337,25 @@ export const ColorGroupItem: React.FC<ColorGroupItemProps> = ({
         {/* Previews with Device Switch */}
         <div className="preview-header-row">
           <span className="preview-label">
-            Pré-visualização do Grupo (Cor + 2ª Camada Sobreposta):
+            {intl.formatMessage(messages.groupPreview)}:
           </span>
           <button
             type="button"
             className="device-toggle-btn"
             onClick={() => onToggleDevice(group.id)}
-            title="Alternar simulação de dispositivo"
+            title={intl.formatMessage(messages.toggleDevice)}
           >
-            Simular:{' '}
-            <strong>
-              {isMobilePreview ? 'Mobile (Telas Pequenas)' : 'Desktop'}
-            </strong>
+            {intl.formatMessage(messages.simulate, {
+              device: (
+                <strong key="device">
+                  {intl.formatMessage(
+                    isMobilePreview
+                      ? messages.mobileSmallScreens
+                      : messages.desktop,
+                  )}
+                </strong>
+              ),
+            })}
           </button>
         </div>
 

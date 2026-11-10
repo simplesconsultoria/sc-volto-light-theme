@@ -1,11 +1,13 @@
 import React from 'react';
 import cx from 'classnames';
+import { useIntl } from 'react-intl';
 import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
 import { normalizeBlockWidth } from '../../../helpers/blockWidth';
 import {
   getEventDetails,
   getEventSchedule,
   getThemeClass,
+  messages,
   stripBlockWidthClasses,
 } from './helpers';
 
@@ -26,6 +28,7 @@ const EventLink = ({
 
 const EventMetadataView = (props: any) => {
   const { data, properties, className } = props;
+  const intl = useIntl();
   const blockWidth = normalizeBlockWidth(data) || 'default';
   const themeClass = getThemeClass(className, data?.theme);
   const cleanClassName = stripBlockWidthClasses(className);
@@ -42,7 +45,7 @@ const EventMetadataView = (props: any) => {
     contactEmail,
     price,
     eventUrl,
-  } = getEventDetails(data, item);
+  } = getEventDetails(data, item, intl);
 
   return (
     <div
@@ -53,7 +56,7 @@ const EventMetadataView = (props: any) => {
     >
       <div className="event-metadata-inner">
         <div className="metadata-col">
-          <h4>Quando</h4>
+          <h4>{intl.formatMessage(messages.when)}</h4>
           <p>{schedule.date}</p>
           <p>
             {schedule.time}
@@ -61,7 +64,7 @@ const EventMetadataView = (props: any) => {
           </p>
         </div>
         <div className="metadata-col">
-          <h4>Onde</h4>
+          <h4>{intl.formatMessage(messages.where)}</h4>
           <p>{location}</p>
           <EventLink
             href={eventLink}
@@ -70,17 +73,19 @@ const EventMetadataView = (props: any) => {
           />
         </div>
         <div className="metadata-col">
-          <h4>Organização</h4>
+          <h4>{intl.formatMessage(messages.organization)}</h4>
           <p>{contactName}</p>
           {contactEmail && (
             <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
           )}
         </div>
         <div className="metadata-col">
-          <h4>Participação</h4>
+          <h4>{intl.formatMessage(messages.participation)}</h4>
           <p>{price}</p>
           {eventUrl && (
-            <a href={`${eventUrl}/@@ical`}>Adicionar ao calendário (iCal)</a>
+            <a href={`${eventUrl}/@@ical`}>
+              {intl.formatMessage(messages.addToCalendar)}
+            </a>
           )}
         </div>
       </div>

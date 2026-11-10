@@ -12,6 +12,7 @@ import { addStyling } from '@plone/volto/helpers/Extensions/withBlockSchemaEnhan
 import calendarSVG from '@plone/volto/icons/calendar.svg';
 import appsSVG from '@plone/volto/icons/apps.svg';
 import cx from 'classnames';
+import { defineMessages } from 'react-intl';
 
 import DocumentByLineInfo from '../components/Blocks/DocumentByLine';
 import MainImageBlockInfo from '../components/Blocks/MainImageBlock';
@@ -42,6 +43,23 @@ import {
 import SearchBlockView from '../components/Blocks/Search/SearchBlockView';
 import SearchBlockEdit from '../components/Blocks/Search/SearchBlockEdit';
 import { defaultContentTypeColors } from './contentTypeColors';
+
+const messages = defineMessages({
+  blockTheme: { id: 'Block Theme', defaultMessage: 'Block Theme' },
+  blockWidth: { id: 'Block Width', defaultMessage: 'Block Width' },
+  borderColor: { id: 'Border color', defaultMessage: 'Border color' },
+  borderStyle: {
+    id: 'Border style and thickness',
+    defaultMessage: 'Border style and thickness',
+  },
+  borderDescription: {
+    id: 'Configure border sides and thickness',
+    defaultMessage: 'Configure border sides and thickness',
+  },
+  // Listing variation title: Volto translates it using the title as the
+  // message id, so it is declared here for `pnpm i18n` to extract it.
+  events: { id: 'Events', defaultMessage: 'Events' },
+});
 
 declare module '@plone/types' {
   export interface BlocksConfigData {
@@ -541,10 +559,7 @@ export function enhanceBlockConfig(
     schema.properties = schema.properties || {};
     schema.properties.theme = {
       widget: 'block_theme_widget',
-      title: args.intl.formatMessage({
-        id: 'Block Theme',
-        defaultMessage: 'Tema do Bloco',
-      }),
+      title: args.intl.formatMessage(messages.blockTheme),
       default: 'default',
     };
 
@@ -601,10 +616,7 @@ export function enhanceBlockConfig(
       if (!isAligned) {
         stylesSchema.properties['blockWidth:noprefix'] = {
           widget: 'blockWidth',
-          title: args.intl.formatMessage({
-            id: 'Block Width',
-            defaultMessage: 'Largura do Bloco',
-          }),
+          title: args.intl.formatMessage(messages.blockWidth),
           default: 'default',
           actions: config.blocks?.widths?.map((w: any) => w.name || w) || [
             'narrow',
@@ -626,23 +638,14 @@ export function enhanceBlockConfig(
       if (hasBorders) {
         stylesSchema.properties['--cardBorderColor'] = {
           widget: 'style_simple_color',
-          title: args.intl.formatMessage({
-            id: 'Border color',
-            defaultMessage: 'Cor da Borda',
-          }),
+          title: args.intl.formatMessage(messages.borderColor),
           default: '',
         };
 
         stylesSchema.properties['--cardBorderWidth'] = {
           widget: 'border_widget',
-          title: args.intl.formatMessage({
-            id: 'Border style and thickness',
-            defaultMessage: 'Estilo e Espessura da Borda',
-          }),
-          description: args.intl.formatMessage({
-            id: 'Configure border sides and thickness',
-            defaultMessage: 'Selecione os lados e a espessura da borda',
-          }),
+          title: args.intl.formatMessage(messages.borderStyle),
+          description: args.intl.formatMessage(messages.borderDescription),
           default: '',
         };
       }
@@ -820,7 +823,7 @@ export default function install(config: ConfigType) {
         ...variations,
         {
           id: 'events',
-          title: 'Eventos',
+          title: messages.events.id,
           template: EventsTemplate,
         },
       ];

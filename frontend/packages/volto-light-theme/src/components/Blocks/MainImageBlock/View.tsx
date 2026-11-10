@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import withBlockExtensions from '@plone/volto/helpers/Extensions/withBlockExtensions';
 import Image from '@plone/volto/components/theme/Image/Image';
 import config from '@plone/volto/registry';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import cx from 'classnames';
 import type { Content } from '@plone/types';
 import type { MainImageBlockData } from './index';
@@ -57,6 +57,7 @@ const MainImageBlockView: React.FC<MainImageBlockViewProps> = (props) => {
     properties,
     metadata,
   } = props;
+  const intl = useIntl();
 
   const stateContent = useStateContent();
 
@@ -92,7 +93,7 @@ const MainImageBlockView: React.FC<MainImageBlockViewProps> = (props) => {
     ...(style || {}),
     ...resolveThemeStyle(data, resolved.style),
   };
-  const image = resolveMainImage(data, effectivePreview, pageContent);
+  const image = resolveMainImage(data, effectivePreview, pageContent, intl);
 
   return (
     <Layout

@@ -1,0 +1,1 @@
+The theme, Color Group, Block Theme and border widgets, the block theme and border fields, the Event Metadata block and the Themes control panel swatches are now translatable: their text was hardcoded in Portuguese and now goes through react-intl with English source messages. All of it is translated to Brazilian Portuguese. @Humanaice

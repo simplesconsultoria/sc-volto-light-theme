@@ -18,6 +18,71 @@ msgstr ""
 "X-Is-Fallback-For: es-ar es-bo es-cl es-co es-cr es-do es-ec es-es es-sv es-gt es-hn es-mx es-ni es-pa es-py es-pe es-pr es-us es-uy es-ve\n"
 "X-Generator: Poedit 2.2.1\n"
 
+#. Default: "100% width"
+#: components/Widgets/ColorGroups/messages
+msgid "100% width"
+msgstr ""
+
+#. Default: "1st layer: Background"
+#: components/Widgets/ColorGroups/messages
+msgid "1st layer: Background"
+msgstr ""
+
+#. Default: "2nd layer"
+#: components/Widgets/ColorGroups/messages
+msgid "2nd layer"
+msgstr ""
+
+#. Default: "2nd layer active"
+#: components/Widgets/ColorGroups/messages
+msgid "2nd layer active"
+msgstr ""
+
+#. Default: "2nd layer: initial image or CSS pattern (light, desktop)"
+#: components/Widgets/ColorGroups/messages
+msgid "2nd layer: initial image or CSS pattern (light, desktop)"
+msgstr ""
+
+#. Default: "A Color Group defines a set of 4 colours (background, text, subtext and accent), an image or CSS pattern layer laid over the background colour, and a text font. Click a group to expand and edit it."
+#: components/Widgets/ColorGroups/messages
+msgid "A Color Group defines a set of 4 colours (background, text, subtext and accent), an image or CSS pattern layer laid over the background colour, and a text font. Click a group to expand and edit it."
+msgstr ""
+
+#. Default: "A Color Group with the ID \"{id}\" already exists."
+#: components/Widgets/ColorGroups/messages
+msgid "A Color Group with the ID \"{id}\" already exists."
+msgstr ""
+
+#. Default: "A block theme is a predefined pair of Color Groups: the back area (block background, listing title) and the front area (cards, chips and highlights). Click a theme to expand and edit it."
+#: components/Widgets/BlockThemesWidget
+msgid "A block theme is a predefined pair of Color Groups: the back area (block background, listing title) and the front area (cards, chips and highlights). Click a theme to expand and edit it."
+msgstr ""
+
+#. Default: "A block theme with the ID \"{id}\" already exists."
+#: components/Widgets/BlockThemesWidget
+msgid "A block theme with the ID \"{id}\" already exists."
+msgstr ""
+
+#. Default: "A new Color Group created in this theme is automatically synced to every other theme of the site with default values."
+#: components/Widgets/ColorGroups/messages
+msgid "A new Color Group created in this theme is automatically synced to every other theme of the site with default values."
+msgstr ""
+
+#. Default: "Accent"
+#: components/Widgets/ColorGroups/messages
+msgid "Accent"
+msgstr ""
+
+#. Default: "Accent action"
+#: components/Widgets/ColorGroups/messages
+msgid "Accent action"
+msgstr ""
+
+#. Default: "Accent button"
+#: components/Widgets/BlockThemesWidget
+msgid "Accent button"
+msgstr ""
+
 #. Default: "Accessibility options"
 #: components/Header/MobileHeader/MobileTools
 msgid "Accessibility options"
@@ -28,9 +93,29 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
+#. Default: "Add an image (link or file) or a CSS pattern. The image is rendered on top of the background colour set above, allowing transparency and responsive layering."
+#: components/Widgets/ColorGroups/messages
+msgid "Add an image (link or file) or a CSS pattern. The image is rendered on top of the background colour set above, allowing transparency and responsive layering."
+msgstr ""
+
+#. Default: "Add new Color Group"
+#: components/Widgets/ColorGroups/messages
+msgid "Add new Color Group"
+msgstr ""
+
+#. Default: "Add new block theme"
+#: components/Widgets/BlockThemesWidget
+msgid "Add new block theme"
+msgstr ""
+
 #. Default: "Add theme"
 #: components/Controlpanels/Themes/messages
 msgid "Add theme"
+msgstr ""
+
+#. Default: "Add to calendar (iCal)"
+#: components/Blocks/EventMetadata/helpers
+msgid "Add to calendar (iCal)"
 msgstr ""
 
 #. Default: "Alignment"
@@ -54,6 +139,11 @@ msgstr ""
 msgid "Alt text hint link text"
 msgstr ""
 
+#. Default: "Asymmetric"
+#: components/Widgets/BorderWidget
+msgid "Asymmetric"
+msgstr ""
+
 #. Default: "Attached Card"
 #: index
 msgid "Attached Card"
@@ -62,6 +152,11 @@ msgstr ""
 #. Default: "Author / Source"
 #: components/Blocks/QuoteBlock/schema
 msgid "Author / Source"
+msgstr ""
+
+#. Default: "Auto"
+#: components/Widgets/ColorGroups/messages
+msgid "Auto"
 msgstr ""
 
 #. Default: "Auto-advance"
@@ -79,14 +174,148 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
+#. Default: "Back Color Group (background)"
+#: components/Widgets/BlockThemesWidget
+msgid "Back Color Group (background)"
+msgstr ""
+
+#. Default: "Back area (Color Group)"
+#: components/Blocks/CustomGrid/Schema
+#: components/Widgets/BlockThemeWidget
+msgid "Back area (Color Group)"
+msgstr ""
+
+#. Default: "Back area (background)"
+#: components/Widgets/BlockThemesWidget
+msgid "Back area (background)"
+msgstr ""
+
+#. Default: "Back area: {name}"
+#: components/Widgets/BlockThemesWidget
+msgid "Back area: {name}"
+msgstr ""
+
+#. Default: "Background"
+#: components/Widgets/ColorGroups/messages
+msgid "Background"
+msgstr ""
+
+#. Default: "Background colour with a 2nd layer on top."
+#: components/Widgets/ColorGroups/messages
+msgid "Background colour with a 2nd layer on top."
+msgstr ""
+
+#. Default: "Background image and CSS patterns"
+#: components/Widgets/ColorGroups/messages
+msgid "Background image and CSS patterns"
+msgstr ""
+
 #. Default: "Background style"
 #: components/Blocks/QuoteBlock/schema
 msgid "Background style"
 msgstr ""
 
+#. Default: "Base"
+#: components/Widgets/ColorGroups/messages
+msgid "Base"
+msgstr ""
+
+#. Default: "Block Theme"
+#: components/Blocks/schema
+#: components/Widgets/BlockThemeWidget
+#: config/blocks
+msgid "Block Theme"
+msgstr ""
+
 #. Default: "Block Width"
 #: components/Blocks/HeroBlock/schema
+#: config/blocks
 msgid "Block Width"
+msgstr ""
+
+#. Default: "Block theme: {name} ({back} / {front})"
+#: components/Controlpanels/Themes/messages
+msgid "Block theme: {name} ({back} / {front})"
+msgstr ""
+
+#. Default: "Block themes"
+#: components/Widgets/BlockThemesWidget
+msgid "Block themes"
+msgstr ""
+
+#. Default: "Blueprint (fine grid)"
+#: config/blockThemes
+msgid "Blueprint (fine grid)"
+msgstr ""
+
+#. Default: "Border color"
+#: config/blocks
+msgid "Border color"
+msgstr ""
+
+#. Default: "Border on bottom only"
+#: components/Widgets/BorderWidget
+msgid "Border on bottom only"
+msgstr ""
+
+#. Default: "Border on top only"
+#: components/Widgets/BorderWidget
+msgid "Border on top only"
+msgstr ""
+
+#. Default: "Border style and thickness"
+#: config/blocks
+msgid "Border style and thickness"
+msgstr ""
+
+#. Default: "Border thickness"
+#: components/Widgets/BorderWidget
+msgid "Border thickness"
+msgstr ""
+
+#. Default: "Borders have asymmetric thicknesses"
+#: components/Widgets/BorderWidget
+msgid "Borders have asymmetric thicknesses"
+msgstr ""
+
+#. Default: "Borders on the sides (left and right)"
+#: components/Widgets/BorderWidget
+msgid "Borders on the sides (left and right)"
+msgstr ""
+
+#. Default: "Borders on top and left side"
+#: components/Widgets/BorderWidget
+msgid "Borders on top and left side"
+msgstr ""
+
+#. Default: "Borders on: {sides}"
+#: components/Widgets/BorderWidget
+msgid "Borders on: {sides}"
+msgstr ""
+
+#. Default: "Bottom"
+#: components/Widgets/BorderWidget
+msgid "Bottom"
+msgstr ""
+
+#. Default: "Bottom border"
+#: components/Widgets/BorderWidget
+msgid "Bottom border"
+msgstr ""
+
+#. Default: "Bottom border disabled"
+#: components/Widgets/BorderWidget
+msgid "Bottom border disabled"
+msgstr ""
+
+#. Default: "Bottom border enabled at {width} pixels"
+#: components/Widgets/BorderWidget
+msgid "Bottom border enabled at {width} pixels"
+msgstr ""
+
+#. Default: "Bottom only ({width}px)"
+#: components/Widgets/BorderWidget
+msgid "Bottom only ({width}px)"
 msgstr ""
 
 #. Default: "Brand"
@@ -130,6 +359,11 @@ msgstr ""
 msgid "Byline"
 msgstr ""
 
+#. Default: "CSS patterns"
+#: components/Widgets/ColorGroups/messages
+msgid "CSS patterns"
+msgstr ""
+
 #. Default: "Call to Action"
 #: components/Blocks/HeroBlock/schema
 msgid "Call to Action"
@@ -138,6 +372,16 @@ msgstr ""
 #. Default: "Cancel"
 #: components/Controlpanels/Themes/messages
 msgid "Cancel"
+msgstr ""
+
+#. Default: "Card description and metadata using the subtext color."
+#: components/Widgets/BlockThemesWidget
+msgid "Card description and metadata using the subtext color."
+msgstr ""
+
+#. Default: "Card in the front area ({name})"
+#: components/Widgets/BlockThemesWidget
+msgid "Card in the front area ({name})"
 msgstr ""
 
 #. Default: "Carousel"
@@ -154,16 +398,19 @@ msgstr ""
 
 #. Default: "Center"
 #: components/Blocks/Listing/schema
+#: components/Widgets/ColorGroups/messages
 msgid "Center"
 msgstr ""
 
 #. Default: "Center bottom"
 #: components/Blocks/Listing/schema
+#: components/Widgets/ColorGroups/messages
 msgid "Center bottom"
 msgstr ""
 
 #. Default: "Center top"
 #: components/Blocks/Listing/schema
+#: components/Widgets/ColorGroups/messages
 msgid "Center top"
 msgstr ""
 
@@ -172,9 +419,19 @@ msgstr ""
 msgid "Changes saved"
 msgstr ""
 
+#. Default: "Clear"
+#: components/Widgets/SimpleColorPickerWidget
+msgid "Clear"
+msgstr ""
+
 #. Default: "Clear column style"
-#: components/Blocks/CustomGrid/Edit
+#: components/Blocks/CustomGrid/messages
 msgid "Clear column style"
+msgstr ""
+
+#. Default: "Clear image"
+#: components/Widgets/ColorGroups/messages
+msgid "Clear image"
 msgstr ""
 
 #. Default: "Close menu"
@@ -185,6 +442,21 @@ msgstr ""
 #. Default: "Color"
 #: components/Blocks/Separator/schema
 msgid "Color"
+msgstr ""
+
+#. Default: "Color Group: {name} ({color})"
+#: components/Controlpanels/Themes/messages
+msgid "Color Group: {name} ({color})"
+msgstr ""
+
+#. Default: "Color Groups"
+#: components/Widgets/ColorGroups/messages
+msgid "Color Groups"
+msgstr ""
+
+#. Default: "Color group palette"
+#: components/Widgets/BlockThemesWidget
+msgid "Color group palette"
 msgstr ""
 
 #. Default: "Colours"
@@ -198,12 +470,28 @@ msgid "Column"
 msgstr ""
 
 #. Default: "Column Settings"
-#: components/Blocks/CustomGrid/Edit
+#: components/Blocks/CustomGrid/messages
 msgid "Column Settings"
+msgstr ""
+
+#. Default: "Configure border sides and thickness"
+#: config/blocks
+msgid "Configure border sides and thickness"
+msgstr ""
+
+#. Default: "Contact Email (override)"
+#: components/Blocks/EventMetadata/schema
+msgid "Contact Email (override)"
+msgstr ""
+
+#. Default: "Contact Name (override)"
+#: components/Blocks/EventMetadata/schema
+msgid "Contact Name (override)"
 msgstr ""
 
 #. Default: "Contain"
 #: components/Blocks/HeroBlock/schema
+#: components/Widgets/ColorGroups/messages
 msgid "Contain"
 msgstr ""
 
@@ -214,7 +502,13 @@ msgstr ""
 
 #. Default: "Cover"
 #: components/Blocks/HeroBlock/schema
+#: components/Widgets/ColorGroups/messages
 msgid "Cover"
+msgstr ""
+
+#. Default: "Create a new block theme by selecting the Color Groups for the back area (block background) and the front area (cards and highlights)."
+#: components/Widgets/BlockThemesWidget
+msgid "Create a new block theme by selecting the Color Groups for the back area (block background) and the front area (cards and highlights)."
 msgstr ""
 
 #. Default: "Criteria"
@@ -222,19 +516,72 @@ msgstr ""
 msgid "Criteria"
 msgstr ""
 
+#. Default: "Custom"
+#: components/Widgets/BlockThemeWidget
+msgid "Custom"
+msgstr ""
+
+#. Default: "Custom ({back}/{front})"
+#: components/Widgets/BlockThemeWidget
+msgid "Custom ({back}/{front})"
+msgstr ""
+
 #. Default: "Custom Grid"
 #: components/Blocks/CustomGrid/Schema
 msgid "Custom Grid"
 msgstr ""
 
+#. Default: "Customize the colors of this block by selecting the Color Groups for the background and the front elements."
+#: components/Widgets/BlockThemeWidget
+msgid "Customize the colors of this block by selecting the Color Groups for the background and the front elements."
+msgstr ""
+
+#. Default: "Customize thickness per side"
+#: components/Widgets/BorderWidget
+msgid "Customize thickness per side"
+msgstr ""
+
+#. Default: "Dark"
+#: components/Widgets/ColorGroups/messages
+msgid "Dark"
+msgstr ""
+
+#. Default: "Dark mode"
+#: components/Widgets/ColorGroups/messages
+msgid "Dark mode"
+msgstr ""
+
+#. Default: "Decrease thickness (-1px)"
+#: components/Widgets/BorderWidget
+msgid "Decrease thickness (-1px)"
+msgstr ""
+
+#. Default: "Decrease thickness by 1 pixel"
+#: components/Widgets/BorderWidget
+msgid "Decrease thickness by 1 pixel"
+msgstr ""
+
 #. Default: "Default"
 #: components/Blocks/CustomGrid/Schema
+#: components/Blocks/EventMetadata/schema
+#: components/Widgets/BlockThemesWidget
+#: components/Widgets/BlockThemeWidget
 msgid "Default"
 msgstr ""
 
 #. Default: "Delete"
 #: components/Controlpanels/Themes/messages
 msgid "Delete"
+msgstr ""
+
+#. Default: "Delete Color Group {name}"
+#: components/Widgets/ColorGroups/messages
+msgid "Delete Color Group {name}"
+msgstr ""
+
+#. Default: "Delete block theme {name}"
+#: components/Widgets/BlockThemesWidget
+msgid "Delete block theme {name}"
 msgstr ""
 
 #. Default: "Delete this theme? Content still using it keeps the stored id but falls back to the default colours."
@@ -248,6 +595,47 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+#. Default: "Desktop"
+#: components/Widgets/ColorGroups/messages
+msgid "Desktop"
+msgstr ""
+
+#. Default: "Desktop (file, link or CSS pattern)"
+#: components/Widgets/ColorGroups/messages
+msgid "Desktop (file, link or CSS pattern)"
+msgstr ""
+
+#. Default: "Desktop (optional, falls back to the light version when empty)"
+#: components/Widgets/ColorGroups/messages
+msgid "Desktop (optional, falls back to the light version when empty)"
+msgstr ""
+
+#. Default: "Diagonal stripes"
+#: config/blockThemes
+msgid "Diagonal stripes"
+msgstr ""
+
+#. Default: "Display name"
+#: components/Widgets/BlockThemesWidget
+#: components/Widgets/ColorGroups/messages
+msgid "Display name"
+msgstr ""
+
+#. Default: "Do not repeat the image (no-repeat)"
+#: components/Widgets/ColorGroups/messages
+msgid "Do not repeat the image (no-repeat)"
+msgstr ""
+
+#. Default: "Dots"
+#: config/blockThemes
+msgid "Dots"
+msgstr ""
+
+#. Default: "Double millimetre mesh in a technical blueprint style"
+#: config/blockThemes
+msgid "Double millimetre mesh in a technical blueprint style"
+msgstr ""
+
 #. Default: "Duplicate"
 #: components/Controlpanels/Themes/messages
 msgid "Duplicate"
@@ -258,14 +646,29 @@ msgstr ""
 msgid "Duplicate of {name}"
 msgstr ""
 
+#. Default: "Dynamic curved waves inspired by the Acreative project"
+#: config/blockThemes
+msgid "Dynamic curved waves inspired by the Acreative project"
+msgstr ""
+
 #. Default: "Edit"
 #: components/Controlpanels/Themes/messages
 msgid "Edit"
 msgstr ""
 
 #. Default: "Edit parent grid block"
-#: components/Blocks/CustomGrid/Edit
+#: components/Blocks/CustomGrid/messages
 msgid "Edit parent grid block"
+msgstr ""
+
+#. Default: "Edit theme Color Groups"
+#: components/Widgets/BlockThemeWidget
+msgid "Edit theme Color Groups"
+msgstr ""
+
+#. Default: "Elegant diagonal stripes at 45 degrees"
+#: config/blockThemes
+msgid "Elegant diagonal stripes at 45 degrees"
 msgstr ""
 
 #. Default: "This is a Hero Block. Add an item in the sidebar to fill it automatically."
@@ -283,6 +686,26 @@ msgstr ""
 msgid "Event Metadata"
 msgstr ""
 
+#. Default: "Event URL (override)"
+#: components/Blocks/EventMetadata/schema
+msgid "Event URL (override)"
+msgstr ""
+
+#. Default: "Event URL Label (override)"
+#: components/Blocks/EventMetadata/schema
+msgid "Event URL Label (override)"
+msgstr ""
+
+#. Default: "Events"
+#: config/blocks
+msgid "Events"
+msgstr ""
+
+#. Default: "File"
+#: components/Widgets/ColorGroups/messages
+msgid "File"
+msgstr ""
+
 #. Default: "File type"
 #: components/Blocks/HeroBlock/schema
 msgid "File type"
@@ -293,14 +716,39 @@ msgstr ""
 msgid "File type description"
 msgstr ""
 
+#. Default: "Fill the whole block (cover)"
+#: components/Widgets/ColorGroups/messages
+msgid "Fill the whole block (cover)"
+msgstr ""
+
 #. Default: "Filled"
 #: components/Blocks/QuoteBlock/schema
 msgid "Filled"
 msgstr ""
 
+#. Default: "Fit"
+#: components/Widgets/ColorGroups/messages
+msgid "Fit"
+msgstr ""
+
+#. Default: "Fit the whole image without cropping (contain)"
+#: components/Widgets/ColorGroups/messages
+msgid "Fit the whole image without cropping (contain)"
+msgstr ""
+
 #. Default: "Flex / Decorative"
 #: index
 msgid "Flex / Decorative"
+msgstr ""
+
+#. Default: "Font"
+#: components/Widgets/ColorGroups/messages
+msgid "Font"
+msgstr ""
+
+#. Default: "Font family"
+#: components/Widgets/ColorGroups/messages
+msgid "Font family"
 msgstr ""
 
 #. Default: "Footer text"
@@ -311,6 +759,52 @@ msgstr ""
 #. Default: "Additional information displayed at the foot of the block."
 #: components/Blocks/HeroBlock/schema
 msgid "Footer text description"
+msgstr ""
+
+#. Default: "Free"
+#: components/Blocks/EventMetadata/helpers
+msgid "Free"
+msgstr ""
+
+#. Default: "Front Color Group (cards)"
+#: components/Widgets/BlockThemesWidget
+msgid "Front Color Group (cards)"
+msgstr ""
+
+#. Default: "Front area (Color Group)"
+#: components/Blocks/CustomGrid/Schema
+#: components/Widgets/BlockThemeWidget
+msgid "Front area (Color Group)"
+msgstr ""
+
+#. Default: "Front area (cards)"
+#: components/Widgets/BlockThemesWidget
+msgid "Front area (cards)"
+msgstr ""
+
+#. Default: "Full"
+#: components/Widgets/BorderWidget
+msgid "Full"
+msgstr ""
+
+#. Default: "Full border ({width}px)"
+#: components/Widgets/BorderWidget
+msgid "Full border ({width}px)"
+msgstr ""
+
+#. Default: "Full border enabled at {width} pixels"
+#: components/Widgets/BorderWidget
+msgid "Full border enabled at {width} pixels"
+msgstr ""
+
+#. Default: "Full border on all 4 sides"
+#: components/Widgets/BorderWidget
+msgid "Full border on all 4 sides"
+msgstr ""
+
+#. Default: "Full mixed border ({top}px, {right}px, {bottom}px, {left}px)"
+#: components/Widgets/BorderWidget
+msgid "Full mixed border ({top}px, {right}px, {bottom}px, {left}px)"
 msgstr ""
 
 #. Default: "Full width"
@@ -328,9 +822,34 @@ msgstr ""
 msgid "Full width image"
 msgstr ""
 
+#. Default: "Geometric zigzag pattern"
+#: config/blockThemes
+msgid "Geometric zigzag pattern"
+msgstr ""
+
 #. Default: "Go to item {index}"
 #: components/Blocks/Listing/messages
 msgid "Go to item {index}"
+msgstr ""
+
+#. Default: "Grid"
+#: config/blockThemes
+msgid "Grid"
+msgstr ""
+
+#. Default: "Group ID (e.g. red)"
+#: components/Widgets/ColorGroups/messages
+msgid "Group ID (e.g. red)"
+msgstr ""
+
+#. Default: "Group preview (colour + 2nd layer on top)"
+#: components/Widgets/ColorGroups/messages
+msgid "Group preview (colour + 2nd layer on top)"
+msgstr ""
+
+#. Default: "Has a 2nd image or pattern layer set"
+#: components/Widgets/ColorGroups/messages
+msgid "Has a 2nd image or pattern layer set"
 msgstr ""
 
 #. Default: "Header text"
@@ -379,6 +898,11 @@ msgstr ""
 msgid "Hide image"
 msgstr ""
 
+#. Default: "Hide per-side settings"
+#: components/Widgets/BorderWidget
+msgid "Hide per-side settings"
+msgstr ""
+
 #. Default: "Highlight"
 #: index
 msgid "Highlight"
@@ -392,6 +916,11 @@ msgstr ""
 #. Default: "Select a content item to pull its data automatically (title, description, image)"
 #: components/Blocks/HeroBlock/schema
 msgid "Highlighted item description"
+msgstr ""
+
+#. Default: "Horizontal"
+#: components/Widgets/ColorGroups/messages
+msgid "Horizontal"
 msgstr ""
 
 #. Default: "Id"
@@ -439,6 +968,21 @@ msgstr ""
 msgid "Image size none"
 msgstr ""
 
+#. Default: "Increase thickness (+1px)"
+#: components/Widgets/BorderWidget
+msgid "Increase thickness (+1px)"
+msgstr ""
+
+#. Default: "Increase thickness by 1 pixel"
+#: components/Widgets/BorderWidget
+msgid "Increase thickness by 1 pixel"
+msgstr ""
+
+#. Default: "Independent thickness per side"
+#: components/Widgets/BorderWidget
+msgid "Independent thickness per side"
+msgstr ""
+
 #. Default: "Item batch size"
 #: components/Widgets/QuerystringWidget
 msgid "Item batch size"
@@ -447,6 +991,11 @@ msgstr ""
 #. Default: "Items"
 #: components/Blocks/Listing/messages
 msgid "Items"
+msgstr ""
+
+#. Default: "Large size for patterns ({size})"
+#: components/Widgets/ColorGroups/messages
+msgid "Large size for patterns ({size})"
 msgstr ""
 
 #. Default: "Last modified"
@@ -460,19 +1009,57 @@ msgstr ""
 msgid "Layout"
 msgstr ""
 
+#. Default: "Left"
+#: components/Widgets/BorderWidget
+msgid "Left"
+msgstr ""
+
+#. Default: "Left border"
+#: components/Widgets/BorderWidget
+msgid "Left border"
+msgstr ""
+
+#. Default: "Left border disabled"
+#: components/Widgets/BorderWidget
+msgid "Left border disabled"
+msgstr ""
+
+#. Default: "Left border enabled at {width} pixels"
+#: components/Widgets/BorderWidget
+msgid "Left border enabled at {width} pixels"
+msgstr ""
+
 #. Default: "Left bottom"
 #: components/Blocks/Listing/schema
+#: components/Widgets/ColorGroups/messages
 msgid "Left bottom"
 msgstr ""
 
 #. Default: "Left center"
 #: components/Blocks/Listing/schema
+#: components/Widgets/ColorGroups/messages
 msgid "Left center"
+msgstr ""
+
+#. Default: "Left side border"
+#: components/Widgets/BorderWidget
+msgid "Left side border"
 msgstr ""
 
 #. Default: "Left top"
 #: components/Blocks/Listing/schema
+#: components/Widgets/ColorGroups/messages
 msgid "Left top"
+msgstr ""
+
+#. Default: "Light"
+#: components/Widgets/ColorGroups/messages
+msgid "Light"
+msgstr ""
+
+#. Default: "Light mode"
+#: components/Widgets/ColorGroups/messages
+msgid "Light mode"
 msgstr ""
 
 #. Default: "Line Alignment"
@@ -495,7 +1082,18 @@ msgstr ""
 msgid "Link to"
 msgstr ""
 
+#. Default: "Location (override)"
+#: components/Blocks/EventMetadata/schema
+msgid "Location (override)"
+msgstr ""
+
+#. Default: "Location to be confirmed"
+#: components/Blocks/EventMetadata/helpers
+msgid "Location to be confirmed"
+msgstr ""
+
 #. Default: "Main Image"
+#: components/Blocks/MainImageBlock/helpers
 #: components/Blocks/MainImageBlock/schema
 #: index
 msgid "Main Image"
@@ -512,9 +1110,39 @@ msgstr ""
 msgid "Media fit (object-fit)"
 msgstr ""
 
+#. Default: "Medium size for patterns ({size})"
+#: components/Widgets/ColorGroups/messages
+msgid "Medium size for patterns ({size})"
+msgstr ""
+
+#. Default: "Mobile (optional, for a different image on small screens)"
+#: components/Widgets/ColorGroups/messages
+msgid "Mobile (optional, for a different image on small screens)"
+msgstr ""
+
+#. Default: "Mobile (optional, small screens in dark mode)"
+#: components/Widgets/ColorGroups/messages
+msgid "Mobile (optional, small screens in dark mode)"
+msgstr ""
+
+#. Default: "Mobile (small screens)"
+#: components/Widgets/ColorGroups/messages
+msgid "Mobile (small screens)"
+msgstr ""
+
+#. Default: "Modern square grid with transparency"
+#: config/blockThemes
+msgid "Modern square grid with transparency"
+msgstr ""
+
 #. Default: "Name"
 #: components/Controlpanels/Themes/messages
 msgid "Name"
+msgstr ""
+
+#. Default: "New block theme preview"
+#: components/Widgets/BlockThemesWidget
+msgid "New block theme preview"
 msgstr ""
 
 #. Default: "Next"
@@ -527,6 +1155,26 @@ msgstr ""
 msgid "Next Page"
 msgstr ""
 
+#. Default: "No border"
+#: components/Widgets/BorderWidget
+msgid "No border"
+msgstr ""
+
+#. Default: "No border (0px)"
+#: components/Widgets/BorderWidget
+msgid "No border (0px)"
+msgstr ""
+
+#. Default: "No border selected"
+#: components/Widgets/BorderWidget
+msgid "No border selected"
+msgstr ""
+
+#. Default: "No image or pattern (solid background colour only)"
+#: config/blockThemes
+msgid "No image or pattern (solid background colour only)"
+msgstr ""
+
 #. Default: "No items found in this container."
 #: components/Blocks/Listing/ListingBody
 msgid "No items found in this container."
@@ -537,9 +1185,19 @@ msgstr ""
 msgid "No preview image found on this page."
 msgstr ""
 
+#. Default: "No repeat"
+#: components/Widgets/ColorGroups/messages
+msgid "No repeat"
+msgstr ""
+
 #. Default: "No selection"
 #: components/Widgets/QuerystringWidget
 msgid "No selection"
+msgstr ""
+
+#. Default: "None"
+#: config/blockThemes
+msgid "None"
 msgstr ""
 
 #. Default: "Number of columns"
@@ -552,6 +1210,31 @@ msgstr ""
 msgid "Offset"
 msgstr ""
 
+#. Default: "On the sides (left: {left}px, right: {right}px)"
+#: components/Widgets/BorderWidget
+msgid "On the sides (left: {left}px, right: {right}px)"
+msgstr ""
+
+#. Default: "On the sides ({width}px)"
+#: components/Widgets/BorderWidget
+msgid "On the sides ({width}px)"
+msgstr ""
+
+#. Default: "On top and left side ({top}px, {left}px)"
+#: components/Widgets/BorderWidget
+msgid "On top and left side ({top}px, {left}px)"
+msgstr ""
+
+#. Default: "Once"
+#: components/Widgets/ColorGroups/messages
+msgid "Once"
+msgstr ""
+
+#. Default: "Online stream"
+#: components/Blocks/EventMetadata/helpers
+msgid "Online stream"
+msgstr ""
+
 #. Default: "Open in a new tab"
 #: components/Blocks/MainImageBlock/schema
 msgid "Open in a new tab"
@@ -560,6 +1243,16 @@ msgstr ""
 #. Default: "Open menu"
 #: components/Navigation/SCNavigation/MenuItem
 msgid "Open menu"
+msgstr ""
+
+#. Default: "Organization"
+#: components/Blocks/EventMetadata/helpers
+msgid "Organization"
+msgstr ""
+
+#. Default: "Original image size (auto)"
+#: components/Widgets/ColorGroups/messages
+msgid "Original image size (auto)"
 msgstr ""
 
 #. Default: "Overwrite content"
@@ -587,6 +1280,16 @@ msgstr ""
 msgid "Paragraph (P)"
 msgstr ""
 
+#. Default: "Participation"
+#: components/Blocks/EventMetadata/helpers
+msgid "Participation"
+msgstr ""
+
+#. Default: "Pattern of concentric circles and radial dots"
+#: config/blockThemes
+msgid "Pattern of concentric circles and radial dots"
+msgstr ""
+
 #. Default: "Pause carousel"
 #: components/Blocks/Listing/messages
 msgid "Pause carousel"
@@ -595,6 +1298,11 @@ msgstr ""
 #. Default: "Play carousel"
 #: components/Blocks/Listing/messages
 msgid "Play carousel"
+msgstr ""
+
+#. Default: "Position (background-position)"
+#: components/Widgets/ColorGroups/messages
+msgid "Position (background-position)"
 msgstr ""
 
 #. Default: "Position (object-position)"
@@ -612,9 +1320,19 @@ msgstr ""
 msgid "Previous Page"
 msgstr ""
 
+#. Default: "Price/Participation (override)"
+#: components/Blocks/EventMetadata/schema
+msgid "Price/Participation (override)"
+msgstr ""
+
 #. Default: "Primary"
 #: index
 msgid "Primary"
+msgstr ""
+
+#. Default: "Protected base group"
+#: components/Widgets/ColorGroups/messages
+msgid "Protected base group"
 msgstr ""
 
 #. Default: "Published"
@@ -622,10 +1340,70 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
+#. Default: "Quick presets"
+#: components/Widgets/BorderWidget
+msgid "Quick presets"
+msgstr ""
+
 #. Default: "Quote"
 #: components/Blocks/QuoteBlock/schema
 #: index
 msgid "Quote"
+msgstr ""
+
+#. Default: "Radial mesh"
+#: config/blockThemes
+msgid "Radial mesh"
+msgstr ""
+
+#. Default: "Ready-made CSS patterns (Acreative-style presets)"
+#: components/Widgets/ColorGroups/messages
+msgid "Ready-made CSS patterns (Acreative-style presets)"
+msgstr ""
+
+#. Default: "Remove color"
+#: components/Widgets/SimpleColorPickerWidget
+msgid "Remove color"
+msgstr ""
+
+#. Default: "Repeat"
+#: components/Widgets/ColorGroups/messages
+msgid "Repeat"
+msgstr ""
+
+#. Default: "Repeat (background-repeat)"
+#: components/Widgets/ColorGroups/messages
+msgid "Repeat (background-repeat)"
+msgstr ""
+
+#. Default: "Repeat X"
+#: components/Widgets/ColorGroups/messages
+msgid "Repeat X"
+msgstr ""
+
+#. Default: "Repeat Y"
+#: components/Widgets/ColorGroups/messages
+msgid "Repeat Y"
+msgstr ""
+
+#. Default: "Repeat horizontally only (repeat-x)"
+#: components/Widgets/ColorGroups/messages
+msgid "Repeat horizontally only (repeat-x)"
+msgstr ""
+
+#. Default: "Repeat the image on X and Y (repeat)"
+#: components/Widgets/ColorGroups/messages
+msgid "Repeat the image on X and Y (repeat)"
+msgstr ""
+
+#. Default: "Repeat vertically only (repeat-y)"
+#: components/Widgets/ColorGroups/messages
+msgid "Repeat vertically only (repeat-y)"
+msgstr ""
+
+#. Default: "Repeat, adjusting proportions without cropping (round)"
+#: components/Widgets/ColorGroups/messages
+msgid "Repeat, adjusting proportions without cropping (round)"
 msgstr ""
 
 #. Default: "Result"
@@ -648,24 +1426,67 @@ msgstr ""
 msgid "Reversed order"
 msgstr ""
 
+#. Default: "Right"
+#: components/Widgets/BorderWidget
+msgid "Right"
+msgstr ""
+
+#. Default: "Right border"
+#: components/Widgets/BorderWidget
+msgid "Right border"
+msgstr ""
+
+#. Default: "Right border disabled"
+#: components/Widgets/BorderWidget
+msgid "Right border disabled"
+msgstr ""
+
+#. Default: "Right border enabled at {width} pixels"
+#: components/Widgets/BorderWidget
+msgid "Right border enabled at {width} pixels"
+msgstr ""
+
 #. Default: "Right bottom"
 #: components/Blocks/Listing/schema
+#: components/Widgets/ColorGroups/messages
 msgid "Right bottom"
 msgstr ""
 
 #. Default: "Right center"
 #: components/Blocks/Listing/schema
+#: components/Widgets/ColorGroups/messages
 msgid "Right center"
+msgstr ""
+
+#. Default: "Right side border"
+#: components/Widgets/BorderWidget
+msgid "Right side border"
 msgstr ""
 
 #. Default: "Right top"
 #: components/Blocks/Listing/schema
+#: components/Widgets/ColorGroups/messages
 msgid "Right top"
+msgstr ""
+
+#. Default: "Round"
+#: components/Widgets/ColorGroups/messages
+msgid "Round"
 msgstr ""
 
 #. Default: "Save"
 #: components/Controlpanels/Themes/messages
 msgid "Save"
+msgstr ""
+
+#. Default: "Save block theme"
+#: components/Widgets/BlockThemesWidget
+msgid "Save block theme"
+msgstr ""
+
+#. Default: "Save new Color Group"
+#: components/Widgets/ColorGroups/messages
+msgid "Save new Color Group"
 msgstr ""
 
 #. Default: "Section"
@@ -713,9 +1534,69 @@ msgstr ""
 msgid "Show publication date"
 msgstr ""
 
+#. Default: "Side borders enabled at {width} pixels"
+#: components/Widgets/BorderWidget
+msgid "Side borders enabled at {width} pixels"
+msgstr ""
+
+#. Default: "Sides"
+#: components/Widgets/BorderWidget
+msgid "Sides"
+msgstr ""
+
+#. Default: "Simulate: {device}"
+#: components/Widgets/ColorGroups/messages
+msgid "Simulate: {device}"
+msgstr ""
+
+#. Default: "Size (background-size)"
+#: components/Widgets/ColorGroups/messages
+msgid "Size (background-size)"
+msgstr ""
+
+#. Default: "Small size for patterns ({size})"
+#: components/Widgets/ColorGroups/messages
+msgid "Small size for patterns ({size})"
+msgstr ""
+
 #. Default: "Sort on"
 #: components/Widgets/QuerystringWidget
 msgid "Sort on"
+msgstr ""
+
+#. Default: "Space"
+#: components/Widgets/ColorGroups/messages
+msgid "Space"
+msgstr ""
+
+#. Default: "Space evenly (space)"
+#: components/Widgets/ColorGroups/messages
+msgid "Space evenly (space)"
+msgstr ""
+
+#. Default: "Spaced"
+#: components/Widgets/ColorGroups/messages
+msgid "Spaced"
+msgstr ""
+
+#. Default: "Stretched to full width (100% auto)"
+#: components/Widgets/ColorGroups/messages
+msgid "Stretched to full width (100% auto)"
+msgstr ""
+
+#. Default: "Styling"
+#: components/Blocks/EventMetadata/schema
+msgid "Styling"
+msgstr ""
+
+#. Default: "Subtext"
+#: components/Widgets/ColorGroups/messages
+msgid "Subtext"
+msgstr ""
+
+#. Default: "Subtle dot pattern"
+#: config/blockThemes
+msgid "Subtle dot pattern"
 msgstr ""
 
 #. Default: "Tags"
@@ -723,15 +1604,35 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
+#. Default: "Text"
+#: components/Widgets/ColorGroups/messages
+msgid "Text"
+msgstr ""
+
 #. Default: "Text side"
 #: components/Blocks/HeroBlock/schema
 msgid "Text side"
+msgstr ""
+
+#. Default: "The Color Group ID is required."
+#: components/Widgets/ColorGroups/messages
+msgid "The Color Group ID is required."
+msgstr ""
+
+#. Default: "The block theme ID is required."
+#: components/Widgets/BlockThemesWidget
+msgid "The block theme ID is required."
 msgstr ""
 
 #. Default: "Theme"
 #: components/Blocks/CustomGrid/Schema
 #: components/Blocks/EventMetadata/schema
 msgid "Theme"
+msgstr ""
+
+#. Default: "Theme ID (e.g. highlight)"
+#: components/Widgets/BlockThemesWidget
+msgid "Theme ID (e.g. highlight)"
 msgstr ""
 
 #. Default: "Theme deleted"
@@ -747,6 +1648,11 @@ msgstr ""
 #. Default: "Thickness (px)"
 #: components/Blocks/Separator/schema
 msgid "Thickness (px)"
+msgstr ""
+
+#. Default: "Thickness changed to {width} pixels"
+#: components/Widgets/BorderWidget
+msgid "Thickness changed to {width} pixels"
 msgstr ""
 
 #. Default: "Title"
@@ -766,14 +1672,89 @@ msgstr ""
 msgid "Title element description"
 msgstr ""
 
+#. Default: "Toggle device simulation"
+#: components/Widgets/ColorGroups/messages
+msgid "Toggle device simulation"
+msgstr ""
+
+#. Default: "Toggle {side}"
+#: components/Widgets/BorderWidget
+msgid "Toggle {side}"
+msgstr ""
+
+#. Default: "Top"
+#: components/Widgets/BorderWidget
+msgid "Top"
+msgstr ""
+
+#. Default: "Top & side"
+#: components/Widgets/BorderWidget
+msgid "Top & side"
+msgstr ""
+
+#. Default: "Top and left borders enabled at {width} pixels"
+#: components/Widgets/BorderWidget
+msgid "Top and left borders enabled at {width} pixels"
+msgstr ""
+
+#. Default: "Top border"
+#: components/Widgets/BorderWidget
+msgid "Top border"
+msgstr ""
+
+#. Default: "Top border disabled"
+#: components/Widgets/BorderWidget
+msgid "Top border disabled"
+msgstr ""
+
+#. Default: "Top border enabled at {width} pixels"
+#: components/Widgets/BorderWidget
+msgid "Top border enabled at {width} pixels"
+msgstr ""
+
+#. Default: "Top only ({width}px)"
+#: components/Widgets/BorderWidget
+msgid "Top only ({width}px)"
+msgstr ""
+
 #. Default: "Transparent"
 #: components/Blocks/QuoteBlock/schema
 msgid "Transparent"
 msgstr ""
 
+#. Default: "Upload an image from your computer"
+#: components/Widgets/ColorGroups/messages
+msgid "Upload an image from your computer"
+msgstr ""
+
+#. Default: "Vertical"
+#: components/Widgets/ColorGroups/messages
+msgid "Vertical"
+msgstr ""
+
 #. Default: "Video"
 #: components/Blocks/Listing/messages
 msgid "Video"
+msgstr ""
+
+#. Default: "Waves (Acreative)"
+#: config/blockThemes
+msgid "Waves (Acreative)"
+msgstr ""
+
+#. Default: "When"
+#: components/Blocks/EventMetadata/helpers
+msgid "When"
+msgstr ""
+
+#. Default: "Where"
+#: components/Blocks/EventMetadata/helpers
+msgid "Where"
+msgstr ""
+
+#. Default: "Zigzag / Chevron"
+#: config/blockThemes
+msgid "Zigzag / Chevron"
 msgstr ""
 
 #. Default: "Decrease font size"
@@ -796,6 +1777,11 @@ msgstr ""
 msgid "accessibilitySpeedLabel"
 msgstr ""
 
+#. Default: "bottom: {width}px"
+#: components/Widgets/BorderWidget
+msgid "bottom: {width}px"
+msgstr ""
+
 #. Default: "Dark"
 #: components/ThemeToggle/ThemeToggle
 msgid "darkTheme"
@@ -804,6 +1790,31 @@ msgstr ""
 #. Default: "Toggle menu"
 #: components/DropdownMenu/DropdownMenu
 msgid "dropdownMenuToggle"
+msgstr ""
+
+#. Default: "e.g. Christmas Red"
+#: components/Widgets/ColorGroups/messages
+msgid "e.g. Christmas Red"
+msgstr ""
+
+#. Default: "e.g. Highlight"
+#: components/Widgets/BlockThemesWidget
+msgid "e.g. Highlight"
+msgstr ""
+
+#. Default: "e.g. highlight"
+#: components/Widgets/BlockThemesWidget
+msgid "e.g. highlight"
+msgstr ""
+
+#. Default: "e.g. red"
+#: components/Widgets/ColorGroups/messages
+msgid "e.g. red"
+msgstr ""
+
+#. Default: "e.g. {example}"
+#: components/Widgets/ColorGroups/messages
+msgid "e.g. {example}"
 msgstr ""
 
 #. Default: "Accessibility menu"
@@ -821,6 +1832,16 @@ msgstr ""
 msgid "highContrastTheme"
 msgstr ""
 
+#. Default: "https://... or radial-gradient(...)"
+#: components/Widgets/ColorGroups/messages
+msgid "https://... or radial-gradient(...)"
+msgstr ""
+
+#. Default: "left: {width}px"
+#: components/Widgets/BorderWidget
+msgid "left: {width}px"
+msgstr ""
+
 #. Default: "Light"
 #: components/ThemeToggle/ThemeToggle
 msgid "lightTheme"
@@ -836,12 +1857,77 @@ msgstr ""
 msgid "of"
 msgstr ""
 
+#. Default: "or type a custom value (e.g. {example})"
+#: components/Widgets/ColorGroups/messages
+msgid "or type a custom value (e.g. {example})"
+msgstr ""
+
+#. Default: "right: {width}px"
+#: components/Widgets/BorderWidget
+msgid "right: {width}px"
+msgstr ""
+
 #. Default: "Toggle theme"
 #: components/ThemeToggle/ThemeToggle
 msgid "toggleTheme"
 msgstr ""
 
+#. Default: "top: {width}px"
+#: components/Widgets/BorderWidget
+msgid "top: {width}px"
+msgstr ""
+
 #. Default: "{count, plural, one {# column} other {# columns}}"
 #: components/Blocks/Listing/schema
 msgid "{count, plural, one {# column} other {# columns}}"
+msgstr ""
+
+#. Default: "{label} (Light / Dark)"
+#: components/Widgets/ColorGroups/messages
+msgid "{label} (Light / Dark)"
+msgstr ""
+
+#. Default: "{label} ({mode})"
+#: components/Widgets/ColorGroups/messages
+msgid "{label} ({mode})"
+msgstr ""
+
+#. Default: "{label} ({mode}), hex"
+#: components/Widgets/ColorGroups/messages
+msgid "{label} ({mode}), hex"
+msgstr ""
+
+#. Default: "{label}: {value}"
+#: components/Widgets/ColorGroups/messages
+msgid "{label}: {value}"
+msgstr ""
+
+#. Default: "{name} ({id}): background {color}"
+#: components/Widgets/BlockThemesWidget
+msgid "{name} ({id}): background {color}"
+msgstr ""
+
+#. Default: "{name} title"
+#: components/Widgets/ColorGroups/messages
+msgid "{name} title"
+msgstr ""
+
+#. Default: "{side} thickness changed to {width} pixels"
+#: components/Widgets/BorderWidget
+msgid "{side} thickness changed to {width} pixels"
+msgstr ""
+
+#. Default: "{side} thickness in pixels"
+#: components/Widgets/BorderWidget
+msgid "{side} thickness in pixels"
+msgstr ""
+
+#. Default: "{side}: none"
+#: components/Widgets/BorderWidget
+msgid "{side}: none"
+msgstr ""
+
+#. Default: "{side}: {width}px"
+#: components/Widgets/BorderWidget
+msgid "{side}: {width}px"
 msgstr ""

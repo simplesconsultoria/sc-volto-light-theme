@@ -1,3 +1,23 @@
+import { defineMessages, type IntlShape } from 'react-intl';
+
+/** Column headings and fallback values shown by the Event Metadata block. */
+export const messages = defineMessages({
+  when: { id: 'When', defaultMessage: 'When' },
+  where: { id: 'Where', defaultMessage: 'Where' },
+  organization: { id: 'Organization', defaultMessage: 'Organization' },
+  participation: { id: 'Participation', defaultMessage: 'Participation' },
+  addToCalendar: {
+    id: 'Add to calendar (iCal)',
+    defaultMessage: 'Add to calendar (iCal)',
+  },
+  locationTbc: {
+    id: 'Location to be confirmed',
+    defaultMessage: 'Location to be confirmed',
+  },
+  onlineStream: { id: 'Online stream', defaultMessage: 'Online stream' },
+  free: { id: 'Free', defaultMessage: 'Free' },
+});
+
 const LOCALE = 'pt-BR';
 
 const DATE_FORMAT: Intl.DateTimeFormatOptions = {
@@ -96,13 +116,19 @@ export const stripBlockWidthClasses = (className?: string): string =>
 export const getEventDetails = (
   data: Record<string, any> | undefined,
   item: Record<string, any>,
+  intl: IntlShape,
 ) => ({
-  location: data?.location || item.location || 'Local a confirmar',
+  location:
+    data?.location || item.location || intl.formatMessage(messages.locationTbc),
   eventLink: getEventLink(data, item),
-  eventLinkLabel: data?.eventUrlLabel || 'Transmissão online',
+  eventLinkLabel:
+    data?.eventUrlLabel || intl.formatMessage(messages.onlineStream),
   hasEventLinkLabel: !!data?.eventUrlLabel,
-  contactName: data?.contactName || item.contact_name || 'Organização',
+  contactName:
+    data?.contactName ||
+    item.contact_name ||
+    intl.formatMessage(messages.organization),
   contactEmail: data?.contactEmail || item.contact_email,
-  price: data?.price || item.price || 'Gratuita',
+  price: data?.price || item.price || intl.formatMessage(messages.free),
   eventUrl: item['@id'] || '',
 });

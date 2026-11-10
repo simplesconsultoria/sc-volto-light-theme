@@ -1,10 +1,12 @@
 import React from 'react';
+import { useIntl } from 'react-intl';
 import {
   SIZE_OPTIONS,
   SIZE_PATTERN_PILLS,
   REPEAT_OPTIONS,
   POSITION_COMPASS,
 } from './constants';
+import { messages } from './messages';
 
 export type LayerSizingField = 'bg_size' | 'bg_repeat' | 'bg_position';
 
@@ -33,6 +35,7 @@ export const LayerSizingControls: React.FC<LayerSizingControlsProps> = ({
   onChange,
   className = 'layer-controls-interactive layer-controls-row',
 }) => {
+  const intl = useIntl();
   const currentSize = size || 'auto';
   const currentRepeat = repeat || 'repeat';
   const currentPosition = (position || 'center').toLowerCase().trim();
@@ -41,7 +44,7 @@ export const LayerSizingControls: React.FC<LayerSizingControlsProps> = ({
     <div className={className}>
       <div className="control-group-box">
         <label className="control-group-label" htmlFor={`bg-size-${idSuffix}`}>
-          Tamanho (background-size):
+          {intl.formatMessage(messages.sizeLabel)}:
         </label>
         <div className="icon-button-group button-group-row">
           {SIZE_OPTIONS.map((opt) => {
@@ -54,17 +57,19 @@ export const LayerSizingControls: React.FC<LayerSizingControlsProps> = ({
                 className={`icon-btn ${currentSize === opt.value ? 'is-active' : ''}`}
                 aria-pressed={currentSize === opt.value}
                 onClick={() => onChange('bg_size', opt.value)}
-                title={opt.title}
+                title={intl.formatMessage(opt.title)}
               >
                 <IconComp />
-                <span>{opt.shortLabel}</span>
+                <span>{intl.formatMessage(opt.shortLabel)}</span>
               </button>
             );
           })}
         </div>
 
         <div className="pattern-pills-row">
-          <span className="pills-hint">Patterns CSS:</span>
+          <span className="pills-hint">
+            {intl.formatMessage(messages.cssPatterns)}:
+          </span>
           {SIZE_PATTERN_PILLS.map((pill) => (
             <button
               key={pill.value}
@@ -72,7 +77,7 @@ export const LayerSizingControls: React.FC<LayerSizingControlsProps> = ({
               className={`pill-btn size-pill ${size === pill.value ? 'is-active' : ''}`}
               aria-pressed={size === pill.value}
               onClick={() => onChange('bg_size', pill.value)}
-              title={pill.title}
+              title={intl.formatMessage(pill.title, { size: pill.value })}
             >
               {pill.label}
             </button>
@@ -85,7 +90,9 @@ export const LayerSizingControls: React.FC<LayerSizingControlsProps> = ({
           className="custom-input-compact"
           value={size || ''}
           onChange={(e) => onChange('bg_size', e.target.value)}
-          placeholder="ou digite custom (ex: 40px 40px)"
+          placeholder={intl.formatMessage(messages.customValue, {
+            example: '40px 40px',
+          })}
         />
       </div>
 
@@ -94,7 +101,7 @@ export const LayerSizingControls: React.FC<LayerSizingControlsProps> = ({
           className="control-group-label"
           htmlFor={`bg-repeat-${idSuffix}`}
         >
-          Repetição (background-repeat):
+          {intl.formatMessage(messages.repeatLabel)}:
         </label>
         <div className="icon-button-group button-group-row">
           {REPEAT_OPTIONS.map((opt) => {
@@ -107,10 +114,10 @@ export const LayerSizingControls: React.FC<LayerSizingControlsProps> = ({
                 className={`icon-btn ${currentRepeat === opt.value ? 'is-active' : ''}`}
                 aria-pressed={currentRepeat === opt.value}
                 onClick={() => onChange('bg_repeat', opt.value)}
-                title={opt.title}
+                title={intl.formatMessage(opt.title)}
               >
                 <IconComp />
-                <span>{opt.shortLabel}</span>
+                <span>{intl.formatMessage(opt.shortLabel)}</span>
               </button>
             );
           })}
@@ -122,13 +129,15 @@ export const LayerSizingControls: React.FC<LayerSizingControlsProps> = ({
           className="custom-input-compact"
           value={repeat || ''}
           onChange={(e) => onChange('bg_repeat', e.target.value)}
-          placeholder="ou digite custom (ex: repeat space)"
+          placeholder={intl.formatMessage(messages.customValue, {
+            example: 'repeat space',
+          })}
         />
       </div>
 
       <div className="control-group-box">
         <label className="control-group-label" htmlFor={`bg-pos-${idSuffix}`}>
-          Posição (background-position):
+          {intl.formatMessage(messages.positionLabel)}:
         </label>
         <div className="compass-grid-wrapper">
           <div className="compass-grid">
@@ -139,9 +148,9 @@ export const LayerSizingControls: React.FC<LayerSizingControlsProps> = ({
                 type="button"
                 className={`compass-cell-btn ${currentPosition === pos.value ? 'is-active' : ''}`}
                 aria-pressed={currentPosition === pos.value}
-                aria-label={pos.label}
+                aria-label={intl.formatMessage(pos.label)}
                 onClick={() => onChange('bg_position', pos.value)}
-                title={pos.label}
+                title={intl.formatMessage(pos.label)}
               >
                 {pos.arrow}
               </button>
@@ -155,7 +164,9 @@ export const LayerSizingControls: React.FC<LayerSizingControlsProps> = ({
           className="custom-input-compact"
           value={position || ''}
           onChange={(e) => onChange('bg_position', e.target.value)}
-          placeholder="ou digite custom (ex: 50% 20px)"
+          placeholder={intl.formatMessage(messages.customValue, {
+            example: '50% 20px',
+          })}
         />
       </div>
     </div>

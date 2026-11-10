@@ -24,6 +24,14 @@ const messages = defineMessages({
     id: 'Default',
     defaultMessage: 'Default',
   },
+  labelBackColorGroup: {
+    id: 'Back area (Color Group)',
+    defaultMessage: 'Back area (Color Group)',
+  },
+  labelFrontColorGroup: {
+    id: 'Front area (Color Group)',
+    defaultMessage: 'Front area (Color Group)',
+  },
 });
 
 export const ColumnSchema = (intl: any) => {
@@ -43,11 +51,11 @@ export const ColumnSchema = (intl: any) => {
         default: 'default',
       },
       backColorGroup: {
-        title: 'Área de Trás (Color Group)',
+        title: intl.formatMessage(messages.labelBackColorGroup),
         type: 'string',
       },
       frontColorGroup: {
-        title: 'Área da Frente (Color Group)',
+        title: intl.formatMessage(messages.labelFrontColorGroup),
         type: 'string',
       },
     },

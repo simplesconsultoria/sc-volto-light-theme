@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl, type MessageDescriptor } from 'react-intl';
 import type { ColorGroup } from '../../../types/theme';
 import {
   CSS_PATTERN_PRESETS,
@@ -6,6 +7,7 @@ import {
 } from '../../../config/blockThemes';
 import { renderPatternPresetIcon } from './icons';
 import { LayerSizingControls } from './LayerSizingControls';
+import { messages } from './messages';
 
 export interface PatternLayerControlsProps {
   group: ColorGroup;
@@ -31,50 +33,54 @@ type ImageField =
 interface ImageFieldSpec {
   field: ImageField;
   idPrefix: string;
-  label: string;
-  placeholder: string;
+  label: MessageDescriptor;
+  placeholder: MessageDescriptor;
+  /** Sample value the placeholder message shows, if it takes one. */
+  example?: string;
 }
 
 /** The four image sources of the layer: light/dark x desktop/mobile. */
 const IMAGE_MATRIX: {
   mode: 'light' | 'dark';
-  title: string;
+  title: MessageDescriptor;
   fields: ImageFieldSpec[];
 }[] = [
   {
     mode: 'light',
-    title: 'Modo Claro (Light Mode)',
+    title: messages.lightMode,
     fields: [
       {
         field: 'bg_image_light_desktop',
         idPrefix: 'img-light-desk',
-        label: 'Desktop (Arquivo, Link ou Pattern CSS):',
-        placeholder: 'https://... ou radial-gradient(...)',
+        label: messages.lightDesktopImage,
+        placeholder: messages.imageOrPatternPlaceholder,
       },
       {
         field: 'bg_image_light_mobile',
         idPrefix: 'img-light-mob',
-        label:
-          'Mobile (Opcional - caso queira imagem diferente em telas pequenas):',
-        placeholder: 'ex: https://.../banner-mobile.webp',
+        label: messages.lightMobileImage,
+        placeholder: messages.example,
+        example: 'https://.../banner-mobile.webp',
       },
     ],
   },
   {
     mode: 'dark',
-    title: 'Modo Escuro (Dark Mode)',
+    title: messages.darkMode,
     fields: [
       {
         field: 'bg_image_dark_desktop',
         idPrefix: 'img-dark-desk',
-        label: 'Desktop (Opcional - usa a versão clara como padrão se vazio):',
-        placeholder: 'ex: https://.../bg-dark.svg',
+        label: messages.darkDesktopImage,
+        placeholder: messages.example,
+        example: 'https://.../bg-dark.svg',
       },
       {
         field: 'bg_image_dark_mobile',
         idPrefix: 'img-dark-mob',
-        label: 'Mobile (Opcional - telas pequenas modo escuro):',
-        placeholder: 'ex: https://.../bg-dark-mobile.svg',
+        label: messages.darkMobileImage,
+        placeholder: messages.example,
+        example: 'https://.../bg-dark-mobile.svg',
       },
     ],
   },
@@ -89,28 +95,30 @@ const ImageSourceField: React.FC<
   idPrefix,
   label,
   placeholder,
+  example,
   group,
   onUpdateGroup,
   onFileUpload,
 }) => {
+  const intl = useIntl();
   const inputId = `${idPrefix}-${group.id}`;
   const value = group[field] || '';
   return (
     <div className="image-field-block">
-      <label htmlFor={inputId}>{label}</label>
+      <label htmlFor={inputId}>{intl.formatMessage(label)}:</label>
       <div className="image-input-row">
         <input
           id={inputId}
           type="text"
           value={value}
           onChange={(e) => onUpdateGroup(group.id, field, e.target.value)}
-          placeholder={placeholder}
+          placeholder={intl.formatMessage(placeholder, { example })}
         />
         <label
           className="file-upload-btn"
-          title="Enviar imagem do seu computador"
+          title={intl.formatMessage(messages.uploadImage)}
         >
-          <span>Arquivo</span>
+          <span>{intl.formatMessage(messages.file)}</span>
           <input
             type="file"
             accept="image/*"
@@ -122,8 +130,8 @@ const ImageSourceField: React.FC<
             type="button"
             className="clear-field-btn"
             onClick={() => onUpdateGroup(group.id, field, '')}
-            title="Limpar imagem"
-            aria-label="Limpar imagem"
+            title={intl.formatMessage(messages.clearImage)}
+            aria-label={intl.formatMessage(messages.clearImage)}
           >
             ✕
           </button>
@@ -139,26 +147,25 @@ export const PatternLayerControls: React.FC<PatternLayerControlsProps> = ({
   onApplyPreset,
   onFileUpload,
 }) => {
+  const intl = useIntl();
   return (
     <div className="colorgroup-image-layer">
       <div className="layer-header">
         <div className="layer-title-wrapper">
-          <span className="layer-badge">2ª Camada</span>
+          <span className="layer-badge">
+            {intl.formatMessage(messages.layerBadge)}
+          </span>
           <strong className="layer-title">
-            Imagem e Padrões CSS de Fundo (Background Image Layer)
+            {intl.formatMessage(messages.layerTitle)}
           </strong>
         </div>
-        <p className="layer-help">
-          Adicione uma imagem (link/arquivo) ou padrão CSS. A imagem é
-          renderizada em cima da cor de fundo configurada acima, permitindo
-          transparência e sobreposição responsiva.
-        </p>
+        <p className="layer-help">{intl.formatMessage(messages.layerHelp)}</p>
       </div>
 
       {/* Quick CSS Pattern Presets */}
       <div className="presets-section">
         <span className="presets-label">
-          Padrões CSS Prontos (Presets estilo Acreative):
+          {intl.formatMessage(messages.presets)}:
         </span>
         <div className="pattern-presets-list">
           {CSS_PATTERN_PRESETS.map((preset) => {
@@ -171,12 +178,14 @@ export const PatternLayerControls: React.FC<PatternLayerControlsProps> = ({
                 type="button"
                 className={`preset-pill ${isSelected ? 'is-active' : ''}`}
                 onClick={() => onApplyPreset(group.id, preset)}
-                title={preset.description}
+                title={intl.formatMessage(preset.description)}
               >
                 <span className="preset-pill-icon" aria-hidden="true">
                   {renderPatternPresetIcon(preset.id)}
                 </span>
-                <span className="preset-pill-label">{preset.label}</span>
+                <span className="preset-pill-label">
+                  {intl.formatMessage(preset.label)}
+                </span>
               </button>
             );
           })}
@@ -189,7 +198,7 @@ export const PatternLayerControls: React.FC<PatternLayerControlsProps> = ({
           <div key={mode} className={`mode-matrix-card ${mode}-mode-card`}>
             <div className="mode-matrix-header">
               <span className={`mode-indicator ${mode}-dot`} />
-              <strong>{title}</strong>
+              <strong>{intl.formatMessage(title)}</strong>
             </div>
             {fields.map((field) => (
               <ImageSourceField

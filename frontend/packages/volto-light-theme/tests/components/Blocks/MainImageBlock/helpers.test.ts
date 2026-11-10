@@ -1,3 +1,4 @@
+import { createIntl } from 'react-intl';
 import { describe, expect, it, vi } from 'vitest';
 import {
   findPreviewImage,
@@ -126,13 +127,15 @@ describe('resolveImageUrl', () => {
 });
 
 describe('resolveMainImage', () => {
+  const intl = createIntl({ locale: 'en', messages: {} });
+
   it('passes a scaled preview as item', () => {
     const preview = {
       title: 'P',
       image_field: 'image',
       image_scales: { image: [{}] },
     };
-    expect(resolveMainImage({}, preview, {})).toEqual({
+    expect(resolveMainImage({}, preview, {}, intl)).toEqual({
       title: 'P',
       description: '',
       alt: 'P',
@@ -144,10 +147,15 @@ describe('resolveMainImage', () => {
 
   it('passes a plain url as src, with alt text fallbacks', () => {
     expect(
-      resolveMainImage({ altText: 'Alt' }, '/a.png', { preview_image_link: 1 }),
+      resolveMainImage(
+        { altText: 'Alt' },
+        '/a.png',
+        { preview_image_link: 1 },
+        intl,
+      ),
     ).toMatchObject({ alt: 'Alt', imageField: undefined, src: '/a.png' });
-    expect(resolveMainImage({}, '/a.png', {})).toMatchObject({
-      alt: 'Imagem principal',
+    expect(resolveMainImage({}, '/a.png', {}, intl)).toMatchObject({
+      alt: 'Main Image',
       imageField: 'preview_image',
       item: undefined,
     });

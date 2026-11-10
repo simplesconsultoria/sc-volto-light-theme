@@ -1,6 +1,8 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
+import { createIntl } from 'react-intl';
+import { renderWithIntl } from '../../support/intl';
 import {
   BorderWidget,
   toThickness,
@@ -97,76 +99,91 @@ describe('formatBorderValue', () => {
 });
 
 describe('getBorderDescription', () => {
+  const intl = createIntl({ locale: 'en', messages: {} });
+
   it('retorna descrições amigáveis e claras', () => {
-    expect(getBorderDescription({ top: 0, right: 0, bottom: 0, left: 0 })).toBe(
-      'Nenhuma borda',
-    );
-    expect(getBorderDescription({ top: 2, right: 2, bottom: 2, left: 2 })).toBe(
-      'Borda completa (2px)',
-    );
-    expect(getBorderDescription({ top: 3, right: 0, bottom: 0, left: 0 })).toBe(
-      'Apenas no topo (3px)',
-    );
-    expect(getBorderDescription({ top: 0, right: 0, bottom: 4, left: 0 })).toBe(
-      'Apenas abaixo (4px)',
-    );
-    expect(getBorderDescription({ top: 0, right: 2, bottom: 0, left: 2 })).toBe(
-      'Nas laterais (2px)',
-    );
-    expect(getBorderDescription({ top: 2, right: 0, bottom: 0, left: 2 })).toBe(
-      'No topo e na lateral esquerda (2px, 2px)',
-    );
+    expect(
+      getBorderDescription({ top: 0, right: 0, bottom: 0, left: 0 }, intl),
+    ).toBe('No border');
+    expect(
+      getBorderDescription({ top: 2, right: 2, bottom: 2, left: 2 }, intl),
+    ).toBe('Full border (2px)');
+    expect(
+      getBorderDescription({ top: 3, right: 0, bottom: 0, left: 0 }, intl),
+    ).toBe('Top only (3px)');
+    expect(
+      getBorderDescription({ top: 0, right: 0, bottom: 4, left: 0 }, intl),
+    ).toBe('Bottom only (4px)');
+    expect(
+      getBorderDescription({ top: 0, right: 2, bottom: 0, left: 2 }, intl),
+    ).toBe('On the sides (2px)');
+    expect(
+      getBorderDescription({ top: 2, right: 0, bottom: 0, left: 2 }, intl),
+    ).toBe('On top and left side (2px, 2px)');
+  });
+
+  it('describes mixed sides and translates the side names', () => {
+    expect(
+      getBorderDescription({ top: 1, right: 2, bottom: 3, left: 0 }, intl),
+    ).toBe('Borders on: top: 1px, right: 2px, bottom: 3px');
+    const ptBR = createIntl({
+      locale: 'pt-BR',
+      messages: { 'No border': 'Nenhuma borda' },
+    });
+    expect(
+      getBorderDescription({ top: 0, right: 0, bottom: 0, left: 0 }, ptBR),
+    ).toBe('Nenhuma borda');
   });
 });
 
 describe('BorderWidget Component', () => {
   it('renderiza corretamente com os presets e controles', () => {
     const onChange = vi.fn();
-    render(<BorderWidget id="test-border" value="" onChange={onChange} />);
+    renderWithIntl(
+      <BorderWidget id="test-border" value="" onChange={onChange} />,
+    );
 
-    expect(screen.getByText('Predefinições rápidas:')).toBeInTheDocument();
+    expect(screen.getByText('Quick presets:')).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Sem borda' }),
+      screen.getByRole('button', { name: 'No border' }),
     ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Full' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Top' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Bottom' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Sides' })).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Completa' }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Topo' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Abaixo' })).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'Laterais' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: 'Topo & Lateral' }),
+      screen.getByRole('button', { name: 'Top & side' }),
     ).toBeInTheDocument();
 
     // Botão de expandir ajuste por lado
     const toggleBtn = screen.getByRole('button', {
-      name: /Personalizar espessura por lado/i,
+      name: /Customize thickness per side/i,
     });
     expect(toggleBtn).toBeInTheDocument();
 
     // Ao expandir, exibe os botões dos 4 lados
     fireEvent.click(toggleBtn);
     expect(
-      screen.getByRole('button', { name: /Borda Superior/i }),
+      screen.getByRole('button', { name: /Top border/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /Borda Direita/i }),
+      screen.getByRole('button', { name: /Right border/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /Borda Inferior/i }),
+      screen.getByRole('button', { name: /Bottom border/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /Borda Esquerda/i }),
+      screen.getByRole('button', { name: /Left border/i }),
     ).toBeInTheDocument();
   });
 
   it('dispara onChange com preset Completa', () => {
     const onChange = vi.fn();
-    render(<BorderWidget id="test-border" value="0px" onChange={onChange} />);
+    renderWithIntl(
+      <BorderWidget id="test-border" value="0px" onChange={onChange} />,
+    );
 
-    const allBtn = screen.getByRole('button', { name: 'Completa' });
+    const allBtn = screen.getByRole('button', { name: 'Full' });
     fireEvent.click(allBtn);
 
     expect(onChange).toHaveBeenCalledWith('test-border', '1px');
@@ -174,9 +191,11 @@ describe('BorderWidget Component', () => {
 
   it('dispara onChange com preset Topo', () => {
     const onChange = vi.fn();
-    render(<BorderWidget id="test-border" value="" onChange={onChange} />);
+    renderWithIntl(
+      <BorderWidget id="test-border" value="" onChange={onChange} />,
+    );
 
-    const topBtn = screen.getByRole('button', { name: 'Topo' });
+    const topBtn = screen.getByRole('button', { name: 'Top' });
     fireEvent.click(topBtn);
 
     expect(onChange).toHaveBeenCalledWith('test-border', '1px 0px 0px 0px');
@@ -184,9 +203,11 @@ describe('BorderWidget Component', () => {
 
   it('dispara onChange com preset Laterais', () => {
     const onChange = vi.fn();
-    render(<BorderWidget id="test-border" value="" onChange={onChange} />);
+    renderWithIntl(
+      <BorderWidget id="test-border" value="" onChange={onChange} />,
+    );
 
-    const sidesBtn = screen.getByRole('button', { name: 'Laterais' });
+    const sidesBtn = screen.getByRole('button', { name: 'Sides' });
     fireEvent.click(sidesBtn);
 
     expect(onChange).toHaveBeenCalledWith('test-border', '0px 1px');
@@ -194,15 +215,17 @@ describe('BorderWidget Component', () => {
 
   it('alterna borda individual ao clicar no botão do lado', () => {
     const onChange = vi.fn();
-    render(<BorderWidget id="test-border" value="0px" onChange={onChange} />);
+    renderWithIntl(
+      <BorderWidget id="test-border" value="0px" onChange={onChange} />,
+    );
 
     // Expande a seção detalhada
     const toggleBtn = screen.getByRole('button', {
-      name: /Personalizar espessura por lado/i,
+      name: /Customize thickness per side/i,
     });
     fireEvent.click(toggleBtn);
 
-    const topSideBtn = screen.getByRole('button', { name: /Borda Superior/i });
+    const topSideBtn = screen.getByRole('button', { name: /Top border/i });
     fireEvent.click(topSideBtn);
 
     expect(onChange).toHaveBeenCalledWith('test-border', '1px 0px 0px 0px');
@@ -210,9 +233,11 @@ describe('BorderWidget Component', () => {
 
   it('permite alterar espessura via botões stepper', () => {
     const onChange = vi.fn();
-    render(<BorderWidget id="test-border" value="1px" onChange={onChange} />);
+    renderWithIntl(
+      <BorderWidget id="test-border" value="1px" onChange={onChange} />,
+    );
 
-    const incBtn = screen.getByRole('button', { name: /Aumentar espessura/i });
+    const incBtn = screen.getByRole('button', { name: /Increase thickness/i });
     fireEvent.click(incBtn);
 
     expect(onChange).toHaveBeenCalledWith('test-border', '2px');
@@ -220,9 +245,11 @@ describe('BorderWidget Component', () => {
 
   it('permite diminuir espessura via botão stepper', () => {
     const onChange = vi.fn();
-    render(<BorderWidget id="test-border" value="3px" onChange={onChange} />);
+    renderWithIntl(
+      <BorderWidget id="test-border" value="3px" onChange={onChange} />,
+    );
 
-    const decBtn = screen.getByRole('button', { name: /Diminuir espessura/i });
+    const decBtn = screen.getByRole('button', { name: /Decrease thickness/i });
     fireEvent.click(decBtn);
 
     expect(onChange).toHaveBeenCalledWith('test-border', '2px');
@@ -230,11 +257,13 @@ describe('BorderWidget Component', () => {
 
   it('expande e colapsa a seção de personalização por lado e altera espessura individual', () => {
     const onChange = vi.fn();
-    render(<BorderWidget id="test-border" value="2px" onChange={onChange} />);
+    renderWithIntl(
+      <BorderWidget id="test-border" value="2px" onChange={onChange} />,
+    );
 
     // Botão de alternância
     const toggleBtn = screen.getByRole('button', {
-      name: /Personalizar espessura por lado/i,
+      name: /Customize thickness per side/i,
     });
     expect(toggleBtn).toBeInTheDocument();
     expect(toggleBtn).toHaveAttribute('aria-expanded', 'false');
@@ -242,12 +271,10 @@ describe('BorderWidget Component', () => {
     // Clica para expandir
     fireEvent.click(toggleBtn);
     expect(toggleBtn).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByText('Ocultar ajuste por lado')).toBeInTheDocument();
+    expect(screen.getByText('Hide per-side settings')).toBeInTheDocument();
 
     // Altera espessura do Topo
-    const topInput = screen.getByLabelText(
-      /Espessura da borda Topo em pixels/i,
-    );
+    const topInput = screen.getByLabelText(/Top border thickness in pixels/i);
     expect(topInput).toBeInTheDocument();
     fireEvent.change(topInput, { target: { value: '5' } });
 
@@ -255,26 +282,54 @@ describe('BorderWidget Component', () => {
   });
 
   it('possui tooltips acessíveis nos presets e botões de lados', () => {
-    render(<BorderWidget id="test-border" value="" onChange={vi.fn()} />);
+    renderWithIntl(
+      <BorderWidget id="test-border" value="" onChange={vi.fn()} />,
+    );
 
     // Presets possuem tooltips descritivos
-    const noneBtn = screen.getByRole('button', { name: 'Sem borda' });
-    expect(noneBtn).toHaveAttribute('title', 'Sem borda (0px)');
+    const noneBtn = screen.getByRole('button', { name: 'No border' });
+    expect(noneBtn).toHaveAttribute('title', 'No border (0px)');
 
-    const allBtn = screen.getByRole('button', { name: 'Completa' });
-    expect(allBtn).toHaveAttribute(
-      'title',
-      'Borda completa em todos os 4 lados',
-    );
+    const allBtn = screen.getByRole('button', { name: 'Full' });
+    expect(allBtn).toHaveAttribute('title', 'Full border on all 4 sides');
 
     // Ao expandir, botões de lados possuem títulos e aria-labels
     const toggleBtn = screen.getByRole('button', {
-      name: /Personalizar espessura por lado/i,
+      name: /Customize thickness per side/i,
     });
     fireEvent.click(toggleBtn);
 
-    const topBtn = screen.getByRole('button', { name: /Borda Superior/i });
-    expect(topBtn).toHaveAttribute('title', 'Alternar Borda Superior');
+    const topBtn = screen.getByRole('button', { name: /Top border/i });
+    expect(topBtn).toHaveAttribute('title', 'Toggle Top border');
+  });
+});
+
+describe('BorderWidget translations', () => {
+  it('uses the messages of the current locale', () => {
+    renderWithIntl(
+      <BorderWidget id="test-border" value="" onChange={vi.fn()} />,
+      {
+        locale: 'pt-BR',
+        messages: {
+          Full: 'Completa',
+          'Quick presets': 'Predefinições rápidas',
+        },
+      },
+    );
+    expect(
+      screen.getByRole('button', { name: 'Completa' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Predefinições rápidas:')).toBeInTheDocument();
+  });
+
+  it('announces a preset in the live region', () => {
+    renderWithIntl(
+      <BorderWidget id="test-border" value="" onChange={vi.fn()} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Full' }));
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Full border enabled at 1 pixels',
+    );
   });
 });
 

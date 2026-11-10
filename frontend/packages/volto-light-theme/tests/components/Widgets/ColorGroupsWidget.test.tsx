@@ -1,6 +1,7 @@
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
+import { renderWithIntl as render } from '../../support/intl';
 import ColorGroupsWidget from '@simplesconsultoria/volto-light-theme/components/Widgets/ColorGroupsWidget';
 
 describe('ColorGroupsWidget', () => {
@@ -61,13 +62,13 @@ describe('ColorGroupsWidget', () => {
       <ColorGroupsWidget id="color_groups" onChange={onChange} />,
     );
 
-    const idInput = getByLabelText(/ID do Grupo/i);
-    const nameInput = getByLabelText(/Nome Exibido/i);
+    const idInput = getByLabelText(/Group ID/i);
+    const nameInput = getByLabelText(/Display name/i);
 
     fireEvent.change(idInput, { target: { value: 'vermelho' } });
     fireEvent.change(nameInput, { target: { value: 'Vermelho Natal' } });
 
-    const saveButton = getByText('Salvar Novo ColorGroup');
+    const saveButton = getByText('Save new Color Group');
     fireEvent.click(saveButton);
 
     expect(onChange).toHaveBeenCalledWith(
@@ -162,8 +163,8 @@ describe('ColorGroupsWidget', () => {
     ) as HTMLElement;
     fireEvent.click(header);
 
-    // Click 'Pontos (Dots)' preset button in the expanded card
-    const dotsBtn = getAllByText('Pontos (Dots)')[0];
+    // Click 'Dots' preset button in the expanded card
+    const dotsBtn = getAllByText('Dots')[0];
     fireEvent.click(dotsBtn);
 
     expect(onChange).toHaveBeenCalledWith(
@@ -354,6 +355,37 @@ describe('ColorGroupsWidget', () => {
     expect(colorInputs.length).toBe(16);
     colorInputs.forEach((input) =>
       expect(input.getAttribute('aria-label')).toBeTruthy(),
+    );
+  });
+
+  it('renders the translation of the active locale', () => {
+    const { getByText, getByLabelText } = render(
+      <ColorGroupsWidget id="color_groups" onChange={vi.fn()} />,
+      {
+        locale: 'pt-BR',
+        messages: {
+          'Save new Color Group': 'Salvar novo Grupo de Cores',
+          'Display name': 'Nome exibido',
+        },
+      },
+    );
+
+    expect(getByText('Salvar novo Grupo de Cores')).toBeInTheDocument();
+    expect(getByLabelText(/Nome exibido/)).toBeInTheDocument();
+  });
+
+  it('reports a duplicate id with the message formatted', () => {
+    const { getByLabelText, getByText, getByRole } = render(
+      <ColorGroupsWidget id="color_groups" onChange={vi.fn()} />,
+    );
+
+    fireEvent.change(getByLabelText(/Group ID/i), {
+      target: { value: 'primary' },
+    });
+    fireEvent.click(getByText('Save new Color Group'));
+
+    expect(getByRole('alert').textContent).toBe(
+      'A Color Group with the ID "primary" already exists.',
     );
   });
 });

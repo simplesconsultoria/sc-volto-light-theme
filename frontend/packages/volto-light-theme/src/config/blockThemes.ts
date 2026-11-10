@@ -9,6 +9,7 @@
  */
 
 import config from '@plone/volto/registry';
+import { defineMessages, type MessageDescriptor } from 'react-intl';
 import type { ColorGroup, BlockTheme } from '../types/theme';
 
 export interface ThemeDefinition {
@@ -32,25 +33,75 @@ export function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
 
 export interface CssPatternPreset {
   id: string;
-  label: string;
-  description: string;
+  /** Message descriptors: format them with `intl.formatMessage`. */
+  label: MessageDescriptor;
+  description: MessageDescriptor;
   css: string;
   defaultSize?: string;
   defaultRepeat?: string;
   defaultPosition?: string;
 }
 
+const presetMessages = defineMessages({
+  none: { id: 'None', defaultMessage: 'None' },
+  noneDescription: {
+    id: 'No image or pattern (solid background colour only)',
+    defaultMessage: 'No image or pattern (solid background colour only)',
+  },
+  dots: { id: 'Dots', defaultMessage: 'Dots' },
+  dotsDescription: {
+    id: 'Subtle dot pattern',
+    defaultMessage: 'Subtle dot pattern',
+  },
+  grid: { id: 'Grid', defaultMessage: 'Grid' },
+  gridDescription: {
+    id: 'Modern square grid with transparency',
+    defaultMessage: 'Modern square grid with transparency',
+  },
+  diagonalStripes: {
+    id: 'Diagonal stripes',
+    defaultMessage: 'Diagonal stripes',
+  },
+  diagonalStripesDescription: {
+    id: 'Elegant diagonal stripes at 45 degrees',
+    defaultMessage: 'Elegant diagonal stripes at 45 degrees',
+  },
+  waves: { id: 'Waves (Acreative)', defaultMessage: 'Waves (Acreative)' },
+  wavesDescription: {
+    id: 'Dynamic curved waves inspired by the Acreative project',
+    defaultMessage: 'Dynamic curved waves inspired by the Acreative project',
+  },
+  blueprint: {
+    id: 'Blueprint (fine grid)',
+    defaultMessage: 'Blueprint (fine grid)',
+  },
+  blueprintDescription: {
+    id: 'Double millimetre mesh in a technical blueprint style',
+    defaultMessage: 'Double millimetre mesh in a technical blueprint style',
+  },
+  zigzag: { id: 'Zigzag / Chevron', defaultMessage: 'Zigzag / Chevron' },
+  zigzagDescription: {
+    id: 'Geometric zigzag pattern',
+    defaultMessage: 'Geometric zigzag pattern',
+  },
+  radialMesh: { id: 'Radial mesh', defaultMessage: 'Radial mesh' },
+  radialMeshDescription: {
+    id: 'Pattern of concentric circles and radial dots',
+    defaultMessage: 'Pattern of concentric circles and radial dots',
+  },
+});
+
 export const CSS_PATTERN_PRESETS: CssPatternPreset[] = [
   {
     id: 'none',
-    label: 'Nenhum',
-    description: 'Sem imagem ou padrão (apenas cor sólida de fundo)',
+    label: presetMessages.none,
+    description: presetMessages.noneDescription,
     css: '',
   },
   {
     id: 'dots',
-    label: 'Pontos (Dots)',
-    description: 'Padrão sutil de pontos',
+    label: presetMessages.dots,
+    description: presetMessages.dotsDescription,
     css: 'radial-gradient(color-mix(in srgb, currentColor 18%, transparent) 1.5px, transparent 1.5px)',
     defaultSize: '24px 24px',
     defaultRepeat: 'repeat',
@@ -58,8 +109,8 @@ export const CSS_PATTERN_PRESETS: CssPatternPreset[] = [
   },
   {
     id: 'grid',
-    label: 'Grade (Grid)',
-    description: 'Grade quadriculada moderna com transparência',
+    label: presetMessages.grid,
+    description: presetMessages.gridDescription,
     css: 'linear-gradient(to right, color-mix(in srgb, currentColor 12%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, currentColor 12%, transparent) 1px, transparent 1px)',
     defaultSize: '32px 32px',
     defaultRepeat: 'repeat',
@@ -67,8 +118,8 @@ export const CSS_PATTERN_PRESETS: CssPatternPreset[] = [
   },
   {
     id: 'diagonal-stripes',
-    label: 'Listras Diagonais',
-    description: 'Listras diagonais elegantes em 45 graus',
+    label: presetMessages.diagonalStripes,
+    description: presetMessages.diagonalStripesDescription,
     css: 'repeating-linear-gradient(45deg, color-mix(in srgb, currentColor 10%, transparent), color-mix(in srgb, currentColor 10%, transparent) 1.5px, transparent 1.5px, transparent 12px)',
     defaultSize: 'auto',
     defaultRepeat: 'repeat',
@@ -76,8 +127,8 @@ export const CSS_PATTERN_PRESETS: CssPatternPreset[] = [
   },
   {
     id: 'waves-acreative',
-    label: 'Ondas (Acreative Waves)',
-    description: 'Ondas dinâmicas curvas inspiradas no projeto acreative',
+    label: presetMessages.waves,
+    description: presetMessages.wavesDescription,
     css: 'radial-gradient(44.72px at 50% 60px, color-mix(in srgb, currentColor 20%, transparent) 99%, #0000 101%) calc(50% - 40px) 0/80px 51% repeat-x, radial-gradient(44.72px at 50% -40px, #0000 99%, color-mix(in srgb, currentColor 20%, transparent) 101%) 50% 20px/80px calc(51% - 20px) repeat-x, radial-gradient(44.72px at 50% calc(100% - 60px), color-mix(in srgb, currentColor 20%, transparent) 99%, #0000 101%) calc(50% - 40px) 100%/80px 51% repeat-x, radial-gradient(44.72px at 50% calc(100% + 40px), #0000 99%, color-mix(in srgb, currentColor 20%, transparent) 101%) 50% calc(100% - 20px)/80px calc(51% - 20px) repeat-x',
     defaultSize: 'auto',
     defaultRepeat: 'repeat-x',
@@ -85,8 +136,8 @@ export const CSS_PATTERN_PRESETS: CssPatternPreset[] = [
   },
   {
     id: 'blueprint',
-    label: 'Blueprint (Grade Fina)',
-    description: 'Malha milimétrica dupla estilo blueprint técnico',
+    label: presetMessages.blueprint,
+    description: presetMessages.blueprintDescription,
     css: 'linear-gradient(color-mix(in srgb, currentColor 14%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, currentColor 14%, transparent) 1px, transparent 1px), linear-gradient(color-mix(in srgb, currentColor 6%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, currentColor 6%, transparent) 1px, transparent 1px)',
     defaultSize: '50px 50px, 50px 50px, 10px 10px, 10px 10px',
     defaultRepeat: 'repeat',
@@ -94,8 +145,8 @@ export const CSS_PATTERN_PRESETS: CssPatternPreset[] = [
   },
   {
     id: 'zigzag',
-    label: 'Zigzag / Chevron',
-    description: 'Padrão geométrico de ziguezague',
+    label: presetMessages.zigzag,
+    description: presetMessages.zigzagDescription,
     css: 'linear-gradient(135deg, color-mix(in srgb, currentColor 12%, transparent) 25%, transparent 25%) -20px 0/40px 40px, linear-gradient(225deg, color-mix(in srgb, currentColor 12%, transparent) 25%, transparent 25%) -20px 0/40px 40px, linear-gradient(315deg, color-mix(in srgb, currentColor 12%, transparent) 25%, transparent 25%) 0 0/40px 40px, linear-gradient(45deg, color-mix(in srgb, currentColor 12%, transparent) 25%, transparent 25%) 0 0/40px 40px',
     defaultSize: '40px 40px',
     defaultRepeat: 'repeat',
@@ -103,8 +154,8 @@ export const CSS_PATTERN_PRESETS: CssPatternPreset[] = [
   },
   {
     id: 'radial-mesh',
-    label: 'Malha Radial (Mesh Dots)',
-    description: 'Padrão de círculos concêntricos e pontos radiais',
+    label: presetMessages.radialMesh,
+    description: presetMessages.radialMeshDescription,
     css: 'radial-gradient(color-mix(in srgb, currentColor 15%, transparent) 1px, color-mix(in srgb, transparent 20%, transparent) 2px) 0 0 / 30px 30px',
     defaultSize: '30px 30px',
     defaultRepeat: 'repeat',

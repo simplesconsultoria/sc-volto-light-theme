@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useIntl, type MessageDescriptor } from 'react-intl';
 import type { ColorGroup } from '../../../types/theme';
 import { LayerSizingControls } from './LayerSizingControls';
+import { messages } from './messages';
 
 export interface NewColorGroupFormProps {
   /** Ids already taken, to refuse duplicates. */
@@ -32,11 +34,11 @@ const EMPTY_DRAFT: Draft = {
   bg_position: 'center',
 };
 
-const COLOR_PAIRS: { role: string; label: string }[] = [
-  { role: 'background', label: 'Fundo' },
-  { role: 'text', label: 'Texto' },
-  { role: 'subtext', label: 'Subtexto' },
-  { role: 'accent', label: 'Accent' },
+const COLOR_PAIRS: { role: string; label: MessageDescriptor }[] = [
+  { role: 'background', label: messages.background },
+  { role: 'text', label: messages.text },
+  { role: 'subtext', label: messages.subtext },
+  { role: 'accent', label: messages.accent },
 ];
 
 /** Turn what the editor typed into a valid group id. */
@@ -51,6 +53,7 @@ export const NewColorGroupForm: React.FC<NewColorGroupFormProps> = ({
   existingIds,
   onAdd,
 }) => {
+  const intl = useIntl();
   const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -60,11 +63,11 @@ export const NewColorGroupForm: React.FC<NewColorGroupFormProps> = ({
   const handleAdd = () => {
     const id = cleanGroupId(draft.id);
     if (!id) {
-      setErrorMsg('O ID do ColorGroup é obrigatório.');
+      setErrorMsg(intl.formatMessage(messages.idRequired));
       return;
     }
     if (existingIds.includes(id)) {
-      setErrorMsg(`Um ColorGroup com o ID "${id}" já existe.`);
+      setErrorMsg(intl.formatMessage(messages.idExists, { id }));
       return;
     }
     onAdd({
@@ -85,11 +88,8 @@ export const NewColorGroupForm: React.FC<NewColorGroupFormProps> = ({
 
   return (
     <div className="add-colorgroup-card">
-      <h5>+ Adicionar Novo ColorGroup</h5>
-      <p className="help">
-        Ao criar um novo ColorGroup neste tema, ele será sincronizado
-        automaticamente para todos os outros temas do site com valores padrão.
-      </p>
+      <h5>+ {intl.formatMessage(messages.addColorGroup)}</h5>
+      <p className="help">{intl.formatMessage(messages.addColorGroupHelp)}</p>
 
       {errorMsg && (
         <div className="ui error message" role="alert">
@@ -99,70 +99,86 @@ export const NewColorGroupForm: React.FC<NewColorGroupFormProps> = ({
 
       <div className="add-fields-grid">
         <div className="field-item">
-          <label htmlFor="new-cg-id">ID do Grupo (ex: vermelho):</label>
+          <label htmlFor="new-cg-id">
+            {intl.formatMessage(messages.groupId)}:
+          </label>
           <input
             id="new-cg-id"
             type="text"
             value={draft.id}
             onChange={(e) => set('id', e.target.value)}
-            placeholder="ex: vermelho"
+            placeholder={intl.formatMessage(messages.groupIdPlaceholder)}
           />
         </div>
         <div className="field-item">
-          <label htmlFor="new-cg-name">Nome Exibido:</label>
+          <label htmlFor="new-cg-name">
+            {intl.formatMessage(messages.displayName)}:
+          </label>
           <input
             id="new-cg-name"
             type="text"
             value={draft.name}
             onChange={(e) => set('name', e.target.value)}
-            placeholder="ex: Vermelho Natal"
+            placeholder={intl.formatMessage(messages.displayNamePlaceholder)}
           />
         </div>
         <div className="field-item">
-          <label htmlFor="new-cg-font">Fonte:</label>
+          <label htmlFor="new-cg-font">
+            {intl.formatMessage(messages.font)}:
+          </label>
           <input
             id="new-cg-font"
             type="text"
             value={draft.font_family || ''}
             onChange={(e) => set('font_family', e.target.value)}
-            placeholder="ex: Inter, sans-serif"
+            placeholder={intl.formatMessage(messages.example, {
+              example: 'Inter, sans-serif',
+            })}
           />
         </div>
       </div>
 
       <div className="add-colors-row">
-        {COLOR_PAIRS.map(({ role, label }) => (
-          <div className="color-pair" key={role}>
-            <span aria-hidden="true">{label} (Claro / Escuro):</span>
-            {(['light', 'dark'] as const).map((mode) => {
-              const field = `${role}_color_${mode}` as keyof Draft;
-              const name = `${label} ${mode === 'light' ? 'Claro' : 'Escuro'}`;
-              return (
-                <input
-                  key={mode}
-                  type="color"
-                  value={draft[field] as string}
-                  onChange={(e) => set(field, e.target.value)}
-                  title={name}
-                  aria-label={name}
-                />
-              );
-            })}
-          </div>
-        ))}
+        {COLOR_PAIRS.map(({ role, label: labelMessage }) => {
+          const label = intl.formatMessage(labelMessage);
+          return (
+            <div className="color-pair" key={role}>
+              <span aria-hidden="true">
+                {intl.formatMessage(messages.colorPair, { label })}:
+              </span>
+              {(['light', 'dark'] as const).map((mode) => {
+                const field = `${role}_color_${mode}` as keyof Draft;
+                const name = intl.formatMessage(messages.colorInMode, {
+                  label,
+                  mode: intl.formatMessage(messages[mode]),
+                });
+                return (
+                  <input
+                    key={mode}
+                    type="color"
+                    value={draft[field] as string}
+                    onChange={(e) => set(field, e.target.value)}
+                    title={name}
+                    aria-label={name}
+                  />
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
 
       <div className="add-image-layer-row">
         <div className="field-item">
           <label htmlFor="new-cg-img">
-            2ª Camada: Imagem ou Padrão CSS Inicial (Desktop Claro):
+            {intl.formatMessage(messages.initialLayer)}:
           </label>
           <input
             id="new-cg-img"
             type="text"
             value={draft.bg_image_light_desktop || ''}
             onChange={(e) => set('bg_image_light_desktop', e.target.value)}
-            placeholder="https://... ou radial-gradient(...)"
+            placeholder={intl.formatMessage(messages.imageOrPatternPlaceholder)}
           />
         </div>
 
@@ -181,7 +197,7 @@ export const NewColorGroupForm: React.FC<NewColorGroupFormProps> = ({
         className="ui button primary add-colorgroup-btn"
         onClick={handleAdd}
       >
-        Salvar Novo ColorGroup
+        {intl.formatMessage(messages.saveNewColorGroup)}
       </button>
     </div>
   );

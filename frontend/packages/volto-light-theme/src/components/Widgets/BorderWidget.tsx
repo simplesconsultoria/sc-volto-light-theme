@@ -1,4 +1,10 @@
 import React, { useState, useEffect, useId, useCallback } from 'react';
+import {
+  defineMessages,
+  useIntl,
+  type IntlShape,
+  type MessageDescriptor,
+} from 'react-intl';
 import FormFieldWrapper from '@plone/volto/components/manage/Widgets/FormFieldWrapper';
 import {
   IconPresetNone,
@@ -12,6 +18,199 @@ import {
   IconSideBottom,
   IconSideLeft,
 } from './BorderWidget/icons';
+
+const messages = defineMessages({
+  // Descriptions (`getBorderDescription`)
+  noBorder: { id: 'No border', defaultMessage: 'No border' },
+  fullBorder: {
+    id: 'Full border ({width}px)',
+    defaultMessage: 'Full border ({width}px)',
+  },
+  fullMixedBorder: {
+    id: 'Full mixed border ({top}px, {right}px, {bottom}px, {left}px)',
+    defaultMessage:
+      'Full mixed border ({top}px, {right}px, {bottom}px, {left}px)',
+  },
+  topOnly: {
+    id: 'Top only ({width}px)',
+    defaultMessage: 'Top only ({width}px)',
+  },
+  bottomOnly: {
+    id: 'Bottom only ({width}px)',
+    defaultMessage: 'Bottom only ({width}px)',
+  },
+  sidesEqual: {
+    id: 'On the sides ({width}px)',
+    defaultMessage: 'On the sides ({width}px)',
+  },
+  sidesMixed: {
+    id: 'On the sides (left: {left}px, right: {right}px)',
+    defaultMessage: 'On the sides (left: {left}px, right: {right}px)',
+  },
+  topAndLeft: {
+    id: 'On top and left side ({top}px, {left}px)',
+    defaultMessage: 'On top and left side ({top}px, {left}px)',
+  },
+  bordersOn: {
+    id: 'Borders on: {sides}',
+    defaultMessage: 'Borders on: {sides}',
+  },
+  sideTopWidth: { id: 'top: {width}px', defaultMessage: 'top: {width}px' },
+  sideRightWidth: {
+    id: 'right: {width}px',
+    defaultMessage: 'right: {width}px',
+  },
+  sideBottomWidth: {
+    id: 'bottom: {width}px',
+    defaultMessage: 'bottom: {width}px',
+  },
+  sideLeftWidth: { id: 'left: {width}px', defaultMessage: 'left: {width}px' },
+  // Presets
+  noBorderTooltip: { id: 'No border (0px)', defaultMessage: 'No border (0px)' },
+  noBorderAnnounce: {
+    id: 'No border selected',
+    defaultMessage: 'No border selected',
+  },
+  full: { id: 'Full', defaultMessage: 'Full' },
+  fullTooltip: {
+    id: 'Full border on all 4 sides',
+    defaultMessage: 'Full border on all 4 sides',
+  },
+  fullAnnounce: {
+    id: 'Full border enabled at {width} pixels',
+    defaultMessage: 'Full border enabled at {width} pixels',
+  },
+  top: { id: 'Top', defaultMessage: 'Top' },
+  topTooltip: {
+    id: 'Border on top only',
+    defaultMessage: 'Border on top only',
+  },
+  bottom: { id: 'Bottom', defaultMessage: 'Bottom' },
+  bottomTooltip: {
+    id: 'Border on bottom only',
+    defaultMessage: 'Border on bottom only',
+  },
+  sides: { id: 'Sides', defaultMessage: 'Sides' },
+  sidesTooltip: {
+    id: 'Borders on the sides (left and right)',
+    defaultMessage: 'Borders on the sides (left and right)',
+  },
+  sidesAnnounce: {
+    id: 'Side borders enabled at {width} pixels',
+    defaultMessage: 'Side borders enabled at {width} pixels',
+  },
+  topLeft: { id: 'Top & side', defaultMessage: 'Top & side' },
+  topLeftTooltip: {
+    id: 'Borders on top and left side',
+    defaultMessage: 'Borders on top and left side',
+  },
+  topLeftAnnounce: {
+    id: 'Top and left borders enabled at {width} pixels',
+    defaultMessage: 'Top and left borders enabled at {width} pixels',
+  },
+  // Sides
+  right: { id: 'Right', defaultMessage: 'Right' },
+  left: { id: 'Left', defaultMessage: 'Left' },
+  topBorder: { id: 'Top border', defaultMessage: 'Top border' },
+  rightBorder: { id: 'Right border', defaultMessage: 'Right border' },
+  bottomBorder: { id: 'Bottom border', defaultMessage: 'Bottom border' },
+  leftBorder: { id: 'Left border', defaultMessage: 'Left border' },
+  rightSideTooltip: {
+    id: 'Right side border',
+    defaultMessage: 'Right side border',
+  },
+  leftSideTooltip: {
+    id: 'Left side border',
+    defaultMessage: 'Left side border',
+  },
+  topEnabled: {
+    id: 'Top border enabled at {width} pixels',
+    defaultMessage: 'Top border enabled at {width} pixels',
+  },
+  rightEnabled: {
+    id: 'Right border enabled at {width} pixels',
+    defaultMessage: 'Right border enabled at {width} pixels',
+  },
+  bottomEnabled: {
+    id: 'Bottom border enabled at {width} pixels',
+    defaultMessage: 'Bottom border enabled at {width} pixels',
+  },
+  leftEnabled: {
+    id: 'Left border enabled at {width} pixels',
+    defaultMessage: 'Left border enabled at {width} pixels',
+  },
+  topDisabled: {
+    id: 'Top border disabled',
+    defaultMessage: 'Top border disabled',
+  },
+  rightDisabled: {
+    id: 'Right border disabled',
+    defaultMessage: 'Right border disabled',
+  },
+  bottomDisabled: {
+    id: 'Bottom border disabled',
+    defaultMessage: 'Bottom border disabled',
+  },
+  leftDisabled: {
+    id: 'Left border disabled',
+    defaultMessage: 'Left border disabled',
+  },
+  sideValue: { id: '{side}: {width}px', defaultMessage: '{side}: {width}px' },
+  sideNone: { id: '{side}: none', defaultMessage: '{side}: none' },
+  toggleSide: { id: 'Toggle {side}', defaultMessage: 'Toggle {side}' },
+  sideThickness: {
+    id: '{side} thickness in pixels',
+    defaultMessage: '{side} thickness in pixels',
+  },
+  sideThicknessChanged: {
+    id: '{side} thickness changed to {width} pixels',
+    defaultMessage: '{side} thickness changed to {width} pixels',
+  },
+  // Thickness
+  borderThickness: {
+    id: 'Border thickness',
+    defaultMessage: 'Border thickness',
+  },
+  decrease: {
+    id: 'Decrease thickness by 1 pixel',
+    defaultMessage: 'Decrease thickness by 1 pixel',
+  },
+  decreaseTitle: {
+    id: 'Decrease thickness (-1px)',
+    defaultMessage: 'Decrease thickness (-1px)',
+  },
+  increase: {
+    id: 'Increase thickness by 1 pixel',
+    defaultMessage: 'Increase thickness by 1 pixel',
+  },
+  increaseTitle: {
+    id: 'Increase thickness (+1px)',
+    defaultMessage: 'Increase thickness (+1px)',
+  },
+  thicknessChanged: {
+    id: 'Thickness changed to {width} pixels',
+    defaultMessage: 'Thickness changed to {width} pixels',
+  },
+  // Layout
+  quickPresets: { id: 'Quick presets', defaultMessage: 'Quick presets' },
+  hidePerSide: {
+    id: 'Hide per-side settings',
+    defaultMessage: 'Hide per-side settings',
+  },
+  customizePerSide: {
+    id: 'Customize thickness per side',
+    defaultMessage: 'Customize thickness per side',
+  },
+  asymmetric: { id: 'Asymmetric', defaultMessage: 'Asymmetric' },
+  asymmetricTitle: {
+    id: 'Borders have asymmetric thicknesses',
+    defaultMessage: 'Borders have asymmetric thicknesses',
+  },
+  perSideRegion: {
+    id: 'Independent thickness per side',
+    defaultMessage: 'Independent thickness per side',
+  },
+});
 
 export interface BorderWidgetProps {
   id: string;
@@ -122,158 +321,185 @@ export function formatBorderValue(sides: BorderSides): string {
 /**
  * Retorna uma descrição em texto legível para leitores de tela e resumos visuais.
  */
-export function getBorderDescription(sides: BorderSides): string {
+export function getBorderDescription(
+  sides: BorderSides,
+  intl: IntlShape,
+): string {
   const { top, right, bottom, left } = sides;
   const activeCount = [top > 0, right > 0, bottom > 0, left > 0].filter(
     Boolean,
   ).length;
 
-  if (activeCount === 0) return 'Nenhuma borda';
+  if (activeCount === 0) return intl.formatMessage(messages.noBorder);
   if (activeCount === 4) {
     return top === right && right === bottom && bottom === left
-      ? `Borda completa (${top}px)`
-      : `Borda completa mista (${top}px, ${right}px, ${bottom}px, ${left}px)`;
+      ? intl.formatMessage(messages.fullBorder, { width: top })
+      : intl.formatMessage(messages.fullMixedBorder, {
+          top,
+          right,
+          bottom,
+          left,
+        });
   }
   if (top > 0 && right === 0 && bottom === 0 && left === 0) {
-    return `Apenas no topo (${top}px)`;
+    return intl.formatMessage(messages.topOnly, { width: top });
   }
   if (top === 0 && right === 0 && bottom > 0 && left === 0) {
-    return `Apenas abaixo (${bottom}px)`;
+    return intl.formatMessage(messages.bottomOnly, { width: bottom });
   }
   if (top === 0 && right > 0 && bottom === 0 && left > 0) {
-    return `Nas laterais (${left === right ? `${left}px` : `esq: ${left}px, dir: ${right}px`})`;
+    return left === right
+      ? intl.formatMessage(messages.sidesEqual, { width: left })
+      : intl.formatMessage(messages.sidesMixed, { left, right });
   }
   if (top > 0 && right === 0 && bottom === 0 && left > 0) {
-    return `No topo e na lateral esquerda (${top}px, ${left}px)`;
+    return intl.formatMessage(messages.topAndLeft, { top, left });
   }
 
   const activeNames: string[] = [];
-  if (top > 0) activeNames.push(`topo: ${top}px`);
-  if (right > 0) activeNames.push(`direita: ${right}px`);
-  if (bottom > 0) activeNames.push(`abaixo: ${bottom}px`);
-  if (left > 0) activeNames.push(`esquerda: ${left}px`);
+  if (top > 0)
+    activeNames.push(intl.formatMessage(messages.sideTopWidth, { width: top }));
+  if (right > 0)
+    activeNames.push(
+      intl.formatMessage(messages.sideRightWidth, { width: right }),
+    );
+  if (bottom > 0)
+    activeNames.push(
+      intl.formatMessage(messages.sideBottomWidth, { width: bottom }),
+    );
+  if (left > 0)
+    activeNames.push(
+      intl.formatMessage(messages.sideLeftWidth, { width: left }),
+    );
 
-  return `Bordas em: ${activeNames.join(', ')}`;
+  return intl.formatMessage(messages.bordersOn, {
+    sides: activeNames.join(', '),
+  });
 }
 
 type PresetKey = 'none' | 'all' | 'top' | 'bottom' | 'sides' | 'top-left';
 
 interface PresetDefinition {
   key: PresetKey;
-  name: string;
-  tooltip: string;
+  name: MessageDescriptor;
+  tooltip: MessageDescriptor;
   icon: React.FC;
   isActive: (sides: BorderSides) => boolean;
   /** The sides this preset sets for a thickness `t`. */
   apply: (t: number) => BorderSides;
-  /** What the live region announces. */
-  announce: (t: number) => string;
+  /** What the live region announces; formatted with `{ width }`. */
+  announce: MessageDescriptor;
 }
 
 const PRESETS: PresetDefinition[] = [
   {
     key: 'none',
-    name: 'Sem borda',
-    tooltip: 'Sem borda (0px)',
+    name: messages.noBorder,
+    tooltip: messages.noBorderTooltip,
     icon: IconPresetNone,
     isActive: (s) =>
       s.top === 0 && s.right === 0 && s.bottom === 0 && s.left === 0,
     apply: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
-    announce: () => 'Nenhuma borda selecionada',
+    announce: messages.noBorderAnnounce,
   },
   {
     key: 'all',
-    name: 'Completa',
-    tooltip: 'Borda completa em todos os 4 lados',
+    name: messages.full,
+    tooltip: messages.fullTooltip,
     icon: IconPresetAll,
     isActive: (s) => s.top > 0 && s.right > 0 && s.bottom > 0 && s.left > 0,
     apply: (t) => ({ top: t, right: t, bottom: t, left: t }),
-    announce: (t) => `Borda completa ativada com ${t} pixels`,
+    announce: messages.fullAnnounce,
   },
   {
     key: 'top',
-    name: 'Topo',
-    tooltip: 'Borda apenas no topo (superior)',
+    name: messages.top,
+    tooltip: messages.topTooltip,
     icon: IconPresetTop,
     isActive: (s) =>
       s.top > 0 && s.right === 0 && s.bottom === 0 && s.left === 0,
     apply: (t) => ({ top: t, right: 0, bottom: 0, left: 0 }),
-    announce: (t) => `Borda no topo ativada com ${t} pixels`,
+    announce: messages.topEnabled,
   },
   {
     key: 'bottom',
-    name: 'Abaixo',
-    tooltip: 'Borda apenas abaixo (inferior)',
+    name: messages.bottom,
+    tooltip: messages.bottomTooltip,
     icon: IconPresetBottom,
     isActive: (s) =>
       s.top === 0 && s.right === 0 && s.bottom > 0 && s.left === 0,
     apply: (t) => ({ top: 0, right: 0, bottom: t, left: 0 }),
-    announce: (t) => `Borda abaixo ativada com ${t} pixels`,
+    announce: messages.bottomEnabled,
   },
   {
     key: 'sides',
-    name: 'Laterais',
-    tooltip: 'Bordas nas laterais (esquerda e direita)',
+    name: messages.sides,
+    tooltip: messages.sidesTooltip,
     icon: IconPresetSides,
     isActive: (s) => s.top === 0 && s.right > 0 && s.bottom === 0 && s.left > 0,
     apply: (t) => ({ top: 0, right: t, bottom: 0, left: t }),
-    announce: (t) => `Bordas laterais ativadas com ${t} pixels`,
+    announce: messages.sidesAnnounce,
   },
   {
     key: 'top-left',
-    name: 'Topo & Lateral',
-    tooltip: 'Bordas no topo e na lateral esquerda',
+    name: messages.topLeft,
+    tooltip: messages.topLeftTooltip,
     icon: IconPresetTopLeft,
     isActive: (s) => s.top > 0 && s.right === 0 && s.bottom === 0 && s.left > 0,
     apply: (t) => ({ top: t, right: 0, bottom: 0, left: t }),
-    announce: (t) =>
-      `Bordas no topo e na lateral esquerda ativadas com ${t} pixels`,
+    announce: messages.topLeftAnnounce,
   },
 ];
 
 interface SideDefinition {
   key: keyof BorderSides;
-  label: string;
-  tooltip: string;
+  label: MessageDescriptor;
+  tooltip: MessageDescriptor;
   icon: React.FC;
-  /** Accessible name of the side's toggle. */
-  ariaName: string;
-  /** Adjective used in announcements ("Borda superior ativada"). */
-  announceName: string;
+  /** Accessible name of the side's toggle ("Top border"). */
+  ariaName: MessageDescriptor;
+  /** Announced when the side is switched on; formatted with `{ width }`. */
+  enabled: MessageDescriptor;
+  /** Announced when the side is switched off. */
+  disabled: MessageDescriptor;
 }
 
 const SIDE_CONFIGS: SideDefinition[] = [
   {
     key: 'top',
-    label: 'Topo',
-    tooltip: 'Borda Superior (topo)',
+    label: messages.top,
+    tooltip: messages.topBorder,
     icon: IconSideTop,
-    ariaName: 'Borda Superior',
-    announceName: 'superior',
+    ariaName: messages.topBorder,
+    enabled: messages.topEnabled,
+    disabled: messages.topDisabled,
   },
   {
     key: 'right',
-    label: 'Direita',
-    tooltip: 'Borda Lateral Direita',
+    label: messages.right,
+    tooltip: messages.rightSideTooltip,
     icon: IconSideRight,
-    ariaName: 'Borda Direita',
-    announceName: 'direita',
+    ariaName: messages.rightBorder,
+    enabled: messages.rightEnabled,
+    disabled: messages.rightDisabled,
   },
   {
     key: 'bottom',
-    label: 'Abaixo',
-    tooltip: 'Borda Inferior (abaixo)',
+    label: messages.bottom,
+    tooltip: messages.bottomBorder,
     icon: IconSideBottom,
-    ariaName: 'Borda Inferior',
-    announceName: 'inferior',
+    ariaName: messages.bottomBorder,
+    enabled: messages.bottomEnabled,
+    disabled: messages.bottomDisabled,
   },
   {
     key: 'left',
-    label: 'Esquerda',
-    tooltip: 'Borda Lateral Esquerda',
+    label: messages.left,
+    tooltip: messages.leftSideTooltip,
     icon: IconSideLeft,
-    ariaName: 'Borda Esquerda',
-    announceName: 'esquerda',
+    ariaName: messages.leftBorder,
+    enabled: messages.leftEnabled,
+    disabled: messages.leftDisabled,
   },
 ];
 
@@ -311,55 +537,61 @@ const ThicknessStepper: React.FC<{
   widgetId: string;
   thickness: number;
   onChange: (value: number) => void;
-}> = ({ widgetId, thickness, onChange }) => (
-  <div className="border-widget__thickness-row">
-    <label
-      htmlFor={`${widgetId}-thickness-input`}
-      className="border-widget__thickness-label"
-    >
-      Espessura da Borda:
-    </label>
-    <div className="border-widget__stepper-wrapper">
-      <button
-        type="button"
-        className="border-widget__stepper-btn border-widget__stepper-btn--dec"
-        onClick={() => onChange(thickness - 1)}
-        disabled={thickness <= 0}
-        aria-label="Diminuir espessura em 1 pixel"
-        title="Diminuir espessura (-1px)"
+}> = ({ widgetId, thickness, onChange }) => {
+  const intl = useIntl();
+  return (
+    <div className="border-widget__thickness-row">
+      <label
+        htmlFor={`${widgetId}-thickness-input`}
+        className="border-widget__thickness-label"
       >
-        <StepIcon />
-      </button>
+        {intl.formatMessage(messages.borderThickness)}:
+      </label>
+      <div className="border-widget__stepper-wrapper">
+        <button
+          type="button"
+          className="border-widget__stepper-btn border-widget__stepper-btn--dec"
+          onClick={() => onChange(thickness - 1)}
+          disabled={thickness <= 0}
+          aria-label={intl.formatMessage(messages.decrease)}
+          title={intl.formatMessage(messages.decreaseTitle)}
+        >
+          <StepIcon />
+        </button>
 
-      <div className="border-widget__stepper-input-container">
-        <input
-          id={`${widgetId}-thickness-input`}
-          type="number"
-          min="0"
-          max={MAX_THICKNESS}
-          value={thickness}
-          onChange={(e) => onChange(toThickness(e.target.value))}
-          className="border-widget__number-input"
-          aria-describedby={`${widgetId}-thickness-unit`}
-        />
-        <span id={`${widgetId}-thickness-unit`} className="border-widget__unit">
-          px
-        </span>
+        <div className="border-widget__stepper-input-container">
+          <input
+            id={`${widgetId}-thickness-input`}
+            type="number"
+            min="0"
+            max={MAX_THICKNESS}
+            value={thickness}
+            onChange={(e) => onChange(toThickness(e.target.value))}
+            className="border-widget__number-input"
+            aria-describedby={`${widgetId}-thickness-unit`}
+          />
+          <span
+            id={`${widgetId}-thickness-unit`}
+            className="border-widget__unit"
+          >
+            px
+          </span>
+        </div>
+
+        <button
+          type="button"
+          className="border-widget__stepper-btn border-widget__stepper-btn--inc"
+          onClick={() => onChange(thickness + 1)}
+          disabled={thickness >= MAX_THICKNESS}
+          aria-label={intl.formatMessage(messages.increase)}
+          title={intl.formatMessage(messages.increaseTitle)}
+        >
+          <StepIcon plus />
+        </button>
       </div>
-
-      <button
-        type="button"
-        className="border-widget__stepper-btn border-widget__stepper-btn--inc"
-        onClick={() => onChange(thickness + 1)}
-        disabled={thickness >= MAX_THICKNESS}
-        aria-label="Aumentar espessura em 1 pixel"
-        title="Aumentar espessura (+1px)"
-      >
-        <StepIcon plus />
-      </button>
     </div>
-  </div>
-);
+  );
+};
 
 /** One side in the detailed grid: an on/off toggle and its own thickness. */
 const SideControl: React.FC<{
@@ -369,7 +601,11 @@ const SideControl: React.FC<{
   onToggle: () => void;
   onChange: (value: number) => void;
 }> = ({ widgetId, side, value, onToggle, onChange }) => {
-  const { key, label, tooltip, icon: SideIcon, ariaName } = side;
+  const intl = useIntl();
+  const { key, icon: SideIcon } = side;
+  const label = intl.formatMessage(side.label);
+  const tooltip = intl.formatMessage(side.tooltip);
+  const ariaName = intl.formatMessage(side.ariaName);
   const isActive = value > 0;
   return (
     <div
@@ -381,8 +617,15 @@ const SideControl: React.FC<{
           className={`border-widget__side-icon-btn ${isActive ? 'is-active' : ''}`}
           onClick={onToggle}
           aria-pressed={isActive}
-          aria-label={`${ariaName}: ${isActive ? `${value}px` : 'nenhuma'}`}
-          title={`Alternar ${ariaName}`}
+          aria-label={
+            isActive
+              ? intl.formatMessage(messages.sideValue, {
+                  side: ariaName,
+                  width: value,
+                })
+              : intl.formatMessage(messages.sideNone, { side: ariaName })
+          }
+          title={intl.formatMessage(messages.toggleSide, { side: ariaName })}
         >
           <SideIcon />
         </button>
@@ -406,7 +649,9 @@ const SideControl: React.FC<{
           value={value}
           onChange={(e) => onChange(toThickness(e.target.value))}
           className="border-widget__side-input"
-          aria-label={`Espessura da borda ${label} em pixels`}
+          aria-label={intl.formatMessage(messages.sideThickness, {
+            side: ariaName,
+          })}
           title={tooltip}
         />
         <span className="border-widget__unit">px</span>
@@ -417,6 +662,7 @@ const SideControl: React.FC<{
 
 export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
   const { id, value, onChange } = props;
+  const intl = useIntl();
   const widgetId = useId();
 
   const parsed = parseBorderValue(value);
@@ -442,23 +688,27 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
       if (announceMsg) {
         setAnnouncement(announceMsg);
       } else {
-        setAnnouncement(getBorderDescription(newSides));
+        setAnnouncement(getBorderDescription(newSides, intl));
       }
     },
-    [id, onChange, value],
+    [id, onChange, value, intl],
   );
 
   const baseThickness = thickness > 0 ? thickness : 1;
 
   const handlePreset = (preset: PresetDefinition) =>
-    updateSides(preset.apply(baseThickness), preset.announce(baseThickness));
+    updateSides(
+      preset.apply(baseThickness),
+      intl.formatMessage(preset.announce, { width: baseThickness }),
+    );
 
-  const toggleSide = ({ key, announceName }: SideDefinition) => {
+  const toggleSide = ({ key, enabled, disabled }: SideDefinition) => {
     const nextVal = sides[key] > 0 ? 0 : baseThickness;
-    const action = nextVal > 0 ? `ativada com ${nextVal} pixels` : 'desativada';
     updateSides(
       { ...sides, [key]: nextVal },
-      `Borda ${announceName} ${action}`,
+      nextVal > 0
+        ? intl.formatMessage(enabled, { width: nextVal })
+        : intl.formatMessage(disabled),
     );
   };
 
@@ -474,19 +724,19 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
           bottom: sides.bottom > 0 ? valid : 0,
           left: sides.left > 0 ? valid : 0,
         },
-        `Espessura alterada para ${valid} pixels`,
+        intl.formatMessage(messages.thicknessChanged, { width: valid }),
       );
     }
   };
 
-  const handleSideThicknessChange = (
-    sideKey: keyof BorderSides,
-    newVal: number,
-  ) => {
+  const handleSideThicknessChange = (side: SideDefinition, newVal: number) => {
     const valid = toThickness(newVal);
     updateSides(
-      { ...sides, [sideKey]: valid },
-      `Espessura da borda ${sideKey} alterada para ${valid} pixels`,
+      { ...sides, [side.key]: valid },
+      intl.formatMessage(messages.sideThicknessChanged, {
+        side: intl.formatMessage(side.ariaName),
+        width: valid,
+      }),
     );
   };
 
@@ -508,7 +758,7 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
             className="border-widget__presets-label"
             id={`${widgetId}-presets-label`}
           >
-            Predefinições rápidas:
+            {intl.formatMessage(messages.quickPresets)}:
           </div>
           <div
             className="border-widget__presets-toolbar"
@@ -518,6 +768,8 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
             {PRESETS.map((preset) => {
               const active = preset.isActive(sides);
               const PresetIcon = preset.icon;
+              const name = intl.formatMessage(preset.name);
+              const tooltip = intl.formatMessage(preset.tooltip);
 
               return (
                 <button
@@ -526,8 +778,8 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
                   className={`border-widget__preset-btn ${active ? 'is-active' : ''}`}
                   onClick={() => handlePreset(preset)}
                   aria-pressed={active}
-                  aria-label={preset.name}
-                  title={preset.tooltip}
+                  aria-label={name}
+                  title={tooltip}
                 >
                   <span
                     className="border-widget__preset-icon"
@@ -539,9 +791,9 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
                     className="border-widget__preset-tooltip"
                     role="tooltip"
                   >
-                    {preset.tooltip}
+                    {tooltip}
                   </span>
-                  <span className="sr-only">{preset.name}</span>
+                  <span className="sr-only">{name}</span>
                 </button>
               );
             })}
@@ -585,16 +837,18 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
                 </svg>
               </span>
               <span className="border-widget__toggle-text">
-                {showDetailed
-                  ? 'Ocultar ajuste por lado'
-                  : 'Personalizar espessura por lado'}
+                {intl.formatMessage(
+                  showDetailed
+                    ? messages.hidePerSide
+                    : messages.customizePerSide,
+                )}
               </span>
               {!showDetailed && !parsed.isUniform && (
                 <span
                   className="border-widget__asymmetric-pill"
-                  title="Bordas possuem espessuras assimétricas"
+                  title={intl.formatMessage(messages.asymmetricTitle)}
                 >
-                  Assimétrico
+                  {intl.formatMessage(messages.asymmetric)}
                 </span>
               )}
             </button>
@@ -606,7 +860,7 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
               id={`${widgetId}-detailed-sides`}
               className="border-widget__detailed-grid"
               role="region"
-              aria-label="Ajuste independente de espessura por lado"
+              aria-label={intl.formatMessage(messages.perSideRegion)}
             >
               {SIDE_CONFIGS.map((side) => (
                 <SideControl
@@ -615,7 +869,7 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
                   side={side}
                   value={sides[side.key]}
                   onToggle={() => toggleSide(side)}
-                  onChange={(val) => handleSideThicknessChange(side.key, val)}
+                  onChange={(val) => handleSideThicknessChange(side, val)}
                 />
               ))}
             </div>

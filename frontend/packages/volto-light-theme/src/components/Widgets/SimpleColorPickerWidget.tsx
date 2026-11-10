@@ -1,9 +1,16 @@
 import React from 'react';
+import { defineMessages, useIntl } from 'react-intl';
 import { ColorPicker } from '@plone/components';
 import FormFieldWrapper from '@plone/volto/components/manage/Widgets/FormFieldWrapper';
 
+const messages = defineMessages({
+  removeColor: { id: 'Remove color', defaultMessage: 'Remove color' },
+  clear: { id: 'Clear', defaultMessage: 'Clear' },
+});
+
 export const SimpleColorPickerWidget = (props: any) => {
   const { id, value, onChange, title } = props;
+  const intl = useIntl();
 
   return (
     <FormFieldWrapper {...props} className="simple-color-picker">
@@ -29,9 +36,9 @@ export const SimpleColorPickerWidget = (props: any) => {
               cursor: 'pointer',
               fontSize: '12px',
             }}
-            title="Remover cor"
+            title={intl.formatMessage(messages.removeColor)}
           >
-            Limpar
+            {intl.formatMessage(messages.clear)}
           </button>
         )}
       </div>

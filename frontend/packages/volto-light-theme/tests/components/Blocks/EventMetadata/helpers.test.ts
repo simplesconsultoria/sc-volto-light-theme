@@ -1,3 +1,4 @@
+import { createIntl } from 'react-intl';
 import {
   getEventDetails,
   getEventLink,
@@ -5,6 +6,8 @@ import {
   getThemeClass,
   stripBlockWidthClasses,
 } from '@simplesconsultoria/volto-light-theme/components/Blocks/EventMetadata/helpers';
+
+const intl = createIntl({ locale: 'en', messages: {} });
 
 const fmtDate = (v: string) =>
   new Date(v).toLocaleDateString('pt-BR', {
@@ -68,20 +71,21 @@ describe('EventMetadata helpers', () => {
   });
 
   it('prefers block data, then the item, then defaults', () => {
-    expect(getEventDetails({}, {})).toEqual({
-      location: 'Local a confirmar',
+    expect(getEventDetails({}, {}, intl)).toEqual({
+      location: 'Location to be confirmed',
       eventLink: undefined,
-      eventLinkLabel: 'Transmissão online',
+      eventLinkLabel: 'Online stream',
       hasEventLinkLabel: false,
-      contactName: 'Organização',
+      contactName: 'Organization',
       contactEmail: undefined,
-      price: 'Gratuita',
+      price: 'Free',
       eventUrl: '',
     });
     expect(
       getEventDetails(
         { location: 'L', eventUrlLabel: 'Live', contactEmail: 'd@x' },
         { location: 'I', contact_name: 'N', price: '10', '@id': '/ev' },
+        intl,
       ),
     ).toMatchObject({
       location: 'L',
@@ -91,6 +95,17 @@ describe('EventMetadata helpers', () => {
       contactEmail: 'd@x',
       price: '10',
       eventUrl: '/ev',
+    });
+  });
+
+  it('translates the defaults', () => {
+    const ptBR = createIntl({
+      locale: 'pt-BR',
+      messages: { Free: 'Gratuita', Organization: 'Organização' },
+    });
+    expect(getEventDetails({}, {}, ptBR)).toMatchObject({
+      contactName: 'Organização',
+      price: 'Gratuita',
     });
   });
 });

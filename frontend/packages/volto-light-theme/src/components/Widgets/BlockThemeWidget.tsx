@@ -5,6 +5,7 @@ import React, {
   useSyncExternalStore,
 } from 'react';
 import { ReactReduxContext } from 'react-redux';
+import { defineMessages, useIntl } from 'react-intl';
 import config from '@plone/volto/registry';
 import type {
   BlockTheme,
@@ -18,6 +19,33 @@ import {
   NATAL_COLOR_GROUPS,
 } from '../../config/blockThemes';
 import { SwatchDropdown, type SwatchOption } from './shared/SwatchDropdown';
+
+const messages = defineMessages({
+  blockTheme: { id: 'Block Theme', defaultMessage: 'Block Theme' },
+  custom: { id: 'Custom', defaultMessage: 'Custom' },
+  customGroups: {
+    id: 'Custom ({back}/{front})',
+    defaultMessage: 'Custom ({back}/{front})',
+  },
+  default: { id: 'Default', defaultMessage: 'Default' },
+  editGroups: {
+    id: 'Edit theme Color Groups',
+    defaultMessage: 'Edit theme Color Groups',
+  },
+  editHelp: {
+    id: 'Customize the colors of this block by selecting the Color Groups for the background and the front elements.',
+    defaultMessage:
+      'Customize the colors of this block by selecting the Color Groups for the background and the front elements.',
+  },
+  backArea: {
+    id: 'Back area (Color Group)',
+    defaultMessage: 'Back area (Color Group)',
+  },
+  frontArea: {
+    id: 'Front area (Color Group)',
+    defaultMessage: 'Front area (Color Group)',
+  },
+});
 
 const EMPTY_STATE = {};
 const DUMMY_STORE = {
@@ -256,9 +284,10 @@ function useSiteTheme(fromProps?: SerializedTheme) {
 }
 
 export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
+  const intl = useIntl();
   const {
     id = 'theme',
-    title = 'Tema do Bloco',
+    title = intl.formatMessage(messages.blockTheme),
     description,
     value,
     onChange,
@@ -361,8 +390,8 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
   };
 
   const themeLabel = (themeId: string) => {
-    if (themeId === 'custom') return 'Personalizado';
-    if (themeId === 'default') return 'Padrão';
+    if (themeId === 'custom') return intl.formatMessage(messages.custom);
+    if (themeId === 'default') return intl.formatMessage(messages.default);
     return blockThemes[themeId]?.name || themeId;
   };
 
@@ -380,7 +409,7 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
   if (currentThemeId === 'custom') {
     themeOptions.push({
       id: 'custom',
-      label: 'Personalizado',
+      label: intl.formatMessage(messages.custom),
       swatch: (
         <SplitColorCircle
           backColor={getGroupBg(currentBack)}
@@ -456,10 +485,13 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
             testId: 'block-theme-hidden-select',
             className: 'block-theme-hidden-select',
             extraOptions: [
-              { value: 'custom', label: 'Personalizado' },
+              { value: 'custom', label: intl.formatMessage(messages.custom) },
               {
                 value: `custom-${currentBack}-${currentFront}`,
-                label: `Personalizado (${currentBack}/${currentFront})`,
+                label: intl.formatMessage(messages.customGroups, {
+                  back: currentBack,
+                  front: currentFront,
+                }),
               },
             ],
           }}
@@ -468,8 +500,8 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
         <button
           type="button"
           className={`theme-edit-btn ${isEditing ? 'is-active' : ''}`}
-          title="Editar ColorGroups do tema"
-          aria-label="Editar ColorGroups do tema"
+          title={intl.formatMessage(messages.editGroups)}
+          aria-label={intl.formatMessage(messages.editGroups)}
           aria-pressed={isEditing}
           onClick={() => setIsEditing(!isEditing)}
         >
@@ -480,11 +512,18 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
       {isEditing && (
         <div className="theme-colorgroups-details">
           <p className="details-help">
-            Personalize as cores deste bloco selecionando os ColorGroups para
-            fundo e elementos da frente.
+            {intl.formatMessage(messages.editHelp)}
           </p>
-          {groupPicker('back', 'Área de Trás (Color Group)', currentBack)}
-          {groupPicker('front', 'Área da Frente (Color Group)', currentFront)}
+          {groupPicker(
+            'back',
+            intl.formatMessage(messages.backArea),
+            currentBack,
+          )}
+          {groupPicker(
+            'front',
+            intl.formatMessage(messages.frontArea),
+            currentFront,
+          )}
         </div>
       )}
     </div>

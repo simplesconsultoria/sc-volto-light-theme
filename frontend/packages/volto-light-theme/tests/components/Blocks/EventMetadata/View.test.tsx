@@ -30,5 +30,7 @@ describe('EventMetadata View', () => {
 
     expect(getByText('Curitiba')).toBeInTheDocument();
     expect(getByText('Contact Name')).toBeInTheDocument();
+    expect(getByText('When')).toBeInTheDocument();
+    expect(getByText('Free')).toBeInTheDocument();
   });
 });

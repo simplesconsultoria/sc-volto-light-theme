@@ -1,7 +1,12 @@
 import { addStyling } from '@plone/volto/helpers/Extensions/withBlockSchemaEnhancer';
 import config from '@plone/volto/registry';
+import { defineMessages } from 'react-intl';
 import type { IntlShape } from '@plone/types/src/i18n';
 import type { JSONSchema } from '@plone/types/src/config/';
+
+const messages = defineMessages({
+  blockTheme: { id: 'Block Theme', defaultMessage: 'Block Theme' },
+});
 
 interface StylingSchemaProps {
   schema: JSONSchema;
@@ -45,7 +50,7 @@ export const defaultStylingSchema = ({
   schema.properties = schema.properties || {};
   schema.properties.theme = {
     widget: 'block_theme_widget',
-    title: 'Tema do Bloco',
+    title: intl.formatMessage(messages.blockTheme),
     default: defaultTheme || 'default',
   };
 

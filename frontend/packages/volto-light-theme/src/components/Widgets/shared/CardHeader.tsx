@@ -22,7 +22,8 @@ export interface CardHeaderProps {
   /** Shown only when given; base entries cannot be deleted. */
   onDelete?: () => void;
   deleteClassName?: string;
-  deleteLabel?: string;
+  /** Accessible name and tooltip of the delete button, already translated. */
+  deleteLabel: string;
 }
 
 export const ChevronIcon: React.FC<{ rotated: boolean }> = ({ rotated }) => (
@@ -71,7 +72,7 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
   preview,
   onDelete,
   deleteClassName = 'delete-btn',
-  deleteLabel = 'Excluir',
+  deleteLabel,
 }) => (
   <div className={className}>
     <button

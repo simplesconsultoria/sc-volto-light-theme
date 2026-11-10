@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-11-07 12:52+0000\n"
+"POT-Creation-Date: 2026-11-10 22:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,7 +137,7 @@ msgstr ""
 msgid "Header settings"
 msgstr ""
 
-#: sc/voltolighttheme/interfaces.py:56
+#: sc/voltolighttheme/interfaces.py:57
 msgid "Mapping of block themes defining front and back color groups for blocks."
 msgstr ""
 
