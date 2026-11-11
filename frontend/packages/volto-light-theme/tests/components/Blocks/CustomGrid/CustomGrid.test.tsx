@@ -5,8 +5,8 @@ import CustomGridView from '@simplesconsultoria/volto-light-theme/components/Blo
 import '@testing-library/jest-dom';
 
 // Mock RenderBlocks to isolate the grid component logic
-vi.mock('@plone/volto/components', () => ({
-  RenderBlocks: ({ content }: any) => (
+vi.mock('@plone/volto/components/theme/View/RenderBlocks', () => ({
+  default: ({ content }: any) => (
     <div data-testid="render-blocks">
       {content?.settings?.theme || 'no-theme'}
     </div>

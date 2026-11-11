@@ -1,7 +1,8 @@
 <!-- @dsCard group="Type" -->
 <!--
   Type scale — @simplesconsultoria/volto-light-theme
-  Generated from src/theme/_variables.scss and src/theme/_typography.scss.
+  Generated from src/theme/_variables.scss, src/theme/_typography.scss,
+  src/theme/_root.scss, and src/theme/_globals.scss.
   rem values shown at a 16px root; the global --font-scale on <html> shifts them.
 -->
 <meta charset="utf-8" />
@@ -26,7 +27,7 @@
   }
   .wrap { max-width: 1080px; margin: 0 auto; }
   h1 { margin: 0 0 6px; font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
-  .lede { margin: 0; max-width: 66ch; color: var(--ink-soft); }
+  .lede { margin: 0; max-width: 68ch; color: var(--ink-soft); }
   h2 {
     margin: 40px 0 4px;
     font-size: 12px;
@@ -35,7 +36,7 @@
     text-transform: uppercase;
     color: var(--ink-soft);
   }
-  h2 + .note { margin: 0 0 16px; color: var(--ink-soft); font-size: 13px; max-width: 66ch; }
+  h2 + .note { margin: 0 0 16px; color: var(--ink-soft); font-size: 13px; max-width: 70ch; }
   code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em; }
 
   .scale { border: 1px solid var(--rule); border-radius: 12px; overflow: hidden; }
@@ -61,7 +62,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   .miss { background: var(--warn-bg) !important; }
   .miss .num b { color: var(--warn); font-weight: 600; }
@@ -82,15 +83,15 @@
     font: 400 11.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
     color: var(--ink-soft);
   }
-  .stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; margin-top: 16px; }
   .font-chip {
-    padding: 10px 14px;
+    padding: 12px 14px;
     border: 1px solid var(--rule);
     border-radius: 9px;
-    font: 400 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    font: 400 11.5px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
     color: var(--ink-soft);
   }
-  .font-chip b { display: block; margin-bottom: 3px; color: var(--ink); font-weight: 600; }
+  .font-chip b { display: block; margin-bottom: 4px; color: var(--ink); font-weight: 600; font-size: 12px; }
   footer {
     margin-top: 40px;
     padding-top: 16px;
@@ -112,13 +113,13 @@
   <h2>Scale</h2>
   <p class="note">
     <code>$font-sizes</code> and <code>$line-heights</code> both have 11 steps &mdash;
-    every size has a line-height.
+    every size has a matched line-height.
   </p>
   <div class="scale">
     <div class="step">
       <div class="key">2xs</div>
       <div class="num">0.75rem &middot; 12px<b>0.875rem &middot; 14px</b></div>
-      <div class="spec" style="font-size:12px;line-height:1.4">Grade labels and fine print</div>
+      <div class="spec" style="font-size:12px;line-height:14px">Grade labels and fine print</div>
     </div>
     <div class="step">
       <div class="key">xs</div>
@@ -211,20 +212,25 @@
     </tbody>
   </table>
 
-  <h2>Font stacks</h2>
-  <p class="note">All four tokens resolve to the same stack &mdash; the theme ships no brand typeface.</p>
+  <h2>Font stacks &amp; ColorGroup fonts</h2>
+  <p class="note">
+    <code>:root</code> defaults to <code>system-ui, sans-serif</code>, but <code>_globals.scss</code>
+    overrides all four tokens on <code>body</code> to default to <code>'Inter', sans-serif</code>
+    (bundled alongside Metropolis by upstream VLT in <code>dist/fonts/</code>) with runtime theme hooks.
+    Block back/front areas also read <code>--colorgroup-{back,front}-font</code>.
+  </p>
   <div class="stack">
-    <div class="font-chip"><b>--font-sans</b>system-ui, sans-serif</div>
-    <div class="font-chip"><b>--font-body</b>system-ui, sans-serif</div>
-    <div class="font-chip"><b>--custom-font</b>system-ui, sans-serif</div>
-    <div class="font-chip"><b>--custom-main-font</b>system-ui, sans-serif &mdash; drives upstream $page-font</div>
+    <div class="font-chip"><b>--font-body / --font-sans</b>var(--font-family-primary, 'Inter', sans-serif)</div>
+    <div class="font-chip"><b>--custom-font</b>var(--font-family-secondary, var(--font-family-primary, 'Inter', sans-serif))</div>
+    <div class="font-chip"><b>--custom-main-font</b>var(--font-family-primary, 'Inter', sans-serif) &mdash; drives upstream $page-font</div>
+    <div class="font-chip"><b>--colorgroup-{back,front}-font</b>var(--colorgroup-{group}-font-family, inherit)</div>
   </div>
 
   <footer>
-    <code>2xs</code> was the one real gap &mdash; a font-size with no line-height, so
-    <code>map-get($line-heights, 2xs)</code> returned null. It now has one.
-    <code>--custom-main-font</code> has no consumer in this package but is read twice by
-    upstream VLT, where it drives <code>$page-font</code>. Scale and heading rules:
-    <code>INVENTORY.md</code> &sect;6.
+    <code>themeStyleSheet()</code> writes the primary group&rsquo;s <code>font_family</code>
+    onto both <code>--font-family-primary</code> and all four body tokens so <code>_globals.scss</code>
+    cannot shadow a selected site font (such as <code>corporateTheme</code>&rsquo;s serif/editorial choices).
+    Per-group secondary fonts propagate through <code>--colorgroup-*-font-family</code>.
+    Scale and heading rules: <code>INVENTORY.md</code> &sect;6.
   </footer>
 </div>

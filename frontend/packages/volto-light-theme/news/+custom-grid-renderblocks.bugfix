@@ -1,0 +1,1 @@
+Import `RenderBlocks` directly from `@plone/volto/components/theme/View/RenderBlocks` in `CustomGrid/View.tsx` (and update `CustomGrid.test.tsx` to mock that module) so standalone bundlers and tests do not pull the full Volto components barrel. @Humanaice

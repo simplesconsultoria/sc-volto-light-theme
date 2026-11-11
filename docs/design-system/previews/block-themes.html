@@ -1,8 +1,8 @@
 <!-- @dsCard group="Colors" -->
 <!--
   Block theme system — @simplesconsultoria/volto-light-theme
-  createThemeDefinition() in src/config/blocks.ts maps 14 semantic --theme-* properties
-  onto --block-theme-{name}-* tokens defined in src/theme/_root.scss.
+  Generated from src/config/blockThemes.ts, src/config/blocks.ts, src/theme/_root.scss,
+  and src/helpers/themeStyles.ts.
 -->
 <meta charset="utf-8" />
 <title>Block themes</title>
@@ -28,7 +28,7 @@
   }
   .wrap { max-width: 1080px; margin: 0 auto; }
   h1 { margin: 0 0 6px; font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
-  .lede { margin: 0 0 8px; max-width: 66ch; color: var(--ink-soft); }
+  .lede { margin: 0 0 8px; max-width: 72ch; color: var(--ink-soft); }
   h2 {
     margin: 40px 0 14px;
     font-size: 12px;
@@ -42,7 +42,7 @@
   /* ---- layer legend ---- */
   .layers {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
     gap: 10px;
     margin-top: 16px;
   }
@@ -96,7 +96,7 @@
   .card .m { margin-top: 8px; font-size: 11.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
 
   /* ---- mapping table ---- */
-  table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 12.5px; }
   th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--rule); }
   th {
     font: 600 10.5px/1.4 system-ui, sans-serif;
@@ -104,7 +104,7 @@
     text-transform: uppercase;
     color: var(--ink-soft);
   }
-  td code { font-size: 12px; }
+  td code { font-size: 11.5px; }
   tr.missing td { background: var(--fail-bg); }
   tr.partial td { background: var(--warn-bg); }
   .tag {
@@ -131,116 +131,149 @@
 <div class="wrap">
   <h1>Block themes</h1>
   <p class="lede">
-    Any block that calls <code>defaultStylingSchema</code> gets a
-    <code>theme</code> control. A theme is produced by
-    <code>createThemeDefinition(name, label)</code>, which maps 14 semantic
-    <code>--theme-*</code> properties onto <code>--block-theme-{name}-*</code> tokens.
-    Adding a third theme downstream is one line plus a matching token block.
+    <code>enhanceBlockConfig()</code> in <code>src/config/blocks.ts</code> attaches the
+    <code>theme</code> control (<code>block_theme_widget</code>) globally via a registry
+    <code>Proxy</code>. Each base preset is built by <code>createThemeDefinition(name, label)</code>
+    onto <code>--block-theme-{name}-*</code> (bridging from <code>--colorgroup-{group}-*</code>),
+    alongside 16 <code>custom-{back}-{front}</code> ColorGroup combinations resolved dynamically by
+    <code>resolveBlockTheme(data)</code>.
   </p>
 
   <h2>The four layers</h2>
   <div class="layers">
-    <div class="layer"><b>Ground</b><span>The block's own background and text — <code>bg</code>, <code>text</code>, <code>low-contrast</code>, <code>accent-color</code>.</span></div>
-    <div class="layer"><b>High Ground</b><span>Elevated elements inside the block: cards, chips, teasers — the <code>high-bg</code> and <code>top-*</code> tokens.</span></div>
-    <div class="layer"><b>Border</b><span>Optional edge — <code>border</code> and <code>border-width</code>.</span></div>
-    <div class="layer"><b>Pattern</b><span>Decorative overlay — <code>pattern-image</code>, <code>pattern-opacity</code>. Defined as <code>none</code>/<code>0</code>; not yet consumed.</span></div>
+    <div class="layer"><b>Ground (back)</b><span>The block's own background, text, subtext, accent, and back font — driven by <code>back_color_group</code>.</span></div>
+    <div class="layer"><b>High Ground (front)</b><span>Elevated cards, chips, and teasers inside the block — driven by <code>front_color_group</code> (<code>high-bg</code>, <code>top-*</code>).</span></div>
+    <div class="layer"><b>Border</b><span>Theme edge (<code>border</code>, <code>border-width</code>) plus per-block <code>--cardBorderColor</code> and <code>--cardBorderWidth</code> overrides.</span></div>
+    <div class="layer"><b>Background &amp; Pattern</b><span><code>--theme-bg-image</code> renders ColorGroup textures on <code>custom-*</code>; <code>--theme-pattern-{image,opacity}</code> remain unused, and <code>default</code>/<code>alternative</code> literal <code>none</code> currently blocks ColorGroup back images.</span></div>
   </div>
 
-  <h2>default &mdash; label &ldquo;Primary&rdquo;</h2>
+  <h2>default &mdash; label &ldquo;Primary&rdquo; (back: primary &middot; front: neutral)</h2>
   <div class="grid">
     <div class="demo">
       <div class="head"><b>default</b><span>Ground = primary</span><span class="mode">Light</span></div>
-      <div class="block" style="background:#ffffff;color:#000000;border-top:4px solid #f4822c">
-        <div class="eyebrow" style="color:#b55e1c">Eyebrow &middot; accent</div>
+      <div class="block" style="background:#ffffff;color:#1d2129;border-top:4px solid #a5d8ff">
+        <div class="eyebrow" style="color:#1971c2">Eyebrow &middot; accent (5.02)</div>
         <h3>Ground carries the block</h3>
-        <p style="color:#333333">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
-        <div class="card" style="background:#edeff0;color:#000000">
+        <p style="color:#4a5260">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
+        <div class="card" style="background:#f6f7f9;color:#1d2129">
           <div class="t">High ground card</div>
-          <div class="d" style="color:#333333">Elevated surfaces switch to the neutral family.</div>
-          <div class="m" style="color:#af5009">Top accent &middot; 4.58</div>
+          <div class="d" style="color:#4a5260">Elevated surfaces switch to the neutral ColorGroup.</div>
+          <div class="m" style="color:#1971c2">Top accent &middot; 4.68</div>
         </div>
       </div>
     </div>
     <div class="demo">
       <div class="head"><b>default</b><span>Ground = primary</span><span class="mode">Dark</span></div>
-      <div class="block" style="background:#000000;color:#ffffff;border-top:4px solid #b55e1c">
-        <div class="eyebrow" style="color:#f4822c">Eyebrow &middot; accent</div>
+      <div class="block" style="background:#14171c;color:#f1f3f5;border-top:4px solid #1c3a57">
+        <div class="eyebrow" style="color:#74c0fc">Eyebrow &middot; accent (9.14)</div>
         <h3>Ground carries the block</h3>
-        <p style="color:#f8f8f8">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
-        <div class="card" style="background:#333333;color:#ffffff">
+        <p style="color:#b4bcc8">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
+        <div class="card" style="background:#242932;color:#f1f3f5">
           <div class="t">High ground card</div>
-          <div class="d" style="color:#e6e6e6">Elevated surfaces switch to the neutral family.</div>
-          <div class="m" style="color:#f4822c">Top accent &middot; 4.86</div>
+          <div class="d" style="color:#c3cad4">Elevated surfaces switch to the neutral ColorGroup.</div>
+          <div class="m" style="color:#74c0fc">Top accent &middot; 7.43</div>
         </div>
       </div>
     </div>
   </div>
 
-  <h2>brand &mdash; label &ldquo;Brand&rdquo;</h2>
+  <h2>alternative (formerly brand) &mdash; label &ldquo;Alternative&rdquo; (back: accent &middot; front: primary)</h2>
   <div class="grid">
     <div class="demo">
-      <div class="head"><b>brand</b><span>Ground = accent</span><span class="mode">Light</span></div>
-      <div class="block" style="background:#f4822c;color:#000000">
-        <div class="eyebrow" style="color:#000000">Eyebrow &middot; accent</div>
+      <div class="head"><b>alternative</b><span>Ground = accent</span><span class="mode">Light</span></div>
+      <div class="block" style="background:#a5d8ff;color:#0b2239">
+        <div class="eyebrow" style="color:#0b2239">Eyebrow &middot; accent (10.65)</div>
         <h3>Ground carries the block</h3>
-        <p style="color:#333333">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
-        <div class="card" style="background:#ffffff;color:#000000">
+        <p style="color:#1f3f5c">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
+        <div class="card" style="background:#ffffff;color:#1d2129">
           <div class="t">High ground card</div>
-          <div class="d" style="color:#333333">Elevated surfaces invert back to the primary family.</div>
-          <div class="m" style="color:#b55e1c">Top accent &middot; 4.58</div>
+          <div class="d" style="color:#4a5260">Elevated surfaces invert back to the primary ColorGroup.</div>
+          <div class="m" style="color:#1971c2">Top accent &middot; 5.02</div>
         </div>
       </div>
     </div>
     <div class="demo">
-      <div class="head"><b>brand</b><span>Ground = accent</span><span class="mode">Dark</span></div>
-      <div class="block" style="background:#b55e1c;color:#ffffff">
-        <div class="eyebrow" style="color:#ffffff">Eyebrow &middot; accent</div>
+      <div class="head"><b>alternative</b><span>Ground = accent</span><span class="mode">Dark</span></div>
+      <div class="block" style="background:#1c3a57;color:#e7f5ff">
+        <div class="eyebrow" style="color:#a5d8ff">Eyebrow &middot; accent (7.74)</div>
         <h3>Ground carries the block</h3>
-        <p style="color:#f8f8f8">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
-        <div class="card" style="background:#000000;color:#ffffff">
+        <p style="color:#b8d7ef">Low-contrast foreground handles secondary copy, deck text and metadata across the block body.</p>
+        <div class="card" style="background:#14171c;color:#f1f3f5">
           <div class="t">High ground card</div>
-          <div class="d" style="color:#f8f8f8">Elevated surfaces invert back to the primary family.</div>
-          <div class="m" style="color:#f4822c">Top accent &middot; 8.08</div>
+          <div class="d" style="color:#b4bcc8">Elevated surfaces invert back to the primary ColorGroup.</div>
+          <div class="m" style="color:#74c0fc">Top accent &middot; 9.14</div>
         </div>
       </div>
     </div>
   </div>
   <p class="lede" style="margin-top:12px">
-    <code>brand</code> sets <code>border: unset</code> with <code>border-width: 0</code>,
-    so it renders edge-to-edge —
-    hence no top rule above, unlike <code>default</code>&rsquo;s <code>4px 0 0</code>.
+    <code>alternative</code> sets <code>border: unset</code> with <code>border-width: 0</code>,
+    rendering edge-to-edge without a top rule. All <code>--block-theme-brand-*</code> tokens
+    and <code>resolveBlockTheme('brand')</code> remain as backward-compatibility aliases.
   </p>
+
+  <h2>Custom ColorGroup combinations (16 presets: custom-{back}-{front})</h2>
+  <div class="grid">
+    <div class="demo">
+      <div class="head"><b>custom-secondary-primary</b><span>Back: secondary &middot; Front: primary</span><span class="mode">Light</span></div>
+      <div class="block" style="background:#eceff3;color:#1d2129">
+        <div class="eyebrow" style="color:#1864ab">Eyebrow &middot; secondary acc (5.28)</div>
+        <h3>Band over white cards</h3>
+        <p style="color:#4a5260">Generated across all 4&times;4 ColorGroup pairs via <code>createCustomThemeDefinition()</code>.</p>
+        <div class="card" style="background:#ffffff;color:#1d2129">
+          <div class="t">Primary high ground card</div>
+          <div class="d" style="color:#4a5260">Styled via <code>.blocks-group-wrapper.custom-secondary-primary</code> and <code>resolveBlockTheme()</code>.</div>
+          <div class="m" style="color:#1971c2">Top accent &middot; 5.02</div>
+        </div>
+      </div>
+    </div>
+    <div class="demo">
+      <div class="head"><b>custom-secondary-neutral</b><span>Back: secondary &middot; Front: neutral</span><span class="mode">Dark</span></div>
+      <div class="block" style="background:#1c2027;color:#f1f3f5">
+        <div class="eyebrow" style="color:#74c0fc">Eyebrow &middot; secondary acc (8.32)</div>
+        <h3>Surface hierarchy in dark mode</h3>
+        <p style="color:#b4bcc8">Supports per-group font stacks (<code>--colorgroup-{back,front}-font</code>) and background textures.</p>
+        <div class="card" style="background:#242932;color:#f1f3f5">
+          <div class="t">Neutral raised card</div>
+          <div class="d" style="color:#c3cad4">Border width and colour can still be overridden independently per block.</div>
+          <div class="m" style="color:#74c0fc">Top accent &middot; 7.43</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <h2>Property mapping</h2>
   <table>
     <thead>
-      <tr><th>Layer</th><th>Semantic property</th><th>Token suffix</th><th>default</th><th>brand</th><th>Status</th></tr>
+      <tr><th>Layer</th><th>Semantic property</th><th>Token suffix</th><th>default</th><th>alternative (alias: brand)</th><th>custom-{b}-{f}</th><th>Status</th></tr>
     </thead>
     <tbody>
-      <tr><td class="group-cell">Ground</td><td><code>--theme-color</code></td><td><code>bg</code></td><td>primary</td><td>accent</td><td><span class="tag ok">defined</span></td></tr>
-      <tr><td class="group-cell"></td><td><code>--theme-foreground-color</code></td><td><code>text</code></td><td>primary fg</td><td>accent fg</td><td><span class="tag ok">defined</span></td></tr>
-      <tr><td class="group-cell"></td><td><code>--theme-high-contrast-foreground-color</code></td><td><code>high-contrast</code></td><td>primary fg</td><td>accent fg</td><td><span class="tag ok">defined</span></td></tr>
-      <tr><td class="group-cell"></td><td><code>--theme-low-contrast-foreground-color</code></td><td><code>low-contrast</code></td><td>primary low</td><td>accent low</td><td><span class="tag ok">defined</span></td></tr>
-      <tr><td class="group-cell"></td><td><code>--theme-foreground-accent-color</code></td><td><code>accent-color</code></td><td>primary acc</td><td>accent acc</td><td><span class="tag ok">defined</span></td></tr>
-      <tr><td class="group-cell">High Ground</td><td><code>--theme-high-contrast-color</code></td><td><code>high-bg</code></td><td>neutral</td><td>primary</td><td><span class="tag ok">defined</span></td></tr>
-      <tr><td class="group-cell"></td><td><code>--theme-top-foreground-color</code></td><td><code>top-text</code></td><td>neutral fg</td><td>primary fg</td><td><span class="tag ok">defined</span></td></tr>
-      <tr><td class="group-cell"></td><td><code>--theme-top-high-contrast-foreground-color</code></td><td><code>top-high-contrast</code></td><td>neutral fg</td><td>primary fg</td><td><span class="tag ok">defined</span></td></tr>
-      <tr><td class="group-cell"></td><td><code>--theme-top-low-contrast-foreground-color</code></td><td><code>top-low-contrast</code></td><td>neutral low</td><td>primary low</td><td><span class="tag ok">defined</span></td></tr>
-      <tr><td class="group-cell"></td><td><code>--theme-top-accent-color</code></td><td><code>top-accent-color</code></td><td>neutral acc</td><td>primary acc</td><td><span class="tag ok">defined</span></td></tr>
-      <tr><td class="group-cell">Border</td><td><code>--theme-border-color</code></td><td><code>border</code></td><td>accent</td><td><code>unset</code></td><td><span class="tag ok">defined</span></td></tr>
-      <tr><td class="group-cell"></td><td><code>--theme-border-width</code></td><td><code>border-width</code></td><td><code>4px 0 0</code></td><td><code>0</code></td><td><span class="tag ok">defined</span></td></tr>
-      <tr class="partial"><td class="group-cell">Pattern</td><td><code>--theme-pattern-image</code></td><td><code>pattern-image</code></td><td><code>none</code></td><td><code>none</code></td><td><span class="tag part">unused</span></td></tr>
-      <tr class="partial"><td class="group-cell"></td><td><code>--theme-pattern-opacity</code></td><td><code>pattern-opacity</code></td><td><code>0</code></td><td><code>0</code></td><td><span class="tag part">unused</span></td></tr>
+      <tr><td class="group-cell">Ground</td><td><code>--theme-color</code></td><td><code>bg</code></td><td>primary</td><td>accent</td><td><code>--colorgroup-{b}-bg</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-foreground-color</code></td><td><code>text</code></td><td>primary fg</td><td>accent fg</td><td><code>--colorgroup-{b}-text</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-high-contrast-foreground-color</code></td><td><code>high-contrast</code></td><td>primary fg</td><td>accent fg</td><td><code>--colorgroup-{b}-text</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-low-contrast-foreground-color</code></td><td><code>low-contrast</code></td><td>primary low</td><td>accent low</td><td><code>--colorgroup-{b}-subtext</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-foreground-accent-color</code></td><td><code>accent-color</code></td><td>primary acc</td><td>accent acc</td><td><code>--colorgroup-{b}-accent</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell">High Ground</td><td><code>--theme-high-contrast-color</code></td><td><code>high-bg</code></td><td>neutral</td><td>primary</td><td><code>--colorgroup-{f}-bg</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-top-foreground-color</code></td><td><code>top-text</code></td><td>neutral fg</td><td>primary fg</td><td><code>--colorgroup-{f}-text</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-top-high-contrast-foreground-color</code></td><td><code>top-high-contrast</code></td><td>neutral fg</td><td>primary fg</td><td><code>--colorgroup-{f}-text</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-top-low-contrast-foreground-color</code></td><td><code>top-low-contrast</code></td><td>neutral low</td><td>primary low</td><td><code>--colorgroup-{f}-subtext</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-top-accent-color</code></td><td><code>top-accent-color</code></td><td>neutral acc</td><td>primary acc</td><td><code>--colorgroup-{f}-accent</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell">Border</td><td><code>--theme-border-color</code></td><td><code>border</code></td><td>accent</td><td><code>unset</code></td><td><code>--colorgroup-{b}-accent</code></td><td><span class="tag ok">defined</span></td></tr>
+      <tr><td class="group-cell"></td><td><code>--theme-border-width</code></td><td><code>border-width</code></td><td><code>4px 0 0</code></td><td><code>0</code></td><td><code>0</code> (or card border)</td><td><span class="tag ok">defined</span></td></tr>
+      <tr class="partial"><td class="group-cell">Pattern</td><td><code>--theme-pattern-image</code></td><td><code>pattern-image</code></td><td><code>none</code></td><td><code>none</code></td><td>(uses <code>--theme-bg-image</code>)</td><td><span class="tag part">unused / shadows bg</span></td></tr>
+      <tr class="partial"><td class="group-cell"></td><td><code>--theme-pattern-opacity</code></td><td><code>pattern-opacity</code></td><td><code>0</code></td><td><code>0</code></td><td>&mdash;</td><td><span class="tag part">unused</span></td></tr>
     </tbody>
   </table>
 
   <footer>
-    All 14 mapped properties resolve in both themes. Four of them did not, and the
-    failure was silent: a <code>var()</code> with no definition and no fallback is invalid
-    at computed-value time, so the whole declaration is dropped rather than degraded. That
-    took out six focus outlines in <code>_listing.scss</code> reading
-    <code>outline: 2px solid var(--theme-top-high-contrast-foreground-color)</code>,
-    leaving keyboard focus invisible on listing cards.
-    <code>tests/theme/blockThemes.test.ts</code> now guards the contract.
+    All 14 mapped properties resolve on <code>default</code>, <code>alternative</code>, and the
+    backward-compatible <code>brand</code> alias; <code>resolveBlockTheme()</code> also emits
+    <code>--colorgroup-{back,front}-font</code> and <code>--{theme,highground}-bg-image</code>.
+    One subtle trap remains in <code>_root.scss</code>: setting
+    <code>--block-theme-{default,alternative}-pattern-image: none</code> makes
+    <code>var(--block-theme-{theme}-pattern-image, var(--colorgroup-{back}-bg-image, none))</code>
+    always pick <code>none</code>, silently hiding ColorGroup back background patterns on
+    <code>default</code> and <code>alternative</code> blocks. <code>tests/theme/blockThemes.test.ts</code>
+    guards the base token contract.
   </footer>
 </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
-import { RenderBlocks } from '@plone/volto/components';
+import RenderBlocks from '@plone/volto/components/theme/View/RenderBlocks';
 import { BlockWrapper } from '@kitconcept/volto-bm3-compat';
 
 // ========================================================================

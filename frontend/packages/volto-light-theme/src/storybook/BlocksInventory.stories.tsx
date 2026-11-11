@@ -10,19 +10,33 @@ import config from '@plone/volto/registry';
  * from source, so it cannot drift: a block added by an upstream release shows up
  * here the moment the dependency is bumped, and one that disappears stops being
  * listed. Three layers contribute — Volto core, `@plone/volto-slate`, and
- * `@kitconcept/volto-light-theme` — on top of the four this add-on ships.
+ * `@kitconcept/volto-light-theme` (plus third-party block addons) — on top of
+ * the six this add-on ships.
  */
 
 /** Blocks this add-on registers itself. */
 const OWNED = new Set([
+  'customGrid',
   'documentByline',
-  'mainImageBlock',
+  'eventMetadata',
   'heroBlock',
+  'mainImageBlock',
   'quoteBlock',
 ]);
 
 /** Blocks this add-on modifies without owning — see `config/blocks.ts`. */
-const EXTENDED = new Set(['listing', 'gridBlock']);
+const EXTENDED = new Set([
+  'accordion',
+  'banner',
+  'gridBlock',
+  'introduction',
+  'listing',
+  'search',
+  'separator',
+  'slate',
+  'slateTable',
+  'toc',
+]);
 
 type Row = {
   id: string;
@@ -180,7 +194,7 @@ type Story = StoryObj<typeof meta>;
 /** Every block available to an editor on a site running this theme. */
 export const All: Story = { args: { origin: 'all' } };
 
-/** The four blocks this add-on registers. */
+/** The six blocks this add-on registers. */
 export const ShippedByThisAddon: Story = { args: { origin: 'own' } };
 
 /** Blocks this add-on modifies but does not own. */
