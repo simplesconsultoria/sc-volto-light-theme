@@ -8,6 +8,12 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0-alpha.15 (2026-11-11)
+
+### Internal
+
+- Upgraded `@kitconcept/volto-light-theme` to 8.1.4. @ericof [#39](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/39)
+
 ## 1.0.0-alpha.14 (2026-10-30)
 
 ### Bugfix
