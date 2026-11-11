@@ -3,7 +3,9 @@
  * REASON: Forward the StyleWrapper `style` prop (theme CSS variables and
  * BorderWidget `--cardBorderWidth`/`--cardBorderColor`) to the slider root,
  * so the sc-vlt theme and border systems apply to the Slider block in view
- * and edit mode.
+ * and edit mode. Also add the front Color Group's background layer
+ * (`--highground-bg-*`), which StyleWrapper does not provide, so the slide's
+ * text panel shows the theme's second background layer.
  * FILE: @kitconcept/volto-slider-block/src/components/View.jsx
  * FILE VERSION: 7.0.0
  */
@@ -13,11 +15,20 @@ import Autoplay from 'embla-carousel-autoplay';
 import cx from 'classnames';
 import Body from '@kitconcept/volto-slider-block/components/Body';
 import withBlockExtensions from '@plone/volto/helpers/Extensions/withBlockExtensions';
+import { resolveBlockTheme } from '@simplesconsultoria/volto-light-theme/config/blockThemes';
 import {
   DotButton,
   NextButton,
   PrevButton,
 } from '@kitconcept/volto-slider-block/components/DotsAndArrows';
+
+/** The High Ground background layer of the block's theme, as CSS variables. */
+const highGroundLayer = (data) =>
+  Object.fromEntries(
+    Object.entries(resolveBlockTheme(data).style).filter(([key]) =>
+      key.startsWith('--highground-bg-'),
+    ),
+  );
 
 const SliderView = (props) => {
   const {
@@ -116,6 +127,7 @@ const SliderView = (props) => {
       <div
         className={cx('block slider', data.variation || 'default', className)}
         style={{
+          ...highGroundLayer(data),
           ...style,
           '--slider-container-width': `${sliderContainerWidth}px`,
         }}

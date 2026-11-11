@@ -189,7 +189,7 @@ Supplied by Volto core, `@plone/volto-slate`, `@kitconcept/volto-light-theme@8.1
 
 ### 3.1 `syncContainerBlocks(config)`
 
-Runs in `src/config/blocks.ts:697-746` and re-runs whenever new blocks are registered through the `blocksConfig` `Proxy`:
+Runs in `src/config/blocks.ts:749-800` and re-runs whenever new blocks are registered through the `blocksConfig` `Proxy`:
 - Container targets: `accordion`, `tabs_block`, `columnsBlock`, `gridBlock`, `customGrid`.
 - Expands `allowedBlocks` (when already an array) with all other registered block ids (`46` in `gridBlock`, `49` in `accordion` — `accordion` also appends legacy aliases `'button'`, `'byline'`, `'eventsearch'`).
 - Copies each child block config into `container.blocksConfig`; for `accordion`, wraps every child's `schemaEnhancer` with `disableThemeSchema` (stripping `theme` and `backgroundColor` from both root schema and `styles.schema`).
@@ -197,7 +197,11 @@ Runs in `src/config/blocks.ts:697-746` and re-runs whenever new blocks are regis
 
 ### 3.2 `enhanceBlockConfig` & `styleClassNameExtenders`
 
-`installBlockStyling(config)` (`src/config/blocks.ts:748-768`) enhances all existing entries in `config.blocks.blocksConfig` and installs a `Proxy` so dynamically added blocks are enhanced too:
+`installBlockStyling(config)` (`src/config/blocks.ts:802-841`) enhances all existing entries in `config.blocks.blocksConfig` and installs a `Proxy` so dynamically added blocks are enhanced too. Blocks from add-ons loaded later keep the controls whatever registration pattern they use (covered by `tests/config/blockStylingAddons.test.ts`):
+- `config.blocks.blocksConfig` is an accessor: replacing the whole object (`config.blocks.blocksConfig = { ...config.blocks.blocksConfig, myBlock }`) enhances it and puts it behind a new `Proxy`.
+- Each block's `schemaEnhancer` is an accessor: an enhancer assigned later — directly (`blocksConfig.teaser.schemaEnhancer = mine`) or by replacing the block (`{ ...blocksConfig.teaser, schemaEnhancer: mine }`) — is wrapped again. Enhancers already wrapped are marked (`Symbol.for('sc-vlt.stylingEnhancer')`) and not wrapped twice.
+
+What the enhancer adds:
 - Calls `addStyling`, ensures `schema.properties.styles.schema` exists, sets root `schema.properties.theme` (`widget: 'block_theme_widget'`, `default: 'default'`), and strips redundant root/nested `backgroundColor`, root `blockWidth`, `logos_container_width`, and nested `styles.properties.theme`.
 - Injects `styles.properties['blockWidth:noprefix']` (`narrow`, `default`, `layout`, `full`, default `'default'`), **omitting** it for `image` and `mainImageBlock` when `align` is `'left'` or `'right'`.
 - Injects `styles.properties['--cardBorderColor']` (`style_simple_color`) and `styles.properties['--cardBorderWidth']` (`border_widget`) for every block not in `config.settings.borderExcludedBlocks` (default `DEFAULT_BORDER_EXCLUDED_BLOCKS = ['separator']`).

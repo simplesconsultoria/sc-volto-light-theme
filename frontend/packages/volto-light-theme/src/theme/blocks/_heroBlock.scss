@@ -87,10 +87,11 @@ $hero-card-overlap: 60px;
       padding-left: max(2rem, calc(50% - var(--layout-container-width)));
     }
 
-    /* Mobile: imagem full-width, texto com padding */
+    /* Mobile: full-width image; the text only keeps the page gutter, since
+       a full-width container has no side padding of its own. */
     @media only screen and (max-width: $largest-mobile-screen) {
       .hero-flex-content {
-        padding: $spacing-medium !important;
+        padding: 0 $spacing-small !important;
       }
       .hero-flex-image-wrapper {
         width: 100%;
@@ -388,10 +389,6 @@ $hero-card-overlap: 60px;
     flex-direction: column;
     justify-content: center;
     gap: $spacing-small;
-
-    @media only screen and (max-width: $largest-mobile-screen) {
-      padding: $spacing-medium;
-    }
   }
 
   &.has-image .hero-flex-inner {
@@ -477,6 +474,34 @@ $hero-card-overlap: 60px;
   }
 }
 
+// Flex on mobile: text and image stack at the full width of the block. The
+// text needs no padding of its own here — the block container already sits
+// inside the page gutter — and `min-width: min-content` would otherwise keep
+// it narrower than the image.
+@media only screen and (max-width: $largest-mobile-screen) {
+  .hero-flex .hero-flex-inner,
+  .hero-flex.has-image .hero-flex-inner {
+    .hero-flex-content,
+    .hero-flex-image-wrapper {
+      width: 100%;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .hero-flex-content {
+      padding: 0;
+    }
+
+    // Stacked under the image, the text reads left-aligned whatever the
+    // text side: centring only the date and the tags looked misaligned.
+    .hero-flex-content,
+    .hero-flex-content .hero-header {
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+}
+
 // Variation 2: Card Colado
 .hero-card {
   .hero-card-inner {
@@ -500,6 +525,7 @@ $hero-card-overlap: 60px;
 
     @media only screen and (max-width: $largest-mobile-screen) {
       width: 100%;
+      min-width: 0;
       max-width: 100%;
       flex: 1 1 100%;
     }
@@ -546,8 +572,12 @@ $hero-card-overlap: 60px;
 
     @media only screen and (max-width: $largest-mobile-screen) {
       width: 100%;
+      min-width: 0;
       max-width: 100%;
       flex: 1 1 100%;
+      // The card keeps its background, so it keeps a small inset; the desktop
+      // $spacing-large one leaves the text a narrow column on a phone.
+      padding: $spacing-small;
     }
 
     .hero-header-text,

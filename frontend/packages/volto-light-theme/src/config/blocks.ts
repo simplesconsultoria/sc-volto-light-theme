@@ -534,23 +534,73 @@ export function isBlockAligned(args: any): boolean {
   return align === 'left' || align === 'right';
 }
 
+/** Marks a schemaEnhancer (or accessor getter) installed by this add-on. */
+const STYLING_ENHANCER = Symbol.for('sc-vlt.stylingEnhancer');
+
+function isStylingEnhancer(fn: unknown): boolean {
+  return typeof fn === 'function' && (fn as any)[STYLING_ENHANCER] === true;
+}
+
 /**
  * Enhances a block schema configuration to inject:
  * 1. Block Theme (unified widget block_theme_widget)
  * 2. Block Width (blockWidth:noprefix) across all blocks
  * 3. Borders (--cardBorderColor and --cardBorderWidth with border_widget) across all blocks,
  *    except those listed in config.settings.borderExcludedBlocks
+ *
+ * Add-ons loaded after this one keep these controls whatever they do with the
+ * block: `schemaEnhancer` becomes an accessor, so an enhancer assigned later —
+ * directly, or by replacing the block with `{ ...block, schemaEnhancer }` — is
+ * wrapped again. An enhancer that already is (or composes) ours is not
+ * re-wrapped needlessly; running ours twice would be harmless anyway, since it
+ * only sets fields.
  */
 export function enhanceBlockConfig(
   blockConfig: any,
   blockId: string,
   config: ConfigType,
 ) {
-  if (!blockConfig || blockConfig.__vlt_styling_enhanced) return;
-  blockConfig.__vlt_styling_enhanced = true;
+  if (!blockConfig || typeof blockConfig !== 'object') return;
+  const descriptor = Object.getOwnPropertyDescriptor(
+    blockConfig,
+    'schemaEnhancer',
+  );
+  if (isStylingEnhancer(descriptor?.get)) return;
 
-  const prevEnhancer = blockConfig.schemaEnhancer;
-  blockConfig.schemaEnhancer = (args: any) => {
+  const wrap = (enhancer: any) =>
+    isStylingEnhancer(enhancer)
+      ? enhancer
+      : stylingEnhancer(enhancer, blockId, config);
+  let current = wrap(blockConfig.schemaEnhancer);
+
+  if (!Object.isExtensible(blockConfig) || descriptor?.configurable === false) {
+    // Frozen or sealed config: nothing can replace the enhancer later either.
+    try {
+      blockConfig.schemaEnhancer = current;
+    } catch {
+      // Read-only: leave the block as it is.
+    }
+    return;
+  }
+
+  const get = () => current;
+  (get as any)[STYLING_ENHANCER] = true;
+  Object.defineProperty(blockConfig, 'schemaEnhancer', {
+    configurable: true,
+    enumerable: true,
+    get,
+    set(enhancer: any) {
+      current = wrap(enhancer);
+    },
+  });
+}
+
+function stylingEnhancer(
+  prevEnhancer: any,
+  blockId: string,
+  config: ConfigType,
+) {
+  const enhancer = (args: any) => {
     let schema = prevEnhancer ? prevEnhancer(args) : args.schema;
 
     // Ensure the 'styling' fieldset and schema.properties.styles.schema exist
@@ -692,6 +742,8 @@ export function enhanceBlockConfig(
 
     return schema;
   };
+  (enhancer as any)[STYLING_ENHANCER] = true;
+  return enhancer;
 }
 
 function syncContainerBlocks(config: ConfigType) {
@@ -727,10 +779,12 @@ function syncContainerBlocks(config: ConfigType) {
             blockId
           ];
           if (containerId === 'accordion') {
-            const prevEnhancer = globalBlockConfig.schemaEnhancer;
             container.blocksConfig[blockId] = {
               ...globalBlockConfig,
               schemaEnhancer: (args: any) => {
+                // Read at call time, so an enhancer an add-on sets later on
+                // the global block is used here too.
+                const prevEnhancer = globalBlockConfig.schemaEnhancer;
                 const schema = prevEnhancer ? prevEnhancer(args) : args.schema;
                 return disableThemeSchema({ ...args, schema });
               },
@@ -745,14 +799,15 @@ function syncContainerBlocks(config: ConfigType) {
   return config;
 }
 
-function installBlockStyling(config: ConfigType) {
-  // Apply enhancement to all blocks already registered
-  Object.keys(config.blocks.blocksConfig).forEach((blockId) => {
-    enhanceBlockConfig(config.blocks.blocksConfig[blockId], blockId, config);
+/**
+ * Enhance every block in `blocksConfig` and return it behind a Proxy that
+ * enhances blocks registered later (`blocksConfig.myBlock = {...}`).
+ */
+function watchBlocksConfig(blocksConfig: any, config: ConfigType) {
+  Object.keys(blocksConfig).forEach((blockId) => {
+    enhanceBlockConfig(blocksConfig[blockId], blockId, config);
   });
-
-  // Proxy blocksConfig to intercept and enhance dynamically registered blocks
-  config.blocks.blocksConfig = new Proxy(config.blocks.blocksConfig, {
+  return new Proxy(blocksConfig, {
     set(target: any, prop: string, value: any) {
       if (value && typeof value === 'object') {
         enhanceBlockConfig(value, prop, config);
@@ -760,6 +815,24 @@ function installBlockStyling(config: ConfigType) {
       target[prop] = value;
       syncContainerBlocks(config);
       return true;
+    },
+  });
+}
+
+function installBlockStyling(config: ConfigType) {
+  const blocks = config.blocks as any;
+  let blocksConfig = watchBlocksConfig(blocks.blocksConfig, config);
+
+  // An add-on may also replace the whole object
+  // (`config.blocks.blocksConfig = { ...config.blocks.blocksConfig, x }`),
+  // which would drop the Proxy; watch the new object instead.
+  Object.defineProperty(blocks, 'blocksConfig', {
+    configurable: true,
+    enumerable: true,
+    get: () => blocksConfig,
+    set(value: any) {
+      blocksConfig = watchBlocksConfig(value, config);
+      syncContainerBlocks(config);
     },
   });
 

@@ -199,6 +199,9 @@ $sliderImagesAspectRatio: var(--slider-images-aspect-ratio, 16 / 9);
     width: 100%;
     flex: 1 1 auto;
     flex-direction: column;
+    // The `simple` variation sets a grid gap upstream; stacked, the text card
+    // sits right under its image like every other variation.
+    gap: 0;
 
     a {
       display: flex;
@@ -245,7 +248,9 @@ $sliderImagesAspectRatio: var(--slider-images-aspect-ratio, 16 / 9);
       flex-direction: column;
       justify-content: flex-start;
       padding: $spacing-medium !important;
-      background: var(
+      // Only the colour: a `background` shorthand would reset the Color
+      // Group's second layer that the `simple` variation draws here.
+      background-color: var(
         --theme-high-contrast-color,
         var(--card-bg, #fff)
       ) !important;
@@ -375,8 +380,9 @@ $sliderImagesAspectRatio: var(--slider-images-aspect-ratio, 16 / 9);
 // -----------------------------------------------------------------------------
 // 4. Hero Banner Mode (Standalone and Wide Containers >= 768px)
 // -----------------------------------------------------------------------------
-// Applies when the slider is standalone or in a full-width container
-.block.slider:not(
+// Applies when the slider is standalone or in a full-width container. The
+// `simple` variation has a layout of its own (section 5) and is left out.
+.block.slider:not(.simple):not(
     :is(
         .gridBlock:not(.one),
         .grid-items:not(.one),
@@ -460,6 +466,158 @@ $sliderImagesAspectRatio: var(--slider-images-aspect-ratio, 16 / 9);
             color: #000 !important;
           }
         }
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 5. Simple Variation
+// -----------------------------------------------------------------------------
+// Upstream reserves the arrows' room as a 130px side padding on every
+// `.teaser-item`. That padding sits inside `.slider-viewport`, so the border
+// (applied to the viewport, see `_borders.scss`) was drawn around empty space,
+// and in grid columns — where there are no arrows — it squeezed the slide into
+// a sliver. Here the slide always fills the viewport, and the arrows' room is
+// moved to `.slider-wrapper`, where the absolutely positioned arrows sit.
+//
+// The text panel is the block theme's High Ground: its colour and the Color
+// Group's second background layer (image or pattern).
+// `!important` to win over the compact rules (more specific inside grids).
+@mixin simple-slider-panel {
+  background-color: var(
+    --theme-high-contrast-color,
+    var(--card-bg, #fff)
+  ) !important;
+  background-image: var(
+    --highground-bg-image,
+    var(--colorgroup-front-bg-image, none)
+  ) !important;
+  background-position: var(
+    --highground-bg-position,
+    var(--colorgroup-front-bg-position, center)
+  ) !important;
+  background-repeat: var(
+    --highground-bg-repeat,
+    var(--colorgroup-front-bg-repeat, repeat)
+  ) !important;
+  background-size: var(
+    --highground-bg-size,
+    var(--colorgroup-front-bg-size, auto)
+  ) !important;
+  color: var(--theme-top-foreground-color, inherit) !important;
+
+  .title {
+    .supertitle {
+      color: var(--theme-top-accent-color, inherit) !important;
+    }
+
+    h2 {
+      color: var(--theme-top-foreground-color, inherit) !important;
+    }
+  }
+
+  p {
+    color: var(--theme-top-foreground-color, inherit) !important;
+  }
+}
+
+.block.slider.simple {
+  .slider-viewport {
+    margin-bottom: 0;
+  }
+
+  .slider-slide,
+  .grid-teaser-item,
+  .teaser-item.top {
+    width: 100%;
+  }
+
+  .teaser-item.top {
+    padding: 0 !important;
+    gap: 0;
+
+    .teaser-item-title {
+      @include simple-slider-panel;
+    }
+  }
+
+  // Wide: image and text side by side, half and half, at the slide's height.
+  @container (min-width: 768px) {
+    .teaser-item.top {
+      align-items: stretch;
+      aspect-ratio: 2 / 1;
+
+      &,
+      &.has--slider--flagAlign--left,
+      &.has--slider--flagAlign--right {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
+      }
+
+      // Upstream switches the editor to 60/40 with an id selector; keep the
+      // editor showing the same half-and-half split as the published page.
+      #page-edit &,
+      #page-add & {
+        &.has--slider--flagAlign--left,
+        &.has--slider--flagAlign--right {
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        }
+      }
+
+      .highlight-image-wrapper {
+        height: 100%;
+        align-self: stretch;
+
+        img {
+          width: 100%;
+          height: 100%;
+          aspect-ratio: auto !important;
+          object-fit: cover;
+        }
+      }
+
+      .teaser-item-title {
+        position: static;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        box-sizing: border-box;
+        flex-direction: column;
+        justify-content: center;
+        padding: $spacing-medium;
+        transform: none;
+
+        button {
+          align-self: flex-start;
+        }
+      }
+    }
+
+    // The arrows are shown from upstream's $computer-width up.
+    @media only screen and (min-width: $computer-width) {
+      &:not(:has(.slider-button)) .slider-wrapper {
+        padding: 0;
+      }
+
+      .slider-wrapper:has(.slider-button) {
+        padding: 0 80px;
+      }
+
+      .slider-button {
+        width: 80px;
+
+        svg.icon {
+          padding: 15px;
+        }
+      }
+
+      // Upstream only pins the next arrow (`right: 0`); with `left: auto` the
+      // previous one would fall inside the wrapper's padding, over the image.
+      .slider-button-prev {
+        left: 0;
       }
     }
   }
