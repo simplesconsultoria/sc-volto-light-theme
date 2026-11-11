@@ -74,6 +74,77 @@ make stack-start
 
 And... you're all set! Your Plone site is up and running locally! 🚀
 
+## Upgrading 🔄
+
+### From 1.0.0a14 or earlier to 1.0.0a15 (new theme system)
+
+1.0.0a15 replaces the 32 per-colour fields of each theme with **Color Groups** and **Block Themes**, and gives every block **width** and **border** controls. Your content, your theme and your code keep working as they are: bump the versions, run the upgrade step, and you are done.
+
+1.  **Bump the versions.**
+
+    | Where | Package | Version |
+    | --- | --- | --- |
+    | Backend (`pyproject.toml`) | `sc-voltolighttheme` | `1.0.0a15` or later |
+    | Backend (`pyproject.toml`) | `kitconcept.voltolighttheme` | `8.1.4` or later |
+    | Frontend (`package.json`) | `@simplesconsultoria/volto-light-theme` | `1.0.0-alpha.15` or later |
+    | Frontend (`mrs.developer.json`, `core`) | `@plone/volto` | tag `19.6.1` |
+
+2.  **Install.**
+
+    ```shell
+    make install
+    ```
+
+3.  **Run the upgrade step** (profile `1002`). It turns each theme's old colours into Color Groups.
+
+    -   In the site: *Site Setup* → *Add-ons* → *Upgrade* next to *Simples Consultoria VLT: Install*.
+    -   Or from your own policy package, in an upgrade step:
+
+        ```python
+        def upgrade_sc_volto_light_theme(context):
+            context.upgradeProfile("sc.voltolighttheme:default")
+        ```
+
+    Until it runs, the site already shows the right colours: they are derived from the old fields on every read.
+
+4.  **Check** the *Themes* control panel: each theme shows its Color Groups, with the colours it had before.
+
+#### What keeps working without changes
+
+| You have | What happens |
+| --- | --- |
+| Themes stored with the old colour fields (`primary_color_light`, `font_family_primary`, …) | Converted to Color Groups by the upgrade step; derived on read until then. |
+| A `registry.xml` in your profile setting those fields on `ISCVLTThemeDefinition` | Still imports, on existing and new sites. The colours become Color Groups on read. |
+| `font_family_secondary` and the event, file and image colours | Still stored and applied. They are not shown in the control panel form. |
+| Blocks saved with the `brand` theme | Shown as `alternative`. |
+| Blocks saved with plain VLT's `grey` theme | Shown as before, a grey band with white cards (`custom-secondary-primary`). |
+| Block width stored in `data.blockWidth` or `styles.blockWidth` | Still read. New edits store it in `styles['blockWidth:noprefix']`. |
+| CSS using `--primary-color`, `--secondary-color`, `--primary-foreground-color`, … | Still defined, now fed by the Color Groups. |
+| Blocks from your own add-ons | Get the theme, width and border controls automatically, even when registered after this add-on. |
+
+#### Optional follow-ups
+
+-   **Your own blocks:** theme colours and borders reach a block through the `className` and `style` props its view receives. Pass both to the block's root element:
+
+    ```jsx
+    <div className={`block my-block ${className}`} style={style}>
+    ```
+
+    To keep a block out of the border controls, add its id to `config.settings.borderExcludedBlocks`.
+
+-   **Your theme profile:** to drop the old fields, write the theme as Color Groups on `ISCVLTThemeSchema`. The easiest way is to adjust the theme in the control panel of an upgraded site and copy the JSON served at `@controlpanels/themes/<theme-id>`:
+
+    ```xml
+    <records interface="sc.voltolighttheme.interfaces.ISCVLTThemeSchema"
+             prefix="sc.voltolighttheme.theme.default">
+      <value key="name">My theme</value>
+      <value key="color_groups">{"primary": {"id": "primary", "name": "Primary", "background_color_light": "#ffffff", …}, …}</value>
+      <value key="block_themes">{"default": {"id": "default", "name": "Primary", "back_color_group": "primary", "front_color_group": "neutral"}, …}</value>
+    </records>
+    ```
+
+    `profiles/initial/registry/sc.voltolighttheme.themes.xml` in this repository is a complete example.
+
 ## Project structure 🏗️
 
 This monorepo consists of the following distinct sections:

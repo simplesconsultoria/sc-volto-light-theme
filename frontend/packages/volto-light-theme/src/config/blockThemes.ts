@@ -201,6 +201,26 @@ export function createThemeDefinition(
   };
 }
 
+/**
+ * Theme names that blocks saved by earlier versions may carry, and the theme
+ * each one now means.
+ *
+ * `grey` is plain VLT's grey band with white cards: a `secondary` ground under
+ * `primary` cards. (`brand`, sc-vlt's old name for `alternative`, has its own
+ * handling and CSS aliases.) Content keeps working without being edited; the
+ * block theme widget shows the equivalent theme, and saving the block stores it.
+ */
+export const LEGACY_THEME_ALIASES: Record<string, string> = {
+  grey: 'custom-secondary-primary',
+};
+
+/** The theme a saved theme name means today (see `LEGACY_THEME_ALIASES`). */
+export function resolveThemeAlias<T>(name: T): T | string {
+  return typeof name === 'string' && LEGACY_THEME_ALIASES[name]
+    ? LEGACY_THEME_ALIASES[name]
+    : name;
+}
+
 export const DEFAULT_COLOR_GROUPS: Record<string, ColorGroup> = {
   primary: {
     id: 'primary',
@@ -449,10 +469,11 @@ export function resolveBlockTheme(
       ? directThemeDefinitions
       : getThemeDefinitions(blockType);
 
-  const theme =
+  const theme = resolveThemeAlias(
     typeof rawTheme === 'object' && rawTheme !== null
       ? (rawTheme as any).theme || 'default'
-      : rawTheme || 'default';
+      : rawTheme || 'default',
+  );
 
   let customBack: string | undefined;
   let customFront: string | undefined;

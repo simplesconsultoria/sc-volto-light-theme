@@ -4,6 +4,7 @@ import {
   createThemeDefinition,
   DEFAULT_BLOCK_THEMES,
   DEFAULT_COLOR_GROUPS,
+  LEGACY_THEME_ALIASES,
   type ThemeDefinition,
 } from './blockThemes';
 import type { ConfigType } from '@plone/registry';
@@ -160,6 +161,18 @@ customThemes.find = function (predicate: any, thisArg?: any) {
       if (predicate.call(thisArg, candidate)) {
         return candidate;
       }
+    }
+  }
+  // Legacy names (`grey`): VLT paints the full-width band of a block group
+  // from the definition named like the saved theme, so answer under that name.
+  for (const [alias, target] of Object.entries(LEGACY_THEME_ALIASES)) {
+    const [, back, front] = target.split('-');
+    const candidate = {
+      ...createCustomThemeDefinition(back, front),
+      name: alias,
+    };
+    if (predicate.call(thisArg, candidate)) {
+      return candidate;
     }
   }
   // Also check active block themes from config.blocks.blockThemes or registered block themes

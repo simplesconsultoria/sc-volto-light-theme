@@ -17,6 +17,7 @@ import {
   DEFAULT_COLOR_GROUPS,
   NATAL_BLOCK_THEMES,
   NATAL_COLOR_GROUPS,
+  resolveThemeAlias,
 } from '../../config/blockThemes';
 import { SwatchDropdown, type SwatchOption } from './shared/SwatchDropdown';
 
@@ -173,11 +174,12 @@ export function parseThemeValue(
         objectvalue?.theme ||
         'default';
   if (typeof raw !== 'string') return { themeId: 'default' };
-  if (raw.startsWith('custom-')) {
-    const [, back, front] = raw.split('-');
+  const name = resolveThemeAlias(raw);
+  if (name.startsWith('custom-')) {
+    const [, back, front] = name.split('-');
     return { themeId: 'custom', back, front };
   }
-  return { themeId: raw };
+  return { themeId: name };
 }
 
 /** A back/front group stored next to the theme, wherever the form put it. */
