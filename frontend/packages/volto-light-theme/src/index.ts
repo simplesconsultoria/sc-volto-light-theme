@@ -36,7 +36,7 @@ defineMessages({
   highlight: { id: 'Highlight', defaultMessage: 'Highlight' },
   // Block theme labels (see `createThemeDefinition` in config/blocks.ts)
   themePrimary: { id: 'Primary', defaultMessage: 'Primary' },
-  themeBrand: { id: 'Brand', defaultMessage: 'Brand' },
+  themeAlternative: { id: 'Alternative', defaultMessage: 'Alternative' },
 });
 
 function applyConfig(config: ConfigType) {

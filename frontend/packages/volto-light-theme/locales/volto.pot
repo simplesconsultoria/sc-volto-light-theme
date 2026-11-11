@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Plone\n"
-"POT-Creation-Date: 2026-11-10T23:12:55.441Z\n"
+"POT-Creation-Date: 2026-11-11T12:06:54.189Z\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -132,6 +132,11 @@ msgstr ""
 #. Default: "Describe the purpose of the image"
 #: components/Blocks/MainImageBlock/schema
 msgid "Alt text hint link text"
+msgstr ""
+
+#. Default: "Alternative"
+#: index
+msgid "Alternative"
 msgstr ""
 
 #. Default: "Asymmetric"
@@ -311,11 +316,6 @@ msgstr ""
 #. Default: "Bottom only ({width}px)"
 #: components/Widgets/BorderWidget
 msgid "Bottom only ({width}px)"
-msgstr ""
-
-#. Default: "Brand"
-#: index
-msgid "Brand"
 msgstr ""
 
 #. Default: "Button Theme"

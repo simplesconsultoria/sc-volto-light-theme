@@ -137,6 +137,11 @@ msgstr "Deixe em branco se a imagem for puramente decorativa"
 msgid "Alt text hint link text"
 msgstr "Descreva o propósito da imagem"
 
+#. Default: "Alternative"
+#: index
+msgid "Alternative"
+msgstr "Alternativo"
+
 #. Default: "Asymmetric"
 #: components/Widgets/BorderWidget
 msgid "Asymmetric"
@@ -315,11 +320,6 @@ msgstr "Borda inferior ativada com {width} pixels"
 #: components/Widgets/BorderWidget
 msgid "Bottom only ({width}px)"
 msgstr "Apenas embaixo ({width}px)"
-
-#. Default: "Brand"
-#: index
-msgid "Brand"
-msgstr "Marca"
 
 #. Default: "Button Theme"
 #: components/Blocks/HeroBlock/schema

@@ -10,7 +10,7 @@
   $color:
     var(
       --cardBorderColor,
-      var(--theme-border-color, var(--primary-accent-color, #007bc1))
+      var(--theme-border-color, var(--primary-accent-color))
     ),
   $style: solid
 ) {

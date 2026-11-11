@@ -100,10 +100,6 @@ In `src/theme/_root.scss:3-5`:
 
 The `blockWidth` widget offers four distinct options (`narrow`, `default`, `layout`, `full`), but `narrow` and `default` resolve to the same `940px`. All three also carry `!important`, preventing site CSS overrides without `!important`.
 
-### 3.2 Hardcoded `#007bc1` fallback in `_borders.scss`
-
-`src/theme/blocks/_borders.scss:13` ends its `--cardBorderColor` fallback chain with literal `#007bc1` (inherited from upstream blue defaults rather than `--primary-accent-color` alone or cool-slate/light-blue brand tokens).
-
 ---
 
 ## 4. Controlpanel, Registry & Schemas
@@ -116,14 +112,10 @@ The `blockWidth` widget offers four distinct options (`narrow`, `default`, `layo
 
 `backend/src/sc/voltolighttheme/utils/legacy_themes.py:43-51` keeps 7 passthrough fields (`font_family_secondary`, `event_color_{light,dark}`, `file_color_{light,dark}`, `image_color_{light,dark}`) active so `_root.scss` / `_globals.scss` still read their CSS variables — yet `LEGACY_THEME_FIELDS` in `src/helpers/themesControlpanel.ts:59-100` strips all 7 from control panel add/edit forms, leaving no UI to configure secondary fonts or content-type colours per site theme.
 
-### 4.3 Stale pre-ColorGroup values in `Controlpanels/Themes/fixtures.ts`
-
-`Themes/fixtures.ts:17-63` mixes `DEFAULT_COLOR_GROUPS` / `NATAL_COLOR_GROUPS` with legacy fields holding old warm-orange values (`accent_color_light: '#f4822c'`, `primary_color_light: '#ffffff'`, `header_foreground_color: '#000000'`), so `themeStyleSheet` applied on Storybook site-theme selection emits those legacy properties alongside `color_groups`.
-
-### 4.4 Accordion-only legacy aliases & schema message location
+### 4.3 Accordion-only legacy aliases & schema message location
 
 - `installAccordionBlock` (`src/config/blocks.ts:501-508`) appends three unprefixed/legacy block IDs (`'button'`, `'byline'`, `'eventsearch'`) only to `accordion.allowedBlocks`, whereas `gridBlock` and the actual registered IDs are `'__button'`, `'documentByline'`, and `'eventCalendar'`.
-- Central `src/index.ts:24-40` message extractor retains `themeBrand: 'Brand'` instead of `Alternative` and leaves `Custom Grid`, `Event Metadata`, and `Events` split across individual schema/config files.
+- The central `src/index.ts` message extractor leaves `Custom Grid`, `Event Metadata`, and `Events` split across individual schema/config files.
 
 ---
 
