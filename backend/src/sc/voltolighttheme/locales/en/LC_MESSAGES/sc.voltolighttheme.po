@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-11-10 22:30+0000\n"
+"POT-Creation-Date: 2026-11-11 14:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "A festive theme with Inter typography and rounded borders."
 msgstr ""
 
-#: sc/voltolighttheme/interfaces.py:29
+#: sc/voltolighttheme/interfaces.py:35
 msgid "Block Themes"
 msgstr ""
 
@@ -30,7 +30,7 @@ msgstr ""
 msgid "Brand slogan"
 msgstr ""
 
-#: sc/voltolighttheme/interfaces.py:24
+#: sc/voltolighttheme/interfaces.py:30
 msgid "Color Groups"
 msgstr ""
 
@@ -134,11 +134,11 @@ msgstr ""
 msgid "Header settings"
 msgstr ""
 
-#: sc/voltolighttheme/interfaces.py:57
+#: sc/voltolighttheme/interfaces.py:63
 msgid "Mapping of block themes defining front and back color groups for blocks."
 msgstr ""
 
-#: sc/voltolighttheme/interfaces.py:47
+#: sc/voltolighttheme/interfaces.py:53
 msgid "Mapping of color groups configured for this theme. Each color group defines a font and 4 colors (background, text, subtext, accent) with dark mode variations."
 msgstr ""
 

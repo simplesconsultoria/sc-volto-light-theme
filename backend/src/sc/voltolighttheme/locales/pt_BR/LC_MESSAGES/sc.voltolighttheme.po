@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-11-10 22:30+0000\n"
+"POT-Creation-Date: 2026-11-11 14:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "A festive theme with Inter typography and rounded borders."
 msgstr "Um tema festivo com tipografia Inter e bordas arredondadas."
 
-#: sc/voltolighttheme/interfaces.py:29
+#: sc/voltolighttheme/interfaces.py:35
 msgid "Block Themes"
 msgstr "Temas de blocos"
 
@@ -30,7 +30,7 @@ msgstr "Mensagem da marca"
 msgid "Brand slogan"
 msgstr "Slogan da marca"
 
-#: sc/voltolighttheme/interfaces.py:24
+#: sc/voltolighttheme/interfaces.py:30
 msgid "Color Groups"
 msgstr "Grupos de cores"
 
@@ -134,11 +134,11 @@ msgstr "Configuração do cabeçalho para sites/subsites"
 msgid "Header settings"
 msgstr "Configurações do cabeçalho"
 
-#: sc/voltolighttheme/interfaces.py:57
+#: sc/voltolighttheme/interfaces.py:63
 msgid "Mapping of block themes defining front and back color groups for blocks."
 msgstr "Mapeamento dos temas de blocos definindo grupos de cores frontal e de fundo para blocos."
 
-#: sc/voltolighttheme/interfaces.py:47
+#: sc/voltolighttheme/interfaces.py:53
 msgid "Mapping of color groups configured for this theme. Each color group defines a font and 4 colors (background, text, subtext, accent) with dark mode variations."
 msgstr "Mapeamento dos grupos de cores configurados para este tema. Cada grupo de cores define uma fonte e 4 cores (fundo, texto, subtexto, destaque) com variações para modo escuro."
 
