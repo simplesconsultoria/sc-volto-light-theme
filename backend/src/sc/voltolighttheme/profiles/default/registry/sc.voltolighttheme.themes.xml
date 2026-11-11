@@ -9,7 +9,7 @@
     The "default" theme is shipped with the add-on and cannot be deleted.
   -->
 
-  <records interface="sc.voltolighttheme.interfaces.ISCVLTThemeDefinition"
+  <records interface="sc.voltolighttheme.interfaces.ISCVLTThemeSchema"
            prefix="sc.voltolighttheme.theme.default"
   >
     <value key="name"

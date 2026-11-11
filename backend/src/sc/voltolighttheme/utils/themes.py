@@ -12,7 +12,7 @@ from plone.registry import Record
 from plone.registry.field import TextLine
 from plone.registry.interfaces import IRegistry
 from sc.voltolighttheme import logger
-from sc.voltolighttheme.interfaces import ISCVLTThemeDefinition
+from sc.voltolighttheme.interfaces import ISCVLTThemeSchema
 from sc.voltolighttheme.utils.legacy_themes import color_groups_from_legacy
 from sc.voltolighttheme.utils.legacy_themes import has_legacy_colors
 from sc.voltolighttheme.utils.legacy_themes import LEGACY_COLOR_FIELDS
@@ -265,9 +265,9 @@ def is_valid_theme_id(theme_id: str) -> bool:
 def theme_field_names() -> list[str]:
     """Names of the fields making up a theme definition.
 
-    :returns: field names, as declared on :class:`ISCVLTThemeDefinition`.
+    :returns: field names, as declared on :class:`ISCVLTThemeSchema`.
     """
-    return list(getFieldNames(ISCVLTThemeDefinition))
+    return list(getFieldNames(ISCVLTThemeSchema))
 
 
 def _registry(registry=None):
@@ -324,7 +324,7 @@ def ensure_theme_records(theme_id: str, registry=None) -> None:
     registry = _registry(registry)
     prefix = record_name(theme_id, "").rstrip(".")
     try:
-        registry.registerInterface(ISCVLTThemeDefinition, prefix=prefix)
+        registry.registerInterface(ISCVLTThemeSchema, prefix=prefix)
     except Exception:
         logger.exception("Could not register records for theme %r", theme_id)
 
@@ -698,7 +698,7 @@ def theme_settings(theme_id: str, registry=None) -> dict:
 
     These are the fields the frontend turns into CSS custom properties. They
     are colours today, but the name is deliberately broader: any style variable
-    added to :class:`ISCVLTThemeDefinition` becomes a setting automatically,
+    added to :class:`ISCVLTThemeSchema` becomes a setting automatically,
     since only :data:`THEME_METADATA_FIELDS` is excluded.
 
     Use :func:`theme_values` for the control panel, which edits the whole
@@ -762,7 +762,7 @@ def create_theme(theme_id: str, values: dict | None = None, registry=None) -> di
         raise ValueError(f"Theme already exists: {theme_id!r}")
 
     registry.registerInterface(
-        ISCVLTThemeDefinition, prefix=record_name(theme_id, "").rstrip(".")
+        ISCVLTThemeSchema, prefix=record_name(theme_id, "").rstrip(".")
     )
     if values:
         update_theme(theme_id, values, registry)

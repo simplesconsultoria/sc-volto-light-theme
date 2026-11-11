@@ -3,7 +3,7 @@
           i18n:domain="sc.voltolighttheme"
 >
 
-  <records interface="sc.voltolighttheme.interfaces.ISCVLTThemeDefinition"
+  <records interface="sc.voltolighttheme.interfaces.ISCVLTThemeSchema"
            prefix="sc.voltolighttheme.theme.natal"
   >
     <value key="name"

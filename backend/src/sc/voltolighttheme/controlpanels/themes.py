@@ -2,7 +2,7 @@ from plone.protect.interfaces import IDisableCSRFProtection
 from plone.restapi.controlpanels import RegistryConfigletPanel
 from plone.restapi.deserializer import json_body
 from plone.restapi.exceptions import DeserializationError
-from sc.voltolighttheme.interfaces import ISCVLTThemeDefinition
+from sc.voltolighttheme.interfaces import ISCVLTThemeSchema
 from sc.voltolighttheme.interfaces import ISCVLTThemesControlpanel
 from sc.voltolighttheme.utils import themes
 from zExceptions import BadRequest
@@ -40,7 +40,7 @@ class ThemesControlpanel(RegistryConfigletPanel):
     ==========================================  ===========================
     """
 
-    schema = ISCVLTThemeDefinition
+    schema = ISCVLTThemeSchema
     configlet_id = "sc.voltolighttheme.themes"
     configlet_category_id = "Products"
     schema_prefix = themes.PREFIX
