@@ -55,10 +55,10 @@ export const WIDTH_SAMPLES: readonly BlockWidth[] = VALID_BLOCK_WIDTHS;
 
 /** Values in the shape `BorderWidget` writes them. */
 export const BORDER_SAMPLES = [
-  { label: 'all sides — 2px, theme colour', width: '2px' },
+  { label: 'all sides — 2px, theme color', width: '2px' },
   { label: 'bottom only — 0px 0px 3px 0px', width: '0px 0px 3px 0px' },
   {
-    label: 'left only — 0px 0px 0px 6px, custom colour',
+    label: 'left only — 0px 0px 0px 6px, custom color',
     width: '0px 0px 0px 6px',
     color: '#c2255c',
   },

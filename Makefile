@@ -147,6 +147,14 @@ i18n:  ## Update locales
 test:  backend-test frontend-test ## Test codebase
 
 ###########################################
+# Design previews
+###########################################
+.PHONY: design-previews
+design-previews: ## Regenerate Claude Design previews (needs a current Storybook build: make -C frontend storybook-build)
+	@echo "Regenerate design previews from the Storybook build in frontend/.storybook-build"
+	uvx --with playwright==1.65.0 python $(CURRENT_DIR)/.design-sync/previews.py
+
+###########################################
 # Container images
 ###########################################
 .PHONY: build-images
