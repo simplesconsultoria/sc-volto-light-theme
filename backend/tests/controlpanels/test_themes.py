@@ -310,3 +310,12 @@ class TestColorGroupsAndBlockThemesControlpanel:
             default_updated["color_groups"]["dourado"]["background_color_light"]
             == "#ffffff"
         )
+
+    @pytest.mark.parametrize("value", ("x", ["x"]))
+    def test_patch_with_malformed_color_groups_is_rejected(self, value):
+        response = self.api.patch(f"{PANEL}/festive", json={"color_groups": value})
+        assert response.status_code == 400
+
+    def test_create_with_a_non_string_id_is_rejected(self):
+        response = self.api.post(PANEL, json={"id": 42, "name": "Number"})
+        assert response.status_code == 400

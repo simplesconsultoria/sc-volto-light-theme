@@ -4,6 +4,7 @@ from plone.registry import field
 from plone.registry import Record
 from plone.registry.interfaces import IRegistry
 from sc.voltolighttheme.utils import themes
+from sc.voltolighttheme.utils.legacy_themes import LEGACY_PASSTHROUGH_FIELDS
 from zope.component import getUtility
 
 import pytest
@@ -23,6 +24,19 @@ class TestThemeUtils:
         assert values["name"] == "Default"
         assert "color_groups" in values
         assert "block_themes" in values
+
+    @pytest.mark.parametrize(
+        "field,expected",
+        (
+            ("font_family_secondary", "Inter, sans-serif"),
+            ("event_color_light", "#d32f2f"),
+            ("file_color_dark", "#1976d2"),
+            ("image_color_light", "#388e3c"),
+        ),
+    )
+    def test_default_theme_serves_the_passthrough_fields(self, field, expected):
+        settings = themes.theme_settings(themes.DEFAULT_THEME_ID, self.registry)
+        assert settings[field] == expected
 
     def test_theme_field_names_come_from_the_schema(self):
         names = themes.theme_field_names()
@@ -70,8 +84,9 @@ class TestThemeUtils:
         # Defined by exclusion, so a style field added to the schema is picked
         # up without touching `theme_settings`.
         settings = themes.theme_settings(themes.DEFAULT_THEME_ID, self.registry)
-        assert set(settings) == set(themes.theme_field_names()) - set(
-            themes.THEME_METADATA_FIELDS
+        assert set(settings) == (
+            set(themes.theme_field_names()) - set(themes.THEME_METADATA_FIELDS)
+            | set(LEGACY_PASSTHROUGH_FIELDS)
         )
 
     def test_theme_settings_of_a_missing_theme_is_empty(self):
@@ -170,6 +185,33 @@ class TestThemeUtils:
         def test_update_of_a_missing_theme_raises(self):
             with pytest.raises(KeyError):
                 themes.update_theme("not-here", {"name": "X"}, registry=self.registry)
+
+        @pytest.mark.parametrize("field", ("color_groups", "block_themes"))
+        @pytest.mark.parametrize("value", ("x", 42, ["not-a-mapping"]))
+        def test_update_rejects_a_malformed_collection(self, field, value):
+            with pytest.raises(ValueError):
+                themes.update_theme("corporate", {field: value}, registry=self.registry)
+
+        def test_a_malformed_update_keeps_custom_groups(self):
+            groups = themes.get_theme_color_groups("corporate", self.registry)
+            groups["golden"] = {"id": "golden", "name": "Golden"}
+            themes.update_theme(
+                "corporate", {"color_groups": groups}, registry=self.registry
+            )
+            with pytest.raises(ValueError):
+                themes.update_theme(
+                    "corporate", {"color_groups": "x"}, registry=self.registry
+                )
+            for tid in ("corporate", themes.DEFAULT_THEME_ID):
+                assert "golden" in themes.get_theme_color_groups(tid, self.registry)
+
+        def test_update_rejects_a_hyphen_in_a_color_group_id(self):
+            groups = themes.get_theme_color_groups("corporate", self.registry)
+            groups["my-brand"] = {"id": "my-brand", "name": "My Brand"}
+            with pytest.raises(ValueError):
+                themes.update_theme(
+                    "corporate", {"color_groups": groups}, registry=self.registry
+                )
 
     class TestDelete:
         @pytest.fixture(autouse=True)

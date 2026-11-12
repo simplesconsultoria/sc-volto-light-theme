@@ -3,7 +3,7 @@
           i18n:domain="sc.voltolighttheme"
 >
 
-  <records interface="sc.voltolighttheme.interfaces.ISCVLTThemeSchema"
+  <records interface="sc.voltolighttheme.interfaces.ISCVLTThemeDefinition"
            prefix="sc.voltolighttheme.theme.natal"
   >
     <value key="name"
@@ -14,6 +14,14 @@
     >A festive theme with Inter typography and rounded borders.</value>
     <value key="color_groups">{"primary": {"id": "primary", "name": "Primary", "font_family": "Inter, sans-serif", "background_color_light": "#ffffff", "background_color_dark": "#0d2317", "text_color_light": "#143d24", "text_color_dark": "#f0f7f2", "subtext_color_light": "#436650", "subtext_color_dark": "#a3c4b0", "accent_color_light": "#c41e3a", "accent_color_dark": "#ea4335"}, "secondary": {"id": "secondary", "name": "Secondary", "font_family": "Inter, sans-serif", "background_color_light": "#165b33", "background_color_dark": "#071a10", "text_color_light": "#ffffff", "text_color_dark": "#ffffff", "subtext_color_light": "#d1e7dd", "subtext_color_dark": "#c0d6c8", "accent_color_light": "#f8b229", "accent_color_dark": "#f8b229"}, "accent": {"id": "accent", "name": "Accent", "font_family": "Inter, sans-serif", "background_color_light": "#c41e3a", "background_color_dark": "#7d1222", "text_color_light": "#ffffff", "text_color_dark": "#ffffff", "subtext_color_light": "#ffe5e8", "subtext_color_dark": "#ffd0d5", "accent_color_light": "#f8b229", "accent_color_dark": "#f8b229"}, "neutral": {"id": "neutral", "name": "Neutral", "font_family": "Inter, sans-serif", "background_color_light": "#f2f7f4", "background_color_dark": "#1b3024", "text_color_light": "#143d24", "text_color_dark": "#ffffff", "subtext_color_light": "#52735f", "subtext_color_dark": "#b5d0c0", "accent_color_light": "#c41e3a", "accent_color_dark": "#f8b229"}}</value>
     <value key="block_themes">{"default": {"id": "default", "name": "Primary", "back_color_group": "primary", "front_color_group": "neutral"}, "alternative": {"id": "alternative", "name": "Alternative", "back_color_group": "accent", "front_color_group": "primary"}}</value>
+    <!-- No Color Group equivalent: served as CSS custom properties. -->
+    <value key="font_family_secondary">Inter, sans-serif</value>
+    <value key="event_color_light">#d32f2f</value>
+    <value key="event_color_dark">#d32f2f</value>
+    <value key="file_color_light">#1976d2</value>
+    <value key="file_color_dark">#1976d2</value>
+    <value key="image_color_light">#388e3c</value>
+    <value key="image_color_dark">#388e3c</value>
   </records>
 
 </registry>

@@ -127,6 +127,8 @@ class ThemesControlpanel(RegistryConfigletPanel):
         theme_id = body.pop("id", None) or body.pop("@id", None)
         if not theme_id:
             raise BadRequest("Missing required field: id")
+        if not isinstance(theme_id, str):
+            raise BadRequest("The theme id must be a string.")
         if not themes.is_valid_theme_id(theme_id):
             raise BadRequest(
                 f"Invalid theme id {theme_id!r}: use lowercase letters, "
@@ -160,6 +162,7 @@ class ThemesControlpanel(RegistryConfigletPanel):
         :param names: traversal path naming exactly one theme.
         :returns: the serialised theme.
         :raises NotFound: when the theme does not exist.
+        :raises BadRequest: when a color group or block theme is malformed.
         """
         theme_id = self._single(names)
         if not themes.theme_exists(theme_id):
@@ -170,7 +173,10 @@ class ThemesControlpanel(RegistryConfigletPanel):
         body.pop("@id", None)
 
         self._disable_csrf()
-        themes.update_theme(theme_id, body)
+        try:
+            themes.update_theme(theme_id, body)
+        except ValueError as exc:
+            raise BadRequest(str(exc)) from exc
         return self.serialize(theme_id)
 
     def delete(self, names):

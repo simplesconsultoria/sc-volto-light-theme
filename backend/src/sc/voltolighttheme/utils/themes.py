@@ -35,6 +35,11 @@ DEFAULT_THEME_ID = "default"
 #: record name and corrupt enumeration. Keep them to a conservative slug.
 THEME_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
+#: Color group ids end up in custom Block Theme names on the frontend
+#: (``custom-<back>-<front>``), which are split on ``-``. A dash inside a group
+#: id would make that name ambiguous, so group ids use underscores instead.
+COLOR_GROUP_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9_]*$")
+
 #: Fields that describe the theme rather than style it. They belong in a
 #: theme record and in the control panel, but not in the payload the frontend
 #: applies as CSS custom properties — the serialized field already carries the
@@ -259,7 +264,22 @@ def is_valid_theme_id(theme_id: str) -> bool:
     :param theme_id: the candidate id.
     :returns: whether the id is acceptable.
     """
-    return bool(theme_id and THEME_ID_PATTERN.match(theme_id))
+    return bool(
+        isinstance(theme_id, str) and theme_id and THEME_ID_PATTERN.match(theme_id)
+    )
+
+
+def is_valid_color_group_id(group_id: str) -> bool:
+    """Check a color group id is usable in a custom Block Theme name.
+
+    :param group_id: the candidate id.
+    :returns: whether the id is acceptable.
+    """
+    return bool(
+        isinstance(group_id, str)
+        and group_id
+        and COLOR_GROUP_ID_PATTERN.match(group_id)
+    )
 
 
 def theme_field_names() -> list[str]:
@@ -372,16 +392,27 @@ def legacy_theme_values(theme_id: str, registry=None) -> dict:
 def get_theme_color_groups(theme_id: str, registry=None) -> dict:
     """Get the mapping of ColorGroups for one theme.
 
-    A theme saved before Color Groups existed, and not yet migrated, has its
-    groups derived from its old per-colour records, so its colours survive an
-    update of the code before the upgrade step runs.
+    Old per-colour records still present for the theme are laid over the
+    stored groups. That covers two cases:
+
+    - a site saved before Color Groups existed, read after the code update but
+      before the upgrade step runs;
+    - a project profile written for 1.0.0a14 and earlier that sets its palette
+      on ``default``. sc.voltolighttheme's own profile, a dependency, has
+      already stored ``color_groups`` for that theme, so ignoring the old
+      records would silently replace the project's palette with ours.
+
+    The old records are dropped the next time the groups are saved, so an
+    edit in the control panel is never masked by them.
+
+    :param theme_id: the theme id.
+    :param registry: registry to read, defaulting to the local one.
+    :returns: color groups by id.
     """
     registry = _registry(registry)
     defaults = NATAL_COLOR_GROUPS if theme_id == "natal" else DEFAULT_COLOR_GROUPS
     stored = _stored_collection(theme_id, "color_groups", defaults, registry)
-    if stored:
-        return stored
-    base = default_color_groups_for_theme(theme_id, registry)
+    base = stored or default_color_groups_for_theme(theme_id, registry)
     legacy = legacy_theme_values(theme_id, registry)
     if has_legacy_colors(legacy):
         return color_groups_from_legacy(legacy, base)
@@ -409,13 +440,14 @@ def migrate_legacy_theme(theme_id: str, registry=None) -> bool:
     if not has_legacy_colors(legacy):
         return False
     ensure_theme_records(theme_id, registry)
+    if record_name(theme_id, "color_groups") not in registry.records:
+        # Nowhere to fold the colours into: keep the old records.
+        logger.warning("Theme %r not migrated: no color_groups record", theme_id)
+        return False
+    # Saving drops the old per-colour records, see save_theme_color_groups.
     save_theme_color_groups(
         theme_id, get_theme_color_groups(theme_id, registry), registry
     )
-    for name in LEGACY_MIGRATED_FIELDS:
-        rec = record_name(theme_id, name)
-        if rec in registry.records:
-            del registry.records[rec]
     return True
 
 
@@ -448,7 +480,16 @@ def _write_passthrough(theme_id: str, values: dict, registry) -> None:
 
 
 def save_theme_color_groups(theme_id: str, color_groups: dict, registry=None) -> None:
-    """Save ColorGroups mapping for one theme in the registry."""
+    """Save ColorGroups mapping for one theme in the registry.
+
+    The theme's old per-colour records, if any, are removed once the groups
+    are stored: callers pass groups read through
+    :func:`get_theme_color_groups`, which already carry their values.
+
+    :param theme_id: the theme id.
+    :param color_groups: color groups by id.
+    :param registry: registry to write, defaulting to the local one.
+    """
     registry = _registry(registry)
     rec = record_name(theme_id, "color_groups")
     if rec not in registry.records:
@@ -459,8 +500,13 @@ def save_theme_color_groups(theme_id: str, color_groups: dict, registry=None) ->
             grp = dict(gdata)
             grp.setdefault("id", gid)
             normalized[gid] = grp
-    if rec in registry.records:
-        registry[rec] = normalized
+    if rec not in registry.records:
+        return
+    registry[rec] = normalized
+    for name in LEGACY_MIGRATED_FIELDS:
+        legacy_rec = record_name(theme_id, name)
+        if legacy_rec in registry.records:
+            del registry.records[legacy_rec]
 
 
 def save_theme_block_themes(theme_id: str, block_themes: dict, registry=None) -> None:
@@ -556,7 +602,7 @@ def create_color_group(theme_id: str, group_data: dict, registry=None) -> dict:
     """
     registry = _registry(registry)
     gid = group_data.get("id")
-    if not gid or not is_valid_theme_id(gid):
+    if not is_valid_color_group_id(gid):
         raise ValueError(f"Invalid color group id: {gid!r}")
 
     groups = dict(get_theme_color_groups(theme_id, registry))
@@ -684,11 +730,10 @@ def theme_values(theme_id: str, registry=None) -> dict:
         if record in registry.records and registry[record]:
             values[name] = registry[record]
 
-    # Ensure color_groups and block_themes are populated
-    if "color_groups" not in values or not values["color_groups"]:
-        values["color_groups"] = get_theme_color_groups(theme_id, registry)
-    if "block_themes" not in values or not values["block_themes"]:
-        values["block_themes"] = get_theme_block_themes(theme_id, registry)
+    # Always read through the helpers: they complete the base entries and lay
+    # old per-colour records over the stored groups.
+    values["color_groups"] = get_theme_color_groups(theme_id, registry)
+    values["block_themes"] = get_theme_block_themes(theme_id, registry)
 
     return values
 
@@ -773,7 +818,11 @@ def create_theme(theme_id: str, values: dict | None = None, registry=None) -> di
 
 
 def _as_mapping(value) -> dict:
-    """Normalize a list of ``{"id": ...}`` items, or a dict, to a dict by id."""
+    """Normalize a list of ``{"id": ...}`` items, or a dict, to a dict by id.
+
+    Stored values are read leniently: anything else becomes an empty mapping.
+    Use :func:`_validated_collection` for values coming from a request.
+    """
     if isinstance(value, list):
         return {
             item["id"]: item
@@ -783,6 +832,32 @@ def _as_mapping(value) -> dict:
     if isinstance(value, dict):
         return dict(value)
     return {}
+
+
+def _validated_collection(name: str, value, is_valid_id) -> dict:
+    """Check a color group / block theme collection sent by a client.
+
+    A malformed collection must not be read as an empty one: custom entries
+    missing from an update are deleted on every theme.
+
+    :param name: the field name, for the error message.
+    :param value: a mapping by id, or a list of objects carrying an ``id``.
+    :param is_valid_id: predicate for the entry ids.
+    :returns: the collection as a mapping by id.
+    :raises ValueError: when the value or one of its entries is malformed.
+    """
+    if isinstance(value, list):
+        if not all(isinstance(item, dict) and "id" in item for item in value):
+            raise ValueError(f"{name}: every item must be an object with an id")
+        value = {item["id"]: item for item in value}
+    if not isinstance(value, dict):
+        raise ValueError(f"{name} must be an object keyed by id")
+    for key, data in value.items():
+        if not isinstance(data, dict):
+            raise ValueError(f"{name}.{key} must be an object")
+        if not is_valid_id(key) or data.get("id", key) != key:
+            raise ValueError(f"{name}: invalid id {key!r}")
+    return dict(value)
 
 
 def _merge_collection(theme_id, value, bases, defaults, read, delete, registry):
@@ -803,6 +878,24 @@ def _merge_collection(theme_id, value, bases, defaults, read, delete, registry):
     return value
 
 
+def _validated_values(values: dict) -> dict:
+    """Validate the collections in a theme update.
+
+    :param values: field values sent by a client.
+    :returns: a copy, with the collections normalized to mappings by id.
+    :raises ValueError: if a collection is malformed.
+    """
+    values = dict(values)
+    checks = {
+        "color_groups": is_valid_color_group_id,
+        "block_themes": is_valid_theme_id,
+    }
+    for name, is_valid_id in checks.items():
+        if name in values:
+            values[name] = _validated_collection(name, values[name], is_valid_id)
+    return values
+
+
 def update_theme(theme_id: str, values: dict, registry=None) -> dict:
     """Write field values onto an existing theme.
 
@@ -815,39 +908,48 @@ def update_theme(theme_id: str, values: dict, registry=None) -> dict:
     :param registry: registry to write, defaulting to the local one.
     :returns: the stored theme values.
     :raises KeyError: if the theme does not exist.
+    :raises ValueError: if ``color_groups`` or ``block_themes`` is malformed.
     """
     registry = _registry(registry)
     if not theme_exists(theme_id, registry):
         raise KeyError(theme_id)
 
+    # Validate before writing anything: a rejected update leaves no trace.
+    values = _validated_values(values)
+
     ensure_theme_records(theme_id, registry)
 
     values = _with_legacy_fields(theme_id, values, registry)
 
+    collections = {
+        "color_groups": (
+            BASE_COLOR_GROUPS,
+            DEFAULT_COLOR_GROUPS,
+            get_theme_color_groups,
+            delete_color_group,
+            save_theme_color_groups,
+        ),
+        "block_themes": (
+            BASE_BLOCK_THEMES,
+            DEFAULT_BLOCK_THEMES,
+            get_theme_block_themes,
+            delete_block_theme,
+            save_theme_block_themes,
+        ),
+    }
     known = set(theme_field_names())
     for name, value in values.items():
         if name not in known:
             continue
-        if name == "color_groups":
+        if name in collections:
+            bases, defaults, read, delete, save = collections[name]
             value = _merge_collection(
-                theme_id,
-                value,
-                BASE_COLOR_GROUPS,
-                DEFAULT_COLOR_GROUPS,
-                get_theme_color_groups,
-                delete_color_group,
-                registry,
+                theme_id, value, bases, defaults, read, delete, registry
             )
-        elif name == "block_themes":
-            value = _merge_collection(
-                theme_id,
-                value,
-                BASE_BLOCK_THEMES,
-                DEFAULT_BLOCK_THEMES,
-                get_theme_block_themes,
-                delete_block_theme,
-                registry,
-            )
+            # Through the helper: saving color groups also drops the theme's
+            # old per-colour records, which would otherwise mask the update.
+            save(theme_id, value, registry)
+            continue
         rec = record_name(theme_id, name)
         if rec not in registry.records:
             ensure_theme_records(theme_id, registry)
