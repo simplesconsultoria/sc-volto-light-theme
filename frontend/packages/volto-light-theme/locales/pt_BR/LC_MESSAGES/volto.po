@@ -679,6 +679,11 @@ msgstr "Este é um Bloco Hero. Adicione um item no menu lateral para preenchê-l
 msgid "Error"
 msgstr "Erro"
 
+#. Default: "Event"
+#: components/Blocks/Listing/eventsTemplateHelpers
+msgid "Event"
+msgstr "Evento"
+
 #. Default: "Event Metadata"
 #: components/Blocks/EventMetadata/schema
 msgid "Event Metadata"
@@ -1735,6 +1740,11 @@ msgstr "Vertical"
 #: components/Blocks/Listing/messages
 msgid "Video"
 msgstr "Vídeo"
+
+#. Default: "View all"
+#: components/Blocks/Listing/eventsTemplateHelpers
+msgid "View all"
+msgstr "Ver todos"
 
 #. Default: "Waves (Acreative)"
 #: config/blockThemes

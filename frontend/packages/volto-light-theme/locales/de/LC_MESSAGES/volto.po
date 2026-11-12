@@ -674,6 +674,11 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
+#. Default: "Event"
+#: components/Blocks/Listing/eventsTemplateHelpers
+msgid "Event"
+msgstr ""
+
 #. Default: "Event Metadata"
 #: components/Blocks/EventMetadata/schema
 msgid "Event Metadata"
@@ -1729,6 +1734,11 @@ msgstr ""
 #. Default: "Video"
 #: components/Blocks/Listing/messages
 msgid "Video"
+msgstr ""
+
+#. Default: "View all"
+#: components/Blocks/Listing/eventsTemplateHelpers
+msgid "View all"
 msgstr ""
 
 #. Default: "Waves (Acreative)"

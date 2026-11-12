@@ -1,0 +1,1 @@
+The Events listing template shows months, times and its "Event" and "View all" labels in the site language instead of always in Portuguese, and shows the time range of single-day events. The Event Metadata block names the visitor's time zone instead of always showing "(BRT)". @ericof

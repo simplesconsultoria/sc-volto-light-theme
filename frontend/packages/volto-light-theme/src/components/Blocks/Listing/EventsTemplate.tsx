@@ -1,16 +1,12 @@
 import React, { useEffect } from 'react';
 import cx from 'classnames';
+import { useIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContent } from '@plone/volto/actions';
 import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
 import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
-
-const parseValidDate = (dateStr: any): Date | null => {
-  if (!dateStr || dateStr === 'None') return null;
-  const d = new Date(dateStr);
-  return isNaN(d.getTime()) ? null : d;
-};
+import { eventsMessages, getEventCardDates } from './eventsTemplateHelpers';
 
 /**
  * Component to fetch and display the event location.
@@ -65,6 +61,7 @@ const EventsTemplate = ({
   className,
   blockWidth,
 }) => {
+  const intl = useIntl();
   return (
     <div
       className={cx('events-listing-wrapper', className, {
@@ -73,24 +70,15 @@ const EventsTemplate = ({
     >
       <div className="events-listing">
         {items.map((item) => {
-          const startDate = parseValidDate(item.start || item.EffectiveDate);
-          const day = startDate ? startDate.getDate() : '';
-          const month = startDate
-            ? startDate
-                .toLocaleString('pt-BR', { month: 'short' })
-                .toUpperCase()
-            : '';
+          const { day, month, endDate, time } = getEventCardDates(
+            item,
+            intl.locale,
+          );
 
-          const endDate = parseValidDate(item.end || item.ExpirationDate);
-          const isSameDay =
-            startDate && endDate
-              ? startDate.toDateString() === endDate.toDateString()
-              : false;
-
-          // Determine event type/label (could be Type, Subject, etc. For now let's use Type or custom tag)
+          // Label: the first subject of an Event, otherwise the content type.
           const eventType =
             item['@type'] === 'Event'
-              ? item.Subject?.[0] || 'Evento'
+              ? item.Subject?.[0] || intl.formatMessage(eventsMessages.event)
               : item.Type;
 
           return (
@@ -98,14 +86,7 @@ const EventsTemplate = ({
               <div className="event-date-block">
                 <div className="event-day">{day}</div>
                 <div className="event-month">{month}</div>
-                {endDate && !isSameDay && (
-                  <div className="event-end-date">
-                    – {endDate.getDate()}{' '}
-                    {endDate
-                      .toLocaleString('pt-BR', { month: 'short' })
-                      .toUpperCase()}
-                  </div>
-                )}
+                {endDate && <div className="event-end-date">– {endDate}</div>}
               </div>
               <div className="event-content">
                 <ConditionalLink item={item} condition={!isEditMode}>
@@ -116,7 +97,7 @@ const EventsTemplate = ({
                     <div className="event-description">{item.description}</div>
                   )}
                   <div className="event-details">
-                    {startDate && (
+                    {time && (
                       <span className="event-time">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -132,20 +113,7 @@ const EventsTemplate = ({
                           <circle cx="12" cy="12" r="10"></circle>
                           <polyline points="12 6 12 12 16 14"></polyline>
                         </svg>
-                        {startDate.toLocaleTimeString('pt-BR', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                        {endDate && !isSameDay && (
-                          <span>
-                            {' '}
-                            –{' '}
-                            {endDate.toLocaleTimeString('pt-BR', {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
-                          </span>
-                        )}
+                        {time}
                       </span>
                     )}
                     <EventLocation item={item} />
@@ -162,7 +130,7 @@ const EventsTemplate = ({
       {linkHref && (
         <div className="listing-footer">
           <UniversalLink href={linkHref}>
-            {linkTitle || 'Ver todos'}
+            {linkTitle || intl.formatMessage(eventsMessages.viewAll)}
           </UniversalLink>
         </div>
       )}

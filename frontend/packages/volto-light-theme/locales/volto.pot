@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Plone\n"
-"POT-Creation-Date: 2026-11-11T12:06:54.189Z\n"
+"POT-Creation-Date: 2026-11-12T19:31:32.415Z\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -674,6 +674,11 @@ msgstr ""
 #. Default: "Error"
 #: components/Controlpanels/Themes/messages
 msgid "Error"
+msgstr ""
+
+#. Default: "Event"
+#: components/Blocks/Listing/eventsTemplateHelpers
+msgid "Event"
 msgstr ""
 
 #. Default: "Event Metadata"
@@ -1731,6 +1736,11 @@ msgstr ""
 #. Default: "Video"
 #: components/Blocks/Listing/messages
 msgid "Video"
+msgstr ""
+
+#. Default: "View all"
+#: components/Blocks/Listing/eventsTemplateHelpers
+msgid "View all"
 msgstr ""
 
 #. Default: "Waves (Acreative)"

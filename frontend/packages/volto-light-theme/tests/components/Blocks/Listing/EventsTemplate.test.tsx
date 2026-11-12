@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { renderWithIntl as render } from '../../../support/intl';
 import EventsTemplate from '@simplesconsultoria/volto-light-theme/components/Blocks/Listing/EventsTemplate';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
@@ -45,5 +45,29 @@ describe('EventsTemplate', () => {
 
     expect(getByText('Test Event')).toBeInTheDocument();
     expect(getByText('Test Location')).toBeInTheDocument();
+  });
+
+  it('falls back to translated labels', () => {
+    const store = mockStore({ content: { subrequests: {} } });
+    const items = [
+      {
+        '@id': '/event2',
+        '@type': 'Event',
+        title: 'No Subject',
+        start: '2026-09-24T16:00:00+00:00',
+        location: 'Somewhere',
+      },
+    ];
+
+    const { getByText, queryByText } = render(
+      <Provider store={store}>
+        <EventsTemplate items={items} isEditMode={false} linkHref="/all" />
+      </Provider>,
+    );
+
+    expect(getByText('Event')).toBeInTheDocument();
+    expect(getByText('View all')).toBeInTheDocument();
+    expect(queryByText('Evento')).not.toBeInTheDocument();
+    expect(queryByText('Ver todos')).not.toBeInTheDocument();
   });
 });

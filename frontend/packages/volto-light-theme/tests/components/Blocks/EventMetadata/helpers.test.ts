@@ -21,6 +21,11 @@ const fmtTime = (v: string, locale = 'en') =>
     minute: '2-digit',
   });
 
+const fmtZone = (v: string, locale = 'en') =>
+  new Intl.DateTimeFormat(locale, { timeZoneName: 'short' })
+    .formatToParts(new Date(v))
+    .find((p) => p.type === 'timeZoneName')!.value;
+
 describe('EventMetadata helpers', () => {
   describe('getEventSchedule', () => {
     it('returns empty values without dates', () => {
@@ -28,6 +33,7 @@ describe('EventMetadata helpers', () => {
         date: '',
         time: '',
         endSuffix: null,
+        timeZone: '',
       });
     });
 
@@ -38,6 +44,7 @@ describe('EventMetadata helpers', () => {
         date: fmtDate(start),
         time: fmtTime(start),
         endSuffix: ` – ${fmtTime(end)}`,
+        timeZone: fmtZone(start),
       });
     });
 
@@ -59,6 +66,13 @@ describe('EventMetadata helpers', () => {
         getEventSchedule({ EffectiveDate: start, ExpirationDate: end }, 'en')
           .endSuffix,
       ).toBe(` – ${fmtDate(end)} ${fmtTime(end)}`);
+    });
+
+    it('names the time zone the times are shown in, not a fixed one', () => {
+      const start = '2026-09-24T12:00:00';
+      const { timeZone } = getEventSchedule({ start }, 'en');
+      expect(timeZone).toBe(fmtZone(start));
+      expect(timeZone).not.toBe('');
     });
   });
 

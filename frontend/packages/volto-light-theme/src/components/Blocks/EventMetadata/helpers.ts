@@ -38,6 +38,14 @@ const formatDate = (date: Date | null, locale?: string): string =>
 const formatTime = (date: Date | null, locale?: string): string =>
   date ? date.toLocaleTimeString(locale, TIME_FORMAT) : '';
 
+/** Short name of the time zone the times are shown in, e.g. "BRT" or "GMT-3". */
+const formatTimeZone = (date: Date | null, locale?: string): string =>
+  date
+    ? new Intl.DateTimeFormat(locale, { timeZoneName: 'short' })
+        .formatToParts(date)
+        .find((part) => part.type === 'timeZoneName')?.value || ''
+    : '';
+
 export interface EventSchedule {
   /** Formatted start date, e.g. "Sep 24, 2026" in English. */
   date: string;
@@ -48,6 +56,11 @@ export interface EventSchedule {
    * " – <end date> <end time>" otherwise, or null when there is no end.
    */
   endSuffix: string | null;
+  /**
+   * Short name of the viewer's time zone, which the times are rendered in,
+   * or '' without a start date.
+   */
+  timeZone: string;
 }
 
 /**
@@ -78,6 +91,7 @@ export const getEventSchedule = (
     date: formatDate(startDate, locale),
     time: formatTime(startDate, locale),
     endSuffix,
+    timeZone: formatTimeZone(startDate, locale),
   };
 };
 

@@ -60,7 +60,8 @@ const EventMetadataView = (props: any) => {
           <p>{schedule.date}</p>
           <p>
             {schedule.time}
-            {schedule.endSuffix} (BRT)
+            {schedule.endSuffix}
+            {schedule.timeZone && ` (${schedule.timeZone})`}
           </p>
         </div>
         <div className="metadata-col">
