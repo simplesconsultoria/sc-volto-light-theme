@@ -116,37 +116,11 @@ export default function install(config: ConfigType) {
     },
   };
 
-  if (
-    !config.settings.socialNetworks ||
-    config.settings.socialNetworks.length === 0
-  ) {
-    config.settings.socialNetworks = [
-      {
-        id: 'facebook',
-        title: 'Facebook',
-        href: [{ '@id': 'https://facebook.com/plone' }],
-      },
-      {
-        id: 'instagram',
-        title: 'Instagram',
-        href: [{ '@id': 'https://instagram.com/plone' }],
-      },
-      {
-        id: 'youtube',
-        title: 'YouTube',
-        href: [{ '@id': 'https://youtube.com/plonecms' }],
-      },
-      {
-        id: 'x',
-        title: 'X (Twitter)',
-        href: [{ '@id': 'https://x.com/plone' }],
-      },
-      {
-        id: 'linkedin',
-        title: 'LinkedIn',
-        href: [{ '@id': 'https://linkedin.com/company/plone-foundation' }],
-      },
-    ];
+  // No default social networks: a site without `social_links` of its own
+  // must not link to somebody else's accounts. Projects set their list in
+  // `config.settings.socialNetworks`.
+  if (!config.settings.socialNetworks) {
+    config.settings.socialNetworks = [];
   }
 
   applyExpanders(config);

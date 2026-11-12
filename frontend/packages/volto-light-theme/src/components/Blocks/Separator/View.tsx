@@ -29,9 +29,9 @@ const SeparatorView = (props: any) => {
     (data?.styles?.['--cardBorderWidth']
       ? parseInt(data?.styles?.['--cardBorderWidth'], 10)
       : 1);
-  // Largura do separador (100% por padrão). Blocos salvos pelo separador
-  // upstream (@kitconcept/volto-separator-block) usam `styles.shortLine`
-  // para a linha curta, que lá mede 165px.
+  // Separator width (100% by default). Blocks saved by the upstream
+  // separator (@kitconcept/volto-separator-block) use `styles.shortLine`
+  // for the short line, which measures 165px there.
   const width =
     data?.width ||
     data?.styles?.width ||

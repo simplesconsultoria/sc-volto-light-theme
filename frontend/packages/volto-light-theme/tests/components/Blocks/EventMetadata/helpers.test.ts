@@ -9,14 +9,14 @@ import {
 
 const intl = createIntl({ locale: 'en', messages: {} });
 
-const fmtDate = (v: string) =>
-  new Date(v).toLocaleDateString('pt-BR', {
+const fmtDate = (v: string, locale = 'en') =>
+  new Date(v).toLocaleDateString(locale, {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
   });
-const fmtTime = (v: string) =>
-  new Date(v).toLocaleTimeString('pt-BR', {
+const fmtTime = (v: string, locale = 'en') =>
+  new Date(v).toLocaleTimeString(locale, {
     hour: '2-digit',
     minute: '2-digit',
   });
@@ -34,18 +34,29 @@ describe('EventMetadata helpers', () => {
     it('shows only the end time on the same day', () => {
       const start = '2026-09-24T12:00:00';
       const end = '2026-09-24T14:00:00';
-      expect(getEventSchedule({ start, end })).toEqual({
+      expect(getEventSchedule({ start, end }, 'en')).toEqual({
         date: fmtDate(start),
         time: fmtTime(start),
         endSuffix: ` – ${fmtTime(end)}`,
       });
     });
 
+    it('formats in the site language', () => {
+      const start = '2026-09-24T12:00:00';
+      expect(getEventSchedule({ start }, 'en').date).toBe(fmtDate(start, 'en'));
+      expect(getEventSchedule({ start }, 'pt-BR').date).toBe(
+        fmtDate(start, 'pt-BR'),
+      );
+      expect(getEventSchedule({ start }, 'en').date).not.toBe(
+        getEventSchedule({ start }, 'pt-BR').date,
+      );
+    });
+
     it('shows the end date on different days, using fallback fields', () => {
       const start = '2026-09-24T12:00:00';
       const end = '2026-09-26T14:00:00';
       expect(
-        getEventSchedule({ EffectiveDate: start, ExpirationDate: end })
+        getEventSchedule({ EffectiveDate: start, ExpirationDate: end }, 'en')
           .endSuffix,
       ).toBe(` – ${fmtDate(end)} ${fmtTime(end)}`);
     });

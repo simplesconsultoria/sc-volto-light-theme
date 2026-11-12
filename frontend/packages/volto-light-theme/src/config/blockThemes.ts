@@ -214,11 +214,53 @@ export const LEGACY_THEME_ALIASES: Record<string, string> = {
   grey: 'custom-secondary-primary',
 };
 
-/** The theme a saved theme name means today (see `LEGACY_THEME_ALIASES`). */
+/**
+ * Whether the project defines a theme with this name itself, in
+ * `config.blocks.themes` or `config.blocks.blockThemes`. Its own definition
+ * then wins over a legacy alias of the same name.
+ */
+function isProjectTheme(name: string): boolean {
+  const blocks = (config as any)?.blocks;
+  const themes = blocks?.themes;
+  if (Array.isArray(themes) && themes.some((t: any) => t?.name === name)) {
+    return true;
+  }
+  return Boolean(blocks?.blockThemes?.[name]);
+}
+
+/**
+ * The theme a saved theme name means today (see `LEGACY_THEME_ALIASES`).
+ *
+ * A project that defines a theme with an alias's name (a `grey` of its own)
+ * keeps it: the alias applies only to names nothing else defines.
+ */
 export function resolveThemeAlias<T>(name: T): T | string {
-  return typeof name === 'string' && LEGACY_THEME_ALIASES[name]
-    ? LEGACY_THEME_ALIASES[name]
-    : name;
+  if (typeof name !== 'string' || !LEGACY_THEME_ALIASES[name]) return name;
+  return isProjectTheme(name) ? name : LEGACY_THEME_ALIASES[name];
+}
+
+/**
+ * Color Group ids allowed in a custom Block Theme name. The name is
+ * `custom-<back>-<front>`, so a group id cannot contain a dash; the backend
+ * enforces the same rule.
+ */
+export const COLOR_GROUP_ID_PATTERN = /^[a-z0-9][a-z0-9_]*$/;
+
+const CUSTOM_THEME_PATTERN =
+  /^custom-([a-z0-9][a-z0-9_]*)-([a-z0-9][a-z0-9_]*)$/;
+
+/**
+ * Split a custom Block Theme name into its back and front Color Groups.
+ *
+ * @param name a theme name, such as `custom-secondary-primary`.
+ * @returns the two group ids, or `null` when `name` is not a custom theme.
+ */
+export function parseCustomTheme(
+  name: unknown,
+): { back: string; front: string } | null {
+  if (typeof name !== 'string') return null;
+  const match = CUSTOM_THEME_PATTERN.exec(name);
+  return match ? { back: match[1], front: match[2] } : null;
 }
 
 export const DEFAULT_COLOR_GROUPS: Record<string, ColorGroup> = {
@@ -475,13 +517,9 @@ export function resolveBlockTheme(
       : rawTheme || 'default',
   );
 
-  let customBack: string | undefined;
-  let customFront: string | undefined;
-  if (typeof theme === 'string' && theme.startsWith('custom-')) {
-    const parts = theme.split('-');
-    customBack = parts[1];
-    customFront = parts[2];
-  }
+  const custom = parseCustomTheme(theme);
+  const customBack = custom?.back;
+  const customFront = custom?.front;
 
   const isCustom = typeof theme === 'string' && theme.startsWith('custom');
 

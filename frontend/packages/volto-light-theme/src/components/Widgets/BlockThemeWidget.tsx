@@ -17,6 +17,7 @@ import {
   DEFAULT_COLOR_GROUPS,
   NATAL_BLOCK_THEMES,
   NATAL_COLOR_GROUPS,
+  parseCustomTheme,
   resolveThemeAlias,
 } from '../../config/blockThemes';
 import { SwatchDropdown, type SwatchOption } from './shared/SwatchDropdown';
@@ -175,9 +176,9 @@ export function parseThemeValue(
         'default';
   if (typeof raw !== 'string') return { themeId: 'default' };
   const name = resolveThemeAlias(raw);
-  if (name.startsWith('custom-')) {
-    const [, back, front] = name.split('-');
-    return { themeId: 'custom', back, front };
+  const custom = parseCustomTheme(name);
+  if (custom) {
+    return { themeId: 'custom', ...custom };
   }
   return { themeId: name };
 }
@@ -378,8 +379,12 @@ export const BlockThemeWidget: React.FC<BlockThemeWidgetProps> = (props) => {
 
   const handleSelectTheme = (themeId: string) => {
     if (themeId.startsWith('custom')) {
-      const [, back, front] = themeId.split('-');
-      selectGroups('custom', back || currentBack, front || currentFront);
+      const custom = parseCustomTheme(themeId);
+      selectGroups(
+        'custom',
+        custom?.back || currentBack,
+        custom?.front || currentFront,
+      );
       setIsEditing(true);
       return;
     }

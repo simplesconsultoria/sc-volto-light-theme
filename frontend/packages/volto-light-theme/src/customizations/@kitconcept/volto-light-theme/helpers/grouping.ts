@@ -1,4 +1,21 @@
+/**
+ * OVERRIDE grouping.ts
+ * REASON: Group by the theme a block resolves to, not by its raw value:
+ * read `styles.theme` and object-form themes as well as `block.theme`, and
+ * resolve legacy names (`brand` -> `alternative`, `grey` -> its alias), so
+ * blocks that look the same share one `blocks-group-wrapper` band.
+ * Load-bearing: upstream `RenderBlocksV2` imports this module.
+ * FILE: @kitconcept/volto-light-theme/src/helpers/grouping.ts
+ * FILE VERSION: 8.1.4
+ */
 import type { BlocksData } from '@plone/types';
+import { resolveThemeAlias } from '@simplesconsultoria/volto-light-theme/config/blockThemes';
+
+/** The theme name a saved value stands for today. */
+const canonicalTheme = (name: string): string => {
+  const resolved = String(resolveThemeAlias(name));
+  return resolved === 'brand' ? 'alternative' : resolved;
+};
 
 /**
  * Groups adjacent blocks by background theme/color.
@@ -26,10 +43,11 @@ export function groupByBGColor(
       blocks[blockId]?.theme ??
       blocks[blockId]?.styles?.theme ??
       blocks[blockId]?.backgroundColor;
-    const currentBlockColor =
+    const currentBlockColor = canonicalTheme(
       typeof rawTheme === 'object' && rawTheme !== null
         ? rawTheme.theme || 'default'
-        : rawTheme || 'default';
+        : rawTheme || 'default',
+    );
 
     if (currentBlockColor !== currentBGColor) {
       currentBGColor = currentBlockColor;

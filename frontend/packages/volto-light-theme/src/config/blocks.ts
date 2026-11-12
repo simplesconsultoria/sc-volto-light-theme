@@ -5,6 +5,7 @@ import {
   DEFAULT_BLOCK_THEMES,
   DEFAULT_COLOR_GROUPS,
   LEGACY_THEME_ALIASES,
+  parseCustomTheme,
   type ThemeDefinition,
 } from './blockThemes';
 import type { ConfigType } from '@plone/registry';
@@ -166,9 +167,10 @@ customThemes.find = function (predicate: any, thisArg?: any) {
   // Legacy names (`grey`): VLT paints the full-width band of a block group
   // from the definition named like the saved theme, so answer under that name.
   for (const [alias, target] of Object.entries(LEGACY_THEME_ALIASES)) {
-    const [, back, front] = target.split('-');
+    const custom = parseCustomTheme(target);
+    if (!custom) continue;
     const candidate = {
-      ...createCustomThemeDefinition(back, front),
+      ...createCustomThemeDefinition(custom.back, custom.front),
       name: alias,
     };
     if (predicate.call(thisArg, candidate)) {
@@ -267,7 +269,7 @@ function installLocalBlocks(config: ConfigType) {
     };
   }
 
-  // Garante que o bloco Slate padrão repasse className (com has--block-width--) e style na visualização
+  // Make the default Slate block pass className (with has--block-width--) and style to its view
   if (config.blocks.blocksConfig.slate) {
     const PrevSlateView = config.blocks.blocksConfig.slate.view;
     config.blocks.blocksConfig.slate.view = (props: any) => {
@@ -279,7 +281,7 @@ function installLocalBlocks(config: ConfigType) {
     };
   }
 
-  // Garante que o bloco Table of Contents (toc) repasse className e style na visualização
+  // Make the Table of Contents (toc) block pass className and style to its view
   if (config.blocks.blocksConfig.toc) {
     const PrevTocView = config.blocks.blocksConfig.toc.view;
     config.blocks.blocksConfig.toc.view = (props: any) => {
@@ -291,7 +293,7 @@ function installLocalBlocks(config: ConfigType) {
     };
   }
 
-  // Garante que o bloco SlateTable / Table repasse className e style na visualização
+  // Make the SlateTable / Table block pass className and style to its view
   if (config.blocks.blocksConfig.slateTable) {
     const PrevSlateTableView = config.blocks.blocksConfig.slateTable.view;
     config.blocks.blocksConfig.slateTable.view = (props: any) => {
@@ -309,8 +311,8 @@ function installLocalBlocks(config: ConfigType) {
     };
   }
 
-  // Substitui view e edit do Search Block pelas versões aprimoradas com sistema de temas,
-  // bordas personalizadas, controle de largura do bloco e sanitização contra variação inválida
+  // Replace the Search block view and edit with versions that support block
+  // themes, borders and block width, and that ignore an invalid variation
   if (config.blocks.blocksConfig.search) {
     const PrevSearchView = SearchBlockView;
     const PrevSearchEdit = SearchBlockEdit;
@@ -454,8 +456,9 @@ function installContentTypeColors(config: ConfigType) {
 }
 
 /**
- * Remove os campos de tema (theme, backgroundColor) do schema e de styles.schema,
- * impedindo que blocos dentro de containers restritos (como o accordion) alterem seu tema.
+ * Remove the theme fields (theme, backgroundColor) from the schema and from
+ * styles.schema, so blocks inside restricted containers (such as the
+ * accordion) cannot change their theme.
  */
 export const disableThemeSchema = ({ schema }: { schema: any }) => {
   if (!schema) return schema;

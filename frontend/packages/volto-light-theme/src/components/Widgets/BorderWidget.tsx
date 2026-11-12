@@ -231,7 +231,7 @@ export interface BorderSides {
 }
 
 /**
- * Converte valor numérico para pixel string seguro.
+ * Convert a numeric value to a safe pixel string.
  */
 function toPx(val: number): string {
   return `${Math.max(0, Math.round(val))}px`;
@@ -319,7 +319,7 @@ export function formatBorderValue(sides: BorderSides): string {
 }
 
 /**
- * Retorna uma descrição em texto legível para leitores de tela e resumos visuais.
+ * Return a readable description for screen readers and visual summaries.
  */
 export function getBorderDescription(
   sides: BorderSides,
@@ -532,7 +532,7 @@ const StepIcon: React.FC<{ plus?: boolean }> = ({ plus }) => (
   </svg>
 );
 
-/** "Espessura da Borda" number field with -1 / +1 buttons. */
+/** "Border width" number field with -1 / +1 buttons. */
 const ThicknessStepper: React.FC<{
   widgetId: string;
   thickness: number;
@@ -747,7 +747,7 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
         role="group"
         aria-labelledby={`${widgetId}-label`}
       >
-        {/* Live region para anúncios a11y */}
+        {/* Live region for a11y announcements */}
         <div role="status" aria-live="polite" className="sr-only">
           {announcement}
         </div>
@@ -800,7 +800,7 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
           </div>
         </div>
 
-        {/* 2. Controle Numérico de Espessura ("Espessura da Borda") */}
+        {/* 2. Numeric border width control */}
         <div className="border-widget__thickness-section">
           <ThicknessStepper
             widgetId={widgetId}
@@ -808,7 +808,7 @@ export const BorderWidget: React.FC<BorderWidgetProps> = (props) => {
             onChange={handleThicknessChange}
           />
 
-          {/* Toggle para personalização detalhada por lado */}
+          {/* Toggle for per-side customization */}
           <div className="border-widget__side-toggle-wrapper">
             <button
               type="button"

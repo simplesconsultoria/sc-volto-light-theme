@@ -1,3 +1,11 @@
+/**
+ * OVERRIDE Facets.jsx
+ * REASON: Guard against a missing facet index, querystring indexes or facets
+ * map, which crash the Search block on sites whose facet field is no longer
+ * an index; import the search utils by their absolute path.
+ * FILE: @plone/volto/src/components/manage/Blocks/Search/components/Facets.jsx
+ * FILE VERSION: 19.7.0
+ */
 import React, { useState, useMemo } from 'react';
 import { Button, Grid } from 'semantic-ui-react';
 import { resolveExtension } from '@plone/volto/helpers/Extensions/withBlockExtensions';

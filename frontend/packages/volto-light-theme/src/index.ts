@@ -13,7 +13,11 @@ import BlockThemesWidget from './components/Widgets/BlockThemesWidget';
 import BlockThemeWidget from './components/Widgets/BlockThemeWidget';
 import BorderWidget from './components/Widgets/BorderWidget';
 import { resolveBlockWidthForBlock } from './helpers/blockWidth';
-import { DEFAULT_BLOCK_THEMES, resolveThemeAlias } from './config/blockThemes';
+import {
+  DEFAULT_BLOCK_THEMES,
+  parseCustomTheme,
+  resolveThemeAlias,
+} from './config/blockThemes';
 
 /**
  * Block and variation titles are plain strings in the block configuration, and
@@ -114,13 +118,9 @@ function applyConfig(config: ConfigType) {
           : rawTheme,
       );
 
-      let customBack: string | undefined;
-      let customFront: string | undefined;
-      if (typeof theme === 'string' && theme.startsWith('custom-')) {
-        const parts = theme.split('-');
-        customBack = parts[1];
-        customFront = parts[2];
-      }
+      const custom = parseCustomTheme(theme);
+      const customBack = custom?.back;
+      const customFront = custom?.front;
 
       const activeBlockThemes: Record<string, any> = {
         ...DEFAULT_BLOCK_THEMES,

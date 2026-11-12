@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import type { ConfigType } from '@plone/registry';
-import { inheritBehaviors } from '@simplesconsultoria/volto-light-theme/config/settings';
+import install, {
+  inheritBehaviors,
+} from '@simplesconsultoria/volto-light-theme/config/settings';
 
 const HEADER = 'sc.voltolighttheme.siteheader';
 const THEME = 'sc.voltolighttheme.themeselector';
@@ -148,5 +150,22 @@ describe('inheritBehaviors', () => {
         }),
       ).toBe(`keep.this.one,${THEME},${FOOTER}`);
     });
+  });
+});
+
+describe('socialNetworks default', () => {
+  const installed = (socialNetworks?: unknown[]) =>
+    install({
+      settings: { socialNetworks, apiExpanders: [] },
+      blocks: { blocksConfig: {} },
+    } as unknown as ConfigType).settings.socialNetworks;
+
+  it("is empty: no links to somebody else's accounts", () => {
+    expect(installed()).toEqual([]);
+  });
+
+  it('keeps a list set before the add-on loads', () => {
+    const own = [{ id: 'x', title: 'X', href: [{ '@id': 'https://x.com/a' }] }];
+    expect(installed(own)).toBe(own);
   });
 });

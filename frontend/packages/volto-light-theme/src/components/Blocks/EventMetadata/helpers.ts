@@ -18,8 +18,6 @@ export const messages = defineMessages({
   free: { id: 'Free', defaultMessage: 'Free' },
 });
 
-const LOCALE = 'pt-BR';
-
 const DATE_FORMAT: Intl.DateTimeFormatOptions = {
   day: '2-digit',
   month: 'short',
@@ -34,14 +32,14 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
 const toDate = (value?: string | null): Date | null =>
   value ? new Date(value) : null;
 
-const formatDate = (date: Date | null): string =>
-  date ? date.toLocaleDateString(LOCALE, DATE_FORMAT) : '';
+const formatDate = (date: Date | null, locale?: string): string =>
+  date ? date.toLocaleDateString(locale, DATE_FORMAT) : '';
 
-const formatTime = (date: Date | null): string =>
-  date ? date.toLocaleTimeString(LOCALE, TIME_FORMAT) : '';
+const formatTime = (date: Date | null, locale?: string): string =>
+  date ? date.toLocaleTimeString(locale, TIME_FORMAT) : '';
 
 export interface EventSchedule {
-  /** Formatted start date, e.g. "24 de set. de 2026". */
+  /** Formatted start date, e.g. "Sep 24, 2026" in English. */
   date: string;
   /** Formatted start time, e.g. "13:00". */
   time: string;
@@ -54,9 +52,16 @@ export interface EventSchedule {
 
 /**
  * Formats the start/end of an event (falling back to EffectiveDate and
- * ExpirationDate) for the "Quando" column.
+ * ExpirationDate) for the "When" column.
+ *
+ * @param item the event content.
+ * @param locale the site language (`intl.locale`); the runtime default
+ *   when omitted.
  */
-export const getEventSchedule = (item: Record<string, any>): EventSchedule => {
+export const getEventSchedule = (
+  item: Record<string, any>,
+  locale?: string,
+): EventSchedule => {
   const startDate = toDate(item.start || item.EffectiveDate);
   const endDate = toDate(item.end || item.ExpirationDate);
 
@@ -65,13 +70,13 @@ export const getEventSchedule = (item: Record<string, any>): EventSchedule => {
     const isSameDay =
       !!startDate && startDate.toDateString() === endDate.toDateString();
     endSuffix = isSameDay
-      ? ` – ${formatTime(endDate)}`
-      : ` – ${formatDate(endDate)} ${formatTime(endDate)}`;
+      ? ` – ${formatTime(endDate, locale)}`
+      : ` – ${formatDate(endDate, locale)} ${formatTime(endDate, locale)}`;
   }
 
   return {
-    date: formatDate(startDate),
-    time: formatTime(startDate),
+    date: formatDate(startDate, locale),
+    time: formatTime(startDate, locale),
     endSuffix,
   };
 };

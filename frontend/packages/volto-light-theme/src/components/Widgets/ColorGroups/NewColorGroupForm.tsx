@@ -41,12 +41,17 @@ const COLOR_PAIRS: { role: string; label: MessageDescriptor }[] = [
   { role: 'accent', label: messages.accent },
 ];
 
-/** Turn what the editor typed into a valid group id. */
+/**
+ * Turn what the editor typed into a valid group id.
+ *
+ * Anything but letters and digits becomes `_`: a dash would break the
+ * `custom-<back>-<front>` Block Theme name the id ends up in.
+ */
 export const cleanGroupId = (raw: string) =>
   raw
     .trim()
     .toLowerCase()
-    .replace(/[^a-z0-9-]/g, '-');
+    .replace(/[^a-z0-9_]/g, '_');
 
 /** Form adding a custom Color Group to the theme being edited. */
 export const NewColorGroupForm: React.FC<NewColorGroupFormProps> = ({

@@ -35,7 +35,7 @@ const EventMetadataView = (props: any) => {
 
   // Properties usually contains the current context data (Event data)
   const item = properties || {};
-  const schedule = getEventSchedule(item);
+  const schedule = getEventSchedule(item, intl.locale);
   const {
     location,
     eventLink,

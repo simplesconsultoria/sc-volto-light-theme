@@ -55,6 +55,20 @@ describe('groupByBGColor', () => {
     expect(result).toEqual([['b1'], ['b2']]);
   });
 
+  it('groups a legacy name with the theme it stands for', () => {
+    const blocks: any = {
+      b1: { '@type': 'slate', theme: 'brand' },
+      b2: { '@type': 'slate', styles: { theme: 'alternative' } },
+      b3: { '@type': 'slate', theme: 'grey' },
+      b4: { '@type': 'slate', theme: 'custom-secondary-primary' },
+    };
+    const blocks_layout: any = { items: ['b1', 'b2', 'b3', 'b4'] };
+    expect(groupByBGColor(blocks, blocks_layout)).toEqual([
+      ['b1', 'b2'],
+      ['b3', 'b4'],
+    ]);
+  });
+
   it('retorna array vazio quando layout ou blocks estiverem vazios', () => {
     expect(groupByBGColor({}, { items: [] } as any)).toEqual([]);
     expect(groupByBGColor(null as any, null as any)).toEqual([]);
