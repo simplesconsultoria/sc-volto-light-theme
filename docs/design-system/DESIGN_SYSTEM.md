@@ -4,7 +4,7 @@ The architectural manifest for `@simplesconsultoria/volto-light-theme`: what thi
 
 All factual claims were verified against source or runtime probes on **2026-11-11**.
 
-- **Package:** `@simplesconsultoria/volto-light-theme@1.0.0-alpha.14`
+- **Package:** `@simplesconsultoria/volto-light-theme@1.0.0-alpha.16`
 - **Built on:** `@kitconcept/volto-light-theme@8.1.4` (`package.json` `theme`) + 16 declared addons
 - **Companion documents:** [INVENTORY.md](./INVENTORY.md) for exhaustive schemas and token tables, [GAPS.md](./GAPS.md) for verified open defects and design decisions
 
@@ -19,7 +19,7 @@ Four layers compose at runtime, and debugging any visual issue starts with ident
 | **Volto core** + `@plone/volto-slate` | block registry, Slate editor, layout grid primitives, default widgets/views | core/addon releases (or targeted `customizations/` shadows) |
 | **`@kitconcept/volto-light-theme@8.1.4`** + block addons | base visual language, `--theme-*` convention, 10 `@property` declarations, 3rd-party blocks (`accordion`, `banner`, `carousel`, `highlight`, `logos`, `separator`, `slider`, etc.) | upgrading npm dependencies or SC-VLT SCSS/schema extensions |
 | **`sc-vlt` (`this add-on`)** | **6** own blocks, **10** extended blocks + **6** listing variations, universal styling injection (`theme`, `blockWidth`, `borders`), **Color Groups + Block Themes**, semantic cool-slate palette, `rem` type scale, accessible HeaderBar/Navigation/EventMetadata | editing this package |
-| **Site configuration** | site palette, fonts, 2nd-layer patterns/images, custom block-theme combinations | creating/editing records in `@controlpanels/themes` (`ISCVLTThemeDefinition`) |
+| **Site configuration** | site palette, fonts, 2nd-layer patterns/images, custom block-theme combinations | creating/editing records in `@controlpanels/themes` (`ISCVLTThemeSchema`) |
 
 **The live authoritative catalogue is Storybook's `Blocks/Inventory`**, which reads `config.blocks.blocksConfig` at runtime — **47 blocks** today (**6** own, **10** extended, **31** inherited).
 
@@ -41,8 +41,8 @@ Registered in `src/config/blocks.ts` → `installLocalBlocks()`:
 ### 2.2 Extended blocks & container rules (10 + universal enhancer)
 
 - **`listing`:** replaces upstream `grid` and `imageGallery` templates with `GridTemplate` (adds `gridColumns` 1–4), adds `carousel`, `mediaCarousel`, `teaser` ("Highlight"), and `events` variations, and composes `listingSchemaEnhancer` (`headlineButtonText`/`headlineButtonLink`) on top of upstream's enhancer.
-- **Standalone extensions:** `separator` (custom `SeparatorSchema` with colour/thickness/width/alignment, excluded from card borders), `introduction` (injects `styles.align`), `banner` (injects `styles.size:noprefix` `image_size` widget titled `"Height"`), `search` (`SearchBlockView`/`SearchBlockEdit` + `sanitizeSearchData` guarding invalid variations), and thin wrapper `<div>`s forwarding `className`/`style` on `slate`, `toc`, and `slateTable`.
-- **Container sync (`syncContainerBlocks`):** expands `allowedBlocks` on `gridBlock` (**46**) and `accordion` (**49**) and mirrors `blocksConfig` into containers (`accordion`, `tabs_block`, `columnsBlock`, `gridBlock`, `customGrid`). Inside `accordion`, every child block's `schemaEnhancer` is wrapped with `disableThemeSchema` and `_accordion.scss` forces `--theme-*` / `--colorgroup-*-font` `inherit !important` so nested blocks never split panel colour schemes.
+- **Standalone extensions:** `separator` (custom `SeparatorSchema` with color/thickness/width/alignment, excluded from card borders), `introduction` (injects `styles.align`), `banner` (injects `styles.size:noprefix` `image_size` widget titled `"Height"`), `search` (`SearchBlockView`/`SearchBlockEdit` + `sanitizeSearchData` guarding invalid variations), and thin wrapper `<div>`s forwarding `className`/`style` on `slate`, `toc`, and `slateTable`.
+- **Container sync (`syncContainerBlocks`):** expands `allowedBlocks` on `gridBlock` (**46**) and `accordion` (**49**) and mirrors `blocksConfig` into containers (`accordion`, `tabs_block`, `columnsBlock`, `gridBlock`, `customGrid`). Inside `accordion`, every child block's `schemaEnhancer` is wrapped with `disableThemeSchema` and `_accordion.scss` forces `--theme-*` / `--colorgroup-*-font` `inherit !important` so nested blocks never split panel color schemes.
 - **Universal block styling (`enhanceBlockConfig` + `Proxy`):** wraps every existing and dynamically registered block's `schemaEnhancer` (including blocks and enhancers that add-ons loaded later register, replace or spread) to expose root `theme` (`block_theme_widget`), `styles.blockWidth:noprefix` (`narrow`, `default`, `layout`, `full`), `styles.--cardBorderColor`, and `styles.--cardBorderWidth` (`border_widget`, unless excluded via `borderExcludedBlocks`). Three `styleClassNameExtenders` in `src/index.ts` emit `has--block-width--*`, `has--block-alignment--*`, `has--border`, `has--theme--*`, and `has-{back,front}-colorgroup-*`. On left/right floated `image` and `mainImageBlock` blocks, `blockWidth` is omitted from the sidebar and `resolveBlockWidthForBlock` inherits the adjacent sibling's width.
 
 ---
@@ -63,7 +63,7 @@ Rather than editing 14 tokens per block theme manually, `sc-vlt` separates palet
 
 ---
 
-## 4. Colour architecture, `@property` constraints & contrast
+## 4. Color architecture, `@property` constraints & contrast
 
 ### 4.1 Semantic tokens first
 
@@ -74,13 +74,13 @@ Base neutrals (`--gray-02`..`--gray-dark-*`) and brand shades (`--brand-color*`)
 Upstream VLT registers **10** custom properties via `@property` in `src/theme/_variables.scss`:
 `--background`, `--text-color`, `--text-size`, `--primary-color`, `--primary-foreground-color`, `--secondary-color`, `--secondary-foreground-color`, `--accent-color`, `--accent-foreground-color`, `--image-aspect-ratio`.
 
-Because `@property { syntax: '<color>'; }` is **computed eagerly where declared** (at `:root`), `light-dark(...)` inside those six registered colour tokens locks onto the `color-scheme` of `<html>`. Unregistered properties (`--*-low-foreground-color`, `--*-accent-color`, etc.) stay as token streams and resolve against the **closest ancestor's** `color-scheme`.
+Because `@property { syntax: '<color>'; }` is **computed eagerly where declared** (at `:root`), `light-dark(...)` inside those six registered color tokens locks onto the `color-scheme` of `<html>`. Unregistered properties (`--*-low-foreground-color`, `--*-accent-color`, etc.) stay as token streams and resolve against the **closest ancestor's** `color-scheme`.
 
-Therefore, whenever rendering a colour-mode switcher on a scoped wrapper (such as Storybook's `withTheme.tsx` or `DsPreviewProvider.tsx`), `color-scheme` / `data-theme` MUST be set on **both `document.documentElement` and the story wrapper**; setting it on only one freezes half the tokens.
+Therefore, whenever rendering a color-mode switcher on a scoped wrapper (such as Storybook's `withTheme.tsx` or `DsPreviewProvider.tsx`), `color-scheme` / `data-theme` MUST be set on **both `document.documentElement` and the story wrapper**; setting it on only one freezes half the tokens.
 
 ### 4.3 Default contrast (WCAG 2.1 AA)
 
-`DEFAULT_COLOR_GROUPS` uses a cool slate neutral scale + light-blue brand ramp (`#a5d8ff` light / `#1c3a57` dark). Across all 4 Color Groups × 3 foreground roles × 2 colour modes (24 foreground/background pairs), every shipped pair clears **WCAG 2.1 AA (≥ 4.5:1)**: ratios range from **4.68:1** (`neutral` light accent `#1971c2` on `#f6f7f9`) to **16.15:1** (`primary` dark text `#f1f3f5` on `#14171c`). Because site admins replace Color Group colours per project via the Themes control panel, per-site contrast validation remains necessary on deployment.
+`DEFAULT_COLOR_GROUPS` uses a cool slate neutral scale + light-blue brand ramp (`#a5d8ff` light / `#1c3a57` dark). Across all 4 Color Groups × 3 foreground roles × 2 color modes (24 foreground/background pairs), every shipped pair clears **WCAG 2.1 AA (≥ 4.5:1)**, checked by `tests/theme/contrast.test.ts`: ratios range from **4.68:1** (`neutral` light accent `#1971c2` on `#f6f7f9`) to **16.15:1** (`primary` dark text `#f1f3f5` on `#14171c`). Because site admins replace Color Group colors per project via the Themes control panel, per-site contrast validation remains necessary on deployment.
 
 ---
 
@@ -101,7 +101,28 @@ Therefore, whenever rendering a colour-mode switcher on a scoped wrapper (such a
 
 Instead of framing every outer `.block` box uniformly, `_borders.scss` targets inner semantic surfaces when `--cardBorderWidth` is set: `img` (`image` / `mainImageBlock`), `.quote-block` (`quoteBlock`), `.ui.accordion` (`accordion`), `.teaser-item` (`highlight`), `table` (`slateTable`), `.item` / `.logo-item` (`logos`), `.carousel-container .card` (`carousel`), `.slider-viewport` (`slider`), explicit `[data-border-target]` / `.block-border-target`, and fallback `.block-inner-container`.
 
-### 6.3 Selector scoping — Storybook & Preview Gotcha
+### 6.3 Configuration for projects and block developers
+
+Projects tune the system from their own add-on, which loads after this one:
+
+| Setting | Default | Effect |
+| --- | --- | --- |
+| `config.blocks.blockThemes` | `DEFAULT_BLOCK_THEMES` (`default`, `alternative`) | Extra Block Themes, keyed by id: `{ id, name, back_color_group, front_color_group }`. They join the theme picker and resolve like the shipped ones. |
+| `config.blocks.themes` | `default`, `alternative` and the 16 `custom-<back>-<front>` pairs | A project that sets its own list (for example with a `grey` theme) keeps it: the legacy `grey` alias only applies when nothing else defines that name. |
+| `config.blocks.widths` | `['narrow', 'default', 'layout', 'full']` | The Block Width choices offered on every block. |
+| `config.settings.borderExcludedBlocks` | `['separator']` | Block ids that get no border controls. |
+| `config.settings.socialNetworks` | `[]` | Footer social links used when the site has no `social_links`. |
+
+Color Group ids use lowercase letters, digits and underscores: they become part of `custom-<back>-<front>`, which is split on `-`.
+
+A block's view receives the theme, width and border through two props, and must pass both to its root element:
+
+- `className`: `has--theme--<name>`, `has-back-colorgroup-<id>`, `has-front-colorgroup-<id>` and `has--block-width--<width>`.
+- `style`: the `--theme-*` custom properties, `--cardBorderColor` and `--cardBorderWidth`.
+
+The width is stored in `styles['blockWidth:noprefix']`; `data.blockWidth` and `styles.blockWidth` are still read. Every block registered in `config.blocks.blocksConfig` gets these controls, including blocks registered after this add-on, because `blocksConfig` is wrapped in a `Proxy` and each block's `schemaEnhancer` becomes an accessor. An add-on that kept a reference to the raw `blocksConfig` object from before this add-on loaded, or that redefines a block with `Object.defineProperty`, bypasses it.
+
+### 6.4 Selector scoping — Storybook & Preview Gotcha
 
 Many stylesheets depend on ancestor DOM selectors present on real Plone pages. Rendering a component outside its ancestor chain drops all matching rules cleanly without throwing errors:
 
@@ -117,13 +138,13 @@ Stories and previews must wrap these components in their matching ancestor + gro
 
 ---
 
-## 7. Per-project overlay (`ISCVLTThemeDefinition`)
+## 7. Per-project overlay (`ISCVLTThemeSchema` / `ISCVLTThemeDefinition`)
 
-`backend/src/sc/voltolighttheme/interfaces.py` defines `ISCVLTThemeDefinition` with 4 fields (`name`, `description`, `color_groups`, `block_themes`). At runtime:
+`backend/src/sc/voltolighttheme/interfaces.py` defines two interfaces. `ISCVLTThemeSchema` has 4 fields (`name`, `description`, `color_groups`, `block_themes`): the control panel serves it and the code registers its records. `ISCVLTThemeDefinition` is that schema plus the 40 per-color fields of 1.0.0a15 and earlier, all optional: GenericSetup profiles name it, so old profiles keep importing and the passthrough fields (`font_family_secondary`, event/file/image colors) can be set. At runtime:
 1. `src/config/settings.ts` adds the `sc.voltolighttheme.themeselector` behavior to `expand.inherit.behaviors` (dropping upstream `voltolighttheme.*` behaviors).
-2. `src/config/slots.ts` registers `Theming` into `aboveHeader`. Even on 404 routes (`errorContext`), `Theming` fetches `@inherit` from the site root (`''`) so branded colours persist on Not Found pages.
+2. `src/config/slots.ts` registers `Theming` into `aboveHeader`. Even on 404 routes (`errorContext`), `Theming` fetches `@inherit` from the site root (`''`) so branded colors persist on Not Found pages.
 3. `src/helpers/themeStyles.ts` compiles the theme into `:root` tokens + utility classes inside `<Helmet><style data-sc-theme="...">` and bridges `primary`/`secondary`/`accent`/`neutral` onto upstream's CSS tokens.
-4. `src/helpers/themesControlpanel.ts` strips **40** legacy per-colour/font fields (`LEGACY_THEME_FIELDS`, matching `backend/src/sc/voltolighttheme/utils/legacy_themes.py`) from control panel forms while legacy passthrough records still feed CSS custom properties if stored.
+4. `src/helpers/themesControlpanel.ts` strips **40** legacy per-color/font fields (`LEGACY_THEME_FIELDS`, matching `backend/src/sc/voltolighttheme/utils/legacy_themes.py`) from control panel forms while legacy passthrough records still feed CSS custom properties if stored.
 5. `src/index.ts` registers the 5 custom sidebar/controlpanel widgets (`style_simple_color`, `color_groups_widget`, `block_themes_widget`, `block_theme_widget`, `border_widget`).
 
 ---

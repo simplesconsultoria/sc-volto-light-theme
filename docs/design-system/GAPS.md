@@ -8,7 +8,7 @@ Resolved past gaps are omitted; history belongs in git and the changelog (`news/
 
 ---
 
-## 1. Colour, Pattern & High-Contrast tokens
+## 1. Color, Pattern & High-Contrast tokens
 
 ### 1.1 `--theme-font-color` is consumed upstream but unmapped
 
@@ -29,7 +29,7 @@ There are currently two overlapping pattern mechanisms with conflicting tokens:
 
 ### 1.3 `[data-theme='high-contrast']` does not suppress 2nd-layer background images/patterns
 
-`_root.scss:464-530` collapses foreground/background/border colours onto `#000` / `#fff` / `#fff333`, but never overrides `--colorgroup-*-bg-image`, `--highground-bg-image`, or `--theme-bg-image` to `none`. Photos or CSS patterns configured on a Color Group continue rendering behind high-contrast text and borders.
+`_root.scss:464-530` collapses foreground/background/border colors onto `#000` / `#fff` / `#fff333`, but never overrides `--colorgroup-*-bg-image`, `--highground-bg-image`, or `--theme-bg-image` to `none`. Photos or CSS patterns configured on a Color Group continue rendering behind high-contrast text and borders.
 
 ### 1.4 `--link-foreground-color` falls back to surface `--accent-color` in `themeStyleSheet`
 
@@ -41,7 +41,7 @@ if (!properties['--link-foreground-color']) {
 }
 ```
 
-Wait-state impact: because `--accent-color` in `DEFAULT_COLOR_GROUPS` is a light/dark **surface colour** (`#a5d8ff` light / `#1c3a57` dark) rather than a text accent colour, injected themes without explicit `--link-foreground-color` override links to low-contrast surface colours (on white `#ffffff`, `#a5d8ff` is only **1.46:1**).
+Because `--accent-color` in `DEFAULT_COLOR_GROUPS` is a light/dark **surface color** (`#a5d8ff` light / `#1c3a57` dark) rather than a text accent color, injected themes without explicit `--link-foreground-color` override links to low-contrast surface colors (on white `#ffffff`, `#a5d8ff` is only **1.51:1**).
 
 ### 1.5 Responsive Color Group background images switch on viewport width, not container width
 
@@ -85,7 +85,7 @@ Five independent mismatches exist in `src/components/Blocks/HeroBlock/` and `src
 
 ### 2.4 `QuoteBlock` reads High Ground ink on a transparent background
 
-`_quoteBlock.scss:61,74` sets `.quote-text` and `.quote-author cite` colour to `var(--theme-top-foreground-color)` even when `backgroundStyle` is `'transparent'` (the default, sitting directly on Ground `--theme-color` rather than High Ground `--theme-high-contrast-color`). Whenever back and front Color Groups differ in luminance (e.g. dark back + light front), quote text reads High Ground ink against Ground background.
+`_quoteBlock.scss:61,74` sets `.quote-text` and `.quote-author cite` color to `var(--theme-top-foreground-color)` even when `backgroundStyle` is `'transparent'` (the default, sitting directly on Ground `--theme-color` rather than High Ground `--theme-high-contrast-color`). Whenever back and front Color Groups differ in luminance (e.g. dark back + light front), quote text reads High Ground ink against Ground background.
 
 ---
 
@@ -106,11 +106,11 @@ The `blockWidth` widget offers four distinct options (`narrow`, `default`, `layo
 
 ### 4.1 `--header-foreground-color` is read in `_root.scss` without a schema field
 
-`_root.scss:137-140` resolves `--header-foreground: var(--header-foreground-color, var(--primary-foreground-color))` (comment still citing `header_foreground_color`), but `ISCVLTThemeDefinition` (`backend/src/sc/voltolighttheme/interfaces.py`) exposes no `header_foreground_color` field, and `themeStyles.ts:494-496` forces `--header-foreground: var(--primary-foreground-color)` whenever `color_groups` is present.
+`_root.scss:137-140` resolves `--header-foreground: var(--header-foreground-color, var(--primary-foreground-color))` (comment still citing `header_foreground_color`), but `ISCVLTThemeSchema` (`backend/src/sc/voltolighttheme/interfaces.py`) exposes no `header_foreground_color` field, and `themeStyles.ts:494-496` forces `--header-foreground: var(--primary-foreground-color)` whenever `color_groups` is present.
 
 ### 4.2 `LEGACY_PASSTHROUGH_FIELDS` cannot be edited in the Themes panel
 
-`backend/src/sc/voltolighttheme/utils/legacy_themes.py:43-51` keeps 7 passthrough fields (`font_family_secondary`, `event_color_{light,dark}`, `file_color_{light,dark}`, `image_color_{light,dark}`) active so `_root.scss` / `_globals.scss` still read their CSS variables — yet `LEGACY_THEME_FIELDS` in `src/helpers/themesControlpanel.ts:59-100` strips all 7 from control panel add/edit forms, leaving no UI to configure secondary fonts or content-type colours per site theme.
+`backend/src/sc/voltolighttheme/utils/legacy_themes.py:43-51` keeps 7 passthrough fields (`font_family_secondary`, `event_color_{light,dark}`, `file_color_{light,dark}`, `image_color_{light,dark}`) active so `_root.scss` / `_globals.scss` still read their CSS variables — yet `LEGACY_THEME_FIELDS` in `src/helpers/themesControlpanel.ts:59-100` strips all 7 from control panel add/edit forms, leaving no UI to configure secondary fonts or content-type colors per site theme.
 
 ### 4.3 Accordion-only legacy aliases & schema message location
 
@@ -128,7 +128,7 @@ All **47** registered blocks render without error in `Blocks/Gallery`, and all *
 
 ### 5.2 Machine-specific absolute paths in `.design-sync/config.json`
 
-`.design-sync/config.json` stores machine-specific `/Users/ericof/...` absolute paths for `storybookConfigDir`, `storybookStatic`, and `entry` (preserved intentionally as documented in `.design-sync/NOTES.md` §Re-sync notes). Running the external Claude Design converter from another workstation requires updating those paths locally without committing user-specific paths back.
+`.design-sync/config.json` stores machine-specific absolute paths for `storybookConfigDir`, `storybookStatic`, and `entry` (preserved intentionally as documented in `.design-sync/NOTES.md` §Re-sync notes). Running the external Claude Design converter from another workstation requires updating those paths locally without committing user-specific paths back.
 
 ### 5.3 Translation & hardcoded-locale gaps
 
@@ -158,8 +158,8 @@ Nothing below is an unintended bug; each requires a design or product owner deci
 | Layout (§3.1) | Should `--narrow-container-width` differ from `--default-container-width`, and can `!important` be dropped? | Two of the four `blockWidth` options look identical today, and downstream sites cannot override container widths cleanly. |
 | Pattern vs Color Group Layer (§1.2) | Implement `--theme-pattern-{image,opacity}` or remove them and fix `default`/`alternative` `pattern-image: none` shadowing? | Removing `--block-theme-{default,alternative}-pattern-image: none` unlocks Color Group patterns/images on preset block themes immediately; keeping `--theme-pattern-*` is redundant unless block-theme-level patterns are planned. |
 | High Contrast (§1.3) | Should `[data-theme='high-contrast']` force `none` on all background images/patterns? | Ensures pure `#000`/`#fff` legibility even when a site uploads busy decorative images on Color Groups. |
-| Header & Legacy Passthrough (§4.1–4.2) | Expose `header_foreground`, `font_family_secondary`, and content-type colour pickers in Color Groups / `ISCVLTThemeDefinition`, or deprecate those CSS overrides? | Currently admins cannot edit secondary heading font, header foreground, or `event`/`file`/`image` tag colours in the control panel UI. |
-| Links (§1.4, §1.6) | Fix `themeStyleSheet` fallback for `--link-foreground-color` to `var(--primary-accent-color)` and consolidate `--link-color` / `--color-link`? | Without an explicit fix, custom themes lacking `--link-foreground-color` inherit surface `--accent-color` (`1.46:1` on light white ground). |
+| Header & Legacy Passthrough (§4.1–4.2) | Expose `header_foreground`, `font_family_secondary`, and content-type color pickers in Color Groups / `ISCVLTThemeSchema`, or deprecate those CSS overrides? | Currently admins cannot edit secondary heading font, header foreground, or `event`/`file`/`image` tag colors in the control panel UI. |
+| Links (§1.4, §1.6) | Fix `themeStyleSheet` fallback for `--link-foreground-color` to `var(--primary-accent-color)` and consolidate `--link-color` / `--color-link`? | Without an explicit fix, custom themes lacking `--link-foreground-color` inherit surface `--accent-color` (`1.51:1` on a white ground). |
 | Typography (`system-ui` vs `Inter`) | Keep `_root.scss` at `system-ui` overridden on `body` by `_globals.scss` (`Inter`), or align `_root.scss` directly? | Unwrapped portals/modals outside `body` inheritance (if any) read `_root.scss`, while normal pages inherit `Inter` from `body`. |
 | Event locale & i18n (§5.3) | Internationalise `EventsTemplate` / `EventMetadata` / `heroContent`, and translate `es` and `de`? | All three components ignore Plone's active `intl.locale`, and `es`/`de` ship with `0 / 376` translations. |
 | Gallery Fixtures (§5.1) | Add sample payloads for the 16 unseeded themed blocks (especially owned/extended `customGrid`, `eventMetadata`, `banner`, `search`)? | Improves visual regression and Claude Design auditing across `Blocks/Gallery`. |

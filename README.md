@@ -76,18 +76,20 @@ And... you're all set! Your Plone site is up and running locally! 🚀
 
 ## Upgrading 🔄
 
-### From 1.0.0a14 or earlier to 1.0.0a15 (new theme system)
+### From 1.0.0a15 or earlier to 1.0.0a16 (new theme system)
 
-1.0.0a15 replaces the 32 per-colour fields of each theme with **Color Groups** and **Block Themes**, and gives every block **width** and **border** controls. Your content, your theme and your code keep working as they are: bump the versions, run the upgrade step, and you are done.
+1.0.0a16 replaces the 32 per-color fields of each theme with **Color Groups** and **Block Themes**, and gives every block **width** and **border** controls. Your content, your theme and your code keep working: bump the versions, run the upgrade step, and check the few changes listed under [What changes](#what-changes).
 
 1.  **Bump the versions.**
 
     | Where | Package | Version |
     | --- | --- | --- |
-    | Backend (`pyproject.toml`) | `sc-voltolighttheme` | `1.0.0a15` or later |
+    | Backend (`pyproject.toml`) | `sc-voltolighttheme` | `1.0.0a16` or later |
     | Backend (`pyproject.toml`) | `kitconcept.voltolighttheme` | `8.1.4` or later |
-    | Frontend (`package.json`) | `@simplesconsultoria/volto-light-theme` | `1.0.0-alpha.15` or later |
-    | Frontend (`mrs.developer.json`, `core`) | `@plone/volto` | tag `19.6.1` |
+    | Frontend (`package.json`) | `@simplesconsultoria/volto-light-theme` | `1.0.0-alpha.16` or later |
+    | Frontend (`mrs.developer.json`, `core`) | `@plone/volto` | tag `19.7.0` or later |
+
+    After changing the Volto tag, keep `"webpack": "catalog:"` in `pnpm.overrides`, check that `pnpm-lock.yaml` resolves a single webpack version, and run `make storybook-build`.
 
 2.  **Install.**
 
@@ -95,55 +97,76 @@ And... you're all set! Your Plone site is up and running locally! 🚀
     make install
     ```
 
-3.  **Run the upgrade step** (profile `1002`). It turns each theme's old colours into Color Groups.
+3.  **Run the upgrade step** (profile `1002`). It turns each theme's old colors into Color Groups.
 
     -   In the site: *Site Setup* → *Add-ons* → *Upgrade* next to *Simples Consultoria VLT: Install*.
-    -   Or from your own policy package, in an upgrade step:
+    -   Or from your own policy package, in a new upgrade step:
 
         ```python
         def upgrade_sc_volto_light_theme(context):
             context.upgradeProfile("sc.voltolighttheme:default")
         ```
 
-    Until it runs, the site already shows the right colours: they are derived from the old fields on every read.
+    Until it runs, the site already shows the right colors: they are derived from the old fields on every read.
 
-4.  **Check** the *Themes* control panel: each theme shows its Color Groups, with the colours it had before.
+4.  **Check** the *Themes* control panel: each theme shows its Color Groups, with the colors it had before.
 
 #### What keeps working without changes
 
 | You have | What happens |
 | --- | --- |
-| Themes stored with the old colour fields (`primary_color_light`, `font_family_primary`, …) | Converted to Color Groups by the upgrade step; derived on read until then. |
-| A `registry.xml` in your profile setting those fields on `ISCVLTThemeDefinition` | Still imports, on existing and new sites. The colours become Color Groups on read. |
-| `font_family_secondary` and the event, file and image colours | Still stored and applied. They are not shown in the control panel form. |
+| Themes stored with the old color fields (`primary_color_light`, `font_family_primary`, …) | Converted to Color Groups by the upgrade step; derived on read until then. |
+| A `registry.xml` in your profile setting those fields on `ISCVLTThemeDefinition` | Still imports, on existing and new sites, including on the `default` theme: its colors replace the palette this add-on ships. They are stored as Color Groups the next time the theme is saved. |
+| `font_family_secondary` and the event, file and image colors | Still stored and applied. They are not shown in the control panel form. |
 | Blocks saved with the `brand` theme | Shown as `alternative`. |
-| Blocks saved with plain VLT's `grey` theme | Shown as before, a grey band with white cards (`custom-secondary-primary`). |
+| Blocks saved with plain VLT's `grey` theme | Shown as before, a grey band with white cards (`custom-secondary-primary`). A project that defines its own `grey` theme keeps it. |
 | Block width stored in `data.blockWidth` or `styles.blockWidth` | Still read. New edits store it in `styles['blockWidth:noprefix']`. |
 | CSS using `--primary-color`, `--secondary-color`, `--primary-foreground-color`, … | Still defined, now fed by the Color Groups. |
 | Blocks from your own add-ons | Get the theme, width and border controls automatically, even when registered after this add-on. |
 
+#### What changes
+
+| Change | What to do |
+| --- | --- |
+| **New default palette.** Sites that never set their own colors change from black and orange to white and cool-gray surfaces with a light-blue accent (`#a5d8ff`), and the default font follows the primary Color Group. | Set your palette in your theme profile (see below) or in the *Themes* control panel. |
+| **Theme REST data.** `@controlpanels/themes/<theme-id>` serves `color_groups` and `block_themes` instead of the per-color keys (`primary_color_light`, …), as soon as the new code is deployed. | Read `color_groups.<group>.<role>_color_<mode>`. The old keys are still accepted when writing. |
+| **Color Group ids** use lowercase letters, digits and underscores (`my_brand`). | Nothing, unless a client creates groups through the API. |
+| **No default social networks.** The footer shows the site's `social_links`, or nothing. | Set `config.settings.socialNetworks` in your project if it relied on a frontend list. |
+
 #### Optional follow-ups
 
--   **Your own blocks:** theme colours and borders reach a block through the `className` and `style` props its view receives. Pass both to the block's root element:
+-   **Your own blocks:** theme colors and borders reach a block through the `className` and `style` props its view receives. Pass both to the block's root element:
 
     ```jsx
     <div className={`block my-block ${className}`} style={style}>
     ```
 
-    To keep a block out of the border controls, add its id to `config.settings.borderExcludedBlocks`.
+    To keep a block out of the border controls, add its id to `config.settings.borderExcludedBlocks` (default: `['separator']`).
 
--   **Your theme profile:** to drop the old fields, write the theme as Color Groups on `ISCVLTThemeSchema`. The easiest way is to adjust the theme in the control panel of an upgraded site and copy the JSON served at `@controlpanels/themes/<theme-id>`:
+-   **Your theme profile:** write the theme as Color Groups. Keep the interface `ISCVLTThemeDefinition`, which also accepts `font_family_secondary` and the event, file and image colors. The easiest way is to adjust the theme in the control panel of an upgraded site and copy the JSON served at `@controlpanels/themes/<theme-id>`:
 
     ```xml
-    <records interface="sc.voltolighttheme.interfaces.ISCVLTThemeSchema"
+    <records interface="sc.voltolighttheme.interfaces.ISCVLTThemeDefinition"
              prefix="sc.voltolighttheme.theme.default">
       <value key="name">My theme</value>
       <value key="color_groups">{"primary": {"id": "primary", "name": "Primary", "background_color_light": "#ffffff", …}, …}</value>
       <value key="block_themes">{"default": {"id": "default", "name": "Primary", "back_color_group": "primary", "front_color_group": "neutral"}, …}</value>
+      <value key="font_family_secondary">Inter, sans-serif</value>
+      <value key="event_color_light">#d32f2f</value>
     </records>
     ```
 
-    `profiles/initial/registry/sc.voltolighttheme.themes.xml` in this repository is a complete example.
+    The old fields map to Color Group keys like this, for the groups `primary`, `secondary`, `accent` and `neutral` and the modes `light` and `dark`:
+
+    | Old field | Key in `color_groups.<group>` |
+    | --- | --- |
+    | `<group>_color_<mode>` | `background_color_<mode>` |
+    | `<group>_foreground_color_<mode>` | `text_color_<mode>` |
+    | `<group>_low_foreground_color_<mode>` | `subtext_color_<mode>` |
+    | `<group>_accent_color_<mode>` | `accent_color_<mode>` |
+    | `font_family_primary` | `font_family` of each group |
+
+    Leave out `block_themes` to get the defaults, `default` and `alternative`. `profiles/initial/registry/sc.voltolighttheme.themes.xml` in this repository is a complete example.
 
 ## Project structure 🏗️
 

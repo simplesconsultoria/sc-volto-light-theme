@@ -1,1 +1,1 @@
-New default palette: white and cool-gray surfaces with a light-blue accent (`#a5d8ff`) replacing black/orange, with matching dark-mode values. All text/accent pairs meet WCAG AA. @Humanaice
+New default palette: white and cool-gray surfaces with a light-blue accent (`#a5d8ff`) replacing black and orange, with matching dark-mode values. Every text and accent color meets WCAG AA contrast on its background. Sites that never set their own colors show the new palette. @Humanaice

@@ -11,4 +11,4 @@ The design system for `@simplesconsultoria/volto-light-theme` is documented unde
 | [previews/](./docs/design-system/previews/) | self-contained preview pages, marked up for import into Claude Design |
 
 The most current answer to "what blocks exist" is not in any of these — it is the
-`Public/Blocks/Inventory` story, which reads the block registry at runtime.
+`Blocks/Inventory` story, which reads the block registry at runtime.

@@ -1,6 +1,6 @@
 """Profiles written for 1.0.0a14 and earlier keep installing.
 
-Projects such as the PortalBrasil Intranet ship their own theme in a
+Downstream projects ship their own theme in a
 ``registry.xml`` naming ``ISCVLTThemeDefinition`` with the old per-colour
 fields. On a new site those records do not exist yet, so the import needs the
 fields on the interface, or it raises ``ValueError``.

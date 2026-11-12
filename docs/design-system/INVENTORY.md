@@ -4,7 +4,7 @@ Machine-extracted inventory of `@simplesconsultoria/volto-light-theme`.
 
 Every row and count is derived from source by reading or probing the runtime registry. Evidence paths are relative to `frontend/packages/volto-light-theme/` unless noted otherwise. `[V 2026-11-11]` marks facts verified against the working tree on that date.
 
-- **Package:** `@simplesconsultoria/volto-light-theme@1.0.0-alpha.14` (declares 16 Volto `addons` in `package.json`)
+- **Package:** `@simplesconsultoria/volto-light-theme@1.0.0-alpha.16` (declares 16 Volto `addons` in `package.json`)
 - **Upstream:** `@kitconcept/volto-light-theme@8.1.4` (`package.json` `theme` field and installed dependency)
 - **Runtime block registry:** **47 blocks** (all 47 expose both `id` and `view`): **6** own, **10** extended, **31** inherited
 - **Companions:** [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) for the architectural manifest and rules, [GAPS.md](./GAPS.md) for verified open defects and decisions
@@ -339,7 +339,7 @@ Every default pair clears WCAG 2.1 AA normal-text `4.5:1` (`4.68:1` minimum, `16
 | `--search-background` | `--primary-color` |
 | `--search-foreground` | `--primary-foreground-color` |
 
-### 5.4 Content-type colours (`_root.scss:112-128`, `config/contentTypeColors.ts`)
+### 5.4 Content-type colors (`_root.scss:112-128`, `config/contentTypeColors.ts`)
 
 | token | value | `defaultContentTypeColors` key |
 |---|---|---|
@@ -375,7 +375,7 @@ Unknown types fall back to `var(--theme-border-color, currentColor)`.
 - `_globals.scss:6-17` overrides those four variables on `body` to `var(--font-family-primary, 'Inter', sans-serif)` (`--custom-font` prefers `var(--font-family-secondary, var(--font-family-primary, 'Inter', sans-serif))`), and `themeStyles.ts:480-489` sets `--font-family-primary` and all four tokens from `groupsById.primary.font_family`.
 - `dist/fonts/` (built from upstream `@kitconcept/volto-light-theme/src/theme/fonts` by `.design-sync/build-css.sh`) contains **83** files (`9` `Inter-*.ttf` weights + `74` Metropolis font/specimen files).
 
-### 5.8 Colour modes & font scale
+### 5.8 Color modes & font scale
 
 `_root.scss:458-530`:
 - `[data-theme='light']` → `color-scheme: light`
@@ -414,8 +414,8 @@ Heading rules (`_typography.scss`):
 
 ## 7. Controlpanel overlay, helpers & customizations `[V 2026-11-11]`
 
-- **Backend schema** (`backend/src/sc/voltolighttheme/interfaces.py` → `ISCVLTThemeDefinition`): **4 fields** — `name`, `description`, `color_groups` (`JSONField`, fieldset `colorgroups`), `block_themes` (`JSONField`, fieldset `blockthemes`).
-- **Legacy migration bridge** (`backend/src/sc/voltolighttheme/utils/legacy_themes.py`): documents `33` `LEGACY_MIGRATED_FIELDS` (32 colour fields across `primary`/`secondary`/`accent`/`neutral` + `font_family_primary`) and `7` `LEGACY_PASSTHROUGH_FIELDS` (`font_family_secondary`, `event_color_{light,dark}`, `file_color_{light,dark}`, `image_color_{light,dark}`).
+- **Backend schema** (`backend/src/sc/voltolighttheme/interfaces.py` → `ISCVLTThemeSchema`): **4 fields** — `name`, `description`, `color_groups` (`JSONField`, fieldset `colorgroups`), `block_themes` (`JSONField`, fieldset `blockthemes`).
+- **Legacy migration bridge** (`backend/src/sc/voltolighttheme/utils/legacy_themes.py`): documents `33` `LEGACY_MIGRATED_FIELDS` (32 color fields across `primary`/`secondary`/`accent`/`neutral` + `font_family_primary`) and `7` `LEGACY_PASSTHROUGH_FIELDS` (`font_family_secondary`, `event_color_{light,dark}`, `file_color_{light,dark}`, `image_color_{light,dark}`).
 - **Controlpanel schema filter** (`src/helpers/themesControlpanel.ts`): `LEGACY_THEME_FIELDS` (`40` keys) strips all legacy fields from the edit/add/clone form and binds `color_groups_widget` and `block_themes_widget`.
 - **Stylesheet emitter** (`src/helpers/themeStyles.ts`): `themeStyleSheet(settings)` emits four concatenated parts: `:root` variables (validated hex/`isSafeCssValue` overrides + `colorGroupCustomProperties` + bridged `--{primary,secondary,accent,neutral}-*` + `--font-family-primary` + `blockThemeCustomProperties`), `colorGroupUtilityClasses`, `blockThemeUtilityClasses`, and `colorGroupResponsiveImageRules` (`@media (max-width: 768px)`, `[data-theme='dark']`, `@media (prefers-color-scheme: dark)`).
 - **Slot registration** (`src/config/slots.ts` & `src/components/Theming/Theming.tsx`): registers `Theming` into `aboveHeader`, reads `sc.voltolighttheme.themeselector` via `useLiveData` (fetching `@inherit` from `''` on 404 via `errorContext`), and syncs `config.blocks.blockThemes` and `config.blocks.colorGroups`.
@@ -441,7 +441,7 @@ Heading rules (`_typography.scss`):
 | `Widgets/*` | 1 | 2 | `Widgets/SimpleColorPickerWidget` |
 | `Slots/*` | 1 | 1 | `Slots/Colophon` |
 
-- `src/storybook/withTheme.tsx`: provides globals for colour mode (`light`, `dark`, `high-contrast`), block theme (`none`, `default`, `alternative`, `custom-secondary-accent`), and site theme (`defaultTheme`, `corporateTheme`, `natalTheme`).
+- `src/storybook/withTheme.tsx`: provides globals for color mode (`light`, `dark`, `high-contrast`), block theme (`none`, `default`, `alternative`, `custom-secondary-accent`), and site theme (`defaultTheme`, `corporateTheme`, `natalTheme`).
 - `src/storybook/blockStyling.tsx`: `StyledBlock` and `StylingMatrix` (`matrixStory('theme' | 'width' | 'border' | 'layer')`) used across block showcase stories.
 - `src/storybook/images/`: **16 files** (**14** bundled `.jpg` images imported at build time + `imageScales.ts` + `optimize.sh`; excluded from npm publish by `.npmignore`).
 - `Blocks/Gallery` renders all **47** registered blocks via `RealStoreWrapper` + `RenderBlocks`: **36** non-embed blocks (**16** with no sample data: `applemusicBlock`, `banner`, `carousel`, `customGrid`, `eventCalendar`, `eventMetadata`, `heading`, `introduction`, `leadimage`, `logos`, `maps`, `mastodonBlock`, `search`, `slider`, `threadsBlock`, `twitchBlock`) and **11** third-party embed blocks.

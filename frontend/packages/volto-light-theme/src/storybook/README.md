@@ -18,7 +18,7 @@ them.
 
 | file | covers |
 |---|---|
-| `withTheme.tsx` | the decorator every story renders through: colour mode, block theme, site theme, and the centred container |
+| `withTheme.tsx` | the decorator every story renders through: color mode, block theme, site theme, and the centred container |
 | `BlocksInventory.stories.tsx` | every block registered at runtime, whichever layer supplies it |
 | `BlocksGallery.stories.tsx` | each of those blocks rendered through `RenderBlocks` |
 | `DefaultView.stories.tsx` | Volto's `DefaultView` — a Document, a News Item and an Event |
@@ -36,7 +36,7 @@ Fixtures for components this package *does* ship stay next to them —
 **A component's stylesheet is usually scoped to an ancestor**, and outside it the
 component renders unstyled while looking like broken CSS. `_listing.scss` needs
 `body .block.listing`, `_navigation.scss` needs `#navigation.navigation.scNavigation`,
-and a themed block needs a wrapper supplying `--theme-*`. `docs/design-system/DESIGN_SYSTEM.md` §7 lists the cases.
+and a themed block needs a wrapper supplying `--theme-*`. `docs/design-system/DESIGN_SYSTEM.md` §6.4 lists the cases.
 
 **`RenderBlocks` has its own per-block error boundary**, and it is the inner one — a
 failing block shows "Block error: …" rather than reaching a boundary a story adds. When
