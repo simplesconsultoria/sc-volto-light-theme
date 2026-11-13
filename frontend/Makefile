@@ -98,11 +98,8 @@ lint: ## Lint, or catch and remove problems, in code base
 	pnpm stylelint --allow-empty-input
 
 .PHONY: typecheck
-typecheck: ## Typecheck the add-on and showcase sources (tests and stories excluded)
-	@status=0; \
-	pnpm --filter @simplesconsultoria/volto-light-theme typecheck || status=1; \
-	pnpm --filter @simplesconsultoria/showcase typecheck || status=1; \
-	exit $$status
+typecheck: ## Typecheck the add-on and showcase sources; errors in upstream sources are reported, not counted
+	node scripts/typecheck.mjs
 
 .PHONY: release
 release: ## Release the add-on on npmjs.org

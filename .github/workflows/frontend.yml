@@ -67,9 +67,9 @@ jobs:
   typecheck:
     name: "Frontend: Typecheck"
     runs-on: ubuntu-latest
-    # Advisory until the known type errors are cleared (issue #17):
-    # failures show on the run but do not fail the workflow.
-    continue-on-error: true
+    # Fails on type errors in this repository's packages. Errors in Volto
+    # core and upstream add-on sources are printed but not counted; see
+    # frontend/scripts/typecheck.mjs.
     defaults:
       run:
         working-directory: ${{ inputs.working-directory }}
@@ -108,6 +108,7 @@ jobs:
       - code-analysis
       - unit
       - i18n
+      - typecheck
     with:
       node-version: ${{ inputs.node-version }}
       working-directory: ${{ inputs.working-directory }}
@@ -121,6 +122,7 @@ jobs:
     needs:
       - code-analysis
       - i18n
+      - typecheck
       - unit
       - storybook
     permissions:
@@ -157,7 +159,7 @@ jobs:
           echo '| --- | --- |' >> $GITHUB_STEP_SUMMARY
           echo '| code-analysis | ${{ needs.code-analysis.result }} |' >> $GITHUB_STEP_SUMMARY
           echo '| i18n | ${{ needs.i18n.result }} |' >> $GITHUB_STEP_SUMMARY
-          echo '| typecheck (advisory) | ${{ needs.typecheck.result }} |' >> $GITHUB_STEP_SUMMARY
+          echo '| typecheck | ${{ needs.typecheck.result }} |' >> $GITHUB_STEP_SUMMARY
           echo '| unit | ${{ needs.unit.result }} |' >> $GITHUB_STEP_SUMMARY
           echo '| storybook | ${{ needs.storybook.result }} |' >> $GITHUB_STEP_SUMMARY
           echo '| release | ${{ needs.release.result }} |' >> $GITHUB_STEP_SUMMARY
