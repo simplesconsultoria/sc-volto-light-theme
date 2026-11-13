@@ -53,13 +53,101 @@ export function findTheme(
 }
 
 /**
+ * Legacy style fields superseded by ColorGroups and BlockThemes.
+ * Stripped from the control panel form so they no longer appear.
+ */
+export const LEGACY_THEME_FIELDS = new Set([
+  'font_family_primary',
+  'font_family_secondary',
+  'primary_color_light',
+  'primary_color_dark',
+  'primary_foreground_color_light',
+  'primary_foreground_color_dark',
+  'primary_low_foreground_color_light',
+  'primary_low_foreground_color_dark',
+  'primary_accent_color_light',
+  'primary_accent_color_dark',
+  'secondary_color_light',
+  'secondary_color_dark',
+  'secondary_foreground_color_light',
+  'secondary_foreground_color_dark',
+  'secondary_low_foreground_color_light',
+  'secondary_low_foreground_color_dark',
+  'secondary_accent_color_light',
+  'secondary_accent_color_dark',
+  'accent_color_light',
+  'accent_color_dark',
+  'accent_foreground_color_light',
+  'accent_foreground_color_dark',
+  'accent_low_foreground_color_light',
+  'accent_low_foreground_color_dark',
+  'accent_accent_color_light',
+  'accent_accent_color_dark',
+  'neutral_color_light',
+  'neutral_color_dark',
+  'neutral_foreground_color_light',
+  'neutral_foreground_color_dark',
+  'neutral_low_foreground_color_light',
+  'neutral_low_foreground_color_dark',
+  'neutral_accent_color_light',
+  'neutral_accent_color_dark',
+  'event_color_light',
+  'event_color_dark',
+  'file_color_light',
+  'file_color_dark',
+  'image_color_light',
+  'image_color_dark',
+]);
+
+/**
+ * Enhance schema properties with custom widgets for color_groups and block_themes,
+ * and strip legacy color/typography fields from the control panel.
+ */
+export function enhanceThemeSchemaWidgets(schema: JsonSchema): JsonSchema {
+  const properties: Record<string, any> = {};
+  for (const [key, val] of Object.entries(schema.properties ?? {})) {
+    if (!LEGACY_THEME_FIELDS.has(key)) {
+      properties[key] = val;
+    }
+  }
+
+  if (properties.color_groups) {
+    properties.color_groups = {
+      ...properties.color_groups,
+      widget: 'color_groups_widget',
+    };
+  }
+  if (properties.block_themes) {
+    properties.block_themes = {
+      ...properties.block_themes,
+      widget: 'block_themes_widget',
+    };
+  }
+
+  const allowedFieldsets = ['default', 'colorgroups', 'blockthemes'];
+  const fieldsets = schema.fieldsets
+    ? schema.fieldsets
+        .filter((fs) => allowedFieldsets.includes(fs.id))
+        .map((fs) => ({
+          ...fs,
+          fields: fs.fields.filter((field) => !LEGACY_THEME_FIELDS.has(field)),
+        }))
+    : undefined;
+
+  return {
+    ...schema,
+    properties,
+    ...(fieldsets ? { fieldsets } : {}),
+  };
+}
+
+/**
  * The schema used to edit an existing theme.
  *
- * Returned as-is; it is the schema of `ISCVLTThemeDefinition`, which already
- * carries the `colorPicker` widgets contributed by the backend.
+ * Returned with custom widgets attached for color_groups and block_themes.
  */
 export function editSchema(schema: JsonSchema): JsonSchema {
-  return schema;
+  return enhanceThemeSchemaWidgets(schema);
 }
 
 /**
@@ -70,8 +158,9 @@ export function editSchema(schema: JsonSchema): JsonSchema {
  * schema.
  */
 export function addSchema(schema: JsonSchema): JsonSchema {
-  const fieldsets = schema.fieldsets?.length
-    ? schema.fieldsets.map((fieldset, index) =>
+  const base = enhanceThemeSchemaWidgets(schema);
+  const fieldsets = base.fieldsets?.length
+    ? base.fieldsets.map((fieldset, index) =>
         index === 0
           ? { ...fieldset, fields: ['id', ...fieldset.fields] }
           : fieldset,
@@ -80,12 +169,12 @@ export function addSchema(schema: JsonSchema): JsonSchema {
         {
           id: 'default',
           title: 'Default',
-          fields: ['id', ...Object.keys(schema.properties)],
+          fields: ['id', ...Object.keys(base.properties)],
         },
       ];
 
   return {
-    ...schema,
+    ...base,
     properties: {
       id: {
         title: 'Id',
@@ -94,9 +183,9 @@ export function addSchema(schema: JsonSchema): JsonSchema {
           'digits and dashes only; it cannot be changed later.',
         type: 'string',
       },
-      ...schema.properties,
+      ...base.properties,
     },
-    required: ['id', ...(schema.required ?? [])],
+    required: ['id', ...(base.required ?? [])],
     fieldsets,
   };
 }
@@ -125,10 +214,88 @@ export function splitFormData(formData: Record<string, unknown>): {
  */
 export function cloneThemeFormData(theme: ThemeItem): Record<string, unknown> {
   const { '@id': _atId, id: _id, name, ...rest } = theme;
+  const cleaned: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(rest)) {
+    if (!LEGACY_THEME_FIELDS.has(key)) {
+      cleaned[key] = val;
+    }
+  }
   return {
-    ...rest,
+    ...cleaned,
     ...(name ? { name: `${name} (copy)` } : {}),
   };
+}
+
+/**
+ * Theme fields the backend merges by id rather than replaces.
+ *
+ * A `PATCH` keeps the entries it leaves out and deletes the ones sent as
+ * `null` (JSON Merge Patch), so a deletion has to be spelled out.
+ */
+export const MERGED_COLLECTIONS = ['color_groups', 'block_themes'] as const;
+
+type Collection = Record<string, unknown> | unknown[] | null | undefined;
+
+/** The ids in a stored collection, held as a mapping or as a list. */
+function collectionIds(value: Collection): string[] {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => (item as { id?: unknown } | null)?.id)
+      .filter((id): id is string => typeof id === 'string');
+  }
+  return value && typeof value === 'object' ? Object.keys(value) : [];
+}
+
+/**
+ * The merge patch that turns one collection into another.
+ *
+ * Every entry of `after` is sent as it is; every id of `before` missing from
+ * `after` is sent as `null`, which the backend reads as "delete".
+ *
+ * @param before the collection as the theme stores it.
+ * @param after the collection as the form submits it.
+ * @returns a mapping by id, ready for the request body.
+ */
+export function collectionPatch(
+  before: Collection,
+  after: Collection,
+): Record<string, unknown> {
+  const patch: Record<string, unknown> = {};
+  if (Array.isArray(after)) {
+    for (const item of after) {
+      const id = (item as { id?: unknown } | null)?.id;
+      if (typeof id === 'string') patch[id] = item;
+    }
+  } else if (after && typeof after === 'object') {
+    Object.assign(patch, after);
+  }
+  for (const id of collectionIds(before)) {
+    if (!(id in patch)) patch[id] = null;
+  }
+  return patch;
+}
+
+/**
+ * The body of a theme `PATCH`: the submitted values, with the merged
+ * collections rewritten so that entries removed in the form are deleted.
+ *
+ * @param theme the theme as stored, before the edit.
+ * @param values the submitted field values.
+ */
+export function themePatchValues(
+  theme: Partial<ThemeItem> | undefined,
+  values: Record<string, unknown>,
+): Record<string, unknown> {
+  const body = { ...values };
+  for (const field of MERGED_COLLECTIONS) {
+    if (field in body) {
+      body[field] = collectionPatch(
+        theme?.[field] as Collection,
+        body[field] as Collection,
+      );
+    }
+  }
+  return body;
 }
 
 /** Validation message for a proposed new id, or `null` when it is usable. */

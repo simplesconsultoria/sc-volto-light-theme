@@ -1,0 +1,214 @@
+// =============================================================================
+// Borders System — sc-volto-light-theme
+// Provides mixins and rules for smart, decoupled border placement.
+// Components manage where the border applies (image, text, card, or container).
+// =============================================================================
+
+// Universal mixin to apply custom border defined by BorderWidget
+@mixin apply-block-border(
+  $width: var(--cardBorderWidth),
+  $color:
+    var(
+      --cardBorderColor,
+      var(--theme-border-color, var(--primary-accent-color))
+    ),
+  $style: solid
+) {
+  border-width: $width !important;
+  border-style: $style;
+  border-color: $color !important;
+}
+
+// Utility mixin for developers to apply borders directly to targeted elements
+@mixin component-border($target-selector: null) {
+  @if $target-selector {
+    #{$target-selector} {
+      @include apply-block-border;
+    }
+  } @else {
+    @include apply-block-border;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Component-Specific Placement
+// -----------------------------------------------------------------------------
+
+// 1. Elements with explicit custom border targets set by developers
+[style*='--cardBorderWidth'] {
+  .block-border-target,
+  [data-border-target],
+  .text-border-target {
+    @include apply-block-border;
+  }
+}
+
+// 2. Image blocks (image and mainImageBlock, and Aurora .block-image):
+// The border is applied specifically to the image element itself (img / figure img),
+// and not around the block container or captions.
+.block.image[style*='--cardBorderWidth'],
+.block.mainImageBlock[style*='--cardBorderWidth'],
+.main-image-block[style*='--cardBorderWidth'],
+.block-image[style*='--cardBorderWidth'],
+#page-edit [class*='block-editor-image'][style*='--cardBorderWidth'],
+#page-edit [class*='block-editor-mainImageBlock'][style*='--cardBorderWidth'],
+#page-add [class*='block-editor-image'][style*='--cardBorderWidth'],
+#page-add [class*='block-editor-mainImageBlock'][style*='--cardBorderWidth'] {
+  figure > img,
+  img {
+    @include apply-block-border;
+  }
+}
+
+// 3. Quote Block (and Aurora .block-quote):
+// Border is delegated to the inner .quote-block element
+.block.quoteBlock[style*='--cardBorderWidth'],
+.block-quote[style*='--cardBorderWidth'],
+#page-edit .block-editor-quoteBlock[style*='--cardBorderWidth'],
+#page-add .block-editor-quoteBlock[style*='--cardBorderWidth'] {
+  .quote-block {
+    @include apply-block-border;
+  }
+}
+
+// 4. Accordion Block (EEA and Aurora .block-accordion):
+.accordion-block[style*='--cardBorderWidth'],
+.block-accordion[style*='--cardBorderWidth'] {
+  .ui.accordion,
+  .block-accordion__panel {
+    @include apply-block-border;
+  }
+}
+
+// 5. Highlight Block (@kitconcept/volto-highlight-block):
+// Border is applied to the teaser item / card container, not the outer block.
+.block.highlight[style*='--cardBorderWidth'],
+.block-highlight[style*='--cardBorderWidth'],
+#page-edit [class*='block-editor-highlight'][style*='--cardBorderWidth'],
+#page-add [class*='block-editor-highlight'][style*='--cardBorderWidth'] {
+  border: none !important;
+
+  .teaser-item,
+  & > .block-inner-container {
+    @include apply-block-border;
+  }
+}
+
+// 6. Table Block (slateTable, slate-table-wrapper, table):
+// Border is applied specifically to the table element itself,
+// not around outer wrappers or .block-inner-container.
+.block.slateTable[style*='--cardBorderWidth'],
+.slate-table-wrapper[style*='--cardBorderWidth'],
+.block.slate-table[style*='--cardBorderWidth'],
+.block.table[style*='--cardBorderWidth'],
+#page-edit [class*='block-editor-slateTable'][style*='--cardBorderWidth'],
+#page-add [class*='block-editor-slateTable'][style*='--cardBorderWidth'] {
+  border: none !important;
+
+  & > .block-inner-container,
+  .block-inner-container {
+    border: none !important;
+  }
+
+  table,
+  table.slate-table-block,
+  table.ui.table {
+    @include apply-block-border;
+  }
+}
+
+// 7. Logos Block:
+// Border is applied to each individual logo item (.item, .logo-item),
+// and not around the outer block container.
+.block.logos[style*='--cardBorderWidth'],
+.block-logos[style*='--cardBorderWidth'],
+#page-edit [class*='block-editor-logos'][style*='--cardBorderWidth'],
+#page-add [class*='block-editor-logos'][style*='--cardBorderWidth'] {
+  border: none !important;
+
+  & > .ui.container,
+  & > .container,
+  ul.logos-container {
+    border: none !important;
+  }
+
+  .item,
+  .logo-item {
+    @include apply-block-border;
+  }
+}
+
+// 8. Carousel Block (@kitconcept/volto-carousel-block):
+// Border is applied to each individual card, not around the outer block.
+.block.carousel[style*='--cardBorderWidth'],
+#page-edit [class*='block-editor-carousel'][style*='--cardBorderWidth'],
+#page-add [class*='block-editor-carousel'][style*='--cardBorderWidth'] {
+  border: none !important;
+
+  .carousel-container .card {
+    @include apply-block-border;
+
+    .card-summary {
+      padding-right: $spacing-small;
+      padding-left: $spacing-small;
+    }
+  }
+}
+
+// 9. Slider Block (@kitconcept/volto-slider-block):
+// Border is applied around the slides viewport (image + card/flag), leaving the
+// navigation dots cleanly outside.
+.block.slider[style*='--cardBorderWidth'],
+#page-edit [class*='block-editor-slider'][style*='--cardBorderWidth'],
+#page-add [class*='block-editor-slider'][style*='--cardBorderWidth'] {
+  border: none !important;
+
+  .slider-viewport {
+    @include apply-block-border;
+  }
+}
+
+// 10. Common blocks with inner container or default targets:
+// Avoid applying on top-level .block if it contains cards, images, quotes or explicit targets.
+.block[style*='--cardBorderWidth'],
+#page-edit [class*='block-editor-'][style*='--cardBorderWidth'],
+#page-add [class*='block-editor-'][style*='--cardBorderWidth'] {
+  &:not(
+      .image,
+      .mainImageBlock,
+      .quoteBlock,
+      .accordion-block,
+      .block-accordion,
+      .block-image,
+      .block-quote,
+      .highlight,
+      .block-highlight,
+      .slateTable,
+      .slate-table-wrapper,
+      .slate-table,
+      .table,
+      .logos,
+      .block-logos,
+      .carousel,
+      .slider
+    ):not(
+      :has(
+          .card,
+          figure img,
+          img,
+          .quote-block,
+          .block-border-target,
+          [data-border-target]
+        )
+    ) {
+    // If it has .block-inner-container, apply on it to maintain full bleed background
+    & > .block-inner-container {
+      @include apply-block-border;
+    }
+
+    // Fallback: apply directly to block if no inner container exists
+    &:not(:has(> .block-inner-container)) {
+      @include apply-block-border;
+    }
+  }
+}

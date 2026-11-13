@@ -255,7 +255,7 @@
   }
 
   :is(.language-selector, .tools, .tools .anontools) {
-    @include header-tool-cluster(var(--accent-foreground-color));
+    @include header-tool-cluster(var(--secondary-foreground-color));
   }
 }
 
@@ -268,4 +268,28 @@
       height: 45px !important;
     }
   }
+}
+
+/// Highground Surface Styling (Cards, Teasers, Chips, and Elevated Containers).
+/// Applies highground background color, pattern/image layer, foreground colors, and typography.
+@mixin highground-surface() {
+  background-color: var(--theme-high-contrast-color);
+  background-image: var(
+    --highground-bg-image,
+    var(--colorgroup-front-bg-image, none)
+  );
+  background-position: var(
+    --highground-bg-position,
+    var(--colorgroup-front-bg-position, center)
+  );
+  background-repeat: var(
+    --highground-bg-repeat,
+    var(--colorgroup-front-bg-repeat, repeat)
+  );
+  background-size: var(
+    --highground-bg-size,
+    var(--colorgroup-front-bg-size, auto)
+  );
+  color: var(--theme-top-foreground-color, inherit);
+  font-family: var(--colorgroup-front-font, inherit);
 }

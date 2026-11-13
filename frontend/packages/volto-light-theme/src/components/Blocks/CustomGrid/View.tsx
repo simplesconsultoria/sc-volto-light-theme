@@ -1,41 +1,14 @@
 import React from 'react';
 import cx from 'classnames';
-import { RenderBlocks } from '@plone/volto/components';
+import RenderBlocks from '@plone/volto/components/theme/View/RenderBlocks';
 import { BlockWrapper } from '@kitconcept/volto-bm3-compat';
-import config from '@plone/volto/registry';
 
 // ========================================================================
 // Theme Resolution Logic (padronizado com o HeroBlock)
 // ========================================================================
 
-export interface ThemeDefinition {
-  name: string;
-  style: React.CSSProperties;
-}
-
-function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
-  const blockThemes = blockType
-    ? (config.blocks?.blocksConfig as any)?.[blockType]?.themes
-    : undefined;
-
-  return (blockThemes ||
-    (config.blocks as any)?.themes ||
-    []) as ThemeDefinition[];
-}
-
-function resolveThemeStyle(
-  theme: unknown,
-  themeDefinitions: ThemeDefinition[],
-): React.CSSProperties {
-  if (!theme) return {};
-  if (typeof theme === 'string') {
-    return themeDefinitions.find((t) => t.name === theme)?.style ?? {};
-  }
-  if (typeof theme === 'object') {
-    return theme as React.CSSProperties;
-  }
-  return {};
-}
+import { resolveBlockTheme } from '../../../config/blockThemes';
+import { normalizeBlockWidth } from '../../../helpers/blockWidth';
 
 // ========================================================================
 // Componentes do Bloco
@@ -55,7 +28,16 @@ const CustomGridColumn = ({
 }: any) => {
   return (
     <div className={cx('custom-grid-column', className)} style={style}>
-      <RenderBlocks content={colData} metadata={metadata} path={path} />
+      <RenderBlocks
+        content={colData}
+        metadata={metadata}
+        properties={{
+          ...metadata,
+          ...colData,
+        }}
+        path={path}
+        isContainer
+      />
     </div>
   );
 };
@@ -72,10 +54,13 @@ const CustomGridView = (props: any) => {
   const columnsLayout = data?.data?.blocks_layout?.items || [];
 
   // Theme resolution for the Grid Wrapper
-  const blockType = data?.['@type'] as string | undefined;
-  const themeDefinitions = getThemeDefinitions(blockType);
   const themeValue = data?.theme ?? data?.styles?.theme;
-  const themeStyle = resolveThemeStyle(themeValue, themeDefinitions);
+  const resolved = resolveBlockTheme(data);
+
+  const themeStyle =
+    typeof themeValue === 'object' && themeValue !== null
+      ? (themeValue as React.CSSProperties)
+      : resolved.style;
 
   const mergedStyle: React.CSSProperties = {
     ...(style || {}),
@@ -83,17 +68,8 @@ const CustomGridView = (props: any) => {
   };
 
   // Block width classes
-  let rawBlockWidth = data.blockWidth;
-  if (typeof rawBlockWidth === 'object' && rawBlockWidth !== null) {
-    rawBlockWidth =
-      rawBlockWidth.value ||
-      rawBlockWidth.id ||
-      Object.values(rawBlockWidth)[0];
-  }
-  const blockWidthClass =
-    rawBlockWidth && typeof rawBlockWidth === 'string'
-      ? `has--block-width--${rawBlockWidth}`
-      : 'has--block-width--layout';
+  const normalizedWidth = normalizeBlockWidth(data, 'layout');
+  const blockWidthClass = `has--block-width--${normalizedWidth}`;
 
   // Remove Volto's injected width classes to prevent conflicts with our custom logic
   const cleanedClassName = (className || '')
@@ -127,12 +103,28 @@ const CustomGridView = (props: any) => {
 
           // Theme resolution for the Column
           const colThemeValue = safeColData.settings?.theme;
-          const colThemeStyle = resolveThemeStyle(
-            colThemeValue,
-            themeDefinitions,
-          );
+          const colBack = safeColData.settings?.backColorGroup;
+          const colFront = safeColData.settings?.frontColorGroup;
+          const hasColTheme = Boolean(colThemeValue);
+          const colResolved = hasColTheme
+            ? resolveBlockTheme({
+                theme:
+                  typeof colThemeValue === 'string' ? colThemeValue : undefined,
+                backColorGroup: colBack,
+                frontColorGroup: colFront,
+              })
+            : null;
 
-          const colThemeClass = cx({ 'has-theme': !!colThemeValue });
+          const colThemeStyle = hasColTheme
+            ? typeof colThemeValue === 'object' && colThemeValue !== null
+              ? (colThemeValue as React.CSSProperties)
+              : colResolved?.style
+            : undefined;
+
+          const colThemeClass = cx(
+            hasColTheme && 'has-theme',
+            colResolved?.className,
+          );
 
           return (
             <CustomGridColumn

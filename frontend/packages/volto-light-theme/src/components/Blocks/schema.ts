@@ -6,14 +6,7 @@ import type { IntlShape } from '@plone/types/src/i18n';
 import type { JSONSchema } from '@plone/types/src/config/';
 
 const messages = defineMessages({
-  backgroundColor: {
-    id: 'Background color',
-    defaultMessage: 'Background color',
-  },
-  borderColor: {
-    id: 'Border color',
-    defaultMessage: 'Border color',
-  },
+  blockTheme: { id: 'Block Theme', defaultMessage: 'Block Theme' },
 });
 
 interface StylingSchemaProps {
@@ -28,7 +21,6 @@ export const defaultStylingSchema = ({
   intl,
 }: StylingSchemaProps): JSONSchema => {
   const blockConfig = config.blocks?.blocksConfig?.[formData['@type']];
-  const themes = blockConfig?.themes || config.blocks.themes;
   const defaultTheme =
     blockConfig?.defaultTheme || config.blocks.themes?.[0]?.name;
 
@@ -42,16 +34,27 @@ export const defaultStylingSchema = ({
   if (stylingIndex === -1 || !schema.fieldsets[stylingIndex]) return schema;
 
   schema.fieldsets[stylingIndex].fields = [
-    ...schema.fieldsets[stylingIndex].fields,
+    ...schema.fieldsets[stylingIndex].fields.filter(
+      (f) =>
+        f !== 'backColorGroup' &&
+        f !== 'frontColorGroup' &&
+        f !== 'theme' &&
+        f !== 'backgroundColor',
+    ),
     'theme',
   ];
 
+  delete schema.properties.backgroundColor;
+  if (schema.properties?.styles?.schema) {
+    delete schema.properties.styles.schema.properties.backgroundColor;
+    delete schema.properties.styles.schema.properties.theme;
+  }
+
   schema.properties = schema.properties || {};
   schema.properties.theme = {
-    widget: 'color_picker',
-    title: intl.formatMessage(messages.backgroundColor),
-    themes: Array.isArray(themes) ? themes : [],
-    default: defaultTheme,
+    widget: 'block_theme_widget',
+    title: intl.formatMessage(messages.blockTheme),
+    default: defaultTheme || 'default',
   };
 
   return schema;

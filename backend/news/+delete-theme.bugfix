@@ -1,0 +1,1 @@
+Deleting a theme now removes every registry record under its prefix, so leftover records from an older theme definition no longer bring the deleted theme back. @Humanaice

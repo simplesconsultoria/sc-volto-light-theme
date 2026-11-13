@@ -1,26 +1,107 @@
 // =============================================================================
-// Listing Block — Arquivo Indice
-// Importa os sub-arquivos de cada parte do bloco listing.
-// Sub-arquivos usam '&' para aninhar dentro do seletor raiz.
+// Listing Block — Index Stylesheet
+// Imports sub-files for each part of the listing block.
+// Sub-files use '&' to nest within the root selector.
 // =============================================================================
 
 body .block.listing,
-#page-edit .block-editor-listing .block.listing,
+#page-edit .block.listing,
+#page-edit [class*='block-editor-listing'],
+.block-editor-listing,
 .block.search {
+  background-color: transparent;
+  color: var(--theme-foreground-color, inherit);
+  font-family: var(--colorgroup-back-font, inherit);
+
   @import 'listing/headline';
   @import 'listing/grid';
   @import 'listing/carousel';
   @import 'listing/pagination';
   @import 'listing/columns';
   @import 'listing/events';
+  @import 'listing/teaser';
+
+  // Base listing items use background color group (transparent inheritance)
+  &:not(.grid):not(.variation-grid):not(.imageGallery):not(.image-gallery):not(
+      .variation-imageGallery
+    ):not(.carousel):not(.variation-carousel):not(.mediaCarousel):not(
+      .variation-mediaCarousel
+    ):not(.teaser):not(.variation-teaser):not(:has(.listing-carousel)):not(
+      :has(.image-gallery)
+    ):not(:has(.items[class*='grid-cols-'])):not(:has([class*='grid-cols-'])) {
+    .listing-item,
+    .listing-item .card {
+      background-color: transparent !important;
+      background-image: none !important;
+      color: var(--theme-foreground-color, inherit);
+    }
+  }
+
+  .listing-block-container {
+    width: auto;
+    max-width: 100%;
+    align-self: stretch;
+  }
+
+  .listing-headline-wrapper,
+  .listing-body {
+    width: auto;
+    max-width: 100% !important;
+    align-self: stretch;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    .items {
+      width: auto;
+      max-width: 100% !important;
+      align-self: stretch;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+  }
+
+  // Summary variation: remove min-width on small screens so image doesn't break out
+  &.summary,
+  .summary-variation {
+    .listing-item {
+      .card {
+        .card-inner .image-wrapper {
+          @container (max-width: #{$largest-mobile-screen}) {
+            width: 100%;
+            max-width: 100%;
+            flex: 1 1 auto;
+          }
+          @media (max-width: #{$largest-mobile-screen}) {
+            width: 100%;
+            max-width: 100%;
+            flex: 1 1 auto;
+          }
+
+          img {
+            @container (max-width: #{$largest-mobile-screen}) {
+              width: 100% !important;
+              min-width: unset !important;
+              max-width: 100% !important;
+              height: auto;
+            }
+            @media (max-width: #{$largest-mobile-screen}) {
+              width: 100% !important;
+              min-width: unset !important;
+              max-width: 100% !important;
+              height: auto;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 // =============================================================================
-// Regras fora do seletor principal
-// Sao regras que precisam de seletores de escopo diferentes.
+// Rules outside main selector
+// Rules that require distinct scope selectors.
 // =============================================================================
 
-// Modo de edicao: mostra paginacao mobile e esconde desktop
+// Edit mode: show mobile pagination and hide desktop pagination
 #page-edit,
 #page-add {
   .listing {
@@ -38,7 +119,7 @@ body .block.listing,
   }
 }
 
-// Spacing entre blocos com backgrounds diferentes
+// Spacing between blocks with different backgrounds
 :not(.blocks-group-wrapper)
   > .block:not(.category-separator).previous--has--different--backgroundColor,
 :not(.blocks-group-wrapper)
@@ -46,65 +127,176 @@ body .block.listing,
   padding: $spacing-medium 0;
 }
 
-// Container widths para carousel/mediaCarousel no page-document
-#page-document .blocks-group-wrapper > .block.listing.carousel,
-#page-document .blocks-group-wrapper > .block.listing.mediaCarousel {
-  @include default-container-width();
-  @include adjustMarginsToContainer($default-container-width);
+// Override: remove container constraints for listing children
+#page-document .blocks-group-wrapper > .block.listing {
+  .listing-item,
+  .emptyListing,
+  .image-gallery,
+  .card {
+    max-width: unset !important;
+    margin-right: unset !important;
+    margin-left: unset !important;
+  }
 }
 
-// Container widths para listing nao-carousel no page-document
-#page-document
-  .blocks-group-wrapper
-  > .block.listing:not(.carousel):not(.mediaCarousel) {
-  position: relative;
+// Full width containment: prevent full-width overflow on small screens
+.block.listing.has--block-width--full {
+  width: 100% !important;
   max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
 
-  .listing-body {
-    &.has--block-width--narrow,
-    &[class*='has--block-width--var(--narrow-container-width)'] {
-      @include narrow-container-width();
-      @include adjustMarginsToContainer($narrow-container-width);
-      max-width: var(--narrow-container-width) !important;
-      margin-right: auto;
-      margin-left: auto;
-    }
+  .listing-block-container,
+  .listing-body,
+  .listing-carousel,
+  .listing-carousel__viewport {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
 
-    &.has--block-width--default,
-    &[class*='has--block-width--var(--default-container-width)'] {
-      @include default-container-width();
-      @include adjustMarginsToContainer($default-container-width);
-      max-width: var(--default-container-width) !important;
-      margin-right: auto;
-      margin-left: auto;
-    }
+// =============================================================================
+// Listing inside Grid Blocks (customGrid, custom-grid, gridBlock) and .contained
+// Resets lateral margins without forcing width: 100% across all viewports,
+// since parent grid manages container layout and spacing.
+// =============================================================================
+.custom-grid,
+.customGrid,
+.block.gridBlock,
+.gridBlock,
+.column,
+.custom-grid-column {
+  .block.listing,
+  .block.contained {
+    width: auto !important;
+    max-width: 100% !important;
+    align-self: stretch;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
 
-    &.has--block-width--layout,
-    &[class*='has--block-width--var(--layout-container-width)'] {
-      @include layout-container-width();
-      @include adjustMarginsToContainer($layout-container-width);
-      max-width: var(--layout-container-width) !important;
-      margin-right: auto;
-      margin-left: auto;
-    }
-
-    &.has--block-width--unset,
-    &.has--block-width--full {
+    .listing-block-container,
+    .listing-headline-wrapper,
+    .listing-body,
+    .listing-carousel,
+    .listing-carousel__viewport,
+    .listing-teaser-wrapper {
+      width: auto !important;
       max-width: 100% !important;
-      padding-right: 0;
-      padding-left: 0;
+      align-self: stretch;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    &.grid,
+    &.imageGallery,
+    &.image-gallery {
+      ul.items {
+        width: auto !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+      }
     }
   }
 }
 
-// Override: remove constraints de container para filhos do listing
-#page-document .blocks-group-wrapper > .block.listing {
-  &.grid,
-  .listing-item,
-  .emptyListing,
-  .image-gallery {
-    max-width: unset !important;
-    margin-right: unset !important;
-    margin-left: unset !important;
+.block.listing.contained {
+  width: auto !important;
+  max-width: 100% !important;
+  align-self: stretch;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+
+  .listing-block-container,
+  .listing-headline-wrapper,
+  .listing-body,
+  .listing-carousel,
+  .listing-carousel__viewport,
+  .listing-teaser-wrapper {
+    width: auto !important;
+    max-width: 100% !important;
+    align-self: stretch;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+}
+
+// =============================================================================
+// Grid Block Edit Mode (GridBlock in Volto)
+// Ensures each column/cell maintains its percentage width without collapsing
+// under react-beautiful-dnd flexbox containers.
+// =============================================================================
+.block-editor-gridBlock,
+.block.gridBlock {
+  .grid-items {
+    [data-rbd-droppable-id] {
+      display: flex !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    &.one [class*='block-editor-'] {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    &.two [class*='block-editor-'] {
+      width: 50% !important;
+      min-width: 0 !important;
+      max-width: 50% !important;
+      box-sizing: border-box !important;
+    }
+
+    &.three [class*='block-editor-'] {
+      width: 33.33333333% !important;
+      min-width: 0 !important;
+      max-width: 33.33333333% !important;
+      box-sizing: border-box !important;
+    }
+
+    &.four [class*='block-editor-'] {
+      width: 25% !important;
+      min-width: 0 !important;
+      max-width: 25% !important;
+      box-sizing: border-box !important;
+    }
+  }
+}
+
+// Listing contained in editor mode (within columns or grid)
+.block-editor-listing.contained {
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+
+  .cell-wrapper,
+  .ui.drag.block.inner,
+  .ui.drag.block.inner.listing {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .block.listing {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+
+    .listing-block-container,
+    .listing-body,
+    .events-listing-wrapper,
+    .events-listing,
+    .listing-teaser-wrapper {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
   }
 }

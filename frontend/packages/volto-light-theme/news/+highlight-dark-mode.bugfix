@@ -1,0 +1,1 @@
+Highlight block: the description panel follows the block theme's front Color Group when it uses the default Grey color, so it turns dark in dark mode. Text in the panel always uses the panel's text color; in dark mode it was white on a light panel. @Humanaice

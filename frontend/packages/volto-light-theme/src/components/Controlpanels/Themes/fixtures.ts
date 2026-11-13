@@ -5,20 +5,47 @@
  * component against real data rather than a convenient simplification. Not a
  * `*.stories.*` file, so Storybook does not try to render it.
  */
-import type { JsonSchema, ThemeItem } from '../../../types/theme';
+import type { ColorGroup, JsonSchema, ThemeItem } from '../../../types/theme';
+
+import {
+  DEFAULT_COLOR_GROUPS,
+  DEFAULT_BLOCK_THEMES,
+  NATAL_COLOR_GROUPS,
+  NATAL_BLOCK_THEMES,
+} from '../../../config/blockThemes';
+
+/**
+ * Corporate: the default Color Groups with a navy ground in place of the light
+ * blue `accent`, so the listing and the site-theme toolbar show a theme that
+ * actually differs from the default.
+ */
+const CORPORATE_COLOR_GROUPS: Record<string, ColorGroup> = {
+  ...DEFAULT_COLOR_GROUPS,
+  accent: {
+    ...DEFAULT_COLOR_GROUPS.accent,
+    background_color_light: '#123456',
+    background_color_dark: '#0b2239',
+    text_color_light: '#ffffff',
+    text_color_dark: '#e7f5ff',
+    subtext_color_light: '#c5d6e8',
+    subtext_color_dark: '#b8d7ef',
+    accent_color_light: '#a5d8ff',
+    accent_color_dark: '#74c0fc',
+  },
+  secondary: {
+    ...DEFAULT_COLOR_GROUPS.secondary,
+    background_color_light: '#e7eef6',
+    background_color_dark: '#1b3a5c',
+  },
+};
 
 export const defaultTheme: ThemeItem = {
   '@id': 'http://localhost:8080/Plone/@controlpanels/themes/default',
   id: 'default',
   name: 'Default',
   description: 'The theme shipped with sc.voltolighttheme.',
-  primary_color_light: '#ffffff',
-  primary_foreground_color_light: '#000000',
-  header_foreground_color: '#000000',
-  secondary_color_light: '#000000',
-  secondary_foreground_color_light: '#ffffff',
-  accent_color_light: '#f4822c',
-  accent_foreground_color_light: '#000000',
+  color_groups: DEFAULT_COLOR_GROUPS,
+  block_themes: DEFAULT_BLOCK_THEMES,
 };
 
 export const corporateTheme: ThemeItem = {
@@ -26,13 +53,8 @@ export const corporateTheme: ThemeItem = {
   id: 'corporate',
   name: 'Corporate',
   description: 'Blues, for a public-facing site.',
-  primary_color_light: '#123456',
-  primary_foreground_color_light: '#ffffff',
-  header_foreground_color: '#ffffff',
-  secondary_color_light: '#1b3a5c',
-  secondary_foreground_color_light: '#ffffff',
-  accent_color_light: '#4a90d9',
-  accent_foreground_color_light: '#000000',
+  color_groups: CORPORATE_COLOR_GROUPS,
+  block_themes: DEFAULT_BLOCK_THEMES,
 };
 
 export const natalTheme: ThemeItem = {
@@ -40,13 +62,8 @@ export const natalTheme: ThemeItem = {
   id: 'natal',
   name: 'Natal',
   description: 'A festive theme with Inter typography and rounded borders.',
-  primary_color_light: '#d32f2f',
-  primary_foreground_color_light: '#ffffff',
-  header_foreground_color: '#ffffff',
-  secondary_color_light: '#2e7d32',
-  secondary_foreground_color_light: '#ffffff',
-  accent_color_light: '#fbc02d',
-  accent_foreground_color_light: '#000000',
+  color_groups: NATAL_COLOR_GROUPS,
+  block_themes: NATAL_BLOCK_THEMES,
 };
 
 export const themes: ThemeItem[] = [defaultTheme, corporateTheme, natalTheme];
@@ -54,32 +71,24 @@ export const themes: ThemeItem[] = [defaultTheme, corporateTheme, natalTheme];
 /**
  * A trimmed `ISCVLTThemeDefinition` schema, as `plone.restapi` renders it.
  *
- * The colour fields are deliberately *not* marked `widget: 'colorPicker'`.
- * Upstream's colour picker reads `config.settings.colorMap[props.id]` with no
- * guard, and in Storybook that map is never populated — the add-on's
- * `applyConfig` does not run there — so a story using it throws during render
- * and shows an empty frame. Plain string fields render through Volto's default
- * text widget, which is what makes these stories show real, editable inputs.
+ * Only the plain fields. The legacy colour fields are left out because
+ * `enhanceThemeSchemaWidgets` strips them from the form anyway, and
+ * `color_groups` / `block_themes` are left out because their widgets are
+ * registered by the add-on's `applyConfig`, which does not run in Storybook.
+ * The Color Groups and Block Themes editors have stories of their own.
  */
 export const schema: JsonSchema = {
   type: 'object',
   properties: {
     name: { title: 'Theme name', type: 'string' },
     description: { title: 'Description', type: 'string' },
-    primary_color_light: { title: 'Primary colour', type: 'string' },
-    accent_color_light: { title: 'Accent colour', type: 'string' },
   },
   required: ['name'],
   fieldsets: [
     {
       id: 'default',
       title: 'Default',
-      fields: [
-        'name',
-        'description',
-        'primary_color_light',
-        'accent_color_light',
-      ],
+      fields: ['name', 'description'],
     },
   ],
 };

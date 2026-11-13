@@ -1,37 +1,90 @@
 // =============================================================================
 // Listing Grid Variation
-// Card layout em grid para itens do listing, com suporte a person-listing.
-// Cores de borda via --cardBorderColor e --content-type-border-color.
+// Grid card layout for listing items, with support for person-listing.
+// Border colors via --cardBorderColor and --content-type-border-color.
 // =============================================================================
 
-&.grid {
+&.grid,
+&.imageGallery,
+&.image-gallery,
+&[class*='grid'],
+&[class*='imageGallery'],
+&[class*='image-gallery'],
+&:has(.items[class*='grid-cols-']),
+&:has([class*='grid-cols-']) {
   .listing-item,
+  .listing-item.news-listing,
+  .listing-item.item-listing,
   .listing-item.person-listing {
+    border-bottom: none !important;
+
     .card {
       height: 100%;
-      border: solid var(--cardBorderColor, var(--theme-border-color));
+      // One declaration for all four sides. `--cardBorderWidth` and the block
+      // theme's `--theme-border-width` are `border-width` shorthands
+      // (`6px 0 0 0`, the default theme's `4px 0 0`): read by
+      // `border-top-width` they are invalid, which drops the top border back
+      // to `medium` whatever the editor picked.
       border-width: var(
         --cardBorderWidth,
-        var(--theme-border-width)
+        var(--theme-border-width, 3px 0 0 0)
       ) !important;
+      // Longhands, not `border: solid var(...)`: when the colour variables are
+      // undefined (no colour picked, a block theme without a border colour)
+      // the shorthand is invalid as a whole and takes `solid` with it, so only
+      // a side with its own style kept a border.
+      border-style: solid;
+      border-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, var(--primary-accent-color))
+      );
+      // The default top line takes the content type's colour.
       border-top-color: var(
         --cardBorderColor,
-        var(--content-type-border-color, var(--theme-border-color))
+        var(
+          --content-type-border-color,
+          var(--theme-border-color, var(--primary-accent-color, #f4822c))
+        )
+      ) !important;
+      background-color: var(
+        --theme-high-contrast-color,
+        var(--colorgroup-neutral-bg, var(--neutral-color, #f0f0f0))
       );
-      background-color: var(--theme-high-contrast-color);
+      background-image: var(
+        --highground-bg-image,
+        var(--colorgroup-front-bg-image, none)
+      );
+      background-position: var(
+        --highground-bg-position,
+        var(--colorgroup-front-bg-position, center)
+      );
+      background-repeat: var(
+        --highground-bg-repeat,
+        var(--colorgroup-front-bg-repeat, repeat)
+      );
+      background-size: var(
+        --highground-bg-size,
+        var(--colorgroup-front-bg-size, auto)
+      );
+      color: var(--theme-top-foreground-color);
+      font-family: var(--colorgroup-front-font, inherit);
 
       .card-inner {
         padding: 0 !important;
 
         .card-summary {
+          padding: $spacing-medium $spacing-small !important;
+
           @container (max-width: #{$largest-mobile-screen}) {
             padding-top: $spacing-medium !important;
           }
-
-          padding: $spacing-medium $spacing-small $spacing-medium $spacing-small !important;
+          @media (max-width: #{$largest-mobile-screen}) {
+            padding-top: $spacing-medium !important;
+          }
 
           .title {
             color: var(--theme-top-foreground-color);
+            font-family: var(--colorgroup-front-font, inherit);
           }
 
           .description,
@@ -47,6 +100,11 @@
             }
           }
         }
+
+        .item-image + .card-summary,
+        .image-wrapper + .card-summary {
+          padding-top: $spacing-medium !important;
+        }
       }
 
       &:hover {
@@ -57,6 +115,15 @@
         );
       }
     }
+  }
+
+  // A border set in the Border widget is one border: the same colour on every
+  // side. (`ListingBody` puts the widget's values on this container.)
+  .listing-block-container[style*='--cardBorderWidth'] .listing-item .card {
+    border-top-color: var(
+      --cardBorderColor,
+      var(--theme-border-color, var(--primary-accent-color))
+    ) !important;
   }
 
   .listing-item.person-listing {

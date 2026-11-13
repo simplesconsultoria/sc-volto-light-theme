@@ -8,36 +8,61 @@ export interface ImageInformation {
   hasImage: boolean;
 }
 
+function getValidImageItem(
+  item: ObjectBrowserItem | null | undefined,
+): ObjectBrowserItem | null {
+  if (!item) return null;
+  const field = item.image_field || 'image';
+  const scales = item.image_scales;
+  if (scales?.[field]?.[0]?.download) {
+    return item.image_field ? item : { ...item, image_field: field };
+  }
+  if (scales && typeof scales === 'object') {
+    for (const [key, val] of Object.entries(scales)) {
+      if (Array.isArray(val) && val[0]?.download) {
+        return { ...item, image_field: key };
+      }
+    }
+  }
+  // Some serializers send the image field itself rather than `image_scales`.
+  if ((item as { image?: { download?: string } }).image?.download) {
+    return { ...item, image_field: 'image' };
+  }
+  return null;
+}
+
 function hasImageAttributes(
   item: ObjectBrowserItem | null | undefined,
 ): boolean {
-  return item
-    ? Boolean(item?.image_scales?.[item.image_field]?.[0]?.download)
-    : false;
+  return Boolean(getValidImageItem(item));
 }
 
 export function imageInfoFromHeroBlock(data: HeroBlockData): ImageInformation {
   const hrefItem = data.href?.[0];
   const oldUrl = data.url;
+  const previewImageItem = Array.isArray(data.preview_image)
+    ? data.preview_image[0]
+    : typeof data.preview_image === 'string'
+      ? ({ '@id': data.preview_image } as unknown as ObjectBrowserItem)
+      : (data.preview_image as ObjectBrowserItem) || null;
+
+  const validHref = getValidImageItem(hrefItem);
+  const validPreview = getValidImageItem(previewImageItem);
+
   const useHrefImage =
     hasImageAttributes(hrefItem) &&
     (!data.overwrite ||
       (data.overwrite &&
         (!data.preview_image || data.preview_image.length === 0)));
-  const previewImageItem = Array.isArray(data.preview_image)
-    ? data.preview_image[0]
-    : null;
-  const imageItem = useHrefImage
-    ? hrefItem
-    : hasImageAttributes(previewImageItem)
-      ? previewImageItem
-      : null;
-  const imageSrc = imageItem
+
+  const imageItem = useHrefImage ? validHref : validPreview;
+  const fallbackSrc = imageItem
     ? null
     : previewImageItem?.['@id'] || oldUrl || null;
+
   return {
     imageItem: imageItem || null,
-    imageSrc: imageSrc ? flattenToAppURL(imageSrc) : null,
-    hasImage: Boolean(imageItem || imageSrc),
+    imageSrc: fallbackSrc ? flattenToAppURL(fallbackSrc) : null,
+    hasImage: Boolean(imageItem || fallbackSrc),
   };
 }

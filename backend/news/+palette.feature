@@ -1,0 +1,1 @@
+Default Color Groups now ship a white primary, a dark gray secondary (`#343a40`) and a dark blue accent (`#0f4c81`, `#1b4d82` in dark mode), with light text on the dark surfaces, matching the frontend defaults; new Color Groups created without colors use the same values. @Humanaice

@@ -1,0 +1,1 @@
+Every block now has a Block Width option (`narrow`, `default`, `layout`, `full`) in its styles, stored as `blockWidth:noprefix`. Legacy width values are normalized, and Image and Main Image blocks aligned left or right take their width from the adjacent block instead of offering the option. @Humanaice

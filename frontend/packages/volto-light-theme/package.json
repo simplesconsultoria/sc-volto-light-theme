@@ -63,7 +63,9 @@
     "@kitconcept/volto-social-blocks": "1.1.0",
     "@plone/components": "workspace:*",
     "@plone-collective/volto-image-editor": "^1.2.0",
-    "@plonegovbr/volto-social-media": "^3.1.0"
+    "@plonegovbr/volto-social-media": "^3.1.0",
+    "embla-carousel-autoplay": "^8.0.0",
+    "embla-carousel-react": "^8.0.0"
   },
   "peerDependencies": {
     "@plone/registry": "workspace:*",

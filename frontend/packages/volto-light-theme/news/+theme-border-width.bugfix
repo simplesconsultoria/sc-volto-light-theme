@@ -1,0 +1,1 @@
+Borders that follow the block theme show again: the top line of the Event Metadata block and the border of the Listing headline button. They read the theme border width as a single value, so the default theme (top border only) dropped them. A Separator whose border width is set on a side other than the top keeps its line. @Humanaice

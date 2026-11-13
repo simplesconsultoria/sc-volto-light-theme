@@ -1,0 +1,1 @@
+Theme control panel widgets are usable with assistive technology: Color Group and Block Theme cards toggle through a real button with `aria-expanded`, the delete button is no longer nested inside it, every colour picker and hex field has an accessible name, and the background size/repeat/position fields have labels. @Humanaice

@@ -2,7 +2,7 @@ from plone.protect.interfaces import IDisableCSRFProtection
 from plone.restapi.controlpanels import RegistryConfigletPanel
 from plone.restapi.deserializer import json_body
 from plone.restapi.exceptions import DeserializationError
-from sc.voltolighttheme.interfaces import ISCVLTThemeDefinition
+from sc.voltolighttheme.interfaces import ISCVLTThemeSchema
 from sc.voltolighttheme.interfaces import ISCVLTThemesControlpanel
 from sc.voltolighttheme.utils import themes
 from zExceptions import BadRequest
@@ -40,7 +40,7 @@ class ThemesControlpanel(RegistryConfigletPanel):
     ==========================================  ===========================
     """
 
-    schema = ISCVLTThemeDefinition
+    schema = ISCVLTThemeSchema
     configlet_id = "sc.voltolighttheme.themes"
     configlet_category_id = "Products"
     schema_prefix = themes.PREFIX
@@ -127,6 +127,8 @@ class ThemesControlpanel(RegistryConfigletPanel):
         theme_id = body.pop("id", None) or body.pop("@id", None)
         if not theme_id:
             raise BadRequest("Missing required field: id")
+        if not isinstance(theme_id, str):
+            raise BadRequest("The theme id must be a string.")
         if not themes.is_valid_theme_id(theme_id):
             raise BadRequest(
                 f"Invalid theme id {theme_id!r}: use lowercase letters, "
@@ -157,9 +159,15 @@ class ThemesControlpanel(RegistryConfigletPanel):
     def update(self, names):
         """Partially update one theme from the request body.
 
+        ``color_groups`` and ``block_themes`` are merge patches keyed by id:
+        entries left out are kept, and an entry sent as ``null`` is deleted
+        on every theme.
+
         :param names: traversal path naming exactly one theme.
         :returns: the serialised theme.
         :raises NotFound: when the theme does not exist.
+        :raises BadRequest: when a color group or block theme is malformed,
+            or a base one is deleted.
         """
         theme_id = self._single(names)
         if not themes.theme_exists(theme_id):
@@ -170,7 +178,10 @@ class ThemesControlpanel(RegistryConfigletPanel):
         body.pop("@id", None)
 
         self._disable_csrf()
-        themes.update_theme(theme_id, body)
+        try:
+            themes.update_theme(theme_id, body)
+        except ValueError as exc:
+            raise BadRequest(str(exc)) from exc
         return self.serialize(theme_id)
 
     def delete(self, names):

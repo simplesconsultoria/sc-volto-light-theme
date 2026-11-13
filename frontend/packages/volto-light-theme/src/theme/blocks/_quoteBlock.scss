@@ -11,12 +11,14 @@ $quote-padding-vertical: $spacing-medium;
 #page-edit .block-editor-quoteBlock,
 #page-add .block-editor-quoteBlock,
 .block.quoteBlock {
-  background-color: var(--theme-color);
+  background-color: transparent;
   color: var(--theme-foreground-color, var(--primary-foreground-color));
 
-  // Always force default-container-width regardless of other wrappers or missing options
-  @include default-container-width();
-  @include adjustMarginsToContainer($default-container-width);
+  // Default fallback if no specific block width class is applied
+  &:not([class*='has--block-width-']) {
+    @include default-container-width();
+    @include adjustMarginsToContainer($default-container-width);
+  }
 }
 
 .quote-block {
@@ -86,10 +88,6 @@ $quote-padding-vertical: $spacing-medium;
 #page-edit,
 #page-add {
   .block-editor-quoteBlock {
-    // .block.quoteBlock {
-    //   max-width: var(--default-container-width, 940px);
-    // }
-
     // Ensure slate editor inherits the italic style
     .quote-text {
       .text-slate-editor-inner {
@@ -100,26 +98,4 @@ $quote-padding-vertical: $spacing-medium;
       }
     }
   }
-}
-
-// Suporte a alinhamento de texto no bloco Introduction (via styles.align)
-.has--align--center.block-editor-introduction .block.introduction,
-.has--block-alignment--center.block-editor-introduction .block.introduction,
-body .block.introduction.has--align--center,
-body .block.introduction.has--block-alignment--center {
-  text-align: center;
-}
-
-.has--align--right.block-editor-introduction .block.introduction,
-.has--block-alignment--right.block-editor-introduction .block.introduction,
-body .block.introduction.has--align--right,
-body .block.introduction.has--block-alignment--right {
-  text-align: right;
-}
-
-.has--align--left.block-editor-introduction .block.introduction,
-.has--block-alignment--left.block-editor-introduction .block.introduction,
-body .block.introduction.has--align--left,
-body .block.introduction.has--block-alignment--left {
-  text-align: left;
 }

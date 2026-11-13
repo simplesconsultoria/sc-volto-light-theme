@@ -11,35 +11,73 @@
   },
   "projectId": "f0a26637-18ca-4f24-80e7-8d196207efcc",
   "titleMap": {
-    "Grid": null,
-    "Highlight": null,
-    "Navigation": null,
-    "QuoteBlock": null,
+    "Blocks/EventMetadata/View": "EventMetadata",
+    "Blocks/Separator/View": "Separator",
+    "Blocks/Listing/Carousel": "CarouselTemplate",
+    "Blocks/Listing/Grid": "GridTemplate",
+    "Blocks/Listing/Highlight": "TeaserTemplate",
     "ThemeForm": null,
     "ThemeSwatches": null,
     "ThemesList": null,
     "ThemesToolbarActions": null,
     "ThemesUI": null,
+    "SimpleColorPickerWidget": null,
     "Gallery": null,
     "Inventory": null,
     "DefaultView": null,
-    "Separator": null,
-    "EventMetadata": null,
-    "EventsTemplate": null,
-    "Colophon": null,
-    "SimpleColorPickerWidget": null
+    "Blocks/Accordion": null,
+    "Blocks/Banner": null,
+    "Blocks/Carousel": null,
+    "Blocks/Event Calendar": null,
+    "Blocks/Grid": null,
+    "Blocks/Highlight": null,
+    "Blocks/Image": null,
+    "Blocks/Introduction": null,
+    "Blocks/Listing/Listing Block": null,
+    "Blocks/Logos": null,
+    "Blocks/Search": null,
+    "Blocks/Separator/In page": null,
+    "Blocks/Slider": null,
+    "Blocks/Table": null,
+    "Blocks/Teaser": null,
+    "Blocks/Table of Contents": null,
+    "Blocks/Video": null
   },
   "overrides": {
+    "CustomGrid": {
+      "cardMode": "column"
+    },
+    "EventMetadata": {
+      "cardMode": "column"
+    },
     "HeroBlock": {
       "cardMode": "column"
     },
     "MainImageBlock": {
       "cardMode": "column"
     },
+    "CarouselTemplate": {
+      "cardMode": "column"
+    },
+    "GridTemplate": {
+      "cardMode": "column"
+    },
+    "MediaCarousel": {
+      "cardMode": "column"
+    },
+    "TeaserTemplate": {
+      "cardMode": "column"
+    },
+    "Colophon": {
+      "cardMode": "column"
+    },
     "HeaderBarActions": {
       "cardMode": "column"
     },
     "MenuItem": {
+      "cardMode": "column"
+    },
+    "Navigation": {
       "cardMode": "column"
     },
     "SubMenu": {

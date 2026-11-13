@@ -1,0 +1,1 @@
+The primary Color Group font now also sets `--font-family-primary`, which `body` reads its fonts from, so the theme font reaches body text. @Humanaice

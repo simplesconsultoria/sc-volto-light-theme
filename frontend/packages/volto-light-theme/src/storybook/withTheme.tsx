@@ -1,7 +1,10 @@
 import React from 'react';
 import type { Decorator } from '@storybook/react';
 
-import { createThemeDefinition } from '../config/blocks';
+import {
+  createThemeDefinition,
+  resolveBlockTheme,
+} from '../config/blockThemes';
 import { themeCustomProperties } from '../helpers/themeStyles';
 import {
   defaultTheme,
@@ -59,11 +62,14 @@ const SITE_THEMES: Record<string, ThemeSettings | null> = {
 /**
  * Build the inline custom properties for one block theme.
  *
- * Reuses `createThemeDefinition` rather than restating the mapping, so a theme
- * added in `config/blocks.ts` needs no change here.
+ * Reuses `createThemeDefinition` / `resolveBlockTheme` rather than restating
+ * the mapping, so a theme added in `config/blockThemes.ts` needs no change here.
  */
 function blockThemeStyle(name: string): Record<string, string> {
   if (name === 'none') return {};
+  if (name.startsWith('custom-')) {
+    return resolveBlockTheme({ theme: name }).style as Record<string, string>;
+  }
   return createThemeDefinition(name, name).style;
 }
 
@@ -91,8 +97,12 @@ export const globalTypes = {
       dynamicTitle: true,
       items: [
         { value: 'none', title: 'No block theme' },
-        { value: 'default', title: 'Primary' },
-        { value: 'brand', title: 'Brand' },
+        { value: 'default', title: 'Default' },
+        { value: 'alternative', title: 'Alternative' },
+        {
+          value: 'custom-secondary-accent',
+          title: 'Custom (Secondary / Accent)',
+        },
       ],
     },
   },
@@ -159,11 +169,18 @@ function ThemedStory({
 
   return (
     <div style={style}>
-      <div
-        style={{ maxWidth: 'var(--default-container-width)', margin: '0 auto' }}
-      >
-        {children}
-      </div>
+      {fullBleed ? (
+        children
+      ) : (
+        <div
+          style={{
+            maxWidth: 'var(--default-container-width)',
+            margin: '0 auto',
+          }}
+        >
+          {children}
+        </div>
+      )}
     </div>
   );
 }

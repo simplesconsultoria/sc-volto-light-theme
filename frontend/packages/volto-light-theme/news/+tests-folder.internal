@@ -1,0 +1,1 @@
+Moved the unit tests out of `src/` into a `tests/` folder mirroring `src/`, importing the code through the package alias, with a shared `readSource()` helper for SCSS contract tests. Lint and Prettier now check `tests/` as well. @Humanaice

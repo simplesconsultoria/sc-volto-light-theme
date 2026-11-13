@@ -1,0 +1,76 @@
+import { describe, it, expect } from 'vitest';
+import { groupByBGColor } from '@simplesconsultoria/volto-light-theme/customizations/@kitconcept/volto-light-theme/helpers/grouping';
+
+describe('groupByBGColor', () => {
+  it('separa blocos com temas diferentes em grupos distintos', () => {
+    const blocks: any = {
+      b1: { '@type': 'image', theme: 'alternative' },
+      b2: { '@type': 'slate', theme: 'default' },
+    };
+    const blocks_layout: any = {
+      items: ['b1', 'b2'],
+    };
+
+    const result = groupByBGColor(blocks, blocks_layout);
+    expect(result).toEqual([['b1'], ['b2']]);
+  });
+
+  it('agrupa blocos consecutivos com o mesmo tema no mesmo grupo', () => {
+    const blocks: any = {
+      b1: { '@type': 'image', theme: 'default' },
+      b2: { '@type': 'slate', theme: 'default' },
+      b3: { '@type': 'slate', theme: 'default' },
+    };
+    const blocks_layout: any = {
+      items: ['b1', 'b2', 'b3'],
+    };
+
+    const result = groupByBGColor(blocks, blocks_layout);
+    expect(result).toEqual([['b1', 'b2', 'b3']]);
+  });
+
+  it('suporta theme definido dentro de styles.theme', () => {
+    const blocks: any = {
+      b1: { '@type': 'image', styles: { theme: 'alternative' } },
+      b2: { '@type': 'slate', styles: { theme: 'default' } },
+    };
+    const blocks_layout: any = {
+      items: ['b1', 'b2'],
+    };
+
+    const result = groupByBGColor(blocks, blocks_layout);
+    expect(result).toEqual([['b1'], ['b2']]);
+  });
+
+  it('suporta legacy backgroundColor de versoes anteriores do VLT', () => {
+    const blocks: any = {
+      b1: { '@type': 'image', backgroundColor: 'alternative' },
+      b2: { '@type': 'slate', backgroundColor: 'default' },
+    };
+    const blocks_layout: any = {
+      items: ['b1', 'b2'],
+    };
+
+    const result = groupByBGColor(blocks, blocks_layout);
+    expect(result).toEqual([['b1'], ['b2']]);
+  });
+
+  it('groups a legacy name with the theme it stands for', () => {
+    const blocks: any = {
+      b1: { '@type': 'slate', theme: 'brand' },
+      b2: { '@type': 'slate', styles: { theme: 'alternative' } },
+      b3: { '@type': 'slate', theme: 'grey' },
+      b4: { '@type': 'slate', theme: 'custom-secondary-primary' },
+    };
+    const blocks_layout: any = { items: ['b1', 'b2', 'b3', 'b4'] };
+    expect(groupByBGColor(blocks, blocks_layout)).toEqual([
+      ['b1', 'b2'],
+      ['b3', 'b4'],
+    ]);
+  });
+
+  it('retorna array vazio quando layout ou blocks estiverem vazios', () => {
+    expect(groupByBGColor({}, { items: [] } as any)).toEqual([]);
+    expect(groupByBGColor(null as any, null as any)).toEqual([]);
+  });
+});

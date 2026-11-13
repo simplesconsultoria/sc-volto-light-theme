@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import withBlockExtensions from '@plone/volto/helpers/Extensions/withBlockExtensions';
 import Image from '@plone/volto/components/theme/Image/Image';
 import config from '@plone/volto/registry';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import cx from 'classnames';
 import type { Content } from '@plone/types';
 import type { MainImageBlockData } from './index';
 import Layout, { type MainImageAlign, type MainImageSize } from './Layout';
-import type { ThemeDefinition } from '../../../config/blocks';
+import { resolveBlockTheme } from '../../../config/blockThemes';
+import { ReactReduxContext, useSelector } from 'react-redux';
+import {
+  findPreviewImage,
+  resolveEffectivePreview,
+  resolveMainImage,
+  resolvePageContent,
+  resolveThemeStyle,
+} from './helpers';
 
 interface MainImageBlockViewProps {
   data: MainImageBlockData;
@@ -16,90 +24,91 @@ interface MainImageBlockViewProps {
   style?: React.CSSProperties;
   content?: Content;
   properties?: Content;
+  metadata?: Content;
   [key: string]: any;
 }
 
-function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
-  const blockThemes = blockType
-    ? (config.blocks?.blocksConfig as any)?.[blockType]?.themes
-    : undefined;
+/** The page content from the Redux store (state or store snapshot). */
+const useStateContent = () => {
+  const reduxContext = useContext(ReactReduxContext);
+  const reduxContent = useSelector((state: any) => state.content?.data);
+  return reduxContent || reduxContext?.store?.getState()?.content?.data;
+};
 
-  return (blockThemes ||
-    (config.blocks as any)?.themes ||
-    []) as ThemeDefinition[];
-}
+const EmptyMainImage: React.FC<{
+  className?: string;
+  style?: React.CSSProperties;
+}> = ({ className, style }) => (
+  <div className={cx('main-image-block', 'empty', className)} style={style}>
+    <FormattedMessage
+      id="No preview image found on this page."
+      defaultMessage="No preview image found on this page. Add a preview image to the page to display it in this block."
+    />
+  </div>
+);
 
-function resolveThemeStyle(
-  theme: unknown,
-  themeDefinitions: ThemeDefinition[],
-): React.CSSProperties {
-  if (!theme) return {};
+const MainImageBlockView: React.FC<MainImageBlockViewProps> = (props) => {
+  const {
+    data = {} as MainImageBlockData,
+    className,
+    style,
+    isEditMode,
+    content,
+    properties,
+    metadata,
+  } = props;
+  const intl = useIntl();
 
-  if (typeof theme === 'string') {
-    return themeDefinitions.find((t) => t.name === theme)?.style ?? {};
-  }
+  const stateContent = useStateContent();
 
-  if (typeof theme === 'object') {
-    return theme as React.CSSProperties;
-  }
+  // Resolves preview image across block data, top-level page, Redux store, and nested containers
+  // (GridBlock, CustomGrid, Accordion) where metadata holds the page document.
+  const previewImage = findPreviewImage([
+    data,
+    metadata,
+    properties,
+    content,
+    stateContent,
+  ]);
+  const pageContent: Content = resolvePageContent(
+    metadata,
+    properties,
+    content,
+    stateContent,
+  );
+  const effectivePreview = resolveEffectivePreview(
+    previewImage,
+    data,
+    pageContent,
+  );
 
-  return {};
-}
-
-const MainImageBlockView: React.FC<MainImageBlockViewProps> = ({
-  data = {} as MainImageBlockData,
-  className,
-  style,
-  isEditMode,
-  content,
-  properties,
-}) => {
-  const blockType = (data as any)?.['@type'] as string | undefined;
-  const themeDefinitions = getThemeDefinitions(blockType);
-  const themeValue = (data as any)?.theme ?? (data as any)?.styles?.theme;
-  const themeStyle = resolveThemeStyle(themeValue, themeDefinitions);
-  const mergedStyle: React.CSSProperties = {
-    ...(style || {}),
-    ...themeStyle,
-  };
-
-  const pageContent = content || properties;
-  const previewImage = (pageContent as any)?.preview_image_link;
-
-  if (!previewImage) {
+  if (!effectivePreview) {
     return isEditMode ? (
-      <div className={cx('main-image-block', 'empty', className)} style={style}>
-        <FormattedMessage
-          id="No preview image found on this page."
-          defaultMessage="No preview image found on this page. Add a preview image to the page to display it in this block."
-        />
-      </div>
+      <EmptyMainImage className={className} style={style} />
     ) : null;
   }
+
+  const resolved = resolveBlockTheme(data);
+  const mergedStyle: React.CSSProperties = {
+    ...(style || {}),
+    ...resolveThemeStyle(data, resolved.style),
+  };
+  const image = resolveMainImage(data, effectivePreview, pageContent, intl);
 
   return (
     <Layout
       align={data.align as MainImageAlign | undefined}
       size={data.size as MainImageSize | undefined}
-      title={data.title}
-      description={
-        data.description ||
-        (pageContent as any)?.preview_caption_link ||
-        (pageContent as any)?.preview_caption ||
-        (pageContent as any)?.image_caption ||
-        ''
-      }
-      className={className}
+      title={image.title}
+      description={image.description}
+      className={cx(className, resolved.className)}
       style={mergedStyle}
       image={
         <Image
-          item={previewImage}
-          alt={
-            data.altText ||
-            data.title ||
-            previewImage?.title ||
-            'Imagem principal'
-          }
+          item={image.item}
+          src={image.src}
+          imageField={image.imageField}
+          alt={image.alt}
           loading="lazy"
           responsive={true}
           sizes={(config.blocks.blocksConfig as any).image?.getSizes?.(data)}

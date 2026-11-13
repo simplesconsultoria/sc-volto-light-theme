@@ -1,5 +1,28 @@
 import React from 'react';
 import cx from 'classnames';
+import { normalizeBlockWidth } from '../../../helpers/blockWidth';
+
+/** Width of the upstream separator's short line (`styles.shortLine`). */
+export const SHORT_LINE_WIDTH = '165px';
+
+/**
+ * The line thickness, in pixels, a `--cardBorderWidth` value asks for.
+ *
+ * The value is a `border-width` shorthand (`2px`, or `0px 0px 3px 0px` for the
+ * bottom only), so it is the thickest of its sides: reading only the first
+ * number gave 0 for any border not set on top, and the line disappeared.
+ *
+ * @returns the thickness, or 0 when the value has no usable width.
+ */
+export function borderThickness(value: unknown): number {
+  if (typeof value !== 'string') return 0;
+  const sides = value
+    .trim()
+    .split(/\s+/)
+    .map((part) => parseFloat(part))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  return sides.length ? Math.max(...sides) : 0;
+}
 
 // Estilos de margem conforme o alinhamento selecionado
 const getMarginStyle = (alignment: string) => {
@@ -14,67 +37,33 @@ const getMarginStyle = (alignment: string) => {
 };
 
 const SeparatorView = (props: any) => {
-  const { data, className } = props;
+  const { data, className, style } = props;
 
-  const color = data?.color || 'var(--theme-border-color, #ccc)';
-  const thickness = data?.thickness || 1;
-  // Largura do separador (100% por padrão)
-  const width = data?.width || '100%';
+  const color =
+    data?.color ||
+    data?.styles?.['--cardBorderColor'] ||
+    'var(--theme-border-color, #ccc)';
+  const cardBorderWidth = data?.styles?.['--cardBorderWidth'];
+  const thickness =
+    data?.thickness || (cardBorderWidth ? borderThickness(cardBorderWidth) : 1);
+  // Separator width (100% by default). Blocks saved by the upstream
+  // separator (@kitconcept/volto-separator-block) use `styles.shortLine`
+  // for the short line, which measures 165px there.
+  const width =
+    data?.width ||
+    data?.styles?.width ||
+    (data?.styles?.shortLine ? SHORT_LINE_WIDTH : '100%');
   // Alinhamento horizontal (center por padrão)
-  const alignment = data?.alignment || 'center';
-  let blockWidth = data?.blockWidth || 'default';
+  const alignment =
+    data?.alignment ||
+    data?.align ||
+    data?.styles?.['align:noprefix'] ||
+    'center';
+  const blockWidth = normalizeBlockWidth(data) || 'default';
 
-  // Trata o objeto salvo pelo widget nativo 'blockWidth' (que salva a prop '--block-width')
-  if (typeof blockWidth === 'object') {
-    const val = (blockWidth as any)['--block-width'];
-    if (val === 'unset') blockWidth = 'full';
-    else if (val === 'var(--layout-container-width)') blockWidth = 'layout';
-    else if (val === 'var(--narrow-container-width)') blockWidth = 'narrow';
-    else if (val === 'var(--default-container-width)') blockWidth = 'default';
-    else blockWidth = 'default';
-  }
-
-  // O Volto injeta 'has--block-width--default' automaticamente se não encontrar em data.styles.
-  // Precisamos limpar isso para aplicar o nosso selecionado na raiz.
   const cleanClassName = (className || '')
     .replace(/has--block-width--[\w-]+/g, '')
     .trim();
-
-  // Aplica estilos manualmente para garantir que funcione mesmo sem SCSS global mapeado para o separator
-  const getBlockWidthStyle = (bw: string) => {
-    switch (bw) {
-      case 'narrow':
-        return {
-          maxWidth: 'var(--narrow-container-width)',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          width: '100%',
-        };
-      case 'layout':
-        return {
-          maxWidth: 'var(--layout-container-width)',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          width: '100%',
-        };
-      case 'default':
-        return {
-          maxWidth: 'var(--default-container-width)',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          width: '100%',
-        };
-      case 'full':
-        return {
-          maxWidth: '100%',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          width: '100%',
-        };
-      default:
-        return {};
-    }
-  };
 
   return (
     <div
@@ -82,7 +71,7 @@ const SeparatorView = (props: any) => {
         [`has--block-width--${blockWidth}`]: blockWidth !== 'default',
         'has--block-width--default': blockWidth === 'default',
       })}
-      style={getBlockWidthStyle(blockWidth)}
+      style={style}
     >
       <hr
         style={{

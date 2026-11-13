@@ -62,20 +62,11 @@ const TeaserTemplate: React.FC<TeaserTemplateProps & Record<string, any>> = ({
 
   return (
     <div
-      className={cx(
-        'listing-teaser-wrapper',
-        data?.styles?.theme || 'default',
-        { [`has--align--${align}`]: align },
-      )}
-      style={
-        {
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2rem',
-        } as React.CSSProperties
-      }
+      className={cx('listing-teaser-wrapper', {
+        [`has--align--${align}`]: align,
+      })}
     >
-      {items.map((item, index) => {
+      {items.map((item) => {
         const date = formatDate(
           item?.Date || item?.effective || item?.CreationDate || item?.created,
           intl.locale,
@@ -85,26 +76,25 @@ const TeaserTemplate: React.FC<TeaserTemplateProps & Record<string, any>> = ({
           openExternalLinkInNewTab && !isInternalURL(item['@id']);
 
         return (
-          <div key={item['@id']} className="block">
-            <div
-              className={cx('block teaser', {
-                [`has--align--${align}`]: align,
-              })}
+          <div
+            key={item['@id'] || item.UID || item.url}
+            className={cx('listing-item', 'teaser-item', {
+              [`has--align--${align}`]: align,
+            })}
+          >
+            <Card
+              item={
+                !isEditMode && !!(item['@id'] || item.href || item.url)
+                  ? item
+                  : null
+              }
+              openLinkInNewTab={openLinkInNewTab}
             >
-              <Card
-                item={
-                  !isEditMode && !!(item['@id'] || item.href || item.url)
-                    ? item
-                    : null
-                }
-                openLinkInNewTab={openLinkInNewTab}
-              >
-                <Card.Image item={item} imageComponent={Image} />
-                <Card.Summary>
-                  <TeaserSummary item={item} date={date} />
-                </Card.Summary>
-              </Card>
-            </div>
+              <Card.Image item={item} imageComponent={Image} />
+              <Card.Summary>
+                <TeaserSummary item={item} date={date} />
+              </Card.Summary>
+            </Card>
           </div>
         );
       })}

@@ -1,0 +1,410 @@
+// =============================================================================
+// Banner Block Styles & Fixes
+// =============================================================================
+
+.banner.container,
+.block.banner .banner.container {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  height: 320px;
+  min-height: 320px;
+  max-height: 320px;
+  grid-template-columns: 1fr;
+  grid-template-rows: 320px;
+
+  // Height levels on direct container
+  &.s,
+  &.has--size--s,
+  &.has--height--s,
+  &.has--height--small,
+  &.has--banner-height--s,
+  &.has--banner-height--small {
+    height: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    grid-template-rows: 200px;
+
+    img:not(.placeholder),
+    img.image {
+      height: 200px !important;
+      max-height: 200px !important;
+    }
+
+    .banner-inner-container {
+      height: 200px;
+      max-height: 200px;
+      padding: 1.25rem clamp(1.25rem, 4vw, 2.5rem);
+
+      .text p {
+        font-size: 1.5rem;
+
+        & + p {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  &.m,
+  &.has--size--m,
+  &.has--height--m,
+  &.has--height--medium,
+  &.has--banner-height--m,
+  &.has--banner-height--medium {
+    height: 320px;
+    min-height: 320px;
+    max-height: 320px;
+    grid-template-rows: 320px;
+
+    img:not(.placeholder),
+    img.image {
+      height: 320px !important;
+      max-height: 320px !important;
+    }
+
+    .banner-inner-container {
+      height: 320px;
+      max-height: 320px;
+      padding: 2rem clamp(1.5rem, 5vw, 3.5rem);
+
+      .text p {
+        font-size: 2rem;
+
+        & + p {
+          font-size: 1.125rem;
+        }
+      }
+    }
+  }
+
+  &.l,
+  &.has--size--l,
+  &.has--height--l,
+  &.has--height--large,
+  &.has--banner-height--l,
+  &.has--banner-height--large {
+    height: 480px;
+    min-height: 480px;
+    max-height: 480px;
+    grid-template-rows: 480px;
+
+    img:not(.placeholder),
+    img.image {
+      height: 480px !important;
+      max-height: 480px !important;
+    }
+
+    .banner-inner-container {
+      height: 480px;
+      max-height: 480px;
+      padding: 3rem clamp(2rem, 6vw, 5rem);
+
+      .text p {
+        font-size: 2.5rem;
+
+        & + p {
+          font-size: 1.25rem;
+        }
+      }
+    }
+  }
+
+  img:not(.placeholder),
+  img.image {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    grid-area: 1/1;
+    object-fit: cover !important;
+  }
+
+  .banner-inner-container {
+    z-index: 1;
+    display: flex;
+    height: 100%;
+    max-height: 100%;
+    flex-direction: column;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    padding: 2rem clamp(1.5rem, 5vw, 3.5rem);
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.3) 60%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    grid-area: 1/1;
+
+    .text {
+      display: flex;
+      max-width: var(--narrow-container-width, 620px);
+      height: auto;
+      flex-direction: column;
+      align-items: flex-start !important;
+      justify-content: center !important;
+      padding: 0;
+      margin-right: auto !important;
+      margin-left: 0 !important;
+      text-align: left !important;
+
+      p {
+        margin-right: auto !important;
+        margin-bottom: 0.5rem;
+        margin-left: 0 !important;
+        color: #ffffff;
+        font-size: 2rem;
+        font-weight: 300;
+        line-height: 1.3;
+        text-align: left !important;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        & + p {
+          font-size: 1.125rem;
+          font-weight: 400;
+          line-height: 1.4;
+          opacity: 0.9;
+        }
+
+        @media only screen and (max-width: 769px) {
+          font-size: 1.5rem;
+          line-height: 1.3;
+
+          & + p {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Height levels applied to outer blocks in View Mode and Edit Mode
+// =============================================================================
+
+// 1. Small (s - 200px)
+.block.banner.s,
+.block.banner.has--size--s,
+.block.banner[class*='-size--s'],
+.banner.container.s,
+.banner.container.has--size--s,
+[class*='block-editor-banner'].s,
+[class*='block-editor-banner'].has--size--s,
+#page-edit [class*='block-editor-banner'].s,
+#page-edit [class*='block-editor-banner'].has--size--s,
+#page-add [class*='block-editor-banner'].s,
+#page-add [class*='block-editor-banner'].has--size--s {
+  .banner.container,
+  &.banner.container {
+    height: 200px !important;
+    min-height: 200px !important;
+    max-height: 200px !important;
+    grid-template-rows: 200px !important;
+
+    img:not(.placeholder),
+    img.image {
+      height: 200px !important;
+      min-height: 200px !important;
+      max-height: 200px !important;
+      object-fit: cover !important;
+    }
+
+    .banner-inner-container {
+      height: 200px !important;
+      max-height: 200px !important;
+      padding: 1.25rem clamp(1.25rem, 4vw, 2.5rem);
+
+      .text p {
+        font-size: 1.5rem;
+
+        & + p {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+// 2. Medium (m - 320px - Default)
+.block.banner.m,
+.block.banner.has--size--m,
+.block.banner[class*='-size--m'],
+.banner.container.m,
+.banner.container.has--size--m,
+[class*='block-editor-banner'].m,
+[class*='block-editor-banner'].has--size--m,
+#page-edit [class*='block-editor-banner'].m,
+#page-edit [class*='block-editor-banner'].has--size--m,
+#page-add [class*='block-editor-banner'].m,
+#page-add [class*='block-editor-banner'].has--size--m {
+  .banner.container,
+  &.banner.container {
+    height: 320px !important;
+    min-height: 320px !important;
+    max-height: 320px !important;
+    grid-template-rows: 320px !important;
+
+    img:not(.placeholder),
+    img.image {
+      height: 320px !important;
+      min-height: 320px !important;
+      max-height: 320px !important;
+      object-fit: cover !important;
+    }
+
+    .banner-inner-container {
+      height: 320px !important;
+      max-height: 320px !important;
+      padding: 2rem clamp(1.5rem, 5vw, 3.5rem);
+
+      .text p {
+        font-size: 2rem;
+
+        & + p {
+          font-size: 1.125rem;
+        }
+      }
+    }
+  }
+}
+
+// 3. Large (l - 480px)
+.block.banner.l,
+.block.banner.has--size--l,
+.block.banner[class*='-size--l'],
+.banner.container.l,
+.banner.container.has--size--l,
+[class*='block-editor-banner'].l,
+[class*='block-editor-banner'].has--size--l,
+#page-edit [class*='block-editor-banner'].l,
+#page-edit [class*='block-editor-banner'].has--size--l,
+#page-add [class*='block-editor-banner'].l,
+#page-add [class*='block-editor-banner'].has--size--l {
+  .banner.container,
+  &.banner.container {
+    height: 480px !important;
+    min-height: 480px !important;
+    max-height: 480px !important;
+    grid-template-rows: 480px !important;
+
+    img:not(.placeholder),
+    img.image {
+      height: 480px !important;
+      min-height: 480px !important;
+      max-height: 480px !important;
+      object-fit: cover !important;
+    }
+
+    .banner-inner-container {
+      height: 480px !important;
+      max-height: 480px !important;
+      padding: 3rem clamp(2rem, 6vw, 5rem);
+
+      .text p {
+        font-size: 2.5rem;
+
+        & + p {
+          font-size: 1.25rem;
+        }
+      }
+    }
+  }
+}
+
+// Full width variation: text stays vertically centered and strictly on the left
+.block.banner.has--block-width--full {
+  max-width: 100% !important;
+
+  .banner-inner-container {
+    align-items: flex-start !important;
+    justify-content: center !important;
+    padding-right: clamp(1.5rem, 6vw, 5rem);
+    padding-left: clamp(1.5rem, 6vw, 5rem);
+
+    .text {
+      max-width: var(--layout-container-width, 1440px);
+      align-items: flex-start !important;
+      margin-right: auto !important;
+      margin-left: 0 !important;
+      text-align: left !important;
+
+      p {
+        margin-right: auto !important;
+        margin-left: 0 !important;
+        text-align: left !important;
+      }
+    }
+  }
+}
+
+// Inside containers (Accordion, Grid, Custom Grid)
+.accordion-block,
+.block-accordion,
+.ui.styled.accordion,
+.ui.accordion,
+.grid-block,
+.block.gridBlock,
+.custom-grid-block,
+.custom-grid-col {
+  .banner.container,
+  .block.banner .banner.container {
+    grid-template-rows: minmax(180px, auto);
+
+    &.s,
+    &.has--size--s,
+    &.has--height--s {
+      height: 140px;
+      min-height: 140px;
+      max-height: 140px;
+      grid-template-rows: 140px;
+    }
+
+    &.m,
+    &.has--size--m,
+    &.has--height--m {
+      height: 200px;
+      min-height: 200px;
+      max-height: 200px;
+      grid-template-rows: 200px;
+    }
+
+    &.l,
+    &.has--size--l,
+    &.has--height--l {
+      height: 300px;
+      min-height: 300px;
+      max-height: 300px;
+      grid-template-rows: 300px;
+    }
+
+    .banner-inner-container {
+      align-items: flex-start !important;
+      justify-content: center !important;
+      padding: 1.25rem 1.5rem;
+
+      .text {
+        align-items: flex-start !important;
+        margin-right: auto !important;
+        margin-left: 0 !important;
+        text-align: left !important;
+
+        p {
+          margin-right: auto !important;
+          margin-left: 0 !important;
+          font-size: 1.25rem !important;
+          line-height: 1.35 !important;
+          text-align: left !important;
+
+          & + p {
+            font-size: 0.95rem !important;
+            line-height: 1.4 !important;
+          }
+        }
+      }
+    }
+  }
+}

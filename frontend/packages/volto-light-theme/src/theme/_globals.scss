@@ -17,7 +17,8 @@ body {
 }
 
 .ui.basic.segment.content-area {
-  padding-bottom: $spacing-medium;
+  width: 100%;
+  flex: 1 1 100%;
   background-color: var(--primary-color);
 }
 
@@ -172,11 +173,103 @@ body .block.search .search-wrapper {
   }
 }
 
-.ui.basic.segment.content-area {
-  container-type: inline-size;
+.blocks-group-wrapper {
+  display: flow-root;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  clear: both;
+
+  // For all grouped blocks and intermediate containers:
+  // Non-highground elements must have transparent background-color and no background-image
+  // to prevent broken background boxes over the seamless group wrapper.
+  & > .block,
+  & > [class*='block-'],
+  .block:not(.is-highground):not(.card):not(.ui.card):not(.card-container):not(
+      .hero-card
+    ):not(.has-highground-bg),
+  .block-inner-container,
+  .block-container:not(.card):not(.ui.card),
+  .hero-block-container,
+  .hero-block:not(.hero-card),
+  .hero-flex,
+  .hero-flex-inner,
+  .hero-flex-content,
+  .hero-flex-image-wrapper,
+  .listing-block-container,
+  .listing-headline-wrapper,
+  .listing-body,
+  .searchBlock-container,
+  .event-metadata-inner,
+  .custom-grid-container {
+    background-color: transparent !important;
+    background-image: none !important;
+  }
+
+  // Preserve styling for highground elements (cards, chips, buttons)
+  .teaser-item,
+  .hero-card,
+  .hero-card-info,
+  .hero-card-image-wrapper,
+  .is-highground,
+  [data-ground='high'] {
+    @include highground-surface();
+  }
+}
+
+// Global surface rules for highground elements across all blocks
+.teaser-item,
+.hero-card,
+.hero-card-info,
+.is-highground,
+[data-ground='high'] {
+  background-image: var(
+    --highground-bg-image,
+    var(--colorgroup-front-bg-image, none)
+  );
+  background-position: var(
+    --highground-bg-position,
+    var(--colorgroup-front-bg-position, center)
+  );
+  background-repeat: var(
+    --highground-bg-repeat,
+    var(--colorgroup-front-bg-repeat, repeat)
+  );
+  background-size: var(
+    --highground-bg-size,
+    var(--colorgroup-front-bg-size, auto)
+  );
+}
+
+// Edit mode has no `.blocks-group-wrapper`, which is what paints a themed
+// block's ground in view mode. Blocks that keep their own `.block`
+// transparent (hero, listing, search) were therefore never painted while
+// editing, so picking another Block Theme in the sidebar changed nothing on
+// screen until the page was saved. The edit wrapper carries the theme's custom
+// properties (Volto's `buildStyleObjectFromData`) and its `has--theme--*`
+// class, so it paints the ground instead; the `has--theme--*` utility rules
+// from `themeStyles.ts` already give it the back Color Group's layer.
+#page-edit,
+#page-add {
+  [class*='block-editor-'][class*='has--theme--'] {
+    background-color: var(--theme-color);
+    color: var(--theme-foreground-color);
+  }
 }
 
 #page-document {
+  &.ui.container,
+  &.q.container,
+  &.container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
   .blocks-group-wrapper:last-child {
     margin-bottom: 0 !important;
   }
@@ -188,6 +281,13 @@ body .block.search .search-wrapper {
   .blocks-group-wrapper .block.introduction {
     margin-top: 40px;
     margin-bottom: 40px;
+  }
+
+  // Direct elements outside blocks-group-wrapper (if any) respect layout container width
+  & > *:not(.blocks-group-wrapper) {
+    max-width: var(--layout-container-width);
+    margin-right: auto;
+    margin-left: auto;
   }
 }
 
@@ -223,4 +323,17 @@ body .block.search .search-wrapper {
       color: var(--primary-foreground-color) !important;
     }
   }
+}
+
+// Visually hidden helper for screen readers only (WCAG 2.1 AA compliant)
+.sr-only {
+  position: absolute !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  margin: -1px !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
 }

@@ -1,18 +1,39 @@
 import { defineMessages } from 'react-intl';
-import config from '@plone/volto/registry';
 
 const messages = defineMessages({
   eventMetadata: {
     id: 'Event Metadata',
     defaultMessage: 'Event Metadata',
   },
-  blockWidth: {
-    id: 'Block Width',
-    defaultMessage: 'Block Width',
-  },
   theme: {
     id: 'Theme',
     defaultMessage: 'Theme',
+  },
+  default: { id: 'Default', defaultMessage: 'Default' },
+  styling: { id: 'Styling', defaultMessage: 'Styling' },
+  location: {
+    id: 'Location (override)',
+    defaultMessage: 'Location (override)',
+  },
+  eventUrl: {
+    id: 'Event URL (override)',
+    defaultMessage: 'Event URL (override)',
+  },
+  eventUrlLabel: {
+    id: 'Event URL Label (override)',
+    defaultMessage: 'Event URL Label (override)',
+  },
+  contactName: {
+    id: 'Contact Name (override)',
+    defaultMessage: 'Contact Name (override)',
+  },
+  contactEmail: {
+    id: 'Contact Email (override)',
+    defaultMessage: 'Contact Email (override)',
+  },
+  price: {
+    id: 'Price/Participation (override)',
+    defaultMessage: 'Price/Participation (override)',
   },
 });
 
@@ -21,7 +42,7 @@ export const EventMetadataSchema = ({ intl }: any) => ({
   fieldsets: [
     {
       id: 'default',
-      title: 'Default',
+      title: intl.formatMessage(messages.default),
       fields: [
         'location',
         'eventUrl',
@@ -33,45 +54,39 @@ export const EventMetadataSchema = ({ intl }: any) => ({
     },
     {
       id: 'styling',
-      title: 'Styling',
-      fields: ['blockWidth', 'theme'],
+      title: intl.formatMessage(messages.styling),
+      fields: ['theme'],
     },
   ],
   properties: {
     location: {
-      title: 'Location (override)',
+      title: intl.formatMessage(messages.location),
       type: 'string',
     },
     eventUrl: {
-      title: 'Event URL (override)',
+      title: intl.formatMessage(messages.eventUrl),
       widget: 'url',
     },
     eventUrlLabel: {
-      title: 'Event URL Label (override)',
+      title: intl.formatMessage(messages.eventUrlLabel),
       type: 'string',
     },
     contactName: {
-      title: 'Contact Name (override)',
+      title: intl.formatMessage(messages.contactName),
       type: 'string',
     },
     contactEmail: {
-      title: 'Contact Email (override)',
+      title: intl.formatMessage(messages.contactEmail),
       type: 'string',
     },
     price: {
-      title: 'Price/Participation (override)',
+      title: intl.formatMessage(messages.price),
       type: 'string',
     },
-    blockWidth: {
-      title: intl.formatMessage(messages.blockWidth),
-      widget: 'blockWidth',
-      default: 'layout',
-    },
     theme: {
+      widget: 'block_theme_widget',
       title: intl.formatMessage(messages.theme),
-      widget: 'color_picker',
-      themes: config.blocks.themes,
-      default: 'slate',
+      default: 'default',
     },
   },
   required: [],

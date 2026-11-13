@@ -1,5 +1,4 @@
 import { defineMessages } from 'react-intl';
-import config from '@plone/volto/registry';
 const messages = defineMessages({
   labelCustomGrid: {
     id: 'Custom Grid',
@@ -25,21 +24,13 @@ const messages = defineMessages({
     id: 'Default',
     defaultMessage: 'Default',
   },
-  labelPrimary: {
-    id: 'Primary',
-    defaultMessage: 'Primary',
+  labelBackColorGroup: {
+    id: 'Back area (Color Group)',
+    defaultMessage: 'Back area (Color Group)',
   },
-  labelSecondary: {
-    id: 'Secondary',
-    defaultMessage: 'Secondary',
-  },
-  labelTertiary: {
-    id: 'Tertiary',
-    defaultMessage: 'Tertiary',
-  },
-  labelGrey: {
-    id: 'Grey',
-    defaultMessage: 'Grey',
+  labelFrontColorGroup: {
+    id: 'Front area (Color Group)',
+    defaultMessage: 'Front area (Color Group)',
   },
 });
 
@@ -55,10 +46,17 @@ export const ColumnSchema = (intl: any) => {
     ],
     properties: {
       theme: {
-        widget: 'color_picker',
+        widget: 'block_theme_widget',
         title: intl.formatMessage(messages.labelTheme),
-        themes: config.blocks?.themes || [],
-        default: config.blocks?.themes?.[0]?.name || '',
+        default: 'default',
+      },
+      backColorGroup: {
+        title: intl.formatMessage(messages.labelBackColorGroup),
+        type: 'string',
+      },
+      frontColorGroup: {
+        title: intl.formatMessage(messages.labelFrontColorGroup),
+        type: 'string',
       },
     },
     required: [],
@@ -71,7 +69,7 @@ export const CustomGridSchema = ({ intl }: { intl: any }) => ({
     {
       id: 'default',
       title: intl.formatMessage(messages.labelDefault),
-      fields: ['title', 'layout', 'blockWidth'],
+      fields: ['title', 'layout'],
     },
   ],
   properties: {
@@ -97,11 +95,6 @@ export const CustomGridSchema = ({ intl }: { intl: any }) => ({
         ['1-1-1-1', '25 / 25 / 25 / 25'],
       ],
       default: '1-1',
-    },
-    blockWidth: {
-      title: 'Block Width',
-      widget: 'blockWidth',
-      default: 'layout',
     },
   },
   required: ['layout'],

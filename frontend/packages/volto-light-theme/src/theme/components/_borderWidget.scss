@@ -1,0 +1,599 @@
+// =============================================================================
+// Border Widget — Visual and Accessible Styles (Volto Light Theme Standard)
+// Quick presets with icons, compact stepper, and side-by-side customization.
+// =============================================================================
+
+.border-widget-field {
+  margin-bottom: 1.25rem;
+
+  .border-widget {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    border: none;
+    background: transparent;
+    gap: 0.875rem;
+  }
+
+  // ---------------------------------------------------------------------------
+  // 1. Quick Presets with Icons (Volto Toolbar Style)
+  // ---------------------------------------------------------------------------
+  .border-widget__section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .border-widget__presets-label {
+    color: var(--primary-foreground-color, #252525);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.2;
+    opacity: 0.9;
+  }
+
+  .border-widget__presets-toolbar {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 4px;
+
+    .border-widget__preset-btn {
+      position: relative;
+      display: inline-flex;
+      min-width: 0;
+      height: 38px;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 1px solid
+        color-mix(
+          in srgb,
+          var(--primary-foreground-color, #111) 20%,
+          transparent
+        );
+      border-radius: 4px;
+      background: var(--primary-color, #fff);
+      color: var(--primary-foreground-color, #252525);
+      cursor: pointer;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease,
+        box-shadow 150ms ease;
+
+      .border-widget__preset-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+          display: block;
+
+          .svg-base-border {
+            opacity: 0.35;
+            stroke: currentColor;
+          }
+
+          .svg-slash-border {
+            opacity: 0.6;
+            stroke: currentColor;
+          }
+
+          .svg-active-border {
+            stroke: currentColor;
+          }
+        }
+      }
+
+      // Floating accessible tooltip on hover and focus-visible
+      .border-widget__preset-tooltip {
+        position: absolute;
+        z-index: 100;
+        bottom: calc(100% + 8px);
+        left: 50%;
+        padding: 5px 9px;
+        border-radius: 4px;
+        background: #202428;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 500;
+        line-height: 1.2;
+        opacity: 0;
+        pointer-events: none;
+        text-align: center;
+        transform: translateX(-50%) translateY(4px);
+        transition:
+          opacity 140ms ease,
+          transform 140ms ease,
+          visibility 140ms;
+        visibility: hidden;
+        white-space: nowrap;
+
+        &::after {
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          border-width: 4px;
+          border-style: solid;
+          border-color: #202428 transparent transparent transparent;
+          content: '';
+          transform: translateX(-50%);
+        }
+      }
+
+      &:hover {
+        border-color: var(--accent-color, #007bc1);
+        background-color: color-mix(
+          in srgb,
+          var(--accent-color, #007bc1) 10%,
+          var(--primary-color, #fff)
+        );
+        color: var(--accent-color, #007bc1);
+
+        .border-widget__preset-tooltip {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+          visibility: visible;
+        }
+      }
+
+      &:focus-visible,
+      &:focus {
+        z-index: 2;
+        border-color: var(--accent-color, #007bc1);
+        outline: 2px solid var(--accent-color, #007bc1);
+        outline-offset: 1px;
+
+        .border-widget__preset-tooltip {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+          visibility: visible;
+        }
+      }
+
+      &.is-active {
+        border-color: var(--accent-color, #007bc1);
+        background-color: var(--accent-color, #007bc1);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+        color: var(--accent-foreground-color, #fff);
+
+        .border-widget__preset-icon svg {
+          .svg-base-border {
+            stroke: rgba(255, 255, 255, 0.5);
+          }
+          .svg-slash-border {
+            stroke: #fff;
+          }
+          .svg-active-border {
+            stroke: #fff;
+          }
+        }
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 2. Numeric Thickness Control ("Border Thickness")
+  // ---------------------------------------------------------------------------
+  .border-widget__thickness-section {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.625rem;
+    border-top: 1px solid
+      color-mix(in srgb, var(--primary-foreground-color, #111) 10%, transparent);
+    gap: 0.625rem;
+  }
+
+  .border-widget__thickness-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+
+    .border-widget__thickness-label {
+      color: var(--primary-foreground-color, #252525);
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+  }
+
+  // Modern Volto-style stepper: [-] [ input px ] [+]
+  .border-widget__stepper-wrapper {
+    display: inline-flex;
+    height: 36px;
+    align-items: stretch;
+    border: 1px solid
+      color-mix(in srgb, var(--primary-foreground-color, #111) 22%, transparent);
+    border-radius: 4px;
+    background-color: var(--primary-color, #fff);
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+
+    &:focus-within {
+      border-color: var(--accent-color, #007bc1);
+      box-shadow: 0 0 0 1px var(--accent-color, #007bc1);
+    }
+
+    .border-widget__stepper-btn {
+      display: inline-flex;
+      width: 32px;
+      min-width: 32px;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: none;
+      background: color-mix(
+        in srgb,
+        var(--primary-foreground-color, #111) 5%,
+        transparent
+      );
+      color: var(--primary-foreground-color, #252525);
+      cursor: pointer;
+      transition:
+        background-color 150ms ease,
+        color 150ms ease;
+
+      &:hover:not(:disabled) {
+        background-color: color-mix(
+          in srgb,
+          var(--accent-color, #007bc1) 15%,
+          transparent
+        );
+        color: var(--accent-color, #007bc1);
+      }
+
+      &:focus-visible {
+        z-index: 2;
+        outline: 2px solid var(--accent-color, #007bc1);
+        outline-offset: -2px;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.35;
+      }
+    }
+
+    .border-widget__stepper-input-container {
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+
+      .border-widget__number-input {
+        width: 38px;
+        height: 100%;
+        padding: 0 2px;
+        border: none;
+        appearance: textfield;
+        background: transparent;
+        color: var(--primary-foreground-color, #252525);
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-align: center;
+
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+          margin: 0;
+          -webkit-appearance: none;
+        }
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .border-widget__unit {
+        color: var(--primary-foreground-color, #252525);
+        font-size: 0.75rem;
+        font-weight: 500;
+        opacity: 0.6;
+        user-select: none;
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 3. Customize by Side (Accordion Toggle & Grid with Flex Wrap)
+  // ---------------------------------------------------------------------------
+  .border-widget__side-toggle-wrapper {
+    display: flex;
+    width: 100%;
+
+    .border-widget__side-toggle-btn {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      padding: 6px 10px;
+      border: 1px solid
+        color-mix(
+          in srgb,
+          var(--primary-foreground-color, #111) 18%,
+          transparent
+        );
+      border-radius: 4px;
+      background: var(--primary-color, #fff);
+      color: var(--primary-foreground-color, #252525);
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      gap: 6px;
+      text-align: left;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
+
+      .border-widget__toggle-chevron {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.7;
+        transition: transform 180ms ease;
+      }
+
+      .border-widget__toggle-text {
+        flex: 1;
+      }
+
+      .border-widget__asymmetric-pill {
+        padding: 2px 6px;
+        border-radius: 10px;
+        background-color: color-mix(
+          in srgb,
+          var(--accent-color, #007bc1) 15%,
+          transparent
+        );
+        color: var(--accent-color, #007bc1);
+        font-size: 0.625rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+      }
+
+      &:hover {
+        border-color: var(--accent-color, #007bc1);
+        background-color: color-mix(
+          in srgb,
+          var(--accent-color, #007bc1) 8%,
+          var(--primary-color, #fff)
+        );
+        color: var(--accent-color, #007bc1);
+
+        .border-widget__toggle-chevron {
+          opacity: 1;
+        }
+      }
+
+      &:focus-visible {
+        border-color: var(--accent-color, #007bc1);
+        outline: 2px solid var(--accent-color, #007bc1);
+        outline-offset: 1px;
+      }
+
+      &.is-expanded {
+        border-color: color-mix(
+          in srgb,
+          var(--primary-foreground-color, #111) 25%,
+          transparent
+        );
+        background-color: var(--primary-color, #fff);
+        color: var(--primary-foreground-color, #252525);
+
+        .border-widget__toggle-chevron {
+          opacity: 1;
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+
+  // Detailed section with flex-wrap to prevent sidebar overflow in Volto
+  .border-widget__detailed-grid {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    padding: 6px 0 0 0;
+    border: none;
+    background: transparent;
+    gap: 8px 10px;
+
+    .border-widget__side-control {
+      position: relative;
+      display: flex;
+      min-width: 110px;
+      box-sizing: border-box;
+      flex: 1 1 calc(50% - 5px);
+      align-items: center;
+      justify-content: space-between;
+      padding: 0;
+      border: none;
+      background: transparent;
+      gap: 6px;
+      transition: opacity 150ms ease;
+
+      .border-widget__side-header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .border-widget__side-icon-btn {
+          display: inline-flex;
+          width: 28px;
+          height: 28px;
+          align-items: center;
+          justify-content: center;
+          padding: 2px;
+          border: 1px solid
+            color-mix(
+              in srgb,
+              var(--primary-foreground-color, #111) 20%,
+              transparent
+            );
+          border-radius: 4px;
+          background: var(--primary-color, #fff);
+          color: var(--primary-foreground-color, #252525);
+          cursor: pointer;
+          transition:
+            background-color 150ms ease,
+            border-color 150ms ease,
+            color 150ms ease;
+
+          svg {
+            display: block;
+
+            .svg-base-border {
+              opacity: 0.3;
+              stroke: currentColor;
+            }
+
+            .svg-active-border {
+              stroke: currentColor;
+            }
+          }
+
+          &:hover {
+            border-color: var(--accent-color, #007bc1);
+            background: color-mix(
+              in srgb,
+              var(--accent-color, #007bc1) 12%,
+              var(--primary-color, #fff)
+            );
+            color: var(--accent-color, #007bc1);
+          }
+
+          &:focus-visible {
+            outline: 2px solid var(--accent-color, #007bc1);
+            outline-offset: 1px;
+          }
+
+          &.is-active {
+            border-color: var(--accent-color, #007bc1);
+            background: color-mix(
+              in srgb,
+              var(--accent-color, #007bc1) 15%,
+              var(--primary-color, #fff)
+            );
+            color: var(--accent-color, #007bc1);
+
+            svg .svg-active-border {
+              stroke: var(--accent-color, #007bc1);
+              stroke-width: 3.5;
+            }
+          }
+        }
+
+        .border-widget__side-label {
+          color: var(--primary-foreground-color, #252525);
+          cursor: pointer;
+          font-size: 0.8125rem;
+          font-weight: 500;
+          white-space: nowrap;
+        }
+
+        // Accessible tooltip per side
+        .border-widget__side-tooltip {
+          position: absolute;
+          z-index: 100;
+          bottom: calc(100% + 6px);
+          left: 0;
+          padding: 3px 6px;
+          border-radius: 3px;
+          background: #202428;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+          color: #fff;
+          font-size: 0.6875rem;
+          font-weight: 500;
+          line-height: 1.2;
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(3px);
+          transition:
+            opacity 140ms ease,
+            transform 140ms ease,
+            visibility 140ms;
+          visibility: hidden;
+          white-space: nowrap;
+
+          &::after {
+            position: absolute;
+            top: 100%;
+            left: 10px;
+            border-width: 4px;
+            border-style: solid;
+            border-color: #202428 transparent transparent transparent;
+            content: '';
+          }
+        }
+      }
+
+      &:hover .border-widget__side-tooltip,
+      &:focus-within .border-widget__side-tooltip {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+      }
+
+      .border-widget__side-input-container {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+
+        .border-widget__side-input {
+          width: 36px;
+          height: 28px;
+          padding: 0 2px;
+          border: 1px solid
+            color-mix(
+              in srgb,
+              var(--primary-foreground-color, #111) 20%,
+              transparent
+            );
+          border-radius: 3px;
+          appearance: textfield;
+          background: var(--primary-color, #fff);
+          color: var(--primary-foreground-color, #252525);
+          font-size: 0.8125rem;
+          font-weight: 600;
+          text-align: center;
+          transition: border-color 150ms ease;
+
+          &::-webkit-inner-spin-button,
+          &::-webkit-outer-spin-button {
+            margin: 0;
+            -webkit-appearance: none;
+          }
+
+          &:focus-visible,
+          &:focus {
+            border-color: var(--accent-color, #007bc1);
+            outline: 2px solid var(--accent-color, #007bc1);
+            outline-offset: -1px;
+          }
+        }
+
+        .border-widget__unit {
+          color: var(--primary-foreground-color, #252525);
+          font-size: 0.6875rem;
+          font-weight: 500;
+          opacity: 0.6;
+          user-select: none;
+        }
+      }
+
+      &.is-active {
+        border: none;
+        background: transparent;
+
+        .border-widget__side-label {
+          color: var(--primary-foreground-color, #252525);
+        }
+      }
+    }
+  }
+}

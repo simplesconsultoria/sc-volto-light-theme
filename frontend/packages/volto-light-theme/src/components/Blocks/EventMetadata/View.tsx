@@ -1,90 +1,51 @@
 import React from 'react';
 import cx from 'classnames';
+import { useIntl } from 'react-intl';
 import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
+import { normalizeBlockWidth } from '../../../helpers/blockWidth';
+import {
+  getEventDetails,
+  getEventSchedule,
+  getThemeClass,
+  messages,
+  stripBlockWidthClasses,
+} from './helpers';
+
+const EventLink = ({
+  href,
+  label,
+  hasLabel,
+}: {
+  href?: string;
+  label: string;
+  hasLabel: boolean;
+}) => {
+  if (href) {
+    return <UniversalLink href={href}>{label}</UniversalLink>;
+  }
+  return hasLabel ? <span>{label}</span> : null;
+};
 
 const EventMetadataView = (props: any) => {
   const { data, properties, className } = props;
-  let blockWidth = data?.blockWidth || 'default';
-  if (typeof blockWidth === 'object' && blockWidth !== null) {
-    const val =
-      (blockWidth as any)['--block-width'] ||
-      (blockWidth as any).value ||
-      (blockWidth as any).id ||
-      Object.values(blockWidth)[0];
-
-    if (val === 'unset') blockWidth = 'full';
-    else if (val === 'var(--layout-container-width)') blockWidth = 'layout';
-    else if (val === 'var(--narrow-container-width)') blockWidth = 'narrow';
-    else if (val === 'var(--default-container-width)') blockWidth = 'default';
-    else blockWidth = val;
-  }
-
-  const themeClass = data?.theme ? `bg-${data.theme}` : 'bg-slate';
-
-  const cleanClassName = (className || '')
-    .replace(/has--block-width--[\w-]+/g, '')
-    .trim();
+  const intl = useIntl();
+  const blockWidth = normalizeBlockWidth(data) || 'default';
+  const themeClass = getThemeClass(className, data?.theme);
+  const cleanClassName = stripBlockWidthClasses(className);
 
   // Properties usually contains the current context data (Event data)
   const item = properties || {};
-
-  const start = item.start || item.EffectiveDate;
-  const startDate = start ? new Date(start) : null;
-  const dateFormatted = startDate
-    ? startDate.toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      })
-    : '';
-  const timeFormatted = startDate
-    ? startDate.toLocaleTimeString('pt-BR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    : '';
-
-  const end = item.end || item.ExpirationDate;
-  const endDate = end ? new Date(end) : null;
-  const isSameDay =
-    startDate && endDate
-      ? startDate.toDateString() === endDate.toDateString()
-      : false;
-
-  const endTimeFormatted = endDate
-    ? endDate.toLocaleTimeString('pt-BR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    : '';
-  const endDateFormatted = endDate
-    ? endDate.toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      })
-    : '';
-
-  // Use data overrides from block config, fallback to context item
-  const location = data?.location || item.location || 'Local a confirmar';
-
-  const getEventLink = () => {
-    if (data?.eventUrl) {
-      if (Array.isArray(data.eventUrl) && data.eventUrl.length > 0) {
-        return data.eventUrl[0]['@id'];
-      }
-      return data.eventUrl;
-    }
-    return item.event_url;
-  };
-  const eventLink = getEventLink();
-  const eventLinkLabel = data?.eventUrlLabel || 'Transmissão online';
-
-  const contactName = data?.contactName || item.contact_name || 'Organização';
-  const contactEmail = data?.contactEmail || item.contact_email;
-  const price = data?.price || item.price || 'Gratuita';
-
-  const eventUrl = item['@id'] || '';
+  const schedule = getEventSchedule(item, intl.locale);
+  const {
+    location,
+    eventLink,
+    eventLinkLabel,
+    hasEventLinkLabel,
+    contactName,
+    contactEmail,
+    price,
+    eventUrl,
+  } = getEventDetails(data, item, intl);
 
   return (
     <div
@@ -95,39 +56,37 @@ const EventMetadataView = (props: any) => {
     >
       <div className="event-metadata-inner">
         <div className="metadata-col">
-          <h4>Quando</h4>
-          <p>{dateFormatted}</p>
+          <h4>{intl.formatMessage(messages.when)}</h4>
+          <p>{schedule.date}</p>
           <p>
-            {timeFormatted}
-            {endDate &&
-              (isSameDay
-                ? ` – ${endTimeFormatted}`
-                : ` – ${endDateFormatted} ${endTimeFormatted}`)}{' '}
-            (BRT)
+            {schedule.time}
+            {schedule.endSuffix}
+            {schedule.timeZone && ` (${schedule.timeZone})`}
           </p>
         </div>
         <div className="metadata-col">
-          <h4>Onde</h4>
+          <h4>{intl.formatMessage(messages.where)}</h4>
           <p>{location}</p>
-          {(eventLink || data?.eventUrlLabel) &&
-            (eventLink ? (
-              <UniversalLink href={eventLink}>{eventLinkLabel}</UniversalLink>
-            ) : (
-              <span>{eventLinkLabel}</span>
-            ))}
+          <EventLink
+            href={eventLink}
+            label={eventLinkLabel}
+            hasLabel={hasEventLinkLabel}
+          />
         </div>
         <div className="metadata-col">
-          <h4>Organização</h4>
+          <h4>{intl.formatMessage(messages.organization)}</h4>
           <p>{contactName}</p>
           {contactEmail && (
             <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
           )}
         </div>
         <div className="metadata-col">
-          <h4>Participação</h4>
+          <h4>{intl.formatMessage(messages.participation)}</h4>
           <p>{price}</p>
           {eventUrl && (
-            <a href={`${eventUrl}/@@ical`}>Adicionar ao calendário (iCal)</a>
+            <a href={`${eventUrl}/@@ical`}>
+              {intl.formatMessage(messages.addToCalendar)}
+            </a>
           )}
         </div>
       </div>

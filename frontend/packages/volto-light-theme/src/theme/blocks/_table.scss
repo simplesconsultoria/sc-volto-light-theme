@@ -1,0 +1,148 @@
+// =============================================================================
+// SlateTable / Table Block Styling — sc-volto-light-theme
+// Ensures full support for block widths (narrow, default, layout, full),
+// neutralizes upstream intermediate container display:grid with place-content,
+// and ensures fluid 100% table expansion with safe horizontal scrolling.
+// =============================================================================
+
+.block.slateTable,
+.slate-table-wrapper,
+.block.slate-table {
+  box-sizing: border-box;
+
+  // Neutralize ::before pseudo-element inherited from .block .block:not(.inner)::before
+  // which sets position: absolute; left: -9px; width: calc(100% + 18px).
+  // In full-bleed or wide layouts, this extra offset causes unwanted horizontal scrolling.
+  &::before,
+  .block::before,
+  .block.slate-table::before,
+  .block.table::before {
+    left: 0 !important;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    border: none !important;
+    content: none !important;
+  }
+
+  // Override kitconcept container isolation in :not(.blocks-group-wrapper) > .block .block-inner-container
+  // which imposed display: grid, place-content: start, and fixed 940px width.
+  .block.slate-table,
+  .slate-table-block-wrapper,
+  .block.table {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  .block-inner-container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    overflow-x: auto;
+  }
+
+  table.slate-table-block,
+  table.ui.table,
+  .ui.table.slate-table-block,
+  .ui.celled.table.slate-table-block {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+
+  // Border styling: delegates border strictly to table element,
+  // preventing border stretching on outer .block-inner-container.
+  &[style*='--cardBorderWidth'] {
+    border: none !important;
+
+    & > .block-inner-container,
+    .block-inner-container {
+      border: none !important;
+    }
+
+    table.slate-table-block,
+    table.ui.table {
+      border-width: var(--cardBorderWidth) !important;
+      border-style: solid;
+      border-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, var(--primary-accent-color))
+      ) !important;
+    }
+  }
+}
+
+// Specific support in Edit Mode
+#page-edit,
+#page-add {
+  .block-editor-slateTable {
+    box-sizing: border-box;
+
+    .block.table,
+    .slate-table-block-wrapper,
+    .block-inner-container {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      padding-right: 0 !important;
+      padding-left: 0 !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    table.slate-table-block,
+    table.ui.table,
+    .ui.table.slate-table-block {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      margin-right: auto !important;
+      margin-left: auto !important;
+    }
+  }
+}
+
+// Reset for tables contained within columns (gridBlock, customGrid, accordion)
+.custom-grid-column,
+.block-column,
+.column,
+.contained {
+  .block.slateTable,
+  .slate-table-wrapper,
+  .block.slate-table,
+  .block-editor-slateTable {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+
+    .block-inner-container {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    table.slate-table-block,
+    table.ui.table {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+  }
+}

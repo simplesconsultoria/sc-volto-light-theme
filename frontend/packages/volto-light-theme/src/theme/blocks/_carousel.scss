@@ -1,3 +1,21 @@
+// =============================================================================
+// Carousel Block Styles — sc-volto-light-theme
+// Standalone carousel and compact carousel embedded in GridBlock and CustomGrid.
+//
+// Each slide is a DIRECT child of `.carousel-container`. Depending on the
+// stored data, the slide wrapper is `.block.teaser` (column `@type: teaser`),
+// a bare `.block` or a bare `.card`. Sizing rules target ONLY the direct child
+// (`.carousel-container > *`) so the nested `.card` inside `.block.teaser` is
+// never sized twice (which used to shrink cards to half/quarter of the slide).
+//
+// Width: the block width system (has--block-width--*) sizes the outer block;
+// the inner wrapper/headline simply span 100% of it.
+// Borders: the BorderWidget border is drawn around each card (see _borders.scss).
+// =============================================================================
+
+$carousel-gutter: 20px;
+$carousel-arrow-space: 56px;
+
 .block.carousel {
   --carousel-dots-selected-bg: var(--theme-foreground-color, #000);
   --carousel-dots-bg: color-mix(
@@ -6,8 +24,152 @@
     transparent
   );
 
-  .block.teaser .card .card-inner .image-wrapper img {
-    object-fit: contain !important;
+  // Follow the block width system instead of the upstream fixed 940px.
+  h2.headline,
+  .carousel-wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .carousel-wrapper {
+    position: relative;
+    box-sizing: border-box;
+
+    // Keep the arrows inside the block bounds for every block width.
+    &:has(> .carousel-button) {
+      padding-right: $carousel-arrow-space;
+      padding-left: $carousel-arrow-space;
+    }
+  }
+
+  .carousel-button {
+    top: 0;
+    display: flex;
+    width: 48px;
+    align-items: center;
+    justify-content: center;
+    color: var(--theme-foreground-color, currentColor);
+  }
+
+  .carousel-button-prev {
+    left: 0;
+  }
+
+  .carousel-button-next {
+    right: 0;
+  }
+
+  .carousel-viewport {
+    overflow: hidden;
+  }
+
+  .carousel-container {
+    display: flex;
+    margin-left: -$carousel-gutter;
+
+    > * {
+      min-width: 0;
+      box-sizing: border-box;
+      flex: 0 0 25%;
+      padding-left: $carousel-gutter;
+      margin: 0 !important;
+      transform: translate3d(0, 0, 0);
+
+      &::before {
+        border: none;
+      }
+    }
+  }
+
+  .carousel-wrapper {
+    &.one .carousel-container > * {
+      max-width: 100%;
+      flex: 0 0 100%;
+    }
+
+    &.two .carousel-container > * {
+      max-width: 50%;
+      flex: 0 0 50%;
+    }
+
+    &.three .carousel-container > * {
+      max-width: calc(100% / 3);
+      flex: 0 0 calc(100% / 3);
+    }
+
+    &.four .carousel-container > * {
+      max-width: 25%;
+      flex: 0 0 25%;
+    }
+  }
+
+  @media only screen and (max-width: 1024px) {
+    .carousel-wrapper:is(.three, .four) .carousel-container > * {
+      max-width: 50%;
+      flex: 0 0 50%;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .carousel-wrapper {
+      &:has(> .carousel-button) {
+        padding-right: 0;
+        padding-left: 0;
+      }
+
+      .carousel-button {
+        display: none;
+      }
+
+      &:is(.one, .two, .three, .four) .carousel-container > * {
+        max-width: 100%;
+        flex: 0 0 100%;
+      }
+    }
+  }
+
+  // Card formatting inside each slide
+  .carousel-container .card {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    flex-direction: column;
+    background: transparent;
+
+    .card-inner {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+    }
+
+    .image-wrapper {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      margin: 0;
+      aspect-ratio: 16 / 9;
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover !important;
+      }
+    }
+
+    .card-summary {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      padding: $spacing-small 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
   }
 
   .carousel-dot {
@@ -41,15 +203,18 @@
     .carousel-wrapper {
       max-width: 100%;
       height: 100%;
+      padding-right: 0;
+      padding-left: 0;
+
       .carousel-viewport {
         height: 100%;
+
         .carousel-container {
           height: 100%;
-
           margin-left: 0;
           gap: $spacing-small;
 
-          .block.teaser {
+          > * {
             padding-left: 0;
           }
         }
@@ -62,13 +227,15 @@
     }
 
     @container (max-width: 479px) {
-      .carousel-container .block.teaser {
+      .carousel-container > * {
+        max-width: 100% !important;
         flex: 0 0 100% !important;
       }
     }
 
     @container (min-width: 480px) {
-      .carousel-container .block.teaser {
+      .carousel-container > * {
+        max-width: calc(50% - #{$spacing-small} / 2) !important;
         flex: 0 0 calc(50% - #{$spacing-small} / 2) !important;
       }
     }
@@ -77,7 +244,7 @@
       padding: $spacing-small 0;
     }
 
-    .block.teaser a {
+    .card a {
       color: inherit;
       text-decoration: none;
 

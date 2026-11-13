@@ -1,11 +1,20 @@
-import { createThemeDefinition } from './blockThemes';
-import type { ThemeDefinition } from './blockThemes';
-import type { ComponentType } from 'react';
+import React from 'react';
+import config from '@plone/volto/registry';
+import {
+  createThemeDefinition,
+  DEFAULT_BLOCK_THEMES,
+  DEFAULT_COLOR_GROUPS,
+  LEGACY_THEME_ALIASES,
+  parseCustomTheme,
+  type ThemeDefinition,
+} from './blockThemes';
 import type { ConfigType } from '@plone/registry';
 import type { BlockConfigBase } from '@plone/types';
 import { addStyling } from '@plone/volto/helpers/Extensions/withBlockSchemaEnhancer';
 import calendarSVG from '@plone/volto/icons/calendar.svg';
 import appsSVG from '@plone/volto/icons/apps.svg';
+import cx from 'classnames';
+import { defineMessages } from 'react-intl';
 
 import DocumentByLineInfo from '../components/Blocks/DocumentByLine';
 import MainImageBlockInfo from '../components/Blocks/MainImageBlock';
@@ -26,13 +35,34 @@ import {
 import { EventMetadataSchema } from '../components/Blocks/EventMetadata/schema';
 import SeparatorView from '../components/Blocks/Separator/View';
 import SeparatorEdit from '../components/Blocks/Separator/Edit';
+import { SeparatorSchema } from '../components/Blocks/Separator/schema';
 import {
   carouselSchemaEnhancer,
   mediaCarouselSchemaEnhancer,
   listingSchemaEnhancer,
   teaserSchemaEnhancer,
 } from '../components/Blocks/Listing/schema';
+import SearchBlockView from '../components/Blocks/Search/SearchBlockView';
+import SearchBlockEdit from '../components/Blocks/Search/SearchBlockEdit';
 import { defaultContentTypeColors } from './contentTypeColors';
+
+const messages = defineMessages({
+  blockTheme: { id: 'Block Theme', defaultMessage: 'Block Theme' },
+  blockWidth: { id: 'Block Width', defaultMessage: 'Block Width' },
+  borderColor: { id: 'Border color', defaultMessage: 'Border color' },
+  borderStyle: {
+    id: 'Border style and thickness',
+    defaultMessage: 'Border style and thickness',
+  },
+  borderDescription: {
+    id: 'Configure border sides and thickness',
+    defaultMessage: 'Configure border sides and thickness',
+  },
+  // Listing variation title: Volto translates it using the title as the
+  // message id, so it is declared here for `pnpm i18n` to extract it.
+  events: { id: 'Events', defaultMessage: 'Events' },
+  styling: { id: 'Styling', defaultMessage: 'Styling' },
+});
 
 declare module '@plone/types' {
   export interface BlocksConfigData {
@@ -70,23 +100,103 @@ export { createThemeDefinition } from './blockThemes';
  * augmentation. Same approach as the `SettingsConfig` augmentation in
  * `config/settings.ts`.
  *
- * - `themes`, `defaultTheme`: kitconcept convention for block themes.
+ * - `themes`: kitconcept convention for block themes.
  * - `getSizes`: the teaser's `sizes` attribute, set by volto-light-theme.
  * - `noResultsComponent`: the listing's empty-result component.
+ *
+ * `defaultTheme` is declared by @kitconcept/volto-light-theme's own
+ * augmentation (`config/blocks.tsx`), which this module imports; declaring
+ * it again with different modifiers is TS2687.
  */
 declare module '@plone/types' {
   interface BlockConfigBase {
     themes?: ThemeDefinition[];
-    defaultTheme?: string;
     getSizes?: (args: Record<string, unknown>) => string | undefined;
-    noResultsComponent?: ComponentType<any>;
+    noResultsComponent?: React.ComponentType<any>;
+  }
+}
+
+const baseColorGroups = ['primary', 'secondary', 'accent', 'neutral'];
+export function createCustomThemeDefinition(
+  back: string,
+  front: string,
+): ThemeDefinition {
+  const name = `custom-${back}-${front}`;
+  const label = `Custom (${back} / ${front})`;
+  return {
+    name,
+    label,
+    style: {
+      '--theme-color': `var(--colorgroup-${back}-bg, var(--${back}-color, var(--primary-color)))`,
+      '--theme-foreground-color': `var(--colorgroup-${back}-text, var(--${back}-foreground-color, var(--primary-foreground-color)))`,
+      '--theme-high-contrast-foreground-color': `var(--colorgroup-${back}-text, var(--${back}-foreground-color, var(--primary-foreground-color)))`,
+      '--theme-low-contrast-foreground-color': `var(--colorgroup-${back}-subtext, var(--${back}-low-foreground-color, var(--primary-low-foreground-color)))`,
+      '--theme-foreground-accent-color': `var(--colorgroup-${back}-accent, var(--${back}-accent-color, var(--primary-accent-color)))`,
+      '--colorgroup-back-font': `var(--colorgroup-${back}-font-family, inherit)`,
+
+      '--theme-high-contrast-color': `var(--colorgroup-${front}-bg, var(--${front}-color, var(--neutral-color)))`,
+      '--theme-top-foreground-color': `var(--colorgroup-${front}-text, var(--${front}-foreground-color, var(--neutral-foreground-color)))`,
+      '--theme-top-high-contrast-foreground-color': `var(--colorgroup-${front}-text, var(--${front}-foreground-color, var(--neutral-foreground-color)))`,
+      '--theme-top-low-contrast-foreground-color': `var(--colorgroup-${front}-subtext, var(--${front}-low-foreground-color, var(--neutral-low-foreground-color)))`,
+      '--theme-top-accent-color': `var(--colorgroup-${front}-accent, var(--${front}-accent-color, var(--neutral-accent-color)))`,
+      '--colorgroup-front-font': `var(--colorgroup-${front}-font-family, inherit)`,
+      '--theme-border-color': `var(--colorgroup-${back}-accent, var(--accent-color))`,
+      '--theme-border-width': '0',
+      '--theme-pattern-image': 'none',
+      '--theme-pattern-opacity': '0',
+    },
+  };
+}
+
+const generatedCustomThemes: ThemeDefinition[] = [];
+for (const back of baseColorGroups) {
+  for (const front of baseColorGroups) {
+    generatedCustomThemes.push(createCustomThemeDefinition(back, front));
   }
 }
 
 const customThemes: ThemeDefinition[] = [
   createThemeDefinition('default', 'Primary'),
-  createThemeDefinition('brand', 'Brand'),
+  createThemeDefinition('alternative', 'Alternative'),
+  ...generatedCustomThemes,
 ];
+
+const originalThemesFind = customThemes.find.bind(customThemes);
+customThemes.find = function (predicate: any, thisArg?: any) {
+  const result = originalThemesFind(predicate, thisArg);
+  if (result) return result;
+  for (const b of baseColorGroups) {
+    for (const f of baseColorGroups) {
+      const candidate = createCustomThemeDefinition(b, f);
+      if (predicate.call(thisArg, candidate)) {
+        return candidate;
+      }
+    }
+  }
+  // Legacy names (`grey`): VLT paints the full-width band of a block group
+  // from the definition named like the saved theme, so answer under that name.
+  for (const [alias, target] of Object.entries(LEGACY_THEME_ALIASES)) {
+    const custom = parseCustomTheme(target);
+    if (!custom) continue;
+    const candidate = {
+      ...createCustomThemeDefinition(custom.back, custom.front),
+      name: alias,
+    };
+    if (predicate.call(thisArg, candidate)) {
+      return candidate;
+    }
+  }
+  // Also check active block themes from config.blocks.blockThemes or registered block themes
+  const cfg = (customThemes as any)?.config || (config as any);
+  const activeBlockThemes = cfg?.blocks?.blockThemes || {};
+  for (const [id, bt] of Object.entries(activeBlockThemes)) {
+    const candidate = createThemeDefinition(id, (bt as any)?.name || id);
+    if (predicate.call(thisArg, candidate)) {
+      return candidate;
+    }
+  }
+  return undefined;
+};
 
 // =============================================================================
 // Installers
@@ -130,8 +240,9 @@ function installLocalBlocks(config: ConfigType) {
   if (config.blocks.blocksConfig.separator) {
     config.blocks.blocksConfig.separator.view = SeparatorView;
     config.blocks.blocksConfig.separator.edit = SeparatorEdit;
+    config.blocks.blocksConfig.separator.schema = SeparatorSchema;
+    config.blocks.blocksConfig.separator.blockSchema = SeparatorSchema;
 
-    // Substitui o schemaEnhancer para remover as opções do add-on e deixar só o styling base (background color/theme)
     config.blocks.blocksConfig.separator.schemaEnhancer = (args: any) => {
       addStyling({ schema: args.schema, intl: args.intl });
       return args.schema;
@@ -167,23 +278,148 @@ function installLocalBlocks(config: ConfigType) {
     };
   }
 
+  // Make the default Slate block pass className (with has--block-width--) and style to its view
+  if (config.blocks.blocksConfig.slate) {
+    const PrevSlateView = config.blocks.blocksConfig.slate.view;
+    config.blocks.blocksConfig.slate.view = (props: any) => {
+      return React.createElement(
+        'div',
+        { className: cx('block slate', props.className), style: props.style },
+        React.createElement(PrevSlateView, props),
+      );
+    };
+  }
+
+  // Make the Table of Contents (toc) block pass className and style to its view
+  if (config.blocks.blocksConfig.toc) {
+    const PrevTocView = config.blocks.blocksConfig.toc.view;
+    config.blocks.blocksConfig.toc.view = (props: any) => {
+      return React.createElement(
+        'div',
+        { className: cx('block toc', props.className), style: props.style },
+        React.createElement(PrevTocView, props),
+      );
+    };
+  }
+
+  // Make the SlateTable / Table block pass className and style to its view
+  if (config.blocks.blocksConfig.slateTable) {
+    const PrevSlateTableView = config.blocks.blocksConfig.slateTable.view;
+    config.blocks.blocksConfig.slateTable.view = (props: any) => {
+      return React.createElement(
+        'div',
+        {
+          className: cx(
+            'block slateTable slate-table-wrapper',
+            props.className,
+          ),
+          style: props.style,
+        },
+        React.createElement(PrevSlateTableView, props),
+      );
+    };
+  }
+
+  // Replace the Search block view and edit with versions that support block
+  // themes, borders and block width, and that ignore an invalid variation
+  if (config.blocks.blocksConfig.search) {
+    const PrevSearchView = SearchBlockView;
+    const PrevSearchEdit = SearchBlockEdit;
+
+    const sanitizeSearchData = (data: any) => {
+      if (!data) return data;
+      const variations =
+        (config.blocks.blocksConfig as any).search?.variations || [];
+      const validVariationIds = variations.map((v: any) => v.id);
+      const defaultVariationId =
+        variations.find((v: any) => v.id === 'facetsTopSide')?.id ||
+        variations.find((v: any) => v.isDefault)?.id ||
+        variations[0]?.id ||
+        'facetsTopSide';
+
+      const variation = data.variation;
+      const isInvalid = !variation || !validVariationIds.includes(variation);
+      if (!isInvalid) return data;
+
+      return {
+        ...data,
+        listingBodyTemplate:
+          data.listingBodyTemplate ||
+          (validVariationIds.includes(variation) ? undefined : variation) ||
+          'grid',
+        variation: defaultVariationId,
+      };
+    };
+
+    config.blocks.blocksConfig.search.view = (props: any) => {
+      const safeData = sanitizeSearchData(props.data);
+      const searchVariations =
+        (config.blocks.blocksConfig as any).search?.variations || [];
+      const validVariation = props.variation?.view
+        ? props.variation
+        : searchVariations.find((v: any) => v.id === safeData?.variation) ||
+          searchVariations.find((v: any) => v.id === 'facetsTopSide') ||
+          searchVariations.find((v: any) => v.isDefault) ||
+          searchVariations[0];
+      return React.createElement(PrevSearchView, {
+        ...props,
+        variation: validVariation,
+        data: safeData,
+      });
+    };
+
+    config.blocks.blocksConfig.search.edit = (props: any) => {
+      const safeData = sanitizeSearchData(props.data);
+      const searchVariations =
+        (config.blocks.blocksConfig as any).search?.variations || [];
+      const validVariation = props.variation?.view
+        ? props.variation
+        : searchVariations.find((v: any) => v.id === safeData?.variation) ||
+          searchVariations.find((v: any) => v.id === 'facetsTopSide') ||
+          searchVariations.find((v: any) => v.isDefault) ||
+          searchVariations[0];
+      return React.createElement(PrevSearchEdit, {
+        ...props,
+        variation: validVariation,
+        data: safeData,
+      });
+    };
+  }
+
   syncContainerBlocks(config);
   return config;
 }
 
 function installThemes(config: ConfigType) {
+  (customThemes as any).config = config;
   config.blocks.themes = customThemes;
+  (config.blocks as any).blockThemes = {
+    ...DEFAULT_BLOCK_THEMES,
+    ...((config.blocks as any).blockThemes || {}),
+  };
+  (config.blocks as any).colorGroups = {
+    ...DEFAULT_COLOR_GROUPS,
+    ...((config.blocks as any).colorGroups || {}),
+  };
   return config;
 }
 
 function installGridBlock(config: ConfigType) {
-  // Allow local blocks inside gridBlock and ensure it uses our custom themes.
-  if ((config.blocks.blocksConfig as any).gridBlock) {
-    (config.blocks.blocksConfig as any).gridBlock.themes = customThemes;
-    (config.blocks.blocksConfig as any).gridBlock.blocksConfig = {
-      ...(config.blocks.blocksConfig as any).gridBlock.blocksConfig,
+  // Allow all blocks inside gridBlock and ensure it uses our custom themes.
+  const gridBlock = (config.blocks.blocksConfig as any).gridBlock;
+  if (gridBlock) {
+    gridBlock.themes = customThemes;
+    gridBlock.blocksConfig = {
+      ...(gridBlock.blocksConfig || {}),
       themes: customThemes,
     };
+
+    const currentAllowed = gridBlock.allowedBlocks || [
+      'image',
+      'listing',
+      'slate',
+      'teaser',
+    ];
 
     const localBlocks = [
       'documentByline',
@@ -195,38 +431,25 @@ function installGridBlock(config: ConfigType) {
       'heroBlock',
       'quoteBlock',
     ];
-    const gridBlock = (config.blocks.blocksConfig as any).gridBlock;
-    if (gridBlock.allowedBlocks && gridBlock.blocksConfig) {
-      gridBlock.allowedBlocks = [...gridBlock.allowedBlocks, ...localBlocks];
-      localBlocks.forEach((blockId) => {
-        gridBlock.blocksConfig[blockId] = (config.blocks.blocksConfig as any)[
-          blockId
-        ];
-      });
-    }
+
+    const allBlockIds = Object.keys(config.blocks.blocksConfig).filter(
+      (id) => id !== 'gridBlock',
+    );
+
+    gridBlock.allowedBlocks = Array.from(
+      new Set([...currentAllowed, ...localBlocks, ...allBlockIds]),
+    );
+
+    allBlockIds.forEach((blockId) => {
+      gridBlock.blocksConfig[blockId] = (config.blocks.blocksConfig as any)[
+        blockId
+      ];
+    });
 
     const prevGridEnhancer = gridBlock.schemaEnhancer;
     gridBlock.schemaEnhancer = (args: any) => {
       const schema = prevGridEnhancer ? prevGridEnhancer(args) : args.schema;
       addStyling({ schema, intl: args.intl });
-
-      const defaultFieldset = schema.fieldsets?.find(
-        (f: any) => f.id === 'default',
-      );
-
-      schema.properties.blockWidth = {
-        widget: 'blockWidth',
-        title: args.intl.formatMessage({
-          id: 'Block Width',
-          defaultMessage: 'Block Width',
-        }),
-        default: 'default',
-        filterActions: ['narrow', 'default', 'layout', 'full'],
-        actions: config.blocks?.widths || [],
-      };
-      if (defaultFieldset && !defaultFieldset.fields.includes('blockWidth')) {
-        defaultFieldset.fields.unshift('blockWidth');
-      }
       return schema;
     };
   }
@@ -241,116 +464,359 @@ function installContentTypeColors(config: ConfigType) {
   return config;
 }
 
-function injectCardBorderColor(config: ConfigType) {
-  // Aplica somente para os blocos solicitados
-  const blocksToEnhance = [
-    'listing',
+/**
+ * Remove the theme fields (theme, backgroundColor) from the schema and from
+ * styles.schema, so blocks inside restricted containers (such as the
+ * accordion) cannot change their theme.
+ */
+export const disableThemeSchema = ({ schema }: { schema: any }) => {
+  if (!schema) return schema;
+
+  if (schema.properties) {
+    delete schema.properties.theme;
+    delete schema.properties.backgroundColor;
+  }
+  if (schema.fieldsets) {
+    schema.fieldsets.forEach((f: any) => {
+      if (f.fields) {
+        f.fields = f.fields.filter(
+          (field: string) => field !== 'theme' && field !== 'backgroundColor',
+        );
+      }
+    });
+  }
+
+  if (schema.properties?.styles?.schema) {
+    const stylesSchema = schema.properties.styles.schema;
+    if (stylesSchema.properties) {
+      delete stylesSchema.properties.theme;
+      delete stylesSchema.properties.backgroundColor;
+    }
+    if (stylesSchema.fieldsets) {
+      stylesSchema.fieldsets.forEach((f: any) => {
+        if (f.fields) {
+          f.fields = f.fields.filter(
+            (field: string) => field !== 'theme' && field !== 'backgroundColor',
+          );
+        }
+      });
+    }
+  }
+
+  return schema;
+};
+
+export function installAccordionBlock(config: ConfigType) {
+  const accordion = (config.blocks.blocksConfig as any).accordion;
+  if (!accordion) return config;
+
+  if (!accordion.blocksConfig) {
+    accordion.blocksConfig = {};
+  }
+
+  const currentAllowed = accordion.allowedBlocks || [
+    'slate',
     'teaser',
-    'slider',
-    'carousel',
-    'quoteBlock',
-    'eventMetadata',
+    'image',
+    'listing',
+    'slateTable',
+    'separator',
   ];
 
-  blocksToEnhance.forEach((blockId) => {
-    const applyToBlock = (blockConfig: any) => {
-      if (!blockConfig) return;
+  const additionalBlocks = [
+    '__button',
+    'button',
+    'documentByline',
+    'byline',
+    'eventCalendar',
+    'eventsearch',
+  ];
 
-      const prevEnhancer = blockConfig.schemaEnhancer;
-      blockConfig.schemaEnhancer = (args: any) => {
-        let schema = prevEnhancer ? prevEnhancer(args) : args.schema;
+  const allBlockIds = Object.keys(config.blocks.blocksConfig).filter(
+    (id) => id !== 'accordion',
+  );
 
-        // Force addStyling so that schema.properties.styles.schema is available
-        addStyling({ schema, intl: args.intl });
+  accordion.allowedBlocks = Array.from(
+    new Set([...currentAllowed, ...additionalBlocks, ...allBlockIds]),
+  );
 
-        // Inject into Volto's internal styles schema
-        if (schema?.properties?.styles?.schema) {
-          const stylesSchema = schema.properties.styles.schema;
-
-          stylesSchema.properties['--cardBorderColor'] = {
-            widget: 'style_simple_color',
-            title: args.intl.formatMessage({
-              id: 'Border color',
-              defaultMessage: 'Border color',
-            }),
-            default: '',
-          };
-
-          const blocksWithBorderWidth = [
-            'listing',
-            'teaser',
-            'slider',
-            'carousel',
-          ];
-          if (blocksWithBorderWidth.includes(blockId)) {
-            stylesSchema.properties['--cardBorderWidth'] = {
-              title: 'Estilo da Borda',
-              description: 'Permite forçar um tipo de borda diferente do tema',
-              choices: [
-                ['', 'Padrão do Tema'],
-                ['1px', 'Completa (Full)'],
-                ['3px 0px 0px 0px', 'Apenas no Topo (Top)'],
-                ['0px', 'Nenhuma Borda'],
-              ],
-            };
-          }
-
-          const defaultFieldset = stylesSchema.fieldsets.find(
-            (f: any) => f.id === 'default',
-          );
-          if (defaultFieldset) {
-            if (!defaultFieldset.fields.includes('--cardBorderColor')) {
-              defaultFieldset.fields.push('--cardBorderColor');
-            }
-            if (
-              blocksWithBorderWidth.includes(blockId) &&
-              !defaultFieldset.fields.includes('--cardBorderWidth')
-            ) {
-              defaultFieldset.fields.push('--cardBorderWidth');
-            }
-          }
-        }
-
-        return schema;
-      };
-    };
-
-    // Apply to standard blocks
-    applyToBlock((config.blocks.blocksConfig as any)[blockId]);
-
-    // Apply to gridBlock inner blocks if gridBlock exists
-    const gridBlock = (config.blocks.blocksConfig as any).gridBlock;
-    if (
-      gridBlock &&
-      gridBlock.blocksConfig &&
-      gridBlock.blocksConfig[blockId]
-    ) {
-      applyToBlock(gridBlock.blocksConfig[blockId]);
-    }
-  });
   return config;
 }
 
+export const DEFAULT_BORDER_EXCLUDED_BLOCKS = ['separator'];
+
+/**
+ * Detects if a block has float alignment configured ('left' or 'right').
+ */
+export function isBlockAligned(args: any): boolean {
+  const align =
+    args?.formData?.align ||
+    args?.formData?.styles?.['align:noprefix'] ||
+    args?.formData?.styles?.align ||
+    args?.data?.align ||
+    args?.data?.styles?.['align:noprefix'] ||
+    args?.data?.styles?.align;
+  return align === 'left' || align === 'right';
+}
+
+/** Marks a schemaEnhancer (or accessor getter) installed by this add-on. */
+const STYLING_ENHANCER = Symbol.for('sc-vlt.stylingEnhancer');
+
+function isStylingEnhancer(fn: unknown): boolean {
+  return typeof fn === 'function' && (fn as any)[STYLING_ENHANCER] === true;
+}
+
+/**
+ * Enhances a block schema configuration to inject:
+ * 1. Block Theme (unified widget block_theme_widget)
+ * 2. Block Width (blockWidth:noprefix) across all blocks
+ * 3. Borders (--cardBorderColor and --cardBorderWidth with border_widget) across all blocks,
+ *    except those listed in config.settings.borderExcludedBlocks
+ *
+ * Add-ons loaded after this one keep these controls whatever they do with the
+ * block: `schemaEnhancer` becomes an accessor, so an enhancer assigned later —
+ * directly, or by replacing the block with `{ ...block, schemaEnhancer }` — is
+ * wrapped again. An enhancer that already is (or composes) ours is not
+ * re-wrapped needlessly; running ours twice would be harmless anyway, since it
+ * only sets fields.
+ */
+export function enhanceBlockConfig(
+  blockConfig: any,
+  blockId: string,
+  config: ConfigType,
+) {
+  if (!blockConfig || typeof blockConfig !== 'object') return;
+  const descriptor = Object.getOwnPropertyDescriptor(
+    blockConfig,
+    'schemaEnhancer',
+  );
+  if (isStylingEnhancer(descriptor?.get)) return;
+
+  const wrap = (enhancer: any) =>
+    isStylingEnhancer(enhancer)
+      ? enhancer
+      : stylingEnhancer(enhancer, blockId, config);
+  let current = wrap(blockConfig.schemaEnhancer);
+
+  if (!Object.isExtensible(blockConfig) || descriptor?.configurable === false) {
+    // Frozen or sealed config: nothing can replace the enhancer later either.
+    try {
+      blockConfig.schemaEnhancer = current;
+    } catch {
+      // Read-only: leave the block as it is.
+    }
+    return;
+  }
+
+  const get = () => current;
+  (get as any)[STYLING_ENHANCER] = true;
+  Object.defineProperty(blockConfig, 'schemaEnhancer', {
+    configurable: true,
+    enumerable: true,
+    get,
+    set(enhancer: any) {
+      current = wrap(enhancer);
+    },
+  });
+}
+
+function stylingEnhancer(
+  prevEnhancer: any,
+  blockId: string,
+  config: ConfigType,
+) {
+  const enhancer = (args: any) => {
+    let schema = prevEnhancer ? prevEnhancer(args) : args.schema;
+
+    // Ensure the 'styling' fieldset and schema.properties.styles.schema exist
+    addStyling({ schema, intl: args.intl });
+    // Volto's addStyling adds `styles` only when there is no 'styling'
+    // fieldset yet. A block that declares that fieldset itself (Event
+    // Metadata does, for its theme) would otherwise get no width or border.
+    schema.properties = schema.properties || {};
+    if (!schema.properties.styles?.schema) {
+      schema.properties.styles = {
+        widget: 'object',
+        title: args.intl.formatMessage(messages.styling),
+        schema: {
+          fieldsets: [{ id: 'default', title: 'Default', fields: [] }],
+          properties: {},
+          required: [],
+        },
+      };
+    }
+
+    // Ensure unified Block Theme widget is present on the style root
+    schema.properties = schema.properties || {};
+    schema.properties.theme = {
+      widget: 'block_theme_widget',
+      title: args.intl.formatMessage(messages.blockTheme),
+      default: 'default',
+    };
+
+    // Remove legacy redundant fields and root-level blockWidth
+    delete schema.properties.backgroundColor;
+    delete schema.properties.blockWidth;
+    delete schema.properties.logos_container_width;
+    if (schema.fieldsets) {
+      // Remove blockWidth from default or layout fieldsets (kept only in styles)
+      schema.fieldsets.forEach((f: any) => {
+        if (f.fields) {
+          f.fields = f.fields.filter(
+            (field: string) =>
+              field !== 'backgroundColor' &&
+              field !== 'blockWidth' &&
+              field !== 'logos_container_width',
+          );
+        }
+      });
+
+      const stylingFieldset = schema.fieldsets.find(
+        (f: any) => f.id === 'styling',
+      );
+      if (stylingFieldset) {
+        stylingFieldset.fields = [
+          ...stylingFieldset.fields.filter(
+            (f: string) =>
+              f !== 'backgroundColor' &&
+              f !== 'theme' &&
+              f !== 'styles' &&
+              f !== 'blockWidth',
+          ),
+          'theme',
+          'styles',
+        ];
+      }
+    }
+
+    // Inject options into Volto's internal styles schema (styles.schema)
+    if (schema?.properties?.styles?.schema) {
+      const stylesSchema = schema.properties.styles.schema;
+      stylesSchema.properties = stylesSchema.properties || {};
+
+      // Remove redundant properties from within styles
+      delete stylesSchema.properties.theme;
+      delete stylesSchema.properties.backgroundColor;
+
+      // 1. Block Width (universal across ALL blocks)
+      // For image blocks (image and mainImageBlock), when in side-aligned mode (left/right),
+      // the block width option is disabled as the block naturally flows alongside other content
+      const isImageBlock = blockId === 'image' || blockId === 'mainImageBlock';
+      const isAligned = isImageBlock && isBlockAligned(args);
+
+      if (!isAligned) {
+        stylesSchema.properties['blockWidth:noprefix'] = {
+          widget: 'blockWidth',
+          title: args.intl.formatMessage(messages.blockWidth),
+          default: 'default',
+          actions: config.blocks?.widths?.map((w: any) => w.name || w) || [
+            'narrow',
+            'default',
+            'layout',
+            'full',
+          ],
+        };
+      } else {
+        delete stylesSchema.properties['blockWidth:noprefix'];
+      }
+
+      // 2. Borders (for all blocks, EXCEPT those excluded in the blacklist)
+      const excluded =
+        (config.settings as any)?.borderExcludedBlocks ||
+        DEFAULT_BORDER_EXCLUDED_BLOCKS;
+      const hasBorders = !excluded.includes(blockId);
+
+      if (hasBorders) {
+        stylesSchema.properties['--cardBorderColor'] = {
+          widget: 'style_simple_color',
+          title: args.intl.formatMessage(messages.borderColor),
+          default: '',
+        };
+
+        stylesSchema.properties['--cardBorderWidth'] = {
+          widget: 'border_widget',
+          title: args.intl.formatMessage(messages.borderStyle),
+          description: args.intl.formatMessage(messages.borderDescription),
+          default: '',
+        };
+      }
+
+      // Organize field order inside the default fieldset of stylesSchema
+      const defaultFieldset = stylesSchema.fieldsets?.find(
+        (f: any) => f.id === 'default',
+      );
+      if (defaultFieldset) {
+        defaultFieldset.fields = defaultFieldset.fields.filter(
+          (f: string) =>
+            f !== 'theme' &&
+            f !== 'backgroundColor' &&
+            f !== 'blockWidth:noprefix' &&
+            f !== '--cardBorderColor' &&
+            f !== '--cardBorderWidth',
+        );
+
+        if (!isAligned) {
+          defaultFieldset.fields.push('blockWidth:noprefix');
+        }
+        if (hasBorders) {
+          defaultFieldset.fields.push('--cardBorderColor');
+          defaultFieldset.fields.push('--cardBorderWidth');
+        }
+      }
+    }
+
+    return schema;
+  };
+  (enhancer as any)[STYLING_ENHANCER] = true;
+  return enhancer;
+}
+
 function syncContainerBlocks(config: ConfigType) {
-  // Sync the updated listing (and other blocks) to containers like accordion
-  const blocksToSync = [
-    'listing',
-    'quoteBlock',
-    'slider',
-    'carousel',
-    'teaser',
-    'eventMetadata',
+  const containers = [
+    'accordion',
+    'tabs_block',
+    'columnsBlock',
+    'gridBlock',
+    'customGrid',
   ];
-  const containers = ['accordion', 'tabs_block', 'columnsBlock'];
+  const allBlockIds = Object.keys(config.blocks.blocksConfig);
 
   containers.forEach((containerId) => {
     const container = (config.blocks.blocksConfig as any)[containerId];
-    if (container && container.blocksConfig) {
-      blocksToSync.forEach((blockId) => {
-        if ((config.blocks.blocksConfig as any)[blockId]) {
-          container.blocksConfig[blockId] = (config.blocks.blocksConfig as any)[
+    if (container) {
+      if (!container.blocksConfig) {
+        container.blocksConfig = {};
+      }
+
+      const allowedIds = allBlockIds.filter((id) => id !== containerId);
+      if (Array.isArray(container.allowedBlocks)) {
+        container.allowedBlocks = Array.from(
+          new Set([...container.allowedBlocks, ...allowedIds]),
+        );
+      }
+
+      allBlockIds.forEach((blockId) => {
+        if (
+          blockId !== containerId &&
+          (config.blocks.blocksConfig as any)[blockId]
+        ) {
+          const globalBlockConfig = (config.blocks.blocksConfig as any)[
             blockId
           ];
+          if (containerId === 'accordion') {
+            container.blocksConfig[blockId] = {
+              ...globalBlockConfig,
+              schemaEnhancer: (args: any) => {
+                // Read at call time, so an enhancer an add-on sets later on
+                // the global block is used here too.
+                const prevEnhancer = globalBlockConfig.schemaEnhancer;
+                const schema = prevEnhancer ? prevEnhancer(args) : args.schema;
+                return disableThemeSchema({ ...args, schema });
+              },
+            };
+          } else {
+            container.blocksConfig[blockId] = globalBlockConfig;
+          }
         }
       });
     }
@@ -358,12 +824,54 @@ function syncContainerBlocks(config: ConfigType) {
   return config;
 }
 
+/**
+ * Enhance every block in `blocksConfig` and return it behind a Proxy that
+ * enhances blocks registered later (`blocksConfig.myBlock = {...}`).
+ */
+function watchBlocksConfig(blocksConfig: any, config: ConfigType) {
+  Object.keys(blocksConfig).forEach((blockId) => {
+    enhanceBlockConfig(blocksConfig[blockId], blockId, config);
+  });
+  return new Proxy(blocksConfig, {
+    set(target: any, prop: string, value: any) {
+      if (value && typeof value === 'object') {
+        enhanceBlockConfig(value, prop, config);
+      }
+      target[prop] = value;
+      syncContainerBlocks(config);
+      return true;
+    },
+  });
+}
+
+function installBlockStyling(config: ConfigType) {
+  const blocks = config.blocks as any;
+  let blocksConfig = watchBlocksConfig(blocks.blocksConfig, config);
+
+  // An add-on may also replace the whole object
+  // (`config.blocks.blocksConfig = { ...config.blocks.blocksConfig, x }`),
+  // which would drop the Proxy; watch the new object instead.
+  Object.defineProperty(blocks, 'blocksConfig', {
+    configurable: true,
+    enumerable: true,
+    get: () => blocksConfig,
+    set(value: any) {
+      blocksConfig = watchBlocksConfig(value, config);
+      syncContainerBlocks(config);
+    },
+  });
+
+  syncContainerBlocks(config);
+  return config;
+}
+
 export default function install(config: ConfigType) {
   installLocalBlocks(config);
   installThemes(config);
   installGridBlock(config);
+  installAccordionBlock(config);
   installContentTypeColors(config);
-  injectCardBorderColor(config);
+  installBlockStyling(config);
 
   // Sync containers AFTER we modified the global listing/quote block variations
 
@@ -429,7 +937,7 @@ export default function install(config: ConfigType) {
         ...variations,
         {
           id: 'events',
-          title: 'Eventos',
+          title: messages.events.id,
           template: EventsTemplate,
         },
       ];
@@ -444,6 +952,44 @@ export default function install(config: ConfigType) {
       return listingSchemaEnhancer({ ...args, schema });
     };
   }
+
+  // Banner: add size (height) widget matching Image block pattern (s, m, l)
+  if ((config.blocks.blocksConfig as any).banner) {
+    const prevBannerEnhancer = (config.blocks.blocksConfig as any).banner
+      .schemaEnhancer;
+    (config.blocks.blocksConfig as any).banner.schemaEnhancer = (args: any) => {
+      let schema = prevBannerEnhancer
+        ? prevBannerEnhancer(args)
+        : (config.blocks.blocksConfig as any).banner.blockSchema
+          ? (config.blocks.blocksConfig as any).banner.blockSchema(args)
+          : args.schema;
+
+      addStyling({ schema, intl: args.intl });
+
+      if (schema?.properties?.styles?.schema) {
+        const fields = schema.properties.styles.schema.fieldsets[0].fields;
+        if (!fields.includes('size:noprefix')) {
+          schema.properties.styles.schema.fieldsets[0].fields = [
+            'size:noprefix',
+            ...fields,
+          ];
+        }
+        schema.properties.styles.schema.properties['size:noprefix'] = {
+          widget: 'image_size',
+          title: args.intl
+            ? args.intl.formatMessage({
+                id: 'Height',
+                defaultMessage: 'Height',
+              })
+            : 'Height',
+          default: 'm',
+        };
+      }
+      return schema;
+    };
+  }
+
+  syncContainerBlocks(config);
 
   return config;
 }

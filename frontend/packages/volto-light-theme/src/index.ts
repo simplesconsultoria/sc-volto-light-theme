@@ -8,6 +8,16 @@ import installReducers from './config/reducers';
 import installRoutes from './config/routes';
 
 import SimpleColorPickerWidget from './components/Widgets/SimpleColorPickerWidget';
+import ColorGroupsWidget from './components/Widgets/ColorGroupsWidget';
+import BlockThemesWidget from './components/Widgets/BlockThemesWidget';
+import BlockThemeWidget from './components/Widgets/BlockThemeWidget';
+import BorderWidget from './components/Widgets/BorderWidget';
+import { resolveBlockWidthForBlock } from './helpers/blockWidth';
+import {
+  DEFAULT_BLOCK_THEMES,
+  parseCustomTheme,
+  resolveThemeAlias,
+} from './config/blockThemes';
 
 /**
  * Block and variation titles are plain strings in the block configuration, and
@@ -30,7 +40,7 @@ defineMessages({
   highlight: { id: 'Highlight', defaultMessage: 'Highlight' },
   // Block theme labels (see `createThemeDefinition` in config/blocks.ts)
   themePrimary: { id: 'Primary', defaultMessage: 'Primary' },
-  themeBrand: { id: 'Brand', defaultMessage: 'Brand' },
+  themeAlternative: { id: 'Alternative', defaultMessage: 'Alternative' },
 });
 
 function applyConfig(config: ConfigType) {
@@ -42,6 +52,139 @@ function applyConfig(config: ConfigType) {
   installRoutes(config);
 
   config.widgets.widget.style_simple_color = SimpleColorPickerWidget;
+  config.widgets.widget.color_groups_widget = ColorGroupsWidget;
+  config.widgets.widget.block_themes_widget = BlockThemesWidget;
+  config.widgets.widget.block_theme_widget = BlockThemeWidget;
+  config.widgets.widget.border_widget = BorderWidget;
+
+  // Ensure blocks with blockWidth receive consistent has--block-width--* classes
+  // supporting data.styles['blockWidth:noprefix'], data.styles.blockWidth, and data.blockWidth
+  config.settings.styleClassNameExtenders = [
+    ...(config.settings.styleClassNameExtenders || []),
+    ({
+      block,
+      content,
+      data,
+      classNames,
+    }: {
+      block?: string;
+      content?: any;
+      data: any;
+      classNames: Array<string>;
+    }) => {
+      const currentBlockWidth = resolveBlockWidthForBlock({
+        block,
+        content,
+        data,
+      });
+      let cleaned = classNames.filter(
+        (cls) => !cls.startsWith('has--block-width--'),
+      );
+      cleaned.push(`has--block-width--${currentBlockWidth}`);
+
+      // Se for imagem ou mainImageBlock com alinhamento explícito, sincroniza has--block-alignment--*
+      const blockType = data?.['@type'];
+      const align =
+        data?.align || data?.styles?.['align:noprefix'] || data?.styles?.align;
+      if (
+        (blockType === 'image' || blockType === 'mainImageBlock') &&
+        align &&
+        (align === 'left' || align === 'right' || align === 'center')
+      ) {
+        cleaned = cleaned.filter(
+          (cls) => !cls.startsWith('has--block-alignment--'),
+        );
+        cleaned.push(`has--block-alignment--${align}`);
+      }
+
+      return cleaned;
+    },
+    ({ data, classNames }: { data: any; classNames: Array<string> }) => {
+      const borderWidth =
+        data?.styles?.['--cardBorderWidth'] ??
+        data?.styles?.cardBorderWidth ??
+        data?.cardBorderWidth;
+      const cleaned = classNames.filter((cls) => cls !== 'has--border');
+      if (borderWidth && borderWidth !== '0' && borderWidth !== '0px') {
+        cleaned.push('has--border');
+      }
+      return cleaned;
+    },
+    ({ data, classNames }: { data: any; classNames: Array<string> }) => {
+      const rawTheme = data?.theme || data?.styles?.theme;
+      const theme = resolveThemeAlias(
+        typeof rawTheme === 'object' && rawTheme !== null
+          ? rawTheme.theme
+          : rawTheme,
+      );
+
+      const custom = parseCustomTheme(theme);
+      const customBack = custom?.back;
+      const customFront = custom?.front;
+
+      const activeBlockThemes: Record<string, any> = {
+        ...DEFAULT_BLOCK_THEMES,
+        ...((config.blocks as any)?.blockThemes || {}),
+      };
+      const currentBlockTheme =
+        typeof theme === 'string'
+          ? activeBlockThemes[theme] ||
+            (theme === 'brand' ? activeBlockThemes['alternative'] : undefined)
+          : undefined;
+
+      const isCustom = typeof theme === 'string' && theme.startsWith('custom');
+
+      const backColorGroup = isCustom
+        ? customBack ||
+          data?.backColorGroup ||
+          data?.styles?.backColorGroup ||
+          (typeof rawTheme === 'object' && rawTheme !== null
+            ? rawTheme.backColorGroup
+            : undefined)
+        : currentBlockTheme?.back_color_group ||
+          data?.backColorGroup ||
+          data?.styles?.backColorGroup ||
+          (typeof rawTheme === 'object' && rawTheme !== null
+            ? rawTheme.backColorGroup
+            : undefined);
+
+      const frontColorGroup = isCustom
+        ? customFront ||
+          data?.frontColorGroup ||
+          data?.styles?.frontColorGroup ||
+          (typeof rawTheme === 'object' && rawTheme !== null
+            ? rawTheme.frontColorGroup
+            : undefined)
+        : currentBlockTheme?.front_color_group ||
+          data?.frontColorGroup ||
+          data?.styles?.frontColorGroup ||
+          (typeof rawTheme === 'object' && rawTheme !== null
+            ? rawTheme.frontColorGroup
+            : undefined);
+
+      // Clean existing theme/colorgroup classes to prevent duplicates
+      const cleaned = classNames.filter(
+        (cls) =>
+          !cls.startsWith('has--theme--') &&
+          !cls.startsWith('has-back-colorgroup-') &&
+          !cls.startsWith('has-front-colorgroup-'),
+      );
+
+      if (theme) {
+        cleaned.push(`has--theme--${theme}`);
+        if (typeof theme === 'string' && theme.startsWith('custom-')) {
+          cleaned.push('has--theme--custom');
+        }
+      }
+      if (backColorGroup) {
+        cleaned.push(`has-back-colorgroup-${backColorGroup}`);
+      }
+      if (frontColorGroup) {
+        cleaned.push(`has-front-colorgroup-${frontColorGroup}`);
+      }
+      return cleaned;
+    },
+  ];
 
   return config;
 }

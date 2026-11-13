@@ -8,62 +8,13 @@
 // ===============================================================
 
 // ===============================================================
-// 1. Estrutura do Bloco (Volto BlockWrapper)
-// O Volto por padrão injeta a classe `.block.customGrid` no
-// container mais externo. Nós removemos max-width e margin dele
-// para permitir que o background-color sangre até as bordas.
-// ===============================================================
-.block.customGrid {
-  max-width: unset !important;
-  padding-right: 0 !important;
-  padding-left: 0 !important;
-  margin-right: 0 !important;
-  margin-left: 0 !important;
-  // container-type garante que o @container interno funcione
-  container-type: inline-size;
-}
-
-// ===============================================================
-// 2. Container Interno da Grid
+// 1. Internal Grid Container
 // ===============================================================
 .custom-grid {
   display: grid;
   gap: 1rem;
 
-  // Larguras do Container (usando mixins do sc-volto-light-theme)
-  &.has--block-width--narrow,
-  &[class*='has--block-width--var(--narrow-container-width)']:not(
-      :where(.custom-grid-edit *)
-    ) {
-    @include narrow-container-width();
-    @include adjustMarginsToContainer($narrow-container-width);
-  }
-
-  &.has--block-width--default,
-  &[class*='has--block-width--var(--default-container-width)']:not(
-      :where(.custom-grid-edit *)
-    ) {
-    @include default-container-width();
-    @include adjustMarginsToContainer($default-container-width);
-  }
-
-  &.has--block-width--layout,
-  &[class*='has--block-width--var(--layout-container-width)']:not(
-      :where(.custom-grid-edit *)
-    ) {
-    @include layout-container-width();
-    @include adjustMarginsToContainer($layout-container-width);
-  }
-
-  &.has--block-width--unset,
-  &.has--block-width--full {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-  }
-
-  // Comportamentos de Layout (CSS Grid)
+  // Layout Behaviors (CSS Grid)
   &.layout-1 {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -160,27 +111,31 @@
 }
 
 // ===============================================================
-// 3. Colunas
+// 3. Columns
 // ===============================================================
 .custom-grid-column {
   display: flex;
+  overflow: visible;
+  min-width: 0;
+  max-width: 100%;
   min-height: 60px;
+  box-sizing: border-box;
   flex-direction: column;
 
   container-type: inline-size;
   word-break: break-word;
 
-  // Integração com sc-vlt theme system
+  // Integration with sc-vlt theme system
   &.has-theme {
     padding: 1rem;
     border-radius: 4px;
-    background-color: var(--theme-color, transparent);
+    background-color: transparent;
     color: var(--theme-foreground-color, inherit);
   }
 }
 
 // ===============================================================
-// 4. Modo de Edição
+// 4. Edit Mode
 // ===============================================================
 #page-edit .custom-grid-edit {
   position: relative;
@@ -212,10 +167,16 @@
 
   .custom-grid-column {
     position: relative;
+    min-width: 0;
     min-height: 80px;
+    box-sizing: border-box;
     padding: 0.5rem 2.2rem;
     border: 1px dashed #b8c6c8;
     transition: border-color 0.15s ease;
+
+    @container (max-width: 320px) {
+      padding: 0.5rem 1rem !important;
+    }
 
     &:hover,
     &.is-focused {
@@ -320,7 +281,7 @@
 }
 
 // ===============================================================
-// 5. Seletor de Layout
+// 5. Layout Selector
 // ===============================================================
 .custom-grid-layout-selector {
   padding: 1.5rem;
@@ -384,25 +345,24 @@
 }
 
 // ===============================================================
-// 6. Contenção e Alturas Iguais
-// - Herda estilos do gridBlock nativo via @extend
-// - CSS Grid distribui altura igual entre colunas (stretch)
-// - Chain flex interna propaga a altura até os blocos visuais.
+// 6. Containment and Equal Heights
+// - Inherits styles from native gridBlock via @extend
+// - CSS Grid distributes equal height among columns (stretch)
+// - Internal flex chain propagates height down to visual blocks.
 // ===============================================================
 .block.custom-grid {
-  // Herda magicamente todos os ajustes finos (backgrounds, margens, etc)
-  // que o VLT original destina a blocos internos do .gridBlock
+  // Inherits background and spacing refinements that VLT targets to .gridBlock
   @extend .gridBlock;
 
   align-items: stretch;
 
   > .custom-grid-column {
     display: flex;
-    // Propaga a altura do CSS Grid para os filhos
+    // Propagate CSS Grid height to children
     flex: 1 1 auto;
     flex-direction: column;
 
-    // Remove max-width e margens de blocos contidos
+    // Remove max-width and margins from contained blocks
     > .blocks-group-wrapper {
       display: flex;
       height: 100%;
@@ -410,27 +370,182 @@
       flex-grow: 1;
 
       > .block {
-        // Remove margens laterais e max-width dos blocos internos
+        // Remove lateral margins and max-width from inner blocks
         max-width: 100% !important;
 
-        // Impede que os blocos sejam esmagados verticalmente se faltar espaço na coluna
+        // Prevent vertical compression when space is constrained
         flex-shrink: 0;
         margin-right: 0 !important;
         margin-left: 0 !important;
 
-        // Se houver mais de um bloco na coluna, não devem forçar 100% de altura
-        // pois isso esmagaria os blocos vizinhos. Devem usar altura natural.
+        // If multiple blocks exist in a column, use natural height instead of forcing 100%
         &:not(:only-child) {
           height: auto !important;
         }
       }
     }
 
-    // O HeroBlock possui um container interno que tenta forçar largura standalone,
-    // precisamos resetá-lo quando dentro de uma coluna do custom grid.
+    // HeroBlock has an inner container that forces standalone width; reset it in columns
     .hero-block-container {
       max-width: 100% !important;
       margin: 0 !important;
+    }
+  }
+}
+
+// ===============================================================
+// 7. Images in Narrow Grid Columns (< 280px)
+// When an image sits in a very narrow column (< 280px),
+// the caption moves below the image with reduced typography:
+// - Overlay above the photo (figure:after) is disabled.
+// - Figcaption moves below the image with black background (#000000).
+// - For standard/large sizes in grids, the default overlay layout is preserved.
+// ===============================================================
+
+@mixin small-grid-image-caption-layout {
+  figure {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    margin: 0 !important;
+
+    &:after {
+      display: none !important;
+      height: 0 !important;
+      content: none !important;
+      opacity: 0 !important;
+    }
+
+    img {
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+
+    figcaption {
+      position: static !important;
+      z-index: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      left: auto !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 0.45rem 0.6rem !important;
+      margin: 0 !important;
+      background: #000000 !important;
+      border-bottom-left-radius: 4px !important;
+      border-bottom-right-radius: 4px !important;
+      color: $white !important;
+
+      .title {
+        display: block !important;
+        margin: 0 0 2px 0 !important;
+        color: $white !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0 !important;
+        line-height: 1.25 !important;
+        word-break: break-word !important;
+      }
+
+      .description {
+        display: block !important;
+        margin: 0 !important;
+        color: rgba(255, 255, 255, 0.85) !important;
+        font-size: 10px !important;
+        line-height: 1.2 !important;
+
+        p {
+          margin: 0 !important;
+          font-size: 10px !important;
+          line-height: 1.2 !important;
+        }
+      }
+
+      .credits {
+        display: block !important;
+        margin-top: 3px !important;
+        color: rgba(255, 255, 255, 0.65) !important;
+        font-size: 9px !important;
+        line-height: 1.1 !important;
+      }
+    }
+
+    figcaption:not(:has(strong.title)):not(:has(.title)) {
+      display: none !important;
+    }
+  }
+}
+
+// 1. Ensure container-type on grid columns
+.custom-grid-column,
+.block.gridBlock .ui.stackable.grid > .column,
+.block.gridBlock .column {
+  container-type: inline-size;
+}
+
+// 2. Container Query application for very small columns (< 280px)
+@container (max-width: 280px) {
+  .block.image,
+  .block-editor-image {
+    @include small-grid-image-caption-layout;
+  }
+}
+
+// 3. Direct application for known narrow columns (20% or 4+ columns)
+.layout-1-4 .custom-grid-column:first-child,
+.layout-4-1 .custom-grid-column:last-child,
+.layout-1-3 .custom-grid-column:first-child,
+.layout-3-1 .custom-grid-column:last-child,
+.layout-1-1-1-1 .custom-grid-column,
+.layout-1-1-1-1-1 .custom-grid-column,
+.block.gridBlock.grid-columns-4 .column,
+.block.gridBlock.grid-columns-5 .column,
+.block.gridBlock.grid-columns-6 .column,
+.block.gridBlock.four.columns .column,
+.block.gridBlock.five.columns .column,
+.block.gridBlock.six.columns .column {
+  .block.image,
+  .block-editor-image {
+    @include small-grid-image-caption-layout;
+  }
+} // ===============================================================
+// 6. Sidebar Column Settings
+// ===============================================================
+.custom-grid-sidebar-column {
+  padding: 12px 14px 24px;
+
+  .ui.segment.custom-grid-sidebar-header {
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .ui.form {
+    header.header.pulled {
+      padding: 4px 6px 12px;
+      margin-bottom: 8px;
+
+      h2 {
+        margin: 0;
+        font-size: 1.15rem;
+      }
+    }
+
+    .ui.segment.form.attached {
+      padding: 18px 20px 24px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+      .block-theme-widget {
+        padding: 4px 0 8px;
+        margin-bottom: 0.75rem;
+      }
     }
   }
 }

@@ -1,0 +1,1 @@
+Saving a theme through `@controlpanels/themes/<theme-id>` no longer deletes the Color Groups and Block Themes left out of the request: `color_groups` and `block_themes` are merged by id, a group sent with only some fields keeps the others, and a group is deleted only when sent as `null`. Deleting a base group or block theme is refused with a 400 and changes nothing. @Humanaice

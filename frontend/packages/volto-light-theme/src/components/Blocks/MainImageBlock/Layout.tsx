@@ -34,7 +34,7 @@ const Layout: React.FC<LayoutProps> = ({
   return (
     <div
       className={cx(
-        'block image align',
+        'block image mainImageBlock align',
         {
           center: !Boolean(align),
         },

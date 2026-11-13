@@ -1,0 +1,1 @@
+Update Storybook and design-sync helpers (`dsConfig.ts`, `dsEntry.ts`, `withTheme.tsx`, and `BlocksInventory.stories.tsx`) to populate the Volto and addon registry, export 28 design-system entries, list the 6 owned and 10 extended blocks, and preview `default`, `alternative`, and `custom-*` block themes. @Humanaice

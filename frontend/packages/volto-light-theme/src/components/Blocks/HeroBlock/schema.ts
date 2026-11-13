@@ -196,7 +196,6 @@ interface HeroSchemaProps {
 }
 
 const layoutFields = [
-  'blockWidth',
   'fullWidthImage',
   'textSide',
   'imageSize',
@@ -366,11 +365,6 @@ export function HeroBlockSchema(props: HeroSchemaProps): any {
         description: intl.formatMessage(messages.fullWidthDescription),
         type: 'boolean',
         default: false,
-      },
-      blockWidth: {
-        title: intl.formatMessage(messages.blockWidth),
-        widget: 'blockWidth',
-        default: 'layout',
       },
       imageSize: {
         title: intl.formatMessage(messages.imageSize),

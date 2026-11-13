@@ -1448,6 +1448,12 @@ importers:
       '@plonegovbr/volto-social-media':
         specifier: ^3.1.0
         version: 3.1.0(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react-redux@8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react@18.2.0)
+      embla-carousel-autoplay:
+        specifier: ^8.0.0
+        version: 8.6.0(embla-carousel@8.6.0)
+      embla-carousel-react:
+        specifier: ^8.0.0
+        version: 8.6.0(react@18.2.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0

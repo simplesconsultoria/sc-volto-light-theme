@@ -2,6 +2,7 @@ import type { ConfigType } from '@plone/registry';
 
 import PostFooter from '../components/Footer/PostFooter';
 import Colophon from '../components/Footer/slots/Colophon';
+import Theming from '../components/Theming/Theming';
 
 function footerSlots(config: ConfigType) {
   config.registerSlotComponent({
@@ -17,11 +18,16 @@ function footerSlots(config: ConfigType) {
   });
 }
 
-// The theme's <style> element is contributed by `components/Theming`, which
-// replaces the upstream component of the same name through a customization —
-// upstream already registers it in the `aboveHeader` slot, so registering it
-// again here would emit the rule twice.
+function themingSlot(config: ConfigType) {
+  // Override upstream @kitconcept/volto-light-theme's Theming component cleanly via registry
+  config.registerSlotComponent({
+    slot: 'aboveHeader',
+    name: 'Theming',
+    component: Theming,
+  });
+}
 
 export default function install(config: ConfigType) {
   footerSlots(config);
+  themingSlot(config);
 }

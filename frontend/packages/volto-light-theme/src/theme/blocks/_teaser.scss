@@ -33,11 +33,17 @@ body #page-edit [class^='block-editor-'] > .block .teaser,
       display: flex;
       height: 100%;
       flex-direction: column;
-      border: solid var(--cardBorderColor, var(--theme-border-color));
       border-width: var(
         --cardBorderWidth,
-        var(--theme-border-width)
+        var(--theme-border-width, 0)
       ) !important;
+      // Longhands: an undefined colour variable would void a `border`
+      // shorthand, `solid` included (see `listing/_grid.scss`).
+      border-style: solid;
+      border-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, var(--primary-accent-color))
+      );
 
       .card-inner {
         padding: 0;
@@ -80,7 +86,7 @@ body #page-edit [class^='block-editor-'] > .block .teaser,
       ) !important;
     }
 
-    // Se o card não tem link, garante que não tenha ponteiro clicável
+    // If card has no link, ensure cursor is default instead of pointer
     &:has(.no-link) {
       cursor: default;
       .card {

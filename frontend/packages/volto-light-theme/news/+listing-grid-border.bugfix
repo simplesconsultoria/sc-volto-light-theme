@@ -1,0 +1,1 @@
+Listing Grid: changing the width of the cards' top border now changes it. A width set per side, or the default theme's top border, used to leave the top border at 3px. @Humanaice

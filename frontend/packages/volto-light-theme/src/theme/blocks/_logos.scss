@@ -1,0 +1,161 @@
+// =============================================================================
+// Logos Block Styles — sc-volto-light-theme
+// Handles block width system, responsive layout, individual logo borders, and theme integration.
+// =============================================================================
+
+.block.logos,
+body .block.logos,
+[class*='block-editor-logos'],
+body [class*='block-editor-logos'] {
+  box-sizing: border-box;
+
+  .ui.container,
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+
+  ul.logos-container {
+    display: grid;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-medium 0;
+    margin: 0 auto;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    justify-items: center;
+    list-style: none;
+
+    &.s {
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+
+      .item,
+      .logo-item {
+        .logo-image {
+          max-height: 120px;
+        }
+      }
+    }
+
+    &.m {
+      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+      .item,
+      .logo-item {
+        .logo-image {
+          max-height: 180px;
+        }
+      }
+    }
+
+    &.l {
+      gap: 32px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+
+      .item,
+      .logo-item {
+        .logo-image {
+          max-height: 260px;
+        }
+      }
+    }
+
+    .item,
+    .logo-item {
+      display: inline-flex;
+      width: fit-content;
+      max-width: 100%;
+      height: fit-content;
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent !important;
+      justify-self: center;
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+      .logo-link {
+        display: inline-flex;
+        width: 100%;
+        height: auto;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .logo-image {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: 180px;
+        object-fit: contain !important;
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Border System: individual borders per logo item
+  // ---------------------------------------------------------------------------
+  &[style*='--cardBorderWidth'] {
+    border: none !important;
+
+    .ui.container,
+    .container,
+    ul.logos-container {
+      border: none !important;
+    }
+
+    .item,
+    .logo-item {
+      @include apply-block-border;
+
+      background-color: transparent !important;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Contained Logos (Accordion, GridBlock, CustomGrid)
+// -----------------------------------------------------------------------------
+.accordion-block,
+.block-accordion,
+.ui.accordion,
+.grid-block,
+.block.gridBlock,
+.custom-grid-block,
+.custom-grid-column,
+.column,
+.block.contained {
+  .block.logos,
+  [class*='block-editor-logos'] {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+
+    ul.logos-container {
+      width: 100% !important;
+      max-width: 100% !important;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+
+      .item,
+      .logo-item {
+        padding: 0.35rem 0.5rem;
+
+        .logo-image {
+          max-height: 100px;
+        }
+      }
+    }
+  }
+}

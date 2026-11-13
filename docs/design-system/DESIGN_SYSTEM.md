@@ -1,320 +1,173 @@
 # Design System — `@simplesconsultoria/volto-light-theme`
 
-The manifest for this add-on's design system: what it owns, what it inherits, and the
-rules that govern how the two compose.
+The architectural manifest for `@simplesconsultoria/volto-light-theme`: what this add-on owns, how it extends upstream Volto and `@kitconcept/volto-light-theme`, and the rules governing tokens, container queries, block themes, Storybook stories, and Claude Design sync.
 
-Every factual claim here was checked against the source or measured in a browser on
-2026-09-01/02. Where something is a decision nobody has taken yet, it says so rather than
-guessing.
+All factual claims were verified against source or runtime probes on **2026-11-11**.
 
-- **Package:** `@simplesconsultoria/volto-light-theme`
-- **Built on:** `@kitconcept/volto-light-theme@8.0.0-alpha.31` (the `theme` in `package.json`)
-- **Companion documents:** [INVENTORY.md](./INVENTORY.md) for the exhaustive tables,
-  [GAPS.md](./GAPS.md) for defects and open questions
+- **Package:** `@simplesconsultoria/volto-light-theme@1.0.0-alpha.17`
+- **Built on:** `@kitconcept/volto-light-theme@8.1.4` (`package.json` `theme`) + 16 declared addons
+- **Companion documents:** [INVENTORY.md](./INVENTORY.md) for exhaustive schemas and token tables, [GAPS.md](./GAPS.md) for verified open defects and design decisions
 
 ---
 
-## 1. How to read this system
+## 1. Architecture & layer stack
 
-Three layers stack, and almost everything confusing about the theme comes from not
-knowing which layer you are looking at:
+Four layers compose at runtime, and debugging any visual issue starts with identifying which layer owns the element:
 
-| layer | supplies | you change it by |
+| layer | supplies | how you change it |
 |---|---|---|
-| **Volto core** + `@plone/volto-slate` | the block vocabulary and page rendering | not at all |
-| **`@kitconcept/volto-light-theme`** | most of the visual language, the `--theme-*` contract, `@property` registrations, `initialBlocks` per type | upgrading the dependency |
-| **this add-on** | 4 blocks, 3 listing variations, 2 template overrides, the block theme factory, the semantic palette, the type scale | editing this package |
-| **a project using it** | concrete colours, via the Themes control panel | an `ISCVLTThemeDefinition` record |
+| **Volto core** + `@plone/volto-slate` | block registry, Slate editor, layout grid primitives, default widgets/views | core/addon releases (or targeted `customizations/` shadows) |
+| **`@kitconcept/volto-light-theme@8.1.4`** + block addons | base visual language, `--theme-*` convention, 10 `@property` declarations, 3rd-party blocks (`accordion`, `banner`, `carousel`, `highlight`, `logos`, `separator`, `slider`, etc.) | upgrading npm dependencies or SC-VLT SCSS/schema extensions |
+| **`sc-vlt` (`this add-on`)** | **6** own blocks, **10** extended blocks + **6** listing variations, universal styling injection (`theme`, `blockWidth`, `borders`), **Color Groups + Block Themes**, semantic cool-slate palette, `rem` type scale, accessible HeaderBar/Navigation/EventMetadata | editing this package |
+| **Site configuration** | site palette, fonts, 2nd-layer patterns/images, custom block-theme combinations | creating/editing records in `@controlpanels/themes` (`ISCVLTThemeSchema`) |
 
-**The single most useful entry point is Storybook**, not this file. `Public/Blocks/Inventory`
-reads `config.blocks.blocksConfig` at runtime, so it always lists what an editor actually
-has — 42 blocks today. This document explains the parts that a table cannot.
+**The live authoritative catalogue is Storybook's `Blocks/Inventory`**, which reads `config.blocks.blocksConfig` at runtime — **47 blocks** today (**6** own, **10** extended, **31** inherited).
 
 ---
 
-## 2. What this add-on owns
+## 2. What this add-on owns & extends
 
-### 2.1 Blocks
+### 2.1 Shipped blocks (6)
 
-Four, registered in `src/config/blocks.ts`:
+Registered in `src/config/blocks.ts` → `installLocalBlocks()`:
 
-| id | title | group | notes |
-|---|---|---|---|
-| `heroBlock` | Hero Block | common | two variations (`flex`, `card`); dynamic schema; 30 `--theme-*` references — the most theme-sensitive block in the system |
-| `mainImageBlock` | Main Image | media | renders the content item's `preview_image_link`; **no colour tokens at all**, only container widths |
-| `quoteBlock` | Quote | text | Slate body; the only own block reading semantic tokens (`--accent-color`) directly as well as `--theme-*` |
-| `documentByline` | Byline | common | publication/modification dates and authors; **ships no stylesheet** — see GAPS §2.1 |
-| `customGrid` | Custom Grid | common | a CSS grid-based block supporting custom fractional layouts and themes per column |
-| `eventMetadata` | Event Metadata | common | metadata for events (date, location, contact, link) |
+- **`heroBlock`** (`Flex / Decorative`, `Attached Card`): dynamic schema (`HeroBlockSchema`), `dataAdapter`, multi-CTA buttons (`buttons`), `30+` theme variable consumers across `_heroBlock.scss`. Defaults unspecified block width to `'layout'`.
+- **`customGrid`**: 13 fractional CSS Grid layouts (`1` through `1-1-1-1`), independent per-column `block_theme_widget` themes (`ColumnSchema`), container-query-aware columns, defaults unspecified block width to `'layout'`.
+- **`mainImageBlock`**: renders page `preview_image_link` (resolved across block data, metadata, properties, content, or Redux store), supports float align (`left`/`right`/`center`), and wraps `Layout` in `withBlockExtensions` + `resolveBlockTheme`.
+- **`quoteBlock`**: Slate-powered blockquote (`blockHasOwnFocusManagement: true`) with `author` and `transparent`/`filled` background modes.
+- **`documentByline`**: publication date, modification date, and author chips with `_documentByLine.scss` styling and `withBlockExtensions`.
+- **`eventMetadata`**: four-column event schedule, location/stream link, contact, and participation summary pulling from Event content properties with schema field overrides (`EventMetadataSchema`), `normalizeBlockWidth`, and `_eventMetadataBlock.scss`.
 
-Full schemas in [INVENTORY.md](./INVENTORY.md) §1.
+### 2.2 Extended blocks & container rules (10 + universal enhancer)
 
-### 2.2 Listing variations
-
-Three added, two overridden — `src/config/blocks.ts` → `install()`:
-
-| id | title | action |
-|---|---|---|
-| `carousel` | Carousel | added |
-| `mediaCarousel` | Media Carousel | added |
-| `teaser` | Highlight | added |
-| `events` | Eventos | added |
-| `grid` | *(upstream)* | template replaced with `GridTemplate` |
-| `imageGallery` | *(upstream)* | template replaced with `GridTemplate` |
-
-Each addition is guarded by an existence check, so `install()` is idempotent, and the
-`listing` block's own `schemaEnhancer` is *composed with* rather than replacing upstream's.
-
-### 2.3 The `gridBlock` extension
-
-`installGridBlock()` assigns this add-on's themes to both `gridBlock.themes` and
-`gridBlock.blocksConfig.themes`, and appends eight ids to `allowedBlocks`:
-`documentByline`, `__button`, `listing`, `slider`, `carousel`, `mainImageBlock`,
-`heroBlock`, `quoteBlock`. Core caps the grid at `maxLength: 4`.
+- **`listing`:** replaces upstream `grid` and `imageGallery` templates with `GridTemplate` (adds `gridColumns` 1–4), adds `carousel`, `mediaCarousel`, `teaser` ("Highlight"), and `events` variations, and composes `listingSchemaEnhancer` (`headlineButtonText`/`headlineButtonLink`) on top of upstream's enhancer.
+- **Standalone extensions:** `separator` (custom `SeparatorSchema` with color/thickness/width/alignment, excluded from card borders), `introduction` (injects `styles.align`), `banner` (injects `styles.size:noprefix` `image_size` widget titled `"Height"`), `search` (`SearchBlockView`/`SearchBlockEdit` + `sanitizeSearchData` guarding invalid variations), and thin wrapper `<div>`s forwarding `className`/`style` on `slate`, `toc`, and `slateTable`.
+- **Container sync (`syncContainerBlocks`):** expands `allowedBlocks` on `gridBlock` (**46**) and `accordion` (**49**) and mirrors `blocksConfig` into containers (`accordion`, `tabs_block`, `columnsBlock`, `gridBlock`, `customGrid`). Inside `accordion`, every child block's `schemaEnhancer` is wrapped with `disableThemeSchema` and `_accordion.scss` forces `--theme-*` / `--colorgroup-*-font` `inherit !important` so nested blocks never split panel color schemes.
+- **Universal block styling (`enhanceBlockConfig` + `Proxy`):** wraps every existing and dynamically registered block's `schemaEnhancer` (including blocks and enhancers that add-ons loaded later register, replace or spread) to expose root `theme` (`block_theme_widget`), `styles.blockWidth:noprefix` (`narrow`, `default`, `layout`, `full`), `styles.--cardBorderColor`, and `styles.--cardBorderWidth` (`border_widget`, unless excluded via `borderExcludedBlocks`). Three `styleClassNameExtenders` in `src/index.ts` emit `has--block-width--*`, `has--block-alignment--*`, `has--border`, `has--theme--*`, and `has-{back,front}-colorgroup-*`. On left/right floated `image` and `mainImageBlock` blocks, `blockWidth` is omitted from the sidebar and `resolveBlockWidthForBlock` inherits the adjacent sibling's width.
 
 ---
 
-## 3. The block theme system
+## 3. Color Groups & the Block Theme system
 
-This is the part most worth understanding, because it is this add-on's own invention and
-it is what a project extends.
+Rather than editing 14 tokens per block theme manually, `sc-vlt` separates palette **Color Groups** from block-level **Block Themes**:
 
-`createThemeDefinition(name, label)` maps **14 semantic `--theme-*` properties** onto
-`--block-theme-{name}-*` tokens, in four groups:
+1. **Color Group** (`primary`, `secondary`, `accent`, `neutral`, or custom site-created groups): defines light & dark values for `background_color`, `text_color`, `subtext_color`, and `accent_color`, a `font_family`, and an optional **2nd background layer** (`bg_image_{light,dark}_{desktop,mobile}` or one of **8** `CSS_PATTERN_PRESETS`, plus `bg_size`, `bg_repeat`, `bg_position`).
+2. **Block Theme** pairs a **back** Color Group (**Ground**: block background, headings, outline/solid ground text, borders) with a **front** Color Group (**High Ground**: cards, teaser boxes, badges, chips, elevated surfaces):
+   - **`default`**: `back = primary`, `front = neutral`, top accent bar (`4px 0 0 var(--accent-color)`).
+   - **`alternative`** (`brand` preserved as CSS & JS lookup alias): `back = accent`, `front = primary`, borderless (`0`).
+   - **`grey`** (plain VLT's theme, kept as an alias in `LEGACY_THEME_ALIASES`): read as `custom-secondary-primary`, a grey band with white cards.
+   - **`custom-<back>-<front>`**: ad-hoc per-block pairing synthesized by `createCustomThemeDefinition` / `resolveBlockTheme` and propagated up to `.blocks-group-wrapper` (with `.blocks-group-wrapper.custom-*-*` rules generated for all 16 base pairings in `_root.scss`, and custom utility rules generated by `themeStyleSheet` for user-created Color Groups).
+3. **Second background layer inheritance:** `resolveBlockTheme`, `blockThemeUtilityClasses`, and `colorGroupUtilityClasses` bind `--theme-bg-*` for Ground and `--highground-bg-*` / `--colorgroup-front-bg-*` for High Ground containers (`.teaser-item`, `.hero-card`, `.hero-card-info`, `.is-highground`, `[data-ground='high']` in `_globals.scss:227-248`), while non-high-ground intermediate containers inside `.blocks-group-wrapper` are forced transparent so group backgrounds bleed cleanly.
 
-- **Ground** — the block's own background and text: `bg`, `text`, `high-contrast`,
-  `low-contrast`, `accent-color`
-- **High Ground** — elevated elements inside it (cards, chips): `high-bg`, `top-text`,
-  `top-high-contrast`, `top-low-contrast`, `top-accent-color`
-- **Border** — `border`, `border-width`
-- **Pattern** — `pattern-image`, `pattern-opacity`. Declared, defined as `none`/`0`, and
-  **consumed nowhere**. Implement or delete; see GAPS §1.2.
-
-Two themes ship: `default` (labelled "Primary") and `brand` ("Brand"). Adding a third
-downstream is one line plus a matching token block in `_root.scss`:
-
-```ts
-createThemeDefinition('purple', 'Purple')
-```
-
-> **The contract is enforced by a test.** `src/theme/blockThemes.test.ts` fails if the
-> factory maps a property `_root.scss` does not declare in its `:root` block, or if a
-> stylesheet reads a `--theme-*` no theme supplies. It exists because the failure is
-> otherwise silent — a `var()` with no definition and no fallback is invalid at
-> computed-value time, so the whole declaration is dropped. That is how six focus
-> outlines went missing.
+> **Token contract test:** `tests/theme/blockThemes.test.ts` parses `_root.scss` and every SCSS consumer of `--theme-*` to fail builds if a factory mapping is undeclared in `:root` or a stylesheet reads an unmapped `--theme-*` token (preventing silent computed-value drops). See [GAPS.md](./GAPS.md) §1.1–1.2 for remaining pattern/legacy-token exceptions.
 
 ---
 
-## 4. Colour
+## 4. Color architecture, `@property` constraints & contrast
 
-### 4.1 Structure
+### 4.1 Semantic tokens first
 
-Ten base values feed a **4 × 4 semantic matrix** — `primary` / `secondary` / `accent` /
-`neutral`, each with `color`, `foreground-color`, `low-foreground-color`,
-`accent-color`. Every semantic token is a `light-dark()` pair, so the system is
-dual-mode by construction.
+Base neutrals (`--gray-02`..`--gray-dark-*`) and brand shades (`--brand-color*`) live in `src/theme/_root.scss`. Components must consume `--theme-*` or semantic `--{primary,secondary,accent,neutral}-*` tokens — never literal hex or `--gray-*` steps — so dark mode, high-contrast mode (`[data-theme='high-contrast']`), and site control-panel overrides work automatically. Visual reference: [previews/colors.html](./previews/colors.html) and [previews/block-themes.html](./previews/block-themes.html).
 
-Resolved values for both modes: [INVENTORY.md](./INVENTORY.md) §5.2. Visual:
-[previews/colors.html](./previews/colors.html).
+### 4.2 `@property` eager resolution constraint (`@kitconcept/volto-light-theme@8.1.4`)
 
-### 4.2 The rule that matters
+Upstream VLT registers **10** custom properties via `@property` in `src/theme/_variables.scss`:
+`--background`, `--text-color`, `--text-size`, `--primary-color`, `--primary-foreground-color`, `--secondary-color`, `--secondary-foreground-color`, `--accent-color`, `--accent-foreground-color`, `--image-aspect-ratio`.
 
-**Components read semantic tokens, never base values.** `--gray-80` appears in
-`_root.scss` and essentially nowhere else; a component that reaches for it bypasses both
-colour modes and the Themes control panel.
+Because `@property { syntax: '<color>'; }` is **computed eagerly where declared** (at `:root`), `light-dark(...)` inside those six registered color tokens locks onto the `color-scheme` of `<html>`. Unregistered properties (`--*-low-foreground-color`, `--*-accent-color`, etc.) stay as token streams and resolve against the **closest ancestor's** `color-scheme`.
 
-### 4.3 Registered properties — a real constraint
+Therefore, whenever rendering a color-mode switcher on a scoped wrapper (such as Storybook's `withTheme.tsx` or `DsPreviewProvider.tsx`), `color-scheme` / `data-theme` MUST be set on **both `document.documentElement` and the story wrapper**; setting it on only one freezes half the tokens.
 
-Upstream registers six tokens with `@property { syntax: '<color>' }`: `--primary-color`,
-`--primary-foreground-color`, `--secondary-color`, `--secondary-foreground-color`,
-`--accent-color`, `--accent-foreground-color`.
+### 4.3 Default contrast (WCAG 2.1 AA)
 
-A **registered** custom property is computed eagerly at the element that declares it, so
-its `light-dark()` resolves once at `:root` and inherits as a flat colour. An
-**unregistered** one stays an unresolved token stream and resolves wherever it is *used*,
-following the `color-scheme` in force at that element.
-
-The two halves therefore fail in opposite directions, which is what makes this confusing
-in practice:
-
-| | mode set on `:root` only | mode set on a wrapper only |
-|---|---|---|
-| the six **registered** tokens | correct | frozen at the root's mode |
-| every **unregistered** token | frozen, *if something resets `color-scheme` below the root* | correct |
-
-Storybook's preview does reset `color-scheme` below `<html>`, so neither placement alone
-works there — `withTheme` sets it in **both** places. On a real page the mode lives on
-`<html>` and the question never arises; it only bites when switching mode on a descendant.
-
-### 4.4 Contrast
-
-Both AA failures the first audit found are now fixed. They were the two accent tokens
-that used `--brand-color` in *both* modes rather than swapping between the brand shades
-the way `--primary-accent-color` and `--accent-color` do:
-
-| token | mode | was | now |
-|---|---|---|---|
-| `--secondary-accent-color` | dark, on `#ffffff` | `#f4822c` — 2.60 **FAIL** | `#b55e1c` — 4.58 AA |
-| `--neutral-accent-color` | light, on `#edeff0` | `#f4822c` — 2.25 **FAIL** | `#af5009` — 4.58 AA |
-
-The second one is why `--brand-color-darker` (`#af5009`) exists: `#b55e1c` reaches only
-3.97 against `#edeff0`, which is AA-large at best.
-
-> Every ratio in this system is a **default**. A site that sets its own colours through
-> the Themes control panel replaces them, so the audit has to be re-run per project.
+`DEFAULT_COLOR_GROUPS` uses a cool slate neutral scale for `primary` / `neutral`, a dark gray `secondary` (`#343a40` in both modes) and a dark blue `accent` (`#0f4c81` light / `#1b4d82` dark), both with light text. Links follow the `primary` group's accent (`#1971c2` / `#74c0fc`), not the `accent` surface. Across all 4 Color Groups × 3 foreground roles × 2 color modes (24 foreground/background pairs), every shipped pair clears **WCAG 2.1 AA (≥ 4.5:1)**, checked by `tests/theme/contrast.test.ts`: ratios range from **4.68:1** (`neutral` light accent `#1971c2` on `#f6f7f9`) to **16.15:1** (`primary` dark text `#f1f3f5` on `#14171c`). Because site admins replace Color Group colors per project via the Themes control panel, per-site contrast validation remains necessary on deployment.
 
 ---
 
 ## 5. Typography
 
-Eleven steps in `$font-sizes`, and now eleven in `$line-heights` too. Declared in
-**rem** so the global `--font-scale` on `html` resizes text emitted by upstream mixins.
-
-The six scalar overrides (`$font-size`, `$heading1`, …) are exact px→rem conversions of
-upstream's `!default` values. That conversion is their entire purpose; they are not
-duplicates and should stay.
-
-All four font tokens resolve to `system-ui` — the theme ships no brand typeface. Note
-that `--custom-main-font` has no consumer in this package but drives upstream's
-`$page-font`.
-
-Scale and heading rules: [previews/typography.html](./previews/typography.html).
+- **Typeface:** `Inter` (`font_family: 'Inter, sans-serif'` in `DEFAULT_COLOR_GROUPS`, bundled across 83 font/specimen files in `dist/fonts/` via upstream VLT). While `_root.scss:151-154` initializes `--font-*` to `system-ui, sans-serif`, `_globals.scss:6-17` rebinds `--font-body`, `--custom-font`, `--custom-main-font`, and `--font-sans` on `body` to `var(--font-family-primary, 'Inter', sans-serif)` (with `--custom-font` preferring `--font-family-secondary`), and `themeStyles.ts:480-489` mirrors `primary.font_family` onto `:root`. `_variables.scss` keeps all 11 `$font-sizes` / `$line-heights` steps (`2xs` `0.75rem` – `6xl` `5rem`) and 6 scalar heading sizes in **`rem`** so `--font-scale` (`0.8`–`1.3`) scales everything proportionally.
+- **Headings & scale preview:** [previews/typography.html](./previews/typography.html).
 
 ---
 
-## 6. Layout
+## 6. Layout, Borders & Scoping Rules
 
-| token | value |
+### 6.1 Widths & Responsive Columns
+
+`--narrow-container-width` (`940px !important`), `--default-container-width` (`940px !important`), and `--layout-container-width` (`1440px !important`) govern `has--block-width--{narrow,default,layout,full}` across `_blockWidth.scss` in both view and `#page-edit` / `#page-add` modes (excluding nested blocks inside `.column`, `.custom-grid-column`, and `.contained`). `_customGrid.scss` defines container queries (`container-type: inline-size` on `.custom-grid-column`, `.block.gridBlock .column`, `#page-document`): below **`280px`** (and explicitly on 20% / 4+ column grids), `image` blocks switch from overlay caption to stacked `<figcaption>` underneath (`@mixin small-grid-image-caption-layout`).
+
+### 6.2 Decoupled Border Placement (`_borders.scss`)
+
+Instead of framing every outer `.block` box uniformly, `_borders.scss` targets inner semantic surfaces when `--cardBorderWidth` is set: `img` (`image` / `mainImageBlock`), `.quote-block` (`quoteBlock`), `.ui.accordion` (`accordion`), `.teaser-item` (`highlight`), `table` (`slateTable`), `.item` / `.logo-item` (`logos`), `.carousel-container .card` (`carousel`), `.slider-viewport` (`slider`), explicit `[data-border-target]` / `.block-border-target`, and fallback `.block-inner-container`.
+
+### 6.3 Configuration for projects and block developers
+
+Projects tune the system from their own add-on, which loads after this one:
+
+| Setting | Default | Effect |
+| --- | --- | --- |
+| `config.blocks.blockThemes` | `DEFAULT_BLOCK_THEMES` (`default`, `alternative`) | Extra Block Themes, keyed by id: `{ id, name, back_color_group, front_color_group }`. They join the theme picker and resolve like the shipped ones. |
+| `config.blocks.themes` | `default`, `alternative` and the 16 `custom-<back>-<front>` pairs | A project that sets its own list (for example with a `grey` theme) keeps it: the legacy `grey` alias only applies when nothing else defines that name. |
+| `config.blocks.widths` | `['narrow', 'default', 'layout', 'full']` | The Block Width choices offered on every block. |
+| `config.settings.borderExcludedBlocks` | `['separator']` | Block ids that get no border controls. |
+| `config.settings.socialNetworks` | `[]` | Footer social links used when the site has no `social_links`. |
+| `config.settings.scvlt.speechVoices` | `DEFAULT_SPEECH_VOICES` (`pt-BR`, `en-US`) | Voice preferences of the hover reader, which speaks the site language: `{ lang, preferredNames? }`. Append an entry to tune another language. |
+
+Color Group ids use lowercase letters, digits and underscores: they become part of `custom-<back>-<front>`, which is split on `-`.
+
+A block's view receives the theme, width and border through two props, and must pass both to its root element:
+
+- `className`: `has--theme--<name>`, `has-back-colorgroup-<id>`, `has-front-colorgroup-<id>` and `has--block-width--<width>`.
+- `style`: the `--theme-*` custom properties, `--cardBorderColor` and `--cardBorderWidth`.
+
+The width is stored in `styles['blockWidth:noprefix']`; `data.blockWidth` and `styles.blockWidth` are still read. Every block registered in `config.blocks.blocksConfig` gets these controls, including blocks registered after this add-on, because `blocksConfig` is wrapped in a `Proxy` and each block's `schemaEnhancer` becomes an accessor. An add-on that kept a reference to the raw `blocksConfig` object from before this add-on loaded, or that redefines a block with `Object.defineProperty`, bypasses it.
+
+### 6.4 Selector scoping — Storybook & Preview Gotcha
+
+Many stylesheets depend on ancestor DOM selectors present on real Plone pages. Rendering a component outside its ancestor chain drops all matching rules cleanly without throwing errors:
+
+| stylesheet | required ancestor / ground |
 |---|---|
-| `--narrow-container-width` | `940px !important` |
-| `--default-container-width` | `940px !important` |
-| `--layout-container-width` | `1440px !important` |
+| `blocks/_listing.scss` & `listing/*` | `body .block.listing` (or `#page-edit .block.listing`, `.block.search`), plus variation class (`carousel`, `mediaCarousel`, `teaser`, `events`) |
+| `components/_header*.scss`, `_mobileTools.scss` | `body header.header-wrapper` (plus `.header-bar-wrapper`) |
+| `components/_navigation.scss` | `#navigation.navigation.scNavigation` |
+| `blocks/_heroBlock.scss` / `_quoteBlock.scss` / themed blocks | ancestor resolving `--theme-*` & `--highground-bg-*` (`resolveBlockTheme` or themed `blocks-group-wrapper`) |
+| `components/_accessibilityControls.scss`, `_themeToggle.scss` | unscoped selectors, but styled for the dark `--secondary-color` bar (`HeaderBar`) |
 
-`narrow` and `default` are currently identical, so two of the four `blockWidth` choices
-are indistinguishable; all three carry `!important`, which blocks downstream override.
-Both are open questions — GAPS §3.1.
-
----
-
-## 7. Scoping rules — the thing that trips people up
-
-Stylesheets in this package are scoped to ancestors that only exist on a real page. A
-component rendered outside its chain gets **none** of its styling, and the symptom always
-looks like missing CSS rather than a missing wrapper:
-
-| stylesheet | scoped to |
-|---|---|
-| `_listing.scss` | `body .block.listing`, then `&.carousel` / `&.mediaCarousel` / … |
-| `_header.scss`, `_headerBar.scss`, `_mobileTools.scss` | `body header.header-wrapper` |
-| `_navigation.scss` | `#navigation.navigation` **and** `&.scNavigation` |
-| any themed block | needs `--theme-*` from a themed wrapper |
-| `_accessibilityControls.scss`, `_themeToggle.scss` | *unscoped* — but drawn for the dark bar, so they need the right **ground**, not the right ancestor |
-
-Anything rendering these outside a page — a story, a preview, a screenshot harness — has
-to reproduce the chain.
-
-The accessibility controls are the instructive counter-example: their selectors are
-unscoped, so the rules *did* apply, and they still looked wrong — the buttons are drawn as
-light pills for the dark `--secondary-color` bar, so on a pale ground they read as
-unstyled browser defaults. The CSS was never the problem; the **ground** was.
-
-The rule this suggests: a story should reproduce the ancestor chain its component's
-stylesheet names, and sit on a themed ground rather than a hardcoded grey — the hardcoded
-value is exactly what hides the mismatch.
+Stories and previews must wrap these components in their matching ancestor + ground rather than an unstyled neutral canvas.
 
 ---
 
-## 8. Per-project overlay
+## 7. Per-project overlay (`ISCVLTThemeSchema` / `ISCVLTThemeDefinition`)
 
-A project supplies colours through the Themes control panel, not by forking this package.
-The backend serves an `ISCVLTThemeDefinition` with **38 colour fields** — the four
-semantic families × four roles, plus the three content types — each of them a `_light` /
-`_dark` pair. `helpers/themeStyles.ts` maps every field onto the custom property of the
-same name, so `primary_color_light` becomes `--primary-color-light`: exactly the override
-hook `_root.scss` reads inside its `light-dark()`. A themed site therefore keeps both
-colour modes.
-
-The mapping is mechanical, so a colour added to the schema needs no frontend change — and
-`themeStyles.test.ts` now checks **both** ends of that contract: that the pinned field
-list still matches the schema, and that `_root.scss` actually reads every property the
-mapping derives. The second half is the one that was missing when the content-type
-colours were wired to `--event-color-override`, a property nothing writes.
-
-`--header-foreground-color` is the exception in the other direction: `_root.scss` reads
-it, but no field of `ISCVLTThemeDefinition` supplies it, so nothing can set it today.
-
-`Themes/fixtures.ts` holds three realistic records, and the Storybook toolbar can apply
-any of them to any story.
+`backend/src/sc/voltolighttheme/interfaces.py` defines two interfaces. `ISCVLTThemeSchema` has 4 fields (`name`, `description`, `color_groups`, `block_themes`): the control panel serves it and the code registers its records. `ISCVLTThemeDefinition` is that schema plus the 40 per-color fields of 1.0.0a15 and earlier, all optional: GenericSetup profiles name it, so old profiles keep importing and the passthrough fields (`font_family_secondary`, event/file/image colors) can be set. At runtime:
+1. `src/config/settings.ts` adds the `sc.voltolighttheme.themeselector` behavior to `expand.inherit.behaviors` (dropping upstream `voltolighttheme.*` behaviors).
+2. `src/config/slots.ts` registers `Theming` into `aboveHeader`. Even on 404 routes (`errorContext`), `Theming` fetches `@inherit` from the site root (`''`) so branded colors persist on Not Found pages.
+3. `src/helpers/themeStyles.ts` compiles the theme into `:root` tokens + utility classes inside `<Helmet><style data-sc-theme="...">` and bridges `primary`/`secondary`/`accent`/`neutral` onto upstream's CSS tokens.
+4. `src/helpers/themesControlpanel.ts` strips **40** legacy per-color/font fields (`LEGACY_THEME_FIELDS`, matching `backend/src/sc/voltolighttheme/utils/legacy_themes.py`) from control panel forms while legacy passthrough records still feed CSS custom properties if stored.
+5. `src/index.ts` registers the 5 custom sidebar/controlpanel widgets (`style_simple_color`, `color_groups_widget`, `block_themes_widget`, `block_theme_widget`, `border_widget`).
 
 ---
 
-## 9. Storybook
+## 8. Storybook & Export to Claude Design (`.design-sync/`)
 
-103 stories. The ones that answer design-system questions:
-
-| story | answers |
-|---|---|
-| `Public/Blocks/Inventory` | what blocks exist, and which layer supplies each |
-| `Public/Blocks/Gallery` | every registered block rendered — all 42 without error |
-| `Public/Views/Default View` | how blocks compose on a Document, News Item and Event |
-| `Public/Blocks/Grid` | `gridBlock` at 1–4 columns |
-| `Public/Blocks/Listing/*` | the four listing variations |
-| `Public/Blocks/Separator` | block width × short line × alignment |
-| `Public/Navigation/*` | the navigation bar and the fat menu |
-
-The toolbar carries three globals — **colour mode** (light / dark / high contrast),
-**block theme** (Primary / Brand) and **site theme** — so any story can be checked in any
-combination. See `src/storybook/withTheme.tsx`.
-
-Every story is constrained to `--default-container-width` and centred, so components are
-seen at the measure they occupy on a page. Stories that genuinely span the viewport —
-the page views, the header bar, the navigation — opt out with
-`parameters: { fullBleed: true }`.
-
-### 9.1 Where a story lives
-
-A story for a component this package ships sits **beside the component**; a story for a
-component from a dependency sits in **`src/storybook/`**, alongside the decorator and the
-shared fixtures. That is why `gridBlock` and `separator` — core and
-`@kitconcept/volto-separator-block` respectively — are not filed under
-`components/Blocks/`. See `src/storybook/README.md`.
-
-### 9.2 Story images
-
-`frontend/.storybook/main.js` serves `packages/volto-light-theme/public` at the Storybook
-root, so a file at `public/images/example.jpg` is reachable as `/images/example.jpg` and
-ships with the package. Fixtures currently point at `picsum.photos` instead, which serves
-arbitrary third-party photographs and needs network access — replacing them is the
-provenance question in §11. `public/images/README.md` lists the four places a fixture
-names its image host.
+- **Storybook (50 files, 261 exports):** built with `@storybook/react-webpack5` + Razzle (`frontend/.storybook/`). Owned component stories sit beside their component (`src/components/`); inherited Volto/addon block showcases (`Blocks/Grid`, `Blocks/Banner`, `Blocks/Slider`, `Blocks/Gallery`, `Blocks/Inventory`, `Views/Default View`) sit in `src/storybook/` alongside `withTheme.tsx` and `blockStyling.tsx` (`StyledBlock` + `StylingMatrix`). Sample photography is bundled locally in `src/storybook/images/` (`14` `.jpg` assets).
+- **Standalone converter pipeline (`.design-sync/`):** because Volto relies on webpack relative/tilde aliases and `load-volto-addons`, `./.design-sync/prepare.sh` prepares standalone `esbuild` & `tsc` outputs without altering Volto core:
+  - `build-icons.py`: compiles `373` SVGs across Volto/VLT/addons into `svg-loader`-compatible `.svg.js` twins. (Own icons imported by shipped components must use `@simplesconsultoria/volto-light-theme/icons/<name>.svg`, never relative `../../icons/...` paths.)
+  - `build-overlay.py`: generates `.design-sync/nm-overlay/` mapping `@plone/volto/src`, `@plone/volto-slate/src`, `@kitconcept/volto-light-theme@8.1.4`, stripped addon sources (removing bare `.less`/`.scss` side-effect imports), layered `customizations/`, and singleton `@plone/registry`.
+  - `build-css.sh`: emits standalone `dist/theme.css` + `83` files under `dist/fonts/`.
+  - `dsEntry.ts`: exports **28** design-system components/providers initialized via `dsGlobals.ts` + `dsConfig.ts` (seeding Volto core, `@plone/volto-slate`, all 16 addons, and `applyConfig`), with `tsconfig.ds.json` wiring paths to `nm-overlay`.
+  - [previews/](./previews/): **11** `@dsCard` HTML previews: tokens (`colors.html`, `color-groups.html`, `block-themes.html`, `typography.html`), styles (`block-widths.html`, `block-borders.html`, `color-group-layers.html`) and blocks (`block-byline.html`, `block-hero.html`, `block-main-image.html`, `block-quote.html`). `make design-previews` regenerates them with `.design-sync/previews.py`: token pages from `src/config/blockThemes.ts` and the theme sources, the others captured from the Storybook build with computed styles inlined, so run `make -C frontend storybook-build` first. _Keep `.design-sync/config.json` path overrides documented in `.design-sync/NOTES.md` in mind when running the converter on another checkout._
 
 ---
 
-## 10. Export to Claude Design
+## 9. Open decisions summary
 
-Preview pages live in [previews/](./previews/), each marked with a first-line
-`<!-- @dsCard group="…" -->` comment, which is what the Design System pane builds its card
-index from. Foundations (`colors`, `typography`, `block-themes`) are generated from the
-SCSS; the block previews are captured from the built Storybook with computed styles
-inlined, so they are the real component output rather than a reimplementation.
-
-`register_assets` is legacy and not needed — the `@dsCard` markers are sufficient.
-
----
-
-## 11. Open decisions
-
-Nothing below is a defect; each is a choice nobody has made. Full context in
-[GAPS.md](./GAPS.md) §6.
-
-- Is `--brand-color: #f4822c` a deliberate default, or inherited from a client site?
-  It feeds `--accent-color`, all four link tokens and both block themes' accent slots.
-- Should the content-type colours (`#d32f2f`, `#1976d2`, `#388e3c`) be brand-aligned?
-  They sit off the brand ramp and carry the same value in both colour modes.
-- Should `narrow` and `default` container widths differ?
-- Should the `documentByline` block get a stylesheet?
-- Implement the Pattern layer, or delete it?
-- Translate `es` and `de`? Both are registered locales with empty catalogues; `pt_BR` is
-  complete at 147 messages.
-- Replace the placeholder imagery and sample copy with assets of known provenance.
+Non-defect product/design choices needing human resolution are tracked alongside code/CSS gaps in [GAPS.md](./GAPS.md):
+- Differentiate `--narrow-container-width` from `--default-container-width` (currently both `940px !important`) and review `!important` container overrides.
+- Decide whether to implement `--theme-pattern-{image,opacity}` or remove those unused mappings (the active 2nd background layer already uses Color Group `--colorgroup-*-bg-image` / `--highground-bg-image` + `--theme-bg-image`).
+- Clear background images/patterns under `[data-theme='high-contrast']`.
+- Expose a header foreground field or remove the unreachable `--header-foreground-color` / `LEGACY_PASSTHROUGH_FIELDS` controlpanel gap.
+- Add sample fixtures for the 16 unseeded themed blocks in `Blocks/Gallery` and update legacy `HeroBlock.stories.tsx` button props.
+- Decide on `es` / `de` translation completeness (`0 / 376`) and `pt-BR` / `BRT` locale hardcoding in event components.

@@ -1,0 +1,12 @@
+.block.toc nav.table-of-contents {
+  .ui.bulleted.list {
+    li {
+      &::before {
+        color: var(--theme-foreground-accent-color) !important;
+      }
+      a {
+        color: var(--theme-foreground-accent-color) !important;
+      }
+    }
+  }
+}

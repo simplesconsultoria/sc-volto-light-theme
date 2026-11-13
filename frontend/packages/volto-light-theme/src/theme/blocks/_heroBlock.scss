@@ -7,54 +7,84 @@ $hero-card-overlap: 60px;
 #page-document
   .blocks-group-wrapper
   > .block:has(.heroBlock.has--block-width--unset),
+#page-document .blocks-group-wrapper > .block.heroBlock.has--block-width--unset,
 #page-document
   .blocks-group-wrapper
-  > .block.heroBlock.has--block-width--unset {
+  > .block:has(.heroBlock.has--block-width--full),
+#page-document .blocks-group-wrapper > .block.heroBlock.has--block-width--full,
+#page-document
+  .blocks-group-wrapper
+  > .block:has(.hero-block-container.has--block-width--full),
+#page-document
+  .blocks-group-wrapper
+  > .block:has(.hero-block-container.has--block-width--unset) {
+  width: 100%;
   max-width: none;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
 }
 
 .block.heroBlock {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin-right: 0 !important;
-  margin-left: 0 !important;
-  background-color: var(--theme-color, transparent);
+  background-color: transparent !important;
   color: var(--theme-foreground-color, inherit);
 
-  // Container type para permitir que fontes reajam à largura da coluna
+  // Container type to allow typography to react to column width
   container-type: inline-size;
+
+  // When outer heroBlock has a background image, avoid duplicating it on inner container
+  .hero-block-container {
+    background-color: transparent !important;
+    background-image: none !important;
+  }
 }
 
 .hero-block-container {
   // Default fallback if no block-width is selected
   @include layout-container-width();
-  @include adjustMarginsToContainer($layout-container-width);
+  margin-right: auto;
+  margin-left: auto;
 
-  // Block widths overrides
+  // The layout width's small-screen margins only for a container without a
+  // width of its own: they are `!important`, so below 1480px they also hit a
+  // narrow or default container and pinned it to the left instead of centred.
+  &:not([class*='has--block-width--']) {
+    @include adjustMarginsToContainer($layout-container-width);
+  }
+
+  &.has--block-width--narrow,
   &.has--block-width--var\(--narrow-container-width\) {
     @include narrow-container-width();
     @include adjustMarginsToContainer($narrow-container-width);
+    margin-right: auto;
+    margin-left: auto;
   }
+
+  &.has--block-width--default,
   &.has--block-width--var\(--default-container-width\) {
     @include default-container-width();
     @include adjustMarginsToContainer($default-container-width);
+    margin-right: auto;
+    margin-left: auto;
   }
-  &.has--block-width--var\(--layout-container-width\),
-  &.has--block-width--layout {
+
+  &.has--block-width--layout,
+  &.has--block-width--var\(--layout-container-width\) {
     @include layout-container-width();
     @include adjustMarginsToContainer($layout-container-width);
+    margin-right: auto;
+    margin-left: auto;
   }
+
   &.has--block-width--unset,
   &.has--block-width--full {
-    // Apenas a variação flex se expande para tocar as laterais da página
-    &:has(.hero-flex) {
-      width: 100%;
-      max-width: 100%;
-      padding-right: 0;
-      padding-left: 0;
-      margin-right: 0;
-      margin-left: 0;
-    }
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
 
     .hero-flex.text-right .hero-flex-content {
       padding-right: max(2rem, calc(50% - var(--layout-container-width)));
@@ -63,10 +93,11 @@ $hero-card-overlap: 60px;
       padding-left: max(2rem, calc(50% - var(--layout-container-width)));
     }
 
-    /* Mobile: imagem full-width, texto com padding */
+    /* Mobile: full-width image; the text only keeps the page gutter, since
+       a full-width container has no side padding of its own. */
     @media only screen and (max-width: $largest-mobile-screen) {
       .hero-flex-content {
-        padding: $spacing-medium !important;
+        padding: 0 $spacing-small !important;
       }
       .hero-flex-image-wrapper {
         width: 100%;
@@ -95,6 +126,7 @@ $hero-card-overlap: 60px;
 
 .hero-block {
   --hero-image-fit: cover;
+  background-color: transparent;
 
   &.image-fit-contain {
     --hero-image-fit: contain;
@@ -363,10 +395,6 @@ $hero-card-overlap: 60px;
     flex-direction: column;
     justify-content: center;
     gap: $spacing-small;
-
-    @media only screen and (max-width: $largest-mobile-screen) {
-      padding: $spacing-medium;
-    }
   }
 
   &.has-image .hero-flex-inner {
@@ -452,6 +480,34 @@ $hero-card-overlap: 60px;
   }
 }
 
+// Flex on mobile: text and image stack at the full width of the block. The
+// text needs no padding of its own here — the block container already sits
+// inside the page gutter — and `min-width: min-content` would otherwise keep
+// it narrower than the image.
+@media only screen and (max-width: $largest-mobile-screen) {
+  .hero-flex .hero-flex-inner,
+  .hero-flex.has-image .hero-flex-inner {
+    .hero-flex-content,
+    .hero-flex-image-wrapper {
+      width: 100%;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .hero-flex-content {
+      padding: 0;
+    }
+
+    // Stacked under the image, the text reads left-aligned whatever the
+    // text side: centring only the date and the tags looked misaligned.
+    .hero-flex-content,
+    .hero-flex-content .hero-header {
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+}
+
 // Variation 2: Card Colado
 .hero-card {
   .hero-card-inner {
@@ -475,6 +531,7 @@ $hero-card-overlap: 60px;
 
     @media only screen and (max-width: $largest-mobile-screen) {
       width: 100%;
+      min-width: 0;
       max-width: 100%;
       flex: 1 1 100%;
     }
@@ -500,13 +557,33 @@ $hero-card-overlap: 60px;
     justify-content: center;
     padding: $spacing-large;
     background-color: var(--theme-high-contrast-color);
+    background-image: var(
+      --highground-bg-image,
+      var(--colorgroup-front-bg-image, none)
+    );
+    background-position: var(
+      --highground-bg-position,
+      var(--colorgroup-front-bg-position, center)
+    );
+    background-repeat: var(
+      --highground-bg-repeat,
+      var(--colorgroup-front-bg-repeat, repeat)
+    );
+    background-size: var(
+      --highground-bg-size,
+      var(--colorgroup-front-bg-size, auto)
+    );
     color: var(--theme-top-foreground-color);
     gap: $spacing-small;
 
     @media only screen and (max-width: $largest-mobile-screen) {
       width: 100%;
+      min-width: 0;
       max-width: 100%;
       flex: 1 1 100%;
+      // The card keeps its background, so it keeps a small inset; the desktop
+      // $spacing-large one leaves the text a narrow column on a phone.
+      padding: $spacing-small;
     }
 
     .hero-header-text,
@@ -616,28 +693,36 @@ $hero-card-overlap: 60px;
 #page-add {
   .block-editor-heroBlock {
     .block.heroBlock {
-      &.has--block-width--var\(--narrow-container-width\) .hero-block {
-        max-width: var(--narrow-container-width) !important;
+      width: 100%;
+      max-width: 100%;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    &:not([class*='has--block-width-']) {
+      @include layout-container-width();
+      @include adjustMarginsToEditContainer($layout-container-width);
+      max-width: var(--layout-container-width) !important;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    &:not(.has--block-width--full):not(.has--block-width--unset) {
+      .hero-block-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+    }
+
+    &.has--block-width--full,
+    &.has--block-width--unset {
+      .hero-block-container:not(.has--full-width-image) {
+        @include layout-container-width();
+        @include adjustMarginsToEditContainer($layout-container-width);
         margin-right: auto !important;
         margin-left: auto !important;
-      }
-      &.has--block-width--var\(--default-container-width\) .hero-block {
-        max-width: var(--default-container-width) !important;
-        margin-right: auto !important;
-        margin-left: auto !important;
-      }
-      &.has--block-width--var\(--layout-container-width\) .hero-block {
-        max-width: var(--layout-container-width) !important;
-        margin-right: auto !important;
-        margin-left: auto !important;
-      }
-      &.has--block-width--unset {
-        @include adjustEditContainerFullWidth();
-        .hero-block {
-          max-width: 100% !important;
-          margin-right: auto !important;
-          margin-left: auto !important;
-        }
       }
     }
   }

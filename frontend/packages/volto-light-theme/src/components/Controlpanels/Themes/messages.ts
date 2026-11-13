@@ -33,6 +33,14 @@ export const messages = defineMessages({
       'Delete this theme? Content still using it keeps the stored id but ' +
       'falls back to the default colours.',
   },
+  swatchColorGroup: {
+    id: 'Color Group: {name} ({color})',
+    defaultMessage: 'Color Group: {name} ({color})',
+  },
+  swatchBlockTheme: {
+    id: 'Block theme: {name} ({back} / {front})',
+    defaultMessage: 'Block theme: {name} ({back} / {front})',
+  },
 });
 
 export default messages;

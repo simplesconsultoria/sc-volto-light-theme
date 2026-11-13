@@ -2,6 +2,7 @@ import type { ConfigType } from '@plone/registry';
 import type { SCVLTSettings } from '../types/vlt';
 import type { VLTSettings } from '@kitconcept/volto-light-theme/types';
 import { bootstrapAccessibilityPreferences } from '../utils/preferences';
+import { DEFAULT_SPEECH_VOICES } from '../utils/speechSynthesis';
 
 declare module '@plone/types' {
   interface SettingsConfig {
@@ -91,6 +92,9 @@ export default function install(config: ConfigType) {
 
   const scvltDefaults: SCVLTSettings = {
     headerBehavior: 'sc.voltolighttheme.siteheader',
+    // Voices of the hover reader, which speaks the site language. A project
+    // tunes another language by appending to this list in its own add-on.
+    speechVoices: DEFAULT_SPEECH_VOICES,
     headerBar: {
       display: true,
       quickLinks: [],
@@ -117,6 +121,13 @@ export default function install(config: ConfigType) {
       },
     },
   };
+
+  // No default social networks: a site without `social_links` of its own
+  // must not link to somebody else's accounts. Projects set their list in
+  // `config.settings.socialNetworks`.
+  if (!config.settings.socialNetworks) {
+    config.settings.socialNetworks = [];
+  }
 
   applyExpanders(config);
   return config;

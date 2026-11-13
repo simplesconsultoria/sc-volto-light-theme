@@ -8,11 +8,118 @@
  * time, so the whole declaration is dropped. `theme/blockThemes.test.ts` guards it.
  */
 
+import config from '@plone/volto/registry';
+import { defineMessages, type MessageDescriptor } from 'react-intl';
+import type { ColorGroup, BlockTheme } from '../types/theme';
+
 export interface ThemeDefinition {
   style: Record<string, string>;
   name: string;
   label: string;
 }
+
+/**
+ * Resolves available theme definitions for a specific block or site fallback.
+ */
+export function getThemeDefinitions(blockType?: string): ThemeDefinition[] {
+  const blockThemes = blockType
+    ? (config.blocks?.blocksConfig as any)?.[blockType]?.themes
+    : undefined;
+
+  return (blockThemes ||
+    (config.blocks as any)?.themes ||
+    []) as ThemeDefinition[];
+}
+
+export interface CssPatternPreset {
+  id: string;
+  /** Message descriptors: format them with `intl.formatMessage`. */
+  label: MessageDescriptor;
+  description: MessageDescriptor;
+  css: string;
+  defaultSize?: string;
+  defaultRepeat?: string;
+  defaultPosition?: string;
+}
+
+const presetMessages = defineMessages({
+  none: { id: 'None', defaultMessage: 'None' },
+  noneDescription: {
+    id: 'No image or pattern (solid background colour only)',
+    defaultMessage: 'No image or pattern (solid background colour only)',
+  },
+  dots: { id: 'Dots', defaultMessage: 'Dots' },
+  dotsDescription: {
+    id: 'Subtle dot pattern',
+    defaultMessage: 'Subtle dot pattern',
+  },
+  grid: { id: 'Grid', defaultMessage: 'Grid' },
+  gridDescription: {
+    id: 'Modern square grid with transparency',
+    defaultMessage: 'Modern square grid with transparency',
+  },
+  diagonalStripes: {
+    id: 'Diagonal stripes',
+    defaultMessage: 'Diagonal stripes',
+  },
+  diagonalStripesDescription: {
+    id: 'Elegant diagonal stripes at 45 degrees',
+    defaultMessage: 'Elegant diagonal stripes at 45 degrees',
+  },
+  blueprint: {
+    id: 'Blueprint (fine grid)',
+    defaultMessage: 'Blueprint (fine grid)',
+  },
+  blueprintDescription: {
+    id: 'Double millimetre mesh in a technical blueprint style',
+    defaultMessage: 'Double millimetre mesh in a technical blueprint style',
+  },
+});
+
+export const CSS_PATTERN_PRESETS: CssPatternPreset[] = [
+  {
+    id: 'none',
+    label: presetMessages.none,
+    description: presetMessages.noneDescription,
+    css: '',
+  },
+  {
+    id: 'dots',
+    label: presetMessages.dots,
+    description: presetMessages.dotsDescription,
+    css: 'radial-gradient(color-mix(in srgb, currentColor 18%, transparent) 1.5px, transparent 1.5px)',
+    defaultSize: '24px 24px',
+    defaultRepeat: 'repeat',
+    defaultPosition: '0 0',
+  },
+  {
+    id: 'grid',
+    label: presetMessages.grid,
+    description: presetMessages.gridDescription,
+    css: 'linear-gradient(to right, color-mix(in srgb, currentColor 12%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, currentColor 12%, transparent) 1px, transparent 1px)',
+    defaultSize: '32px 32px',
+    defaultRepeat: 'repeat',
+    defaultPosition: '0 0',
+  },
+  {
+    id: 'diagonal-stripes',
+    label: presetMessages.diagonalStripes,
+    description: presetMessages.diagonalStripesDescription,
+    css: 'repeating-linear-gradient(45deg, color-mix(in srgb, currentColor 10%, transparent), color-mix(in srgb, currentColor 10%, transparent) 1.5px, transparent 1.5px, transparent 12px)',
+    defaultSize: 'auto',
+    defaultRepeat: 'repeat',
+    defaultPosition: '0 0',
+  },
+  {
+    id: 'blueprint',
+    label: presetMessages.blueprint,
+    description: presetMessages.blueprintDescription,
+    css: 'linear-gradient(color-mix(in srgb, currentColor 14%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, currentColor 14%, transparent) 1px, transparent 1px), linear-gradient(color-mix(in srgb, currentColor 6%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, currentColor 6%, transparent) 1px, transparent 1px)',
+    defaultSize: '50px 50px, 50px 50px, 10px 10px, 10px 10px',
+    defaultRepeat: 'repeat',
+    defaultPosition: '0 0',
+  },
+];
 
 /**
  * Create a complete theme definition by mapping every `--theme-*` variable
@@ -49,5 +156,432 @@ export function createThemeDefinition(
     },
     name,
     label,
+  };
+}
+
+/**
+ * Theme names that blocks saved by earlier versions may carry, and the theme
+ * each one now means.
+ *
+ * `grey` is plain VLT's grey band with white cards: a `secondary` ground under
+ * `primary` cards. (`brand`, sc-vlt's old name for `alternative`, has its own
+ * handling and CSS aliases.) Content keeps working without being edited; the
+ * block theme widget shows the equivalent theme, and saving the block stores it.
+ */
+export const LEGACY_THEME_ALIASES: Record<string, string> = {
+  grey: 'custom-secondary-primary',
+};
+
+/**
+ * Whether the project defines a theme with this name itself, in
+ * `config.blocks.themes` or `config.blocks.blockThemes`. Its own definition
+ * then wins over a legacy alias of the same name.
+ */
+function isProjectTheme(name: string): boolean {
+  const blocks = (config as any)?.blocks;
+  const themes = blocks?.themes;
+  if (Array.isArray(themes) && themes.some((t: any) => t?.name === name)) {
+    return true;
+  }
+  return Boolean(blocks?.blockThemes?.[name]);
+}
+
+/**
+ * The theme a saved theme name means today (see `LEGACY_THEME_ALIASES`).
+ *
+ * A project that defines a theme with an alias's name (a `grey` of its own)
+ * keeps it: the alias applies only to names nothing else defines.
+ */
+export function resolveThemeAlias<T>(name: T): T | string {
+  if (typeof name !== 'string' || !LEGACY_THEME_ALIASES[name]) return name;
+  return isProjectTheme(name) ? name : LEGACY_THEME_ALIASES[name];
+}
+
+/**
+ * Color Group ids allowed in a custom Block Theme name. The name is
+ * `custom-<back>-<front>`, so a group id cannot contain a dash; the backend
+ * enforces the same rule.
+ */
+export const COLOR_GROUP_ID_PATTERN = /^[a-z0-9][a-z0-9_]*$/;
+
+const CUSTOM_THEME_PATTERN =
+  /^custom-([a-z0-9][a-z0-9_]*)-([a-z0-9][a-z0-9_]*)$/;
+
+/**
+ * Split a custom Block Theme name into its back and front Color Groups.
+ *
+ * @param name a theme name, such as `custom-secondary-primary`.
+ * @returns the two group ids, or `null` when `name` is not a custom theme.
+ */
+export function parseCustomTheme(
+  name: unknown,
+): { back: string; front: string } | null {
+  if (typeof name !== 'string') return null;
+  const match = CUSTOM_THEME_PATTERN.exec(name);
+  return match ? { back: match[1], front: match[2] } : null;
+}
+
+export const DEFAULT_COLOR_GROUPS: Record<string, ColorGroup> = {
+  primary: {
+    id: 'primary',
+    name: 'Primary',
+    font_family: 'Inter, sans-serif',
+    background_color_light: '#ffffff',
+    background_color_dark: '#14171c',
+    text_color_light: '#1d2129',
+    text_color_dark: '#f1f3f5',
+    subtext_color_light: '#4a5260',
+    subtext_color_dark: '#b4bcc8',
+    accent_color_light: '#1971c2',
+    accent_color_dark: '#74c0fc',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
+  },
+  secondary: {
+    id: 'secondary',
+    name: 'Secondary',
+    font_family: 'Inter, sans-serif',
+    // Dark gray: the strong band (footer, header bar, `grey` blocks).
+    background_color_light: '#343a40',
+    background_color_dark: '#343a40',
+    text_color_light: '#f8f9fa',
+    text_color_dark: '#f1f3f5',
+    subtext_color_light: '#ced4da',
+    subtext_color_dark: '#c3cad4',
+    accent_color_light: '#a5d8ff',
+    accent_color_dark: '#74c0fc',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
+  },
+  accent: {
+    id: 'accent',
+    name: 'Accent',
+    font_family: 'Inter, sans-serif',
+    // Dark blue, with light text.
+    background_color_light: '#0f4c81',
+    background_color_dark: '#1b4d82',
+    text_color_light: '#ffffff',
+    text_color_dark: '#e7f5ff',
+    subtext_color_light: '#d0ebff',
+    subtext_color_dark: '#b8d7ef',
+    accent_color_light: '#a5d8ff',
+    accent_color_dark: '#a5d8ff',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
+  },
+  neutral: {
+    id: 'neutral',
+    name: 'Neutral',
+    font_family: 'Inter, sans-serif',
+    background_color_light: '#f6f7f9',
+    background_color_dark: '#242932',
+    text_color_light: '#1d2129',
+    text_color_dark: '#f1f3f5',
+    subtext_color_light: '#4a5260',
+    subtext_color_dark: '#c3cad4',
+    accent_color_light: '#1971c2',
+    accent_color_dark: '#74c0fc',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
+  },
+};
+
+export const DEFAULT_BLOCK_THEMES: Record<string, BlockTheme> = {
+  default: {
+    id: 'default',
+    name: 'Default',
+    back_color_group: 'primary',
+    front_color_group: 'neutral',
+  },
+  alternative: {
+    id: 'alternative',
+    name: 'Alternative',
+    back_color_group: 'accent',
+    front_color_group: 'primary',
+  },
+};
+
+export const NATAL_COLOR_GROUPS: Record<string, ColorGroup> = {
+  primary: {
+    id: 'primary',
+    name: 'Primary',
+    font_family: 'Inter, sans-serif',
+    background_color_light: '#ffffff',
+    background_color_dark: '#0d2317',
+    text_color_light: '#143d24',
+    text_color_dark: '#f0f7f2',
+    subtext_color_light: '#436650',
+    subtext_color_dark: '#a3c4b0',
+    accent_color_light: '#c41e3a',
+    accent_color_dark: '#ea4335',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
+  },
+  secondary: {
+    id: 'secondary',
+    name: 'Secondary',
+    font_family: 'Inter, sans-serif',
+    background_color_light: '#165b33',
+    background_color_dark: '#071a10',
+    text_color_light: '#ffffff',
+    text_color_dark: '#ffffff',
+    subtext_color_light: '#d1e7dd',
+    subtext_color_dark: '#c0d6c8',
+    accent_color_light: '#f8b229',
+    accent_color_dark: '#f8b229',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
+  },
+  accent: {
+    id: 'accent',
+    name: 'Accent',
+    font_family: 'Inter, sans-serif',
+    background_color_light: '#c41e3a',
+    background_color_dark: '#7d1222',
+    text_color_light: '#ffffff',
+    text_color_dark: '#ffffff',
+    subtext_color_light: '#ffe5e8',
+    subtext_color_dark: '#ffd0d5',
+    accent_color_light: '#f8b229',
+    accent_color_dark: '#f8b229',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
+  },
+  neutral: {
+    id: 'neutral',
+    name: 'Neutral',
+    font_family: 'Inter, sans-serif',
+    background_color_light: '#f2f7f4',
+    background_color_dark: '#1b3024',
+    text_color_light: '#143d24',
+    text_color_dark: '#ffffff',
+    subtext_color_light: '#52735f',
+    subtext_color_dark: '#b5d0c0',
+    accent_color_light: '#c41e3a',
+    accent_color_dark: '#f8b229',
+    bg_image_light_desktop: '',
+    bg_image_light_mobile: '',
+    bg_image_dark_desktop: '',
+    bg_image_dark_mobile: '',
+    bg_size: 'auto',
+    bg_repeat: 'repeat',
+    bg_position: 'center',
+  },
+};
+
+export const NATAL_BLOCK_THEMES: Record<string, BlockTheme> = {
+  default: {
+    id: 'default',
+    name: 'Primary',
+    back_color_group: 'primary',
+    front_color_group: 'neutral',
+  },
+  alternative: {
+    id: 'alternative',
+    name: 'Alternative',
+    back_color_group: 'accent',
+    front_color_group: 'primary',
+  },
+};
+
+export const BASE_COLOR_GROUP_IDS = [
+  'primary',
+  'secondary',
+  'accent',
+  'neutral',
+];
+
+export const BASE_BLOCK_THEME_IDS = ['default', 'alternative'];
+
+export interface ResolveBlockThemeOptions {
+  theme?: string | any;
+  styles?: { theme?: string; [key: string]: any };
+  backColorGroup?: string;
+  frontColorGroup?: string;
+  themeDefinitions?: ThemeDefinition[];
+  blockThemes?: Record<string, BlockTheme>;
+  [key: string]: any;
+}
+
+export interface ResolvedBlockTheme {
+  style: React.CSSProperties;
+  className: string;
+  backColorGroup: string;
+  frontColorGroup: string;
+  theme: string;
+}
+
+/**
+ * Resolves the block theme preset and the back/front ColorGroups.
+ * Back ColorGroup controls the block ground (background, headline/title, buttons).
+ * Front ColorGroup controls the high ground (cards, chips, card title and subtext).
+ * Can be called with full block `data` directly: `resolveBlockTheme(data)`.
+ */
+export function resolveBlockTheme(
+  optionsOrData: ResolveBlockThemeOptions = {},
+): ResolvedBlockTheme {
+  const {
+    theme: rawThemeExplicit,
+    styles,
+    backColorGroup: directBack,
+    frontColorGroup: directFront,
+    themeDefinitions: directThemeDefinitions,
+    blockThemes = DEFAULT_BLOCK_THEMES,
+  } = optionsOrData;
+
+  const blockType = optionsOrData?.['@type'] as string | undefined;
+  const rawTheme = rawThemeExplicit ?? styles?.theme ?? 'default';
+  const themeDefinitions =
+    directThemeDefinitions && directThemeDefinitions.length > 0
+      ? directThemeDefinitions
+      : getThemeDefinitions(blockType);
+
+  const theme = resolveThemeAlias(
+    typeof rawTheme === 'object' && rawTheme !== null
+      ? (rawTheme as any).theme || 'default'
+      : rawTheme || 'default',
+  );
+
+  const custom = parseCustomTheme(theme);
+  const customBack = custom?.back;
+  const customFront = custom?.front;
+
+  const isCustom = typeof theme === 'string' && theme.startsWith('custom');
+
+  const allBlockThemes: Record<string, BlockTheme> = {
+    ...DEFAULT_BLOCK_THEMES,
+    ...((config as any)?.blocks?.blockThemes || {}),
+    ...(blockThemes || {}),
+  };
+
+  const currentBlockTheme =
+    allBlockThemes[theme] ||
+    (theme === 'brand' ? allBlockThemes['alternative'] : undefined) ||
+    DEFAULT_BLOCK_THEMES[theme] ||
+    (theme === 'brand' ? DEFAULT_BLOCK_THEMES['alternative'] : undefined);
+
+  const resolvedBack = isCustom
+    ? customBack ||
+      directBack ||
+      (typeof rawTheme === 'object' && rawTheme !== null
+        ? (rawTheme as any).backColorGroup
+        : undefined) ||
+      'primary'
+    : currentBlockTheme?.back_color_group ||
+      directBack ||
+      (typeof rawTheme === 'object' && rawTheme !== null
+        ? (rawTheme as any).backColorGroup
+        : undefined) ||
+      'primary';
+
+  const resolvedFront = isCustom
+    ? customFront ||
+      directFront ||
+      (typeof rawTheme === 'object' && rawTheme !== null
+        ? (rawTheme as any).frontColorGroup
+        : undefined) ||
+      'neutral'
+    : currentBlockTheme?.front_color_group ||
+      directFront ||
+      (typeof rawTheme === 'object' && rawTheme !== null
+        ? (rawTheme as any).frontColorGroup
+        : undefined) ||
+      'neutral';
+
+  const themeDef =
+    themeDefinitions.find((t) => t.name === theme) ||
+    (theme === 'brand'
+      ? themeDefinitions.find((t) => t.name === 'alternative')
+      : undefined) ||
+    (!isCustom && theme !== 'default'
+      ? createThemeDefinition(theme, currentBlockTheme?.name || theme)
+      : undefined);
+  const baseStyle: Record<string, string> = themeDef?.style
+    ? { ...themeDef.style }
+    : {};
+
+  const style: React.CSSProperties = {
+    '--theme-color': `var(--block-theme-${theme}-bg, var(--colorgroup-${resolvedBack}-bg, var(--${resolvedBack}-color, var(--primary-color))))`,
+    '--theme-foreground-color': `var(--block-theme-${theme}-text, var(--colorgroup-${resolvedBack}-text, var(--${resolvedBack}-foreground-color, var(--primary-foreground-color))))`,
+    '--theme-high-contrast-foreground-color': `var(--block-theme-${theme}-high-contrast, var(--colorgroup-${resolvedBack}-text, var(--${resolvedBack}-foreground-color, var(--primary-foreground-color))))`,
+    '--theme-low-contrast-foreground-color': `var(--block-theme-${theme}-low-contrast, var(--colorgroup-${resolvedBack}-subtext, var(--${resolvedBack}-low-foreground-color, var(--primary-low-foreground-color))))`,
+    '--theme-foreground-accent-color': `var(--block-theme-${theme}-accent-color, var(--colorgroup-${resolvedBack}-accent, var(--${resolvedBack}-accent-color, var(--primary-accent-color))))`,
+    '--colorgroup-back-font': `var(--block-theme-${theme}-font-family, var(--colorgroup-${resolvedBack}-font-family, inherit))`,
+
+    '--theme-high-contrast-color': `var(--block-theme-${theme}-high-bg, var(--colorgroup-${resolvedFront}-bg, var(--${resolvedFront}-color, var(--neutral-color))))`,
+    '--theme-top-foreground-color': `var(--block-theme-${theme}-top-text, var(--colorgroup-${resolvedFront}-text, var(--${resolvedFront}-foreground-color, var(--neutral-foreground-color))))`,
+    '--theme-top-high-contrast-foreground-color': `var(--block-theme-${theme}-top-high-contrast, var(--colorgroup-${resolvedFront}-text, var(--${resolvedFront}-foreground-color, var(--neutral-foreground-color))))`,
+    '--theme-top-low-contrast-foreground-color': `var(--block-theme-${theme}-top-low-contrast, var(--colorgroup-${resolvedFront}-subtext, var(--${resolvedFront}-low-foreground-color, var(--neutral-low-foreground-color))))`,
+    '--theme-top-accent-color': `var(--block-theme-${theme}-top-accent-color, var(--colorgroup-${resolvedFront}-accent, var(--${resolvedFront}-accent-color, var(--neutral-accent-color))))`,
+    '--colorgroup-front-font': `var(--block-theme-${theme}-top-font-family, var(--colorgroup-${resolvedFront}-font-family, inherit))`,
+    '--highground-bg-image': `var(--colorgroup-${resolvedFront}-bg-image, none)`,
+    '--highground-bg-size': `var(--colorgroup-${resolvedFront}-bg-size, auto)`,
+    '--highground-bg-repeat': `var(--colorgroup-${resolvedFront}-bg-repeat, repeat)`,
+    '--highground-bg-position': `var(--colorgroup-${resolvedFront}-bg-position, center)`,
+    '--colorgroup-front-bg-image': `var(--colorgroup-${resolvedFront}-bg-image, none)`,
+    '--colorgroup-front-bg-size': `var(--colorgroup-${resolvedFront}-bg-size, auto)`,
+    '--colorgroup-front-bg-repeat': `var(--colorgroup-${resolvedFront}-bg-repeat, repeat)`,
+    '--colorgroup-front-bg-position': `var(--colorgroup-${resolvedFront}-bg-position, center)`,
+    '--theme-bg-image': `var(--block-theme-${theme}-pattern-image, var(--colorgroup-${resolvedBack}-bg-image, none))`,
+    '--theme-bg-size': `var(--colorgroup-${resolvedBack}-bg-size, auto)`,
+    '--theme-bg-repeat': `var(--colorgroup-${resolvedBack}-bg-repeat, repeat)`,
+    '--theme-bg-position': `var(--colorgroup-${resolvedBack}-bg-position, center)`,
+    backgroundImage: `var(--theme-bg-image, none)`,
+    backgroundSize: `var(--theme-bg-size, auto)`,
+    backgroundRepeat: `var(--theme-bg-repeat, repeat)`,
+    backgroundPosition: `var(--theme-bg-position, center)`,
+    ...(isCustom ? {} : baseStyle),
+  } as React.CSSProperties;
+
+  const classNames = [
+    theme ? `has--theme--${theme}` : '',
+    typeof theme === 'string' && theme.startsWith('custom-')
+      ? 'has--theme--custom'
+      : '',
+    resolvedBack ? `has-back-colorgroup-${resolvedBack}` : '',
+    resolvedFront ? `has-front-colorgroup-${resolvedFront}` : '',
+  ].filter(Boolean);
+
+  return {
+    style,
+    className: classNames.join(' '),
+    backColorGroup: resolvedBack,
+    frontColorGroup: resolvedFront,
+    theme,
   };
 }

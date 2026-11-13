@@ -15,6 +15,7 @@ node_modules
 !.design-sync/tsconfig.ds.json
 !.design-sync/*.py
 !.design-sync/*.sh
+!.design-sync/*.mjs
 !.design-sync/previews/
 !.design-sync/overrides/
 

@@ -3,8 +3,8 @@
 from plone.registry import field
 from plone.registry import Record
 from plone.registry.interfaces import IRegistry
-from sc.voltolighttheme.fields.color import InvalidColor
 from sc.voltolighttheme.utils import themes
+from sc.voltolighttheme.utils.legacy_themes import LEGACY_PASSTHROUGH_FIELDS
 from zope.component import getUtility
 
 import pytest
@@ -22,13 +22,25 @@ class TestThemeUtils:
     def test_default_theme_carries_its_colors(self):
         values = themes.theme_values(themes.DEFAULT_THEME_ID, self.registry)
         assert values["name"] == "Default"
-        assert values["primary_color_light"] == "#ffffff"
+        assert "color_groups" in values
+        assert "block_themes" in values
+
+    @pytest.mark.parametrize(
+        "field,expected",
+        (
+            ("font_family_secondary", "Inter, sans-serif"),
+            ("event_color_light", "#d32f2f"),
+            ("file_color_dark", "#1976d2"),
+            ("image_color_light", "#388e3c"),
+        ),
+    )
+    def test_default_theme_serves_the_passthrough_fields(self, field, expected):
+        settings = themes.theme_settings(themes.DEFAULT_THEME_ID, self.registry)
+        assert settings[field] == expected
 
     def test_theme_field_names_come_from_the_schema(self):
         names = themes.theme_field_names()
-        assert "name" in names
-        assert "primary_color_light" in names
-        assert "accent_foreground_color_light" in names
+        assert set(names) == {"name", "description", "color_groups", "block_themes"}
 
     @pytest.mark.parametrize(
         "theme_id,expected",
@@ -48,8 +60,8 @@ class TestThemeUtils:
 
     def test_record_name(self):
         assert (
-            themes.record_name("corporate", "primary_color_light")
-            == "sc.voltolighttheme.theme.corporate.primary_color_light"
+            themes.record_name("corporate", "color_groups")
+            == "sc.voltolighttheme.theme.corporate.color_groups"
         )
 
     def test_theme_exists(self):
@@ -72,8 +84,9 @@ class TestThemeUtils:
         # Defined by exclusion, so a style field added to the schema is picked
         # up without touching `theme_settings`.
         settings = themes.theme_settings(themes.DEFAULT_THEME_ID, self.registry)
-        assert set(settings) == set(themes.theme_field_names()) - set(
-            themes.THEME_METADATA_FIELDS
+        assert set(settings) == (
+            set(themes.theme_field_names()) - set(themes.THEME_METADATA_FIELDS)
+            | set(LEGACY_PASSTHROUGH_FIELDS)
         )
 
     def test_theme_settings_of_a_missing_theme_is_empty(self):
@@ -119,11 +132,11 @@ class TestThemeUtils:
         def test_create_stores_the_given_values(self):
             values = themes.create_theme(
                 "corporate",
-                {"name": "Corporate", "primary_color_light": "#123456"},
+                {"name": "Corporate", "description": "Corp desc"},
                 registry=self.registry,
             )
             assert values["name"] == "Corporate"
-            assert values["primary_color_light"] == "#123456"
+            assert values["description"] == "Corp desc"
 
         def test_create_shows_up_in_the_listing(self):
             themes.create_theme("corporate", registry=self.registry)
@@ -138,34 +151,26 @@ class TestThemeUtils:
             with pytest.raises(ValueError, match="already exists"):
                 themes.create_theme("corporate", registry=self.registry)
 
-        def test_create_rejects_an_invalid_color(self):
-            with pytest.raises(InvalidColor):
-                themes.create_theme(
-                    "corporate",
-                    {"primary_color_light": "banana"},
-                    registry=self.registry,
-                )
-
     class TestUpdate:
         @pytest.fixture(autouse=True)
         def _setup(self, integration):
             self.registry = getUtility(IRegistry)
             themes.create_theme(
                 "corporate",
-                {"name": "Corporate", "primary_color_light": "#123456"},
+                {"name": "Corporate", "description": "Initial desc"},
                 registry=self.registry,
             )
 
         def test_update_writes_the_given_field(self):
             themes.update_theme(
-                "corporate", {"primary_color_light": "#abcdef"}, registry=self.registry
+                "corporate", {"description": "Updated desc"}, registry=self.registry
             )
             values = themes.theme_values("corporate", self.registry)
-            assert values["primary_color_light"] == "#abcdef"
+            assert values["description"] == "Updated desc"
 
         def test_update_is_partial(self):
             themes.update_theme(
-                "corporate", {"primary_color_light": "#abcdef"}, registry=self.registry
+                "corporate", {"description": "Updated desc"}, registry=self.registry
             )
             assert themes.theme_values("corporate", self.registry)["name"] == (
                 "Corporate"
@@ -180,6 +185,138 @@ class TestThemeUtils:
         def test_update_of_a_missing_theme_raises(self):
             with pytest.raises(KeyError):
                 themes.update_theme("not-here", {"name": "X"}, registry=self.registry)
+
+        @pytest.mark.parametrize("field", ("color_groups", "block_themes"))
+        @pytest.mark.parametrize("value", ("x", 42, ["not-a-mapping"]))
+        def test_update_rejects_a_malformed_collection(self, field, value):
+            with pytest.raises(ValueError):
+                themes.update_theme("corporate", {field: value}, registry=self.registry)
+
+        def test_a_malformed_update_keeps_custom_groups(self):
+            groups = themes.get_theme_color_groups("corporate", self.registry)
+            groups["golden"] = {"id": "golden", "name": "Golden"}
+            themes.update_theme(
+                "corporate", {"color_groups": groups}, registry=self.registry
+            )
+            with pytest.raises(ValueError):
+                themes.update_theme(
+                    "corporate", {"color_groups": "x"}, registry=self.registry
+                )
+            for tid in ("corporate", themes.DEFAULT_THEME_ID):
+                assert "golden" in themes.get_theme_color_groups(tid, self.registry)
+
+        def test_update_rejects_a_hyphen_in_a_color_group_id(self):
+            groups = themes.get_theme_color_groups("corporate", self.registry)
+            groups["my-brand"] = {"id": "my-brand", "name": "My Brand"}
+            with pytest.raises(ValueError):
+                themes.update_theme(
+                    "corporate", {"color_groups": groups}, registry=self.registry
+                )
+
+    class TestCollectionMerge:
+        """``color_groups`` and ``block_themes`` updates are merge patches."""
+
+        @pytest.fixture(autouse=True)
+        def _setup(self, integration):
+            self.registry = getUtility(IRegistry)
+            themes.create_theme("corporate", {"name": "Corporate"}, self.registry)
+            themes.create_color_group(
+                "corporate",
+                {"id": "golden", "name": "Golden", "background_color_light": "#ffd700"},
+                registry=self.registry,
+            )
+            themes.create_block_theme(
+                "corporate",
+                {
+                    "id": "shiny",
+                    "name": "Shiny",
+                    "back_color_group": "golden",
+                    "front_color_group": "neutral",
+                },
+                registry=self.registry,
+            )
+
+        def groups(self, theme_id="corporate"):
+            return themes.get_theme_color_groups(theme_id, self.registry)
+
+        def block_themes(self, theme_id="corporate"):
+            return themes.get_theme_block_themes(theme_id, self.registry)
+
+        def update(self, values):
+            return themes.update_theme("corporate", values, registry=self.registry)
+
+        def test_a_color_group_left_out_is_kept(self):
+            self.update({"color_groups": {"primary": {"name": "Main"}}})
+            assert "golden" in self.groups()
+            assert self.groups()["golden"]["background_color_light"] == "#ffd700"
+
+        def test_a_partial_color_group_is_merged_onto_the_stored_one(self):
+            self.update({"color_groups": {"golden": {"text_color_light": "#000000"}}})
+            golden = self.groups()["golden"]
+            assert golden["text_color_light"] == "#000000"
+            assert golden["background_color_light"] == "#ffd700"
+            assert golden["name"] == "Golden"
+
+        def test_a_new_color_group_is_added(self):
+            self.update({"color_groups": {"silver": {"name": "Silver"}}})
+            assert self.groups()["silver"] == {"id": "silver", "name": "Silver"}
+            assert "silver" in self.groups(themes.DEFAULT_THEME_ID)
+
+        def test_a_null_color_group_is_deleted_on_every_theme(self):
+            self.update({"color_groups": {"golden": None}})
+            for tid in ("corporate", themes.DEFAULT_THEME_ID):
+                assert "golden" not in self.groups(tid)
+
+        def test_deleting_a_color_group_reverts_the_block_themes_using_it(self):
+            self.update({"color_groups": {"golden": None}})
+            for tid in ("corporate", themes.DEFAULT_THEME_ID):
+                assert self.block_themes(tid)["shiny"]["back_color_group"] == "primary"
+
+        def test_a_null_for_an_unknown_color_group_is_ignored(self):
+            self.update({"color_groups": {"nothing_here": None}})
+            assert "nothing_here" not in self.groups()
+            assert "golden" in self.groups()
+
+        @pytest.mark.parametrize("gid", sorted(themes.BASE_COLOR_GROUPS))
+        def test_a_base_color_group_cannot_be_deleted(self, gid):
+            before = self.groups()
+            with pytest.raises(ValueError, match="cannot be deleted"):
+                self.update({"color_groups": {gid: None, "golden": None}})
+            # Rejected before anything is written.
+            assert self.groups() == before
+
+        def test_a_null_for_an_invalid_color_group_id_is_rejected(self):
+            with pytest.raises(ValueError, match="invalid id"):
+                self.update({"color_groups": {"my-brand": None}})
+
+        def test_a_block_theme_left_out_is_kept(self):
+            self.update({"block_themes": {"default": {"name": "Main"}}})
+            assert self.block_themes()["shiny"]["back_color_group"] == "golden"
+            assert self.block_themes()["default"]["name"] == "Main"
+            assert self.block_themes()["default"]["back_color_group"] == "primary"
+
+        def test_a_null_block_theme_is_deleted_on_every_theme(self):
+            self.update({"block_themes": {"shiny": None}})
+            for tid in ("corporate", themes.DEFAULT_THEME_ID):
+                assert "shiny" not in self.block_themes(tid)
+
+        @pytest.mark.parametrize("btid", sorted(themes.BASE_BLOCK_THEMES))
+        def test_a_base_block_theme_cannot_be_deleted(self, btid):
+            before = self.block_themes()
+            with pytest.raises(ValueError, match="cannot be deleted"):
+                self.update({"block_themes": {btid: None, "shiny": None}})
+            assert self.block_themes() == before
+
+        def test_a_rejected_collection_writes_nothing_else(self):
+            with pytest.raises(ValueError):
+                self.update({
+                    "description": "Changed",
+                    "color_groups": {"golden": None},
+                    "block_themes": {"default": None},
+                })
+            assert "golden" in self.groups()
+            values = themes.theme_values("corporate", self.registry)
+            assert values.get("description") != "Changed"
 
     class TestDelete:
         @pytest.fixture(autouse=True)
@@ -214,3 +351,207 @@ class TestThemeUtils:
         def test_delete_of_a_missing_theme_raises(self):
             with pytest.raises(KeyError):
                 themes.delete_theme("not-here", registry=self.registry)
+
+    class TestColorGroupsAndBlockThemes:
+        @pytest.fixture(autouse=True)
+        def _setup(self, integration):
+            self.registry = getUtility(IRegistry)
+            themes.create_theme(
+                "natal",
+                {"name": "Natal"},
+                registry=self.registry,
+            )
+
+        def test_default_color_groups_exist_on_all_themes(self):
+            default_groups = themes.get_theme_color_groups(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
+            assert "primary" in default_groups
+            assert "secondary" in default_groups
+            assert "accent" in default_groups
+            assert "neutral" in default_groups
+
+            natal_groups = themes.get_theme_color_groups("natal", self.registry)
+            assert natal_groups["primary"]["name"] == "Primary"
+
+        def test_create_color_group_syncs_to_other_themes_with_defaults(self):
+            # When a new color group 'vermelho' is created in 'natal':
+            new_group = {
+                "id": "vermelho",
+                "name": "Vermelho",
+                "font_family": "Inter, sans-serif",
+                "background_color_light": "#ff0000",
+                "background_color_dark": "#990000",
+                "text_color_light": "#ffffff",
+                "text_color_dark": "#ffffff",
+                "subtext_color_light": "#ffcccc",
+                "subtext_color_dark": "#ffcccc",
+                "accent_color_light": "#ffd700",
+                "accent_color_dark": "#ffd700",
+            }
+            themes.create_color_group("natal", new_group, registry=self.registry)
+
+            # Natal must have 'vermelho' with custom colors
+            natal_groups = themes.get_theme_color_groups("natal", self.registry)
+            assert "vermelho" in natal_groups
+            assert natal_groups["vermelho"]["background_color_light"] == "#ff0000"
+
+            # Default theme must automatically receive 'vermelho' with default fallback values
+            default_groups = themes.get_theme_color_groups(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
+            assert "vermelho" in default_groups
+            assert default_groups["vermelho"]["name"] == "Vermelho"
+            assert default_groups["vermelho"]["background_color_light"] == "#ffffff"
+
+        def test_create_block_theme_syncs_across_themes(self):
+            new_bt = {
+                "id": "destaque",
+                "name": "Destaque",
+                "back_color_group": "accent",
+                "front_color_group": "neutral",
+            }
+            themes.create_block_theme("natal", new_bt, registry=self.registry)
+
+            natal_bts = themes.get_theme_block_themes("natal", self.registry)
+            assert "destaque" in natal_bts
+            assert natal_bts["destaque"]["back_color_group"] == "accent"
+
+            default_bts = themes.get_theme_block_themes(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
+            assert "destaque" in default_bts
+            assert default_bts["destaque"]["back_color_group"] == "accent"
+
+        def test_theme_values_and_settings_include_color_groups_and_block_themes(self):
+            values = themes.theme_values(themes.DEFAULT_THEME_ID, self.registry)
+            assert "color_groups" in values
+            assert "block_themes" in values
+
+            settings = themes.theme_settings(themes.DEFAULT_THEME_ID, self.registry)
+            assert "color_groups" in settings
+            assert "block_themes" in settings
+
+        def test_update_theme_registers_missing_block_themes_record(self):
+            rec = themes.record_name(themes.DEFAULT_THEME_ID, "block_themes")
+            if rec in self.registry.records:
+                del self.registry.records[rec]
+            assert rec not in self.registry.records
+            themes.update_theme(
+                themes.DEFAULT_THEME_ID,
+                {
+                    "block_themes": {
+                        "default": {
+                            "id": "default",
+                            "name": "Primary",
+                            "back_color_group": "primary",
+                            "front_color_group": "neutral",
+                        }
+                    }
+                },
+                registry=self.registry,
+            )
+            assert rec in self.registry.records
+            assert "default" in self.registry[rec]
+
+        def test_cannot_delete_base_color_group(self):
+            for bg in ("primary", "secondary", "accent", "neutral"):
+                with pytest.raises(
+                    ValueError, match=r"Base color group .* cannot be deleted"
+                ):
+                    themes.delete_color_group(
+                        themes.DEFAULT_THEME_ID, bg, registry=self.registry
+                    )
+
+        def test_cannot_delete_base_block_theme(self):
+            for bt in ("default", "alternative"):
+                with pytest.raises(
+                    ValueError, match=r"Base block theme .* cannot be deleted"
+                ):
+                    themes.delete_block_theme(
+                        themes.DEFAULT_THEME_ID, bt, registry=self.registry
+                    )
+
+        def test_delete_custom_block_theme_cascades(self):
+            custom_bt = {
+                "id": "promocional",
+                "name": "Promocional",
+                "back_color_group": "accent",
+                "front_color_group": "primary",
+            }
+            themes.create_block_theme("natal", custom_bt, registry=self.registry)
+            assert "promocional" in themes.get_theme_block_themes(
+                "natal", self.registry
+            )
+            assert "promocional" in themes.get_theme_block_themes(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
+
+            themes.delete_block_theme("natal", "promocional", registry=self.registry)
+            assert "promocional" not in themes.get_theme_block_themes(
+                "natal", self.registry
+            )
+            assert "promocional" not in themes.get_theme_block_themes(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
+
+        def test_delete_custom_color_group_cascades_and_reverts_block_themes(self):
+            custom_group = {
+                "id": "roxo",
+                "name": "Roxo",
+                "font_family": "Inter, sans-serif",
+                "background_color_light": "#7b1fa2",
+                "background_color_dark": "#4a148c",
+                "text_color_light": "#ffffff",
+                "text_color_dark": "#ffffff",
+                "subtext_color_light": "#e1bee7",
+                "subtext_color_dark": "#e1bee7",
+                "accent_color_light": "#ff4081",
+                "accent_color_dark": "#ff4081",
+            }
+            themes.create_color_group("natal", custom_group, registry=self.registry)
+
+            # Create block theme that uses 'roxo' as back_color_group
+            custom_bt = {
+                "id": "roxo-card",
+                "name": "Roxo Card",
+                "back_color_group": "roxo",
+                "front_color_group": "neutral",
+            }
+            themes.create_block_theme("natal", custom_bt, registry=self.registry)
+
+            assert "roxo" in themes.get_theme_color_groups("natal", self.registry)
+            assert "roxo" in themes.get_theme_color_groups(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
+            assert (
+                themes.get_theme_block_themes("natal", self.registry)["roxo-card"][
+                    "back_color_group"
+                ]
+                == "roxo"
+            )
+
+            # Delete 'roxo'
+            themes.delete_color_group("natal", "roxo", registry=self.registry)
+
+            # Verified deleted in both themes
+            assert "roxo" not in themes.get_theme_color_groups("natal", self.registry)
+            assert "roxo" not in themes.get_theme_color_groups(
+                themes.DEFAULT_THEME_ID, self.registry
+            )
+
+            # Block theme back_color_group must have reverted to 'primary'
+            assert (
+                themes.get_theme_block_themes("natal", self.registry)["roxo-card"][
+                    "back_color_group"
+                ]
+                == "primary"
+            )
+
+    def test_natal_theme_has_christmas_colors(self):
+        natal_cgs = themes.default_color_groups_for_theme("natal")
+        assert natal_cgs["accent"]["background_color_light"] == "#c41e3a"
+        assert natal_cgs["secondary"]["background_color_light"] == "#165b33"
+        natal_bts = themes.get_theme_block_themes("natal", self.registry)
+        assert "alternative" in natal_bts
+        assert "festivo" not in natal_bts

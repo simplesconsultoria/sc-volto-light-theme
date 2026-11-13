@@ -21,6 +21,7 @@ import {
   findTheme,
   isUnauthorizedError,
   splitFormData,
+  themePatchValues,
   validateNewThemeId,
 } from '../../../helpers/themesControlpanel';
 import ThemesUI from './ThemesUI';
@@ -119,9 +120,12 @@ const ThemesControlpanel = () => {
     const theme = findTheme(data, editing as string);
     if (!theme) return;
     const { values } = splitFormData({ ...formData, id: theme.id });
+    // Color Groups and Block Themes are merged by id on the backend: the ones
+    // removed in the form are sent as `null` so they are deleted.
+    const body = themePatchValues(theme, values);
     (
       dispatch(
-        updateControlpanel(`/@controlpanels/themes/${theme.id}`, values) as any,
+        updateControlpanel(`/@controlpanels/themes/${theme.id}`, body) as any,
       ) as any
     )
       .then(() => succeed(intl.formatMessage(messages.saved)))

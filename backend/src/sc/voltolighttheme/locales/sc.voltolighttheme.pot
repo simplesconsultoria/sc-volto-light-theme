@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-10-21 13:04+0000\n"
+"POT-Creation-Date: 2026-11-11 14:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,8 +21,8 @@ msgstr ""
 msgid "A festive theme with Inter typography and rounded borders."
 msgstr ""
 
-#: sc/voltolighttheme/interfaces.py:60
-msgid "Accent Colors"
+#: sc/voltolighttheme/interfaces.py:35
+msgid "Block Themes"
 msgstr ""
 
 #: sc/voltolighttheme/behaviors/footer.py:212
@@ -33,11 +33,11 @@ msgstr ""
 msgid "Brand slogan"
 msgstr ""
 
-#: sc/voltolighttheme/interfaces.py:89
-msgid "Content Types Colors"
+#: sc/voltolighttheme/interfaces.py:30
+msgid "Color Groups"
 msgstr ""
 
-#: sc/voltolighttheme/profiles.zcml:30
+#: sc/voltolighttheme/profiles.zcml:31
 msgid "Create example content to showcase this addon."
 msgstr ""
 
@@ -137,24 +137,20 @@ msgstr ""
 msgid "Header settings"
 msgstr ""
 
+#: sc/voltolighttheme/interfaces.py:63
+msgid "Mapping of block themes defining front and back color groups for blocks."
+msgstr ""
+
+#: sc/voltolighttheme/interfaces.py:53
+msgid "Mapping of color groups configured for this theme. Each color group defines a font and 4 colors (background, text, subtext, accent) with dark mode variations."
+msgstr ""
+
 #: sc/voltolighttheme/profiles/initial/registry/sc.voltolighttheme.themes.xml
 msgid "Natal"
 msgstr ""
 
-#: sc/voltolighttheme/interfaces.py:75
-msgid "Neutral Colors"
-msgstr ""
-
 #: sc/voltolighttheme/profiles.zcml:13
 msgid "Opinionated enhancements for @kitconcept/volto-light-theme"
-msgstr ""
-
-#: sc/voltolighttheme/interfaces.py:30
-msgid "Primary Colors"
-msgstr ""
-
-#: sc/voltolighttheme/interfaces.py:45
-msgid "Secondary Colors"
 msgstr ""
 
 #: sc/voltolighttheme/behaviors/configure.zcml:49
@@ -177,7 +173,7 @@ msgstr ""
 msgid "Settings used by Intranet sites."
 msgstr ""
 
-#: sc/voltolighttheme/profiles.zcml:30
+#: sc/voltolighttheme/profiles.zcml:31
 msgid "Simples Consultoria VLT: Example content"
 msgstr ""
 
@@ -189,7 +185,7 @@ msgstr ""
 msgid "Simples Consultoria VLT: Intranet"
 msgstr ""
 
-#: sc/voltolighttheme/profiles.zcml:38
+#: sc/voltolighttheme/profiles.zcml:39
 msgid "Simples Consultoria VLT: Uninstall"
 msgstr ""
 
@@ -237,11 +233,7 @@ msgstr ""
 msgid "This is not a valid color."
 msgstr ""
 
-#: sc/voltolighttheme/interfaces.py:24
-msgid "Typography"
-msgstr ""
-
-#: sc/voltolighttheme/profiles.zcml:38
+#: sc/voltolighttheme/profiles.zcml:39
 msgid "Uninstall Simples Consultoria VLT setup."
 msgstr ""
 
@@ -295,46 +287,6 @@ msgstr ""
 msgid "help_theme"
 msgstr ""
 
-#. Default: "Accent Accent Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:280
-msgid "label_accent_accent_color_dark"
-msgstr ""
-
-#. Default: "Accent Accent Color (Light)"
-#: sc/voltolighttheme/interfaces.py:274
-msgid "label_accent_accent_color_light"
-msgstr ""
-
-#. Default: "Accent Background Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:242
-msgid "label_accent_color_dark"
-msgstr ""
-
-#. Default: "Accent Background Color (Light)"
-#: sc/voltolighttheme/interfaces.py:238
-msgid "label_accent_color_light"
-msgstr ""
-
-#. Default: "Accent Foreground Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:253
-msgid "label_accent_foreground_color_dark"
-msgstr ""
-
-#. Default: "Accent Foreground Color (Light)"
-#: sc/voltolighttheme/interfaces.py:246
-msgid "label_accent_foreground_color_light"
-msgstr ""
-
-#. Default: "Accent Low Foreground Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:267
-msgid "label_accent_low_foreground_color_dark"
-msgstr ""
-
-#. Default: "Accent Low Foreground Color (Light)"
-#: sc/voltolighttheme/interfaces.py:260
-msgid "label_accent_low_foreground_color_light"
-msgstr ""
-
 #. Default: "Complementary Logo"
 #: sc/voltolighttheme/behaviors/header.py:106
 msgid "label_complementary_logo"
@@ -343,36 +295,6 @@ msgstr ""
 #. Default: "Enable Fat Menu"
 #: sc/voltolighttheme/behaviors/header.py:38
 msgid "label_enable_fat_menu"
-msgstr ""
-
-#. Default: "Event Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:338
-msgid "label_event_color_dark"
-msgstr ""
-
-#. Default: "Event Color (Light)"
-#: sc/voltolighttheme/interfaces.py:334
-msgid "label_event_color_light"
-msgstr ""
-
-#. Default: "File Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:346
-msgid "label_file_color_dark"
-msgstr ""
-
-#. Default: "File Color (Light)"
-#: sc/voltolighttheme/interfaces.py:342
-msgid "label_file_color_light"
-msgstr ""
-
-#. Default: "Primary Font Family"
-#: sc/voltolighttheme/interfaces.py:113
-msgid "label_font_family_primary"
-msgstr ""
-
-#. Default: "Secondary Font Family"
-#: sc/voltolighttheme/interfaces.py:124
-msgid "label_font_family_secondary"
 msgstr ""
 
 #. Default: "Footer Logo"
@@ -385,139 +307,9 @@ msgstr ""
 msgid "label_has_intranet_header"
 msgstr ""
 
-#. Default: "Image Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:354
-msgid "label_image_color_dark"
-msgstr ""
-
-#. Default: "Image Color (Light)"
-#: sc/voltolighttheme/interfaces.py:350
-msgid "label_image_color_light"
-msgstr ""
-
 #. Default: "Site Flag"
 #: sc/voltolighttheme/behaviors/header.py:126
 msgid "label_intranet_flag"
-msgstr ""
-
-#. Default: "Neutral Accent Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:328
-msgid "label_neutral_accent_color_dark"
-msgstr ""
-
-#. Default: "Neutral Accent Color (Light)"
-#: sc/voltolighttheme/interfaces.py:322
-msgid "label_neutral_accent_color_light"
-msgstr ""
-
-#. Default: "Neutral Background Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:290
-msgid "label_neutral_color_dark"
-msgstr ""
-
-#. Default: "Neutral Background Color (Light)"
-#: sc/voltolighttheme/interfaces.py:284
-msgid "label_neutral_color_light"
-msgstr ""
-
-#. Default: "Neutral Foreground Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:301
-msgid "label_neutral_foreground_color_dark"
-msgstr ""
-
-#. Default: "Neutral Foreground Color (Light)"
-#: sc/voltolighttheme/interfaces.py:294
-msgid "label_neutral_foreground_color_light"
-msgstr ""
-
-#. Default: "Neutral Low Foreground Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:315
-msgid "label_neutral_low_foreground_color_dark"
-msgstr ""
-
-#. Default: "Neutral Low Foreground Color (Light)"
-#: sc/voltolighttheme/interfaces.py:308
-msgid "label_neutral_low_foreground_color_light"
-msgstr ""
-
-#. Default: "Primary Accent Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:179
-msgid "label_primary_accent_color_dark"
-msgstr ""
-
-#. Default: "Primary Accent Color (Light)"
-#: sc/voltolighttheme/interfaces.py:173
-msgid "label_primary_accent_color_light"
-msgstr ""
-
-#. Default: "Primary Background Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:141
-msgid "label_primary_color_dark"
-msgstr ""
-
-#. Default: "Primary Background Color (Light)"
-#: sc/voltolighttheme/interfaces.py:135
-msgid "label_primary_color_light"
-msgstr ""
-
-#. Default: "Primary Foreground Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:152
-msgid "label_primary_foreground_color_dark"
-msgstr ""
-
-#. Default: "Primary Foreground Color (Light)"
-#: sc/voltolighttheme/interfaces.py:145
-msgid "label_primary_foreground_color_light"
-msgstr ""
-
-#. Default: "Primary Low Foreground Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:166
-msgid "label_primary_low_foreground_color_dark"
-msgstr ""
-
-#. Default: "Primary Low Foreground Color (Light)"
-#: sc/voltolighttheme/interfaces.py:159
-msgid "label_primary_low_foreground_color_light"
-msgstr ""
-
-#. Default: "Secondary Accent Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:232
-msgid "label_secondary_accent_color_dark"
-msgstr ""
-
-#. Default: "Secondary Accent Color (Light)"
-#: sc/voltolighttheme/interfaces.py:225
-msgid "label_secondary_accent_color_light"
-msgstr ""
-
-#. Default: "Secondary Background Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:191
-msgid "label_secondary_color_dark"
-msgstr ""
-
-#. Default: "Secondary Background Color (Light)"
-#: sc/voltolighttheme/interfaces.py:185
-msgid "label_secondary_color_light"
-msgstr ""
-
-#. Default: "Secondary Foreground Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:204
-msgid "label_secondary_foreground_color_dark"
-msgstr ""
-
-#. Default: "Secondary Foreground Color (Light)"
-#: sc/voltolighttheme/interfaces.py:197
-msgid "label_secondary_foreground_color_light"
-msgstr ""
-
-#. Default: "Secondary Low Foreground Color (Dark)"
-#: sc/voltolighttheme/interfaces.py:218
-msgid "label_secondary_low_foreground_color_dark"
-msgstr ""
-
-#. Default: "Secondary Low Foreground Color (Light)"
-#: sc/voltolighttheme/interfaces.py:211
-msgid "label_secondary_low_foreground_color_light"
 msgstr ""
 
 #. Default: "Site Logo"
