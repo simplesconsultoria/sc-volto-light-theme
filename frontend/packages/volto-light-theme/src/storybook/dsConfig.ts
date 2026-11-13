@@ -48,10 +48,8 @@ settings.nonContentRoutes ??= [];
 // `RenderBlocks` indexes `config.blocks.blocksConfig[type]` without guarding it.
 // The blocks themselves are not registered here (that is `config/blocks`, and it
 // reaches slate), so a composed block renders empty rather than throwing.
-const blocks = ((config as Record<string, unknown>).blocks ??= {}) as Record<
-  string,
-  unknown
->;
+const blocks = ((config as unknown as Record<string, unknown>).blocks ??=
+  {}) as Record<string, unknown>;
 blocks.blocksConfig ??= {};
 blocks.requiredBlocks ??= [];
 

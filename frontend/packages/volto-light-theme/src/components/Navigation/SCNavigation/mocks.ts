@@ -1,4 +1,4 @@
-import type { NavigationItem } from './types';
+import type { NavigationItem } from '../../../types/navigation';
 
 /**
  * Mock navigation data shared across the Navigation component stories.

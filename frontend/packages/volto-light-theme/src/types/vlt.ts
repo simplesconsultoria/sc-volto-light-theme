@@ -18,7 +18,7 @@ export type SCVLTSettings = {
 };
 
 /**
- * @deprecated Use `ThemeColors` from `../types/theme`, which mirrors
+ * @deprecated Use `ThemeSettings` from `../types/theme`, which mirrors
  * `ISCVLTThemeDefinition` exactly — this alias predates `header_foreground_color`.
  */
-export type { ThemeColors as SiteThemeSettings } from './theme';
+export type { ThemeSettings as SiteThemeSettings } from './theme';

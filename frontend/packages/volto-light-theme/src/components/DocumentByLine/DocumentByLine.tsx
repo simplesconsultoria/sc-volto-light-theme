@@ -3,9 +3,14 @@
  * @module components/DocumentByLine/DocumentByLine
  */
 import { Container } from '@plone/components';
-import FormattedDate from '@plone/volto/components/theme/FormattedDate/FormattedDate';
+import VoltoFormattedDate from '@plone/volto/components/theme/FormattedDate/FormattedDate';
 import { FormattedMessage } from 'react-intl';
+import type { ComponentType } from 'react';
 import type { Content } from '@plone/types';
+
+// Volto's FormattedDate is untyped JS: inferred from its parameters, every
+// prop would be required, although all but `date` are optional.
+const FormattedDate = VoltoFormattedDate as ComponentType<{ date?: string }>;
 
 type Author = {
   fullname: string;

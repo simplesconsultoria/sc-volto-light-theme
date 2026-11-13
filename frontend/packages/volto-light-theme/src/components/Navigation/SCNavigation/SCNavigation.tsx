@@ -14,6 +14,7 @@ import MenuItem from './MenuItem';
 import { useLiveData } from '@simplesconsultoria/volto-light-theme/helpers/useLiveData';
 import { useNavCollapse } from '../../../hooks/useNavCollapse';
 import type { NavigationItem } from '@simplesconsultoria/volto-light-theme/types/navigation';
+import type { Content } from '@plone/types';
 
 type NavigationProps = {
   pathname: string;
@@ -25,9 +26,7 @@ type HeaderSettings = {
 
 type RootState = {
   content: {
-    data: {
-      [key: string]: unknown;
-    };
+    data: Content;
   };
   form: {
     global?: {
@@ -69,7 +68,7 @@ const SCNavigation = ({ pathname }: NavigationProps) => {
   const navigation = useRef<HTMLElement | null>(null);
   const dispatch = useDispatch();
   const contentData = useSelector((state: RootState) => state.content.data);
-  const hasFatMenuSetting = useLiveData<HeaderSettings>(
+  const hasFatMenuSetting = useLiveData<HeaderSettings['has_fat_menu']>(
     contentData,
     'sc.voltolighttheme.siteheader',
     'has_fat_menu',
