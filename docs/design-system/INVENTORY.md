@@ -4,7 +4,7 @@ Machine-extracted inventory of `@simplesconsultoria/volto-light-theme`.
 
 Every row and count is derived from source by reading or probing the runtime registry. Evidence paths are relative to `frontend/packages/volto-light-theme/` unless noted otherwise. `[V 2026-11-11]` marks facts verified against the working tree on that date.
 
-- **Package:** `@simplesconsultoria/volto-light-theme@1.0.0-alpha.16` (declares 16 Volto `addons` in `package.json`)
+- **Package:** `@simplesconsultoria/volto-light-theme@1.0.0-alpha.17` (declares 16 Volto `addons` in `package.json`)
 - **Upstream:** `@kitconcept/volto-light-theme@8.1.4` (`package.json` `theme` field and installed dependency)
 - **Runtime block registry:** **47 blocks** (all 47 expose both `id` and `view`): **6** own, **10** extended, **31** inherited
 - **Companions:** [DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md) for the architectural manifest and rules, [GAPS.md](./GAPS.md) for verified open defects and decisions

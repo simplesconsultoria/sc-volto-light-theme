@@ -4,7 +4,7 @@ The architectural manifest for `@simplesconsultoria/volto-light-theme`: what thi
 
 All factual claims were verified against source or runtime probes on **2026-11-11**.
 
-- **Package:** `@simplesconsultoria/volto-light-theme@1.0.0-alpha.16`
+- **Package:** `@simplesconsultoria/volto-light-theme@1.0.0-alpha.17`
 - **Built on:** `@kitconcept/volto-light-theme@8.1.4` (`package.json` `theme`) + 16 declared addons
 - **Companion documents:** [INVENTORY.md](./INVENTORY.md) for exhaustive schemas and token tables, [GAPS.md](./GAPS.md) for verified open defects and design decisions
 

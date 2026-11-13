@@ -76,17 +76,17 @@ And... you're all set! Your Plone site is up and running locally! 🚀
 
 ## Upgrading 🔄
 
-### From 1.0.0a15 or earlier to 1.0.0a16 (new theme system)
+### From 1.0.0a16 or earlier to 1.0.0a17 (new theme system)
 
-1.0.0a16 replaces the 32 per-color fields of each theme with **Color Groups** and **Block Themes**, and gives every block **width** and **border** controls. Your content, your theme and your code keep working: bump the versions, run the upgrade step, and check the few changes listed under [What changes](#what-changes).
+1.0.0a17 replaces the 32 per-color fields of each theme with **Color Groups** and **Block Themes**, and gives every block **width** and **border** controls. Your content, your theme and your code keep working: bump the versions, run the upgrade step, and check the few changes listed under [What changes](#what-changes).
 
 1.  **Bump the versions.**
 
     | Where | Package | Version |
     | --- | --- | --- |
-    | Backend (`pyproject.toml`) | `sc-voltolighttheme` | `1.0.0a16` or later |
+    | Backend (`pyproject.toml`) | `sc-voltolighttheme` | `1.0.0a17` or later |
     | Backend (`pyproject.toml`) | `kitconcept.voltolighttheme` | `8.1.4` or later |
-    | Frontend (`package.json`) | `@simplesconsultoria/volto-light-theme` | `1.0.0-alpha.16` or later |
+    | Frontend (`package.json`) | `@simplesconsultoria/volto-light-theme` | `1.0.0-alpha.17` or later |
     | Frontend (`mrs.developer.json`, `core`) | `@plone/volto` | tag `19.7.0` or later |
 
     After changing the Volto tag, keep `"webpack": "catalog:"` in `pnpm.overrides`, check that `pnpm-lock.yaml` resolves a single webpack version, and run `make storybook-build`.
