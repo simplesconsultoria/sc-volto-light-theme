@@ -1090,6 +1090,16 @@ msgstr ""
 msgid "Location to be confirmed"
 msgstr ""
 
+#. Default: "Log in"
+#: components/Anontools/Anontools
+msgid "Log in"
+msgstr ""
+
+#. Default: "Log out"
+#: components/Anontools/Anontools
+msgid "Log out"
+msgstr ""
+
 #. Default: "Main Image"
 #: components/Blocks/MainImageBlock/helpers
 #: components/Blocks/MainImageBlock/schema
@@ -1357,6 +1367,11 @@ msgstr ""
 #. Default: "Ready-made CSS patterns (Acreative-style presets)"
 #: components/Widgets/ColorGroups/messages
 msgid "Ready-made CSS patterns (Acreative-style presets)"
+msgstr ""
+
+#. Default: "Register"
+#: components/Anontools/Anontools
+msgid "Register"
 msgstr ""
 
 #. Default: "Remove color"

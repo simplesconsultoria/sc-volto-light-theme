@@ -1,6 +1,6 @@
 {
   "name": "@simplesconsultoria/volto-light-theme",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.16",
   "description": "Opinionated enhancements for @kitconcept/volto-light-theme",
   "main": "src/index.ts",
   "license": "MIT",
@@ -20,6 +20,7 @@
     "access": "public"
   },
   "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.dev.json",
     "i18n": "rm -rf build/messages && NODE_ENV=production i18n --addon",
     "dry-release": "release-it --dry-run",
     "release": "release-it",
@@ -49,10 +50,10 @@
     "@eeacms/volto-accordion-block": "^13.1.1",
     "@kitconcept/volto-banner-block": "^1.2.1",
     "@kitconcept/volto-bm3-compat": "^1.0.0-alpha.1",
-    "@kitconcept/volto-button-block": "5.0.0",
+    "@kitconcept/volto-button-block": "^5.1.0",
     "@kitconcept/volto-calendar-block": "^1.0.0",
     "@kitconcept/volto-carousel-block": "^3.0.0",
-    "@kitconcept/volto-heading-block": "^2.5.0",
+    "@kitconcept/volto-heading-block": "^2.6.0",
     "@kitconcept/volto-highlight-block": "^5.0.0",
     "@kitconcept/volto-introduction-block": "^1.4.2",
     "@kitconcept/volto-light-theme": "8.1.4",

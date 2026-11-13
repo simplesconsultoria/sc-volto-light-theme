@@ -95,15 +95,21 @@ export type { ThemeDefinition } from './blockThemes';
 export { createThemeDefinition } from './blockThemes';
 
 /**
- * `themes` and `defaultTheme` are a kitconcept convention that Volto's own
- * block config type does not declare, so reading them off `blocksConfig`
- * fails to typecheck without this augmentation. Same approach as the
- * `SettingsConfig` augmentation in `config/settings.ts`.
+ * Block config keys that Volto's own block config type does not declare, so
+ * reading them off `blocksConfig` fails to typecheck without this
+ * augmentation. Same approach as the `SettingsConfig` augmentation in
+ * `config/settings.ts`.
+ *
+ * - `themes`, `defaultTheme`: kitconcept convention for block themes.
+ * - `getSizes`: the teaser's `sizes` attribute, set by volto-light-theme.
+ * - `noResultsComponent`: the listing's empty-result component.
  */
 declare module '@plone/types' {
   interface BlockConfigBase {
     themes?: ThemeDefinition[];
     defaultTheme?: string;
+    getSizes?: (args: Record<string, unknown>) => string | undefined;
+    noResultsComponent?: React.ComponentType<any>;
   }
 }
 

@@ -24,7 +24,8 @@ function getValidImageItem(
       }
     }
   }
-  if (item?.image?.download) {
+  // Some serializers send the image field itself rather than `image_scales`.
+  if ((item as { image?: { download?: string } }).image?.download) {
     return { ...item, image_field: 'image' };
   }
   return null;

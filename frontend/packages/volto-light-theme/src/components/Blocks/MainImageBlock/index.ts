@@ -25,7 +25,8 @@ const MainImageBlockInfo: BlockConfigBase = {
   restricted: ({ properties }) => {
     // Plone serializes every item with a `preview_image_link` key, so check
     // for a link that is set rather than for the key.
-    const link = properties?.preview_image_link;
+    const link = (properties as { preview_image_link?: unknown } | undefined)
+      ?.preview_image_link;
     return !(Array.isArray(link) ? link.length > 0 : Boolean(link));
   },
   mostUsed: false,

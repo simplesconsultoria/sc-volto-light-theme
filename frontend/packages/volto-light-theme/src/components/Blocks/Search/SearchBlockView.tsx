@@ -32,7 +32,7 @@ const getListingBodyVariation = (data: any) => {
       ? data?.variation
       : undefined);
 
-  let variation = templateId
+  let variation: { id: string; [key: string]: any } | undefined = templateId
     ? variations.find(({ id }: any) => id === templateId)
     : variations.find(({ isDefault }: any) => isDefault);
 

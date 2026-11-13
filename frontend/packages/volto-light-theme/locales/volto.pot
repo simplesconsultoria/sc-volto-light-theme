@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Plone\n"
-"POT-Creation-Date: 2026-11-12T19:31:32.415Z\n"
+"POT-Creation-Date: 2026-11-13T14:35:28.734Z\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -1092,6 +1092,16 @@ msgstr ""
 msgid "Location to be confirmed"
 msgstr ""
 
+#. Default: "Log in"
+#: components/Anontools/Anontools
+msgid "Log in"
+msgstr ""
+
+#. Default: "Log out"
+#: components/Anontools/Anontools
+msgid "Log out"
+msgstr ""
+
 #. Default: "Main Image"
 #: components/Blocks/MainImageBlock/helpers
 #: components/Blocks/MainImageBlock/schema
@@ -1359,6 +1369,11 @@ msgstr ""
 #. Default: "Ready-made CSS patterns (Acreative-style presets)"
 #: components/Widgets/ColorGroups/messages
 msgid "Ready-made CSS patterns (Acreative-style presets)"
+msgstr ""
+
+#. Default: "Register"
+#: components/Anontools/Anontools
+msgid "Register"
 msgstr ""
 
 #. Default: "Remove color"

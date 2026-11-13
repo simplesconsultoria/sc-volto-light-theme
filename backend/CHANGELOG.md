@@ -9,6 +9,18 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a16 (2026-11-13)
+
+No significant changes.
+
+
+## 1.0.0a15 (2026-11-11)
+
+
+### Internal:
+
+- Upgraded `kitconcept.voltolighttheme` to 8.1.4. @ericof [#39](https://github.com/simplesconsultoria/sc-volto-light-theme/issues/39)
+
 ## 1.0.0a14 (2026-10-30)
 
 

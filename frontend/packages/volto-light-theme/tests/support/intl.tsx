@@ -6,7 +6,17 @@
  */
 import React from 'react';
 import { render, type RenderOptions } from '@testing-library/react';
-import { IntlProvider } from 'react-intl';
+import { IntlProvider as ReactIntlProvider } from 'react-intl';
+
+// react-intl 3's class types predate React 18, where `children` must be
+// declared explicitly, so its provider accepts no children as typed.
+const IntlProvider = ReactIntlProvider as unknown as React.ComponentType<
+  React.PropsWithChildren<{
+    messages: Record<string, string>;
+    locale: string;
+    defaultLocale?: string;
+  }>
+>;
 
 export function renderWithIntl(
   ui: React.ReactElement,

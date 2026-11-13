@@ -217,14 +217,6 @@ body header.header-wrapper {
   }
 }
 
-// Override social network icon color in header bar to
-// use secondary foreground color (white on dark blue background)
-body header.header-wrapper .header-bar-wrapper .header-bar__social {
-  .social-networks .social-network.icon {
-    color: var(--secondary-foreground-color);
-  }
-}
-
 .header-bar__social-mobile .social-networks {
   flex-wrap: wrap;
 }

@@ -1407,8 +1407,8 @@ importers:
         specifier: ^1.0.0-alpha.1
         version: 1.0.0-alpha.1(classnames@2.5.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@kitconcept/volto-button-block':
-        specifier: 5.0.0
-        version: 5.0.0(classnames@2.5.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react@18.2.0)
+        specifier: ^5.1.0
+        version: 5.1.0(classnames@2.5.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react@18.2.0)
       '@kitconcept/volto-calendar-block':
         specifier: ^1.0.0
         version: 1.0.0(classnames@2.5.1)(embla-carousel@8.6.0)(lodash@4.18.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react-redux@8.1.2(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react-router-dom@5.2.0(react@18.2.0))(react@18.2.0)
@@ -1416,8 +1416,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(classnames@2.5.1)(embla-carousel@8.6.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@kitconcept/volto-heading-block':
-        specifier: ^2.5.0
-        version: 2.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: ^2.6.0
+        version: 2.6.0(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react@18.2.0)
       '@kitconcept/volto-highlight-block':
         specifier: ^5.0.0
         version: 5.0.0(classnames@2.5.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react@18.2.0)
@@ -3113,9 +3113,6 @@ packages:
       '@types/node':
         optional: true
 
-  '@internationalized/date@3.12.2':
-    resolution: {integrity: sha512-FY1Y+H64NDs+HAF6omlnWxm3mEpfgaCSWtL5l551ZZfImA+kGjPFgrnJrGjH6lfmLL0g8Z/mBu1R3kufeCp6Jw==}
-
   '@internationalized/date@3.12.4':
     resolution: {integrity: sha512-M1dEn4c1U1HsSlaVR8upZtSqvXrTkHDfv18H01uCSJyjVLDxnBR38v/fMxecmlwXKR4i9HeZcmgQAPE6A+aGJQ==}
 
@@ -3335,8 +3332,8 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0
 
-  '@kitconcept/volto-button-block@5.0.0':
-    resolution: {integrity: sha512-ubkBoueD8TOXy5HFDfDeluLktInZd59HHYHXB4PMeA37dEyOmfcX5FRqdoaGmiDie6HCq+7U1gakLPNhwhQaxA==}
+  '@kitconcept/volto-button-block@5.1.0':
+    resolution: {integrity: sha512-NFDjwJKHVAI6DB1vIF2Nkf+gG1eHM3J58BRYVHet9M/v0BEWZyyZiR4bMHRDHi1bcVHgfFb2rxk2A6f+a87naQ==}
     peerDependencies:
       classnames: ^2.5.1
       react: 18.2.0
@@ -3355,11 +3352,12 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0
 
-  '@kitconcept/volto-heading-block@2.5.0':
-    resolution: {integrity: sha512-ny06aMJaYxHCwtb06w2YXKy92XlaSjgbR/gkxpRJaFAxlgzbgytTs7csPTKvge0SyTVXd21QBeDHYc21Yr1n0g==}
+  '@kitconcept/volto-heading-block@2.6.0':
+    resolution: {integrity: sha512-dx0uUTBb9EtA3CFNfY5VplgrTWblPg4ujyt8ejoEG3CZ7Vhcp7zX78hGtE/KBlfhRbIbAXDcQEZNQvkUm8zVng==}
     peerDependencies:
       react: 18.2.0
       react-dom: 18.2.0
+      react-intl: ^3.12.1
 
   '@kitconcept/volto-highlight-block@5.0.0':
     resolution: {integrity: sha512-xye1i0B6U+mGUtuLurslp8Pa1/WvlH7+QPo+CnmhQai/OrP9tydVGRXy+EsPHMMD1GcUvHv/9OM1hRfRB/wU6A==}
@@ -13054,10 +13052,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.13.3
 
-  '@internationalized/date@3.12.2':
-    dependencies:
-      '@swc/helpers': 0.5.23
-
   '@internationalized/date@3.12.4':
     dependencies:
       '@swc/helpers': 0.5.23
@@ -13304,10 +13298,10 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@kitconcept/volto-button-block@5.0.0(classnames@2.5.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react@18.2.0)':
+  '@kitconcept/volto-button-block@5.1.0(classnames@2.5.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@kitconcept/volto-bm3-compat': 1.0.0-alpha.1(classnames@2.5.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@plone/components': 4.2.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@plone/components': 4.2.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       classnames: 2.5.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -13339,11 +13333,12 @@ snapshots:
       - classnames
       - embla-carousel
 
-  '@kitconcept/volto-heading-block@2.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@kitconcept/volto-heading-block@2.6.0(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react@18.2.0)':
     dependencies:
       react: 18.2.0
       react-contenteditable: 3.3.6(react@18.2.0)
       react-dom: 18.2.0(react@18.2.0)
+      react-intl: 3.12.1(@types/react@18.3.31)(react@18.2.0)
 
   '@kitconcept/volto-highlight-block@5.0.0(classnames@2.5.1)(react-dom@18.2.0(react@18.2.0))(react-intl@3.12.1(@types/react@18.3.31)(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -20097,7 +20092,7 @@ snapshots:
 
   react-aria-components@1.19.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      '@internationalized/date': 3.12.2
+      '@internationalized/date': 3.12.4
       '@react-types/shared': 3.36.0(react@18.2.0)
       '@swc/helpers': 0.5.23
       client-only: 0.0.1
@@ -20121,7 +20116,7 @@ snapshots:
 
   react-aria@3.50.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      '@internationalized/date': 3.12.2
+      '@internationalized/date': 3.12.4
       '@internationalized/number': 3.6.7
       '@internationalized/string': 3.2.9
       '@react-types/shared': 3.36.0(react@18.2.0)
@@ -20530,7 +20525,7 @@ snapshots:
 
   react-stately@3.48.0(react@18.2.0):
     dependencies:
-      '@internationalized/date': 3.12.2
+      '@internationalized/date': 3.12.4
       '@internationalized/number': 3.6.7
       '@internationalized/string': 3.2.9
       '@react-types/shared': 3.36.0(react@18.2.0)

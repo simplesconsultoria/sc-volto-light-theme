@@ -92,7 +92,7 @@ export interface ListingBodyProps {
   totalPages: number;
   onPaginationChange: (
     e: React.MouseEvent,
-    data: { activePage: number | string | undefined },
+    data: { activePage?: number | string },
   ) => void;
   variation?: any;
   currentPage: number;
@@ -304,6 +304,7 @@ export const ListingBody: React.FC<ListingBodyProps> = (props) => {
           isEditMode={isEditMode}
         />
       )}
+      {/* @ts-expect-error SlotRenderer reads the location from the router; Volto's props type still requires it. */}
       <SlotRenderer name="aboveListingItems" content={content} data={data} />
       {listingItems?.length > 0 && ListingBodyTemplate ? (
         <div ref={listingRef} className="listing-body">

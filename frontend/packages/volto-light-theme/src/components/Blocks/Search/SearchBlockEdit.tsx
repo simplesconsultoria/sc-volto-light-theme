@@ -44,7 +44,8 @@ const SearchBlockEdit: React.FC<any> = (props: any) => {
   } = props;
   const { sortable_indexes = {} } = querystring;
 
-  let schema = Schema({ data, intl });
+  // Volto's search schema is untyped JS; widen it so enhancers can replace it.
+  let schema: Record<string, any> = Schema({ data, intl });
 
   schema = addExtensionFieldToSchema({
     schema,
@@ -59,7 +60,11 @@ const SearchBlockEdit: React.FC<any> = (props: any) => {
   const activeItem = listingVariations.find(
     (item: any) => item.id === data.listingBodyTemplate,
   );
-  const listingSchemaEnhancer = activeItem?.schemaEnhancer;
+  // Volto core's search block passes `data` (not `formData`) here, which its
+  // SchemaEnhancerArgs type does not declare; keep the same call.
+  const listingSchemaEnhancer = activeItem?.schemaEnhancer as
+    | ((args: Record<string, unknown>) => Record<string, any>)
+    | undefined;
   if (listingSchemaEnhancer) {
     schema = listingSchemaEnhancer({
       schema: cloneSchema(schema),

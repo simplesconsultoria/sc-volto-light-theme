@@ -29,7 +29,7 @@ const IMAGE = imageScales(gallery);
 const GRID_PHOTOS = [grid01, grid02, grid03, grid04];
 
 /** An item shaped for the blocks that take an `href` to another object. */
-export const linkedItem = {
+export const linkedItem: Record<string, any> = {
   ...listingItems[0],
   image_field: 'preview_image',
   image_scales: { preview_image: [IMAGE] },

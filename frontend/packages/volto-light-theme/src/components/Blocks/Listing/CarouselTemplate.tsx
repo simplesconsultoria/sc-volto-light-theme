@@ -18,6 +18,7 @@ import {
   toEmbedUrl,
   wrapIndex,
 } from './carouselHelpers';
+import { slideA11yProps } from './slideA11y';
 
 interface CarouselTemplateProps {
   items: ListingItem[];
@@ -150,7 +151,7 @@ const CarouselSlide: React.FC<CarouselSlideProps> = ({
   const { title, description, date } = getSlideText(item, intl.locale);
 
   return (
-    <div className="listing-carousel__slide" aria-hidden={!isActiveSlide}>
+    <div className="listing-carousel__slide" {...slideA11yProps(isActiveSlide)}>
       <ConditionalLink
         to={flattenToAppURL(item['@id'])}
         condition={!isEditMode}
@@ -240,6 +241,7 @@ const CarouselTemplate: React.FC<
     <div className="listing-carousel" style={containerStyle}>
       <div
         className="listing-carousel__viewport"
+        role="region"
         aria-roledescription="carousel"
         aria-label={intl.formatMessage(carouselMessages.carousel)}
         onFocusCapture={() => setIsPlaying(false)}

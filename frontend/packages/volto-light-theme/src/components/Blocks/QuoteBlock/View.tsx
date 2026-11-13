@@ -1,9 +1,11 @@
 import React from 'react';
 import cx from 'classnames';
 import { BlockWrapper } from '@kitconcept/volto-bm3-compat';
-// @ts-expect-error - volto-slate has no TS declarations
+// volto-slate is untyped JS that resolves only under tsconfig.dev.json, so an
+// expect-error would fail there and a plain import would fail in editors.
+// @ts-ignore
 import { TextBlockView } from '@plone/volto-slate/blocks/Text';
-// @ts-expect-error - volto-slate has no TS declarations
+// @ts-ignore
 import { DetachedTextBlockEditor } from '@plone/volto-slate/blocks/Text/DetachedTextBlockEditor';
 
 interface QuoteBlockViewProps {

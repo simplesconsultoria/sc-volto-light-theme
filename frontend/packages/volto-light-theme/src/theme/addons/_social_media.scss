@@ -1,0 +1,34 @@
+// =============================================================================
+// @plonegovbr/volto-social-media
+//
+// The add-on sets its icon colours on :root (#000). This theme keeps that
+// default for the page body and changes the colours only on the surfaces
+// painted with the secondary colour: the header bar, the mobile tools panel
+// and the footer.
+// =============================================================================
+
+@mixin social-media-on-secondary() {
+  --social-network-icon-color-main: var(--secondary-foreground-color);
+  --social-network-icon-color-hover: color-mix(
+    in srgb,
+    var(--secondary-foreground-color) 80%,
+    var(--secondary-color)
+  );
+}
+
+body header.header-wrapper {
+  .header-bar-wrapper,
+  .mobile-tools-menu {
+    @include social-media-on-secondary();
+  }
+}
+
+#footer .post-footer {
+  @include social-media-on-secondary();
+}
+
+// Follow Us block in the page body: same column as the other blocks.
+#page-document .blocks-group-wrapper > .block.follow_us {
+  @include default-container-width();
+  @include adjustMarginsToContainer($default-container-width);
+}

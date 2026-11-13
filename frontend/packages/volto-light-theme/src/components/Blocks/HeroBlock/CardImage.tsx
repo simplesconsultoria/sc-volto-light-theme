@@ -41,7 +41,12 @@ const CardImage: React.FC<CardViewProps> = ({ imageInfo }) => {
         return <ImageComponent {...props} />;
       }
       try {
-        const res = ImageComponent ? ImageComponent(props) : null;
+        // Called as a function on purpose, to catch a scale rendering error
+        // here; the registry types it as a component, which is not callable.
+        const render = ImageComponent as
+          | ((p: any) => React.ReactNode)
+          | undefined;
+        const res = render ? render(props) : null;
         if (res) return res;
       } catch {
         // Fallback on scale rendering error

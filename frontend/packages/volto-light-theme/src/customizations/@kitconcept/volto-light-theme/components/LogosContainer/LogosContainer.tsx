@@ -63,7 +63,7 @@ const LogosContainer = (props: LogosContainerProps) => {
                 <li className="item logo-item" key={logo['@id']}>
                   {/* @ts-ignore */}
                   <ConditionalLink
-                    condition={logoInfo.href}
+                    condition={Boolean(logoInfo.href)}
                     className="logo-link"
                     to={logoInfo.href}
                     title={logoInfo.hrefTitle || logoInfo.srcAlt}

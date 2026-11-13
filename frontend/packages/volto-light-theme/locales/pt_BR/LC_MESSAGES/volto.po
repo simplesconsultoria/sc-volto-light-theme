@@ -1095,6 +1095,16 @@ msgstr "Local (substitui o do evento)"
 msgid "Location to be confirmed"
 msgstr "Local a confirmar"
 
+#. Default: "Log in"
+#: components/Anontools/Anontools
+msgid "Log in"
+msgstr "Entrar"
+
+#. Default: "Log out"
+#: components/Anontools/Anontools
+msgid "Log out"
+msgstr "Sair"
+
 #. Default: "Main Image"
 #: components/Blocks/MainImageBlock/helpers
 #: components/Blocks/MainImageBlock/schema
@@ -1363,6 +1373,11 @@ msgstr "Malha radial"
 #: components/Widgets/ColorGroups/messages
 msgid "Ready-made CSS patterns (Acreative-style presets)"
 msgstr "Padrões CSS prontos (predefinições no estilo Acreative)"
+
+#. Default: "Register"
+#: components/Anontools/Anontools
+msgid "Register"
+msgstr "Criar conta"
 
 #. Default: "Remove color"
 #: components/Widgets/SimpleColorPickerWidget

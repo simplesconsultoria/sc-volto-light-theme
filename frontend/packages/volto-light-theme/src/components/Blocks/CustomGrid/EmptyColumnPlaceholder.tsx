@@ -1,12 +1,27 @@
 import React from 'react';
 import { Icon } from '@plone/volto/components';
-import BlockChooser from '@plone/volto/components/manage/BlockChooser/BlockChooser';
-import { useDetectClickOutside } from '@plone/volto/helpers/Utils/useDetectClickOutside';
+import VoltoBlockChooser from '@plone/volto/components/manage/BlockChooser/BlockChooser';
+import { useDetectClickOutside as voltoUseDetectClickOutside } from '@plone/volto/helpers/Utils/useDetectClickOutside';
 import { usePopper } from 'react-popper';
 import { createPortal } from 'react-dom';
 import { Button, Ref } from 'semantic-ui-react';
 import addBlockSVG from '@plone/volto/icons/circle-plus.svg';
 import config from '@plone/volto/registry';
+
+// Both are untyped JS in Volto. TypeScript infers every parameter of the hook
+// as required and sees only `ref` on the forwardRef'd chooser, so give them
+// the types they actually accept.
+const useDetectClickOutside = voltoUseDetectClickOutside as (options: {
+  onTriggered: (event: Event) => void;
+  disableClick?: boolean;
+  disableKeys?: boolean;
+  allowAnyKey?: boolean;
+  triggerKeys?: string[];
+}) => React.MutableRefObject<any>;
+
+const BlockChooser = VoltoBlockChooser as React.ForwardRefExoticComponent<
+  Record<string, unknown> & React.RefAttributes<any>
+>;
 
 // Empty Column Placeholder with Block Chooser
 const EmptyColumnPlaceholder = ({

@@ -1,8 +1,18 @@
 import React from 'react';
-import { IntlProvider } from 'react-intl';
+import { IntlProvider as ReactIntlProvider } from 'react-intl';
 import { MemoryRouter } from 'react-router-dom';
 
 import { createThemeDefinition } from '../config/blockThemes';
+
+// react-intl 3's class types predate React 18, where `children` must be
+// declared explicitly, so its provider accepts no children as typed.
+const IntlProvider = ReactIntlProvider as unknown as React.ComponentType<
+  React.PropsWithChildren<{
+    messages: Record<string, string>;
+    locale: string;
+    defaultLocale?: string;
+  }>
+>;
 
 /**
  * The context a Claude Design preview needs, as a single bundle export.
