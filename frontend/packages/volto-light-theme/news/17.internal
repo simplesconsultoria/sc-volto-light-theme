@@ -1,1 +1,0 @@
-Added `make typecheck`, which runs TypeScript over the theme and showcase sources, and fixed the type errors it found in this package. Errors in Volto and `@kitconcept/volto-light-theme` sources are reported but do not fail the check. The `tsconfig.json` excludes for tests and stories now work. @ericof

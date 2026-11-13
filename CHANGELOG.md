@@ -7,6 +7,39 @@
 -->
 
 <!-- towncrier release notes start -->
+## 1.0.0a16 (2026-11-13)
+
+### Backend
+
+No significant changes.
+
+
+
+
+### Frontend
+
+#### Bugfix
+
+- Fixed invisible icons in a Follow Us block placed in the page body: the social icon colours now change only in the header bar, the mobile tools panel and the footer, and the block lines up with the content column. @ericof [#43](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/43)
+- Fixed keyboard access in the Carousel and Media Carousel listing variations: links on hidden slides are no longer reachable with Tab, and the carousel area is now announced as a labelled region. @ericof [#44](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/44)
+- Fixed the accessible names of the login, register and logout links in the header bar: they now match the visible, translated text instead of a fixed English label, so voice-control and screen reader users get the same name sighted users see. @ericof [#45](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/45)
+
+#### Internal
+
+- Added `make typecheck`, which runs TypeScript over the theme and showcase sources, and fixed the type errors it found in this package. Errors in Volto and `@kitconcept/volto-light-theme` sources are reported but do not fail the check. The `tsconfig.json` excludes for tests and stories now work. @ericof [#17](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/17)
+- Replaced the exact `@kitconcept/volto-button-block` pin with `^5.1.0` and raised `@kitconcept/volto-heading-block` to `^2.6.0`, so projects get new releases of both blocks without a theme release. @ericof [#42](https://github.com/simplesconsultoria/sc-volto-light-theme/issue/42)
+
+
+
+### Project
+
+
+#### Internal
+
+- Added a frontend Typecheck job to CI; Storybook and the image build now wait for it. @ericof [#17](https://github.com/simplesconsultoria/sc-volto-light-theme/pull/17)
+
+
+
 ## 1.0.0a15 (2026-11-11)
 
 ### Backend

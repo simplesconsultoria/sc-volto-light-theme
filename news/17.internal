@@ -1,1 +1,0 @@
-Added a frontend Typecheck job to CI; Storybook and the image build now wait for it. @ericof

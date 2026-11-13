@@ -1,1 +1,0 @@
-Fixed the accessible names of the login, register and logout links in the header bar: they now match the visible, translated text instead of a fixed English label, so voice-control and screen reader users get the same name sighted users see. @ericof
