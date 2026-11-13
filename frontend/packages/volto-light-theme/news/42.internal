@@ -1,0 +1,1 @@
+Replaced the exact `@kitconcept/volto-button-block` pin with `^5.1.0` and raised `@kitconcept/volto-heading-block` to `^2.6.0`, so projects get new releases of both blocks without a theme release. @ericof
