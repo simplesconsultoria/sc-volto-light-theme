@@ -5,13 +5,7 @@
   }
   .main-footer + .post-footer,
   .post-footer {
-    --social-network-icon-color-main: var(--secondary-foreground-color);
     --footer-foreground: var(--secondary-foreground-color);
-    --social-network-icon-color-hover: color-mix(
-      in srgb,
-      var(--secondary-foreground-color) 80%,
-      var(--secondary-color)
-    );
     background-color: var(--secondary-color);
     color: var(--secondary-foreground-color);
     container-type: inline-size;

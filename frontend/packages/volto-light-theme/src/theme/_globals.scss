@@ -36,11 +36,6 @@ body {
   }
 }
 
-:root {
-  --social-network-icon-color-main: var(--footer-foreground, #ffffff);
-  --social-network-icon-color-hover: var(--footer-foreground, #ffffff);
-}
-
 #page-document .blocks-group-wrapper > .block.schemaForm {
   @include default-container-width();
   @include adjustMarginsToContainer($default-container-width);
