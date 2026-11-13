@@ -498,6 +498,16 @@ msgstr ""
 msgid "Link to"
 msgstr ""
 
+#. Default: "Log in"
+#: components/Anontools/Anontools
+msgid "Log in"
+msgstr "Entrar"
+
+#. Default: "Log out"
+#: components/Anontools/Anontools
+msgid "Log out"
+msgstr "Cerrar sesión"
+
 #. Default: "Main Image"
 #: components/Blocks/MainImageBlock/schema
 #: index
@@ -631,6 +641,11 @@ msgstr ""
 #: index
 msgid "Quote"
 msgstr ""
+
+#. Default: "Register"
+#: components/Anontools/Anontools
+msgid "Register"
+msgstr "Registrar usuario"
 
 #. Default: "Result"
 #: components/Blocks/Listing/ListingBody

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import config from '@plone/volto/registry';
-import Anontools from '@plone/volto/components/theme/Anontools/Anontools';
+import Anontools from '../Anontools/Anontools';
 import LanguageSelector from '@plone/volto/components/theme/LanguageSelector/LanguageSelector';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import AccessibilityControls from '../AccessibilityControls/AccessibilityControls';
