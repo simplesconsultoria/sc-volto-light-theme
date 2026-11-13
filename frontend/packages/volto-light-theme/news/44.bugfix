@@ -1,0 +1,1 @@
+Fixed keyboard access in the Carousel and Media Carousel listing variations: links on hidden slides are no longer reachable with Tab, and the carousel area is now announced as a labelled region. @ericof

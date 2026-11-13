@@ -6,6 +6,7 @@ import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers/Url/Url';
 
 import { carouselMessages } from './messages';
 import CarouselControls from './CarouselControls';
+import { slideA11yProps } from './slideA11y';
 
 type ListingItem = Record<string, any>;
 
@@ -181,6 +182,7 @@ const CarouselTemplate: React.FC<
     <div className="listing-carousel" style={containerStyle}>
       <div
         className="listing-carousel__viewport"
+        role="region"
         aria-roledescription="carousel"
         aria-label={intl.formatMessage(carouselMessages.carousel)}
         onFocusCapture={() => setIsPlaying(false)}
@@ -244,7 +246,7 @@ const CarouselTemplate: React.FC<
               <div
                 key={item['@id']}
                 className="listing-carousel__slide"
-                aria-hidden={!isActiveSlide}
+                {...slideA11yProps(isActiveSlide)}
               >
                 <ConditionalLink
                   to={flattenToAppURL(item['@id'])}

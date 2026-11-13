@@ -97,6 +97,10 @@ lint: ## Lint, or catch and remove problems, in code base
 	pnpm prettier
 	pnpm stylelint --allow-empty-input
 
+.PHONY: typecheck
+typecheck: ## Typecheck the add-on and showcase sources; errors in upstream sources are reported, not counted
+	node scripts/typecheck.mjs
+
 .PHONY: release
 release: ## Release the add-on on npmjs.org
 	pnpm release

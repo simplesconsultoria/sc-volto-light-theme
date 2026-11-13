@@ -64,6 +64,36 @@ jobs:
         shell: bash
         run: make ci-i18n
 
+  typecheck:
+    name: "Frontend: Typecheck"
+    runs-on: ubuntu-latest
+    # Fails on type errors in this repository's packages. Errors in Volto
+    # core and upstream add-on sources are printed but not counted; see
+    # frontend/scripts/typecheck.mjs.
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup uv
+        uses: plone/meta/.github/actions/setup_uv@2.x
+        with:
+          working-directory: ${{ inputs.working-directory }}
+
+      - name: Setup codebase
+        uses: plone/meta/.github/actions/setup_frontend@2.x
+        with:
+          node-version: ${{ inputs.node-version }}
+          working-directory: ${{ inputs.working-directory }}
+
+      - name: Typecheck
+        shell: bash
+        run: make typecheck
+
   unit:
     name: "Frontend: Unit tests"
     uses: plone/meta/.github/workflows/frontend-unit.yml@2.x
@@ -78,6 +108,7 @@ jobs:
       - code-analysis
       - unit
       - i18n
+      - typecheck
     with:
       node-version: ${{ inputs.node-version }}
       working-directory: ${{ inputs.working-directory }}
@@ -91,6 +122,7 @@ jobs:
     needs:
       - code-analysis
       - i18n
+      - typecheck
       - unit
       - storybook
     permissions:
@@ -115,6 +147,7 @@ jobs:
     needs:
       - code-analysis
       - i18n
+      - typecheck
       - unit
       - storybook
       - release
@@ -126,6 +159,7 @@ jobs:
           echo '| --- | --- |' >> $GITHUB_STEP_SUMMARY
           echo '| code-analysis | ${{ needs.code-analysis.result }} |' >> $GITHUB_STEP_SUMMARY
           echo '| i18n | ${{ needs.i18n.result }} |' >> $GITHUB_STEP_SUMMARY
+          echo '| typecheck | ${{ needs.typecheck.result }} |' >> $GITHUB_STEP_SUMMARY
           echo '| unit | ${{ needs.unit.result }} |' >> $GITHUB_STEP_SUMMARY
           echo '| storybook | ${{ needs.storybook.result }} |' >> $GITHUB_STEP_SUMMARY
           echo '| release | ${{ needs.release.result }} |' >> $GITHUB_STEP_SUMMARY

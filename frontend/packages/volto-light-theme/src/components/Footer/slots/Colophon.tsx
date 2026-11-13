@@ -70,7 +70,7 @@ const Colophon = ({ content }: { content: Content }) => {
             Powered by Plone and Volto Light Theme
           </div>
           <Copyright />
-          {!logo && <Logo />}
+          {!logo && <Logo isFooterLogo={false} />}
         </>
       )}
     </Container>

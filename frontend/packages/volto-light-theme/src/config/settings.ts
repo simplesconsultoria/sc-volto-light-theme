@@ -7,6 +7,8 @@ declare module '@plone/types' {
   interface SettingsConfig {
     vlt?: VLTSettings;
     scvlt?: SCVLTSettings;
+    /** Border colour per content type; see `config/contentTypeColors.ts`. */
+    contentTypeColors?: Record<string, string>;
   }
 }
 

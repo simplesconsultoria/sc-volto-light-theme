@@ -10,8 +10,8 @@ import {
   Icon,
 } from '@plone/volto/components';
 import { emptyBlocksForm } from '@plone/volto/helpers/Blocks/Blocks';
-import BlockChooser from '@plone/volto/components/manage/BlockChooser/BlockChooser';
-import { useDetectClickOutside } from '@plone/volto/helpers/Utils/useDetectClickOutside';
+import VoltoBlockChooser from '@plone/volto/components/manage/BlockChooser/BlockChooser';
+import { useDetectClickOutside as voltoUseDetectClickOutside } from '@plone/volto/helpers/Utils/useDetectClickOutside';
 import { usePopper } from 'react-popper';
 import { createPortal } from 'react-dom';
 import { Ref } from 'semantic-ui-react';
@@ -25,6 +25,21 @@ import LayoutSelector from './LayoutSelector';
 import CustomGridDataForm from './Data';
 
 import config from '@plone/volto/registry';
+
+// Both are untyped JS in Volto. TypeScript infers every parameter of the hook
+// as required and sees only `ref` on the forwardRef'd chooser, so give them
+// the types they actually accept.
+const useDetectClickOutside = voltoUseDetectClickOutside as (options: {
+  onTriggered: (event: Event) => void;
+  disableClick?: boolean;
+  disableKeys?: boolean;
+  allowAnyKey?: boolean;
+  triggerKeys?: string[];
+}) => React.MutableRefObject<any>;
+
+const BlockChooser = VoltoBlockChooser as React.ForwardRefExoticComponent<
+  Record<string, unknown> & React.RefAttributes<any>
+>;
 
 const messages = defineMessages({
   editParent: {

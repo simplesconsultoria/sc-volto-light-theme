@@ -31,11 +31,7 @@ const GridItemBody = ({
   return (
     <>
       {item.image_field !== '' && (
-        <Card.Image
-          className="item-image"
-          item={item}
-          imageComponent={PreviewImageComponent}
-        />
+        <Card.Image item={item} imageComponent={PreviewImageComponent} />
       )}
       <Card.Summary a11yLabelId={a11yLabelId} LinkToItem={LinkToItem}>
         <Summary item={item} />
@@ -87,7 +83,7 @@ const GridTemplate: React.FC<GridTemplateProps> = ({
             }).component || DefaultSummary;
 
           let showLink =
-            !Summary.hideLink &&
+            !(Summary as { hideLink?: boolean }).hideLink &&
             !isEditMode &&
             !!(item['@id'] || item.href || item.url);
           if (item['@type'] === 'Person' && hideProfileLinks !== undefined) {
