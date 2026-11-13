@@ -100,14 +100,17 @@ export { createThemeDefinition } from './blockThemes';
  * augmentation. Same approach as the `SettingsConfig` augmentation in
  * `config/settings.ts`.
  *
- * - `themes`, `defaultTheme`: kitconcept convention for block themes.
+ * - `themes`: kitconcept convention for block themes.
  * - `getSizes`: the teaser's `sizes` attribute, set by volto-light-theme.
  * - `noResultsComponent`: the listing's empty-result component.
+ *
+ * `defaultTheme` is declared by @kitconcept/volto-light-theme's own
+ * augmentation (`config/blocks.tsx`), which this module imports; declaring
+ * it again with different modifiers is TS2687.
  */
 declare module '@plone/types' {
   interface BlockConfigBase {
     themes?: ThemeDefinition[];
-    defaultTheme?: string;
     getSizes?: (args: Record<string, unknown>) => string | undefined;
     noResultsComponent?: React.ComponentType<any>;
   }
