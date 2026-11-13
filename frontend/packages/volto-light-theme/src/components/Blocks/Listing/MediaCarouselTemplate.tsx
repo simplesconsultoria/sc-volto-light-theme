@@ -4,6 +4,7 @@ import config from '@plone/volto/registry';
 
 import { carouselMessages } from './messages';
 import CarouselControls from './CarouselControls';
+import { slideA11yProps } from './slideA11y';
 
 type ListingItem = Record<string, any>;
 
@@ -130,6 +131,7 @@ const MediaCarouselTemplate: React.FC<
     >
       <div
         className="listing-carousel__viewport"
+        role="region"
         aria-roledescription="carousel"
         aria-label={intl.formatMessage(carouselMessages.mediaCarousel)}
         onFocusCapture={() => setIsPlaying(false)}
@@ -181,7 +183,7 @@ const MediaCarouselTemplate: React.FC<
               <div
                 key={item['@id']}
                 className="listing-carousel__slide"
-                aria-hidden={!isActiveSlide}
+                {...slideA11yProps(isActiveSlide)}
               >
                 <div className="listing-carousel__slideInner">
                   <div className="listing-carousel__media">{media}</div>
