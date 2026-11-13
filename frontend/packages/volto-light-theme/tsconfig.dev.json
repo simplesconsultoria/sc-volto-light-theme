@@ -3,6 +3,12 @@
   "compilerOptions": {
     "paths": {
       "@plone/volto/*": ["../../core/packages/volto/src/*"],
+      "@plone/volto-slate/*": ["../../core/packages/volto/node_modules/@plone/volto-slate/src/*"],
+      "@storybook/react": ["../../core/packages/volto/node_modules/@storybook/react"],
+      "github-slugger": ["../../core/packages/volto/node_modules/github-slugger"],
+      "react-popper": ["../../core/packages/volto/node_modules/react-popper"],
+      "react-toastify": ["../../core/packages/volto/node_modules/react-toastify"],
+      "semantic-ui-react": ["../../core/packages/volto/node_modules/semantic-ui-react"],
       "@kitconcept/volto-light-theme/*": [
         "./node_modules/@kitconcept/volto-light-theme/src/*"
       ],
