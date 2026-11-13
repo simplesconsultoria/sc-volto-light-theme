@@ -3,6 +3,7 @@ import {
   DEFAULT_THEME_ID,
   addSchema,
   cloneThemeFormData,
+  collectionPatch,
   editSchema,
   existingThemeIds,
   findTheme,
@@ -10,6 +11,7 @@ import {
   isUnauthorizedError,
   isValidThemeId,
   splitFormData,
+  themePatchValues,
   validateNewThemeId,
 } from '@simplesconsultoria/volto-light-theme/helpers/themesControlpanel';
 import type {
@@ -299,5 +301,86 @@ describe('isUnauthorizedError', () => {
   it('rejects the absence of an error', () => {
     expect(isUnauthorizedError(null)).toBe(false);
     expect(isUnauthorizedError(undefined)).toBe(false);
+  });
+});
+
+describe('collectionPatch', () => {
+  const golden = { id: 'golden', name: 'Golden' };
+  const primary = { id: 'primary', name: 'Primary' };
+
+  it('sends the submitted entries as they are', () => {
+    expect(collectionPatch({ primary }, { primary, golden })).toEqual({
+      primary,
+      golden,
+    });
+  });
+
+  it('sends null for an entry removed in the form', () => {
+    expect(collectionPatch({ primary, golden }, { primary })).toEqual({
+      primary,
+      golden: null,
+    });
+  });
+
+  it('reads collections held as lists', () => {
+    expect(collectionPatch([primary, golden], [primary])).toEqual({
+      primary,
+      golden: null,
+    });
+  });
+
+  it('tolerates a theme with no stored collection', () => {
+    expect(collectionPatch(undefined, { primary })).toEqual({ primary });
+  });
+
+  it('does not mutate its inputs', () => {
+    const before = { primary, golden };
+    const after = { primary };
+    collectionPatch(before, after);
+    expect(before).toEqual({ primary, golden });
+    expect(after).toEqual({ primary });
+  });
+});
+
+describe('themePatchValues', () => {
+  const theme = {
+    id: 'corporate',
+    color_groups: {
+      primary: { id: 'primary', name: 'Primary' },
+      golden: { id: 'golden', name: 'Golden' },
+    },
+    block_themes: {
+      default: {
+        id: 'default',
+        name: 'Default',
+        back_color_group: 'primary',
+        front_color_group: 'neutral',
+      },
+      shiny: {
+        id: 'shiny',
+        name: 'Shiny',
+        back_color_group: 'golden',
+        front_color_group: 'neutral',
+      },
+    },
+  } as any;
+
+  it('deletes the Color Groups and Block Themes removed in the form', () => {
+    const body = themePatchValues(theme, {
+      name: 'Corporate',
+      color_groups: { primary: theme.color_groups.primary },
+      block_themes: { default: theme.block_themes.default },
+    });
+    expect(body).toEqual({
+      name: 'Corporate',
+      color_groups: { primary: theme.color_groups.primary, golden: null },
+      block_themes: { default: theme.block_themes.default, shiny: null },
+    });
+  });
+
+  it('leaves a collection the form did not submit out of the body', () => {
+    expect(themePatchValues(theme, { name: 'Corporate' })).toEqual({
+      name: 'Corporate',
+    });
   });
 });

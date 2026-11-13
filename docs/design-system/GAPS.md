@@ -1,6 +1,6 @@
 # Design System Gaps
 
-What is still **open** in `@simplesconsultoria/volto-light-theme` as of **2026-11-11** — verified defects, token/schema mismatches, incomplete coverage, and unmade product decisions.
+What is still **open** in `@simplesconsultoria/volto-light-theme` as of **2026-11-13** — verified defects, token/schema mismatches, incomplete coverage, and unmade product decisions.
 
 Resolved past gaps are omitted; history belongs in git and the changelog (`news/`). Every entry below was verified directly in the working tree.
 
@@ -14,40 +14,19 @@ Resolved past gaps are omitted; history belongs in git and the changelog (`news/
 
 `@kitconcept/volto-light-theme@8.1.4` reads `--theme-font-color` once (`src/theme/blocks/_listing.scss:35`: `border-bottom: 1px solid var(--theme-font-color, black);`). Neither `createThemeDefinition`, `createCustomThemeDefinition`, nor `resolveBlockTheme` maps it, so upstream's `black` fallback governs regardless of dark mode or selected theme.
 
-### 1.2 Pattern token duality & preset background-layer shadowing
+### 1.2 Unused `--theme-pattern-*` tokens
 
-There are currently two overlapping pattern mechanisms with conflicting tokens:
-
-- **Unused `--theme-pattern-{image,opacity}`:** mapped by `createThemeDefinition`, `createCustomThemeDefinition`, `blockThemeUtilityClasses`, and `_root.scss:203-204,253-254`, and forced `inherit !important` in `_accordion.scss:79-80,381-382` — yet **0 `var(--theme-pattern-*)` reads** exist anywhere in CSS.
-- **Preset shadowing on `default` / `alternative`:** `_root.scss:203,253` declares `--block-theme-default-pattern-image: none` and `--block-theme-alternative-pattern-image: none`. Because `resolveBlockTheme` (`src/config/blockThemes.ts:541`) and `blockThemeUtilityClasses` (`src/helpers/themeStyles.ts:229`) compute:
-
-  ```css
-  --theme-bg-image: var(--block-theme-${theme}-pattern-image, var(--colorgroup-${back}-bg-image, none));
-  ```
-
-  the `none` value defined in `_root.scss` resolves as non-missing, **short-circuiting** the Color Group's `--colorgroup-${back}-bg-image` fallback for `default` and `alternative` blocks (while `custom-*` blocks and `.blocks-group-wrapper` skip `--block-theme-*-pattern-image` and show the background layer).
+`--theme-pattern-{image,opacity}` are mapped by `createThemeDefinition`, `createCustomThemeDefinition`, `blockThemeUtilityClasses`, and `_root.scss` (`--block-theme-{default,alternative}-pattern-*`), and forced `inherit !important` in `_accordion.scss:79-80,381-382` — yet **0 `var(--theme-pattern-*)` reads** exist anywhere in CSS. `--block-theme-{default,alternative}-pattern-image` are declared `initial` so they fall through to the back Color Group's background layer; a project can still set a block-theme pattern there.
 
 ### 1.3 `[data-theme='high-contrast']` does not suppress 2nd-layer background images/patterns
 
 `_root.scss:464-530` collapses foreground/background/border colors onto `#000` / `#fff` / `#fff333`, but never overrides `--colorgroup-*-bg-image`, `--highground-bg-image`, or `--theme-bg-image` to `none`. Photos or CSS patterns configured on a Color Group continue rendering behind high-contrast text and borders.
 
-### 1.4 `--link-foreground-color` falls back to surface `--accent-color` in `themeStyleSheet`
-
-`_root.scss:109` sets `--link-foreground-color: var(--primary-accent-color)` (`#1971c2` light / `#74c0fc` dark). However, when a site theme defines `color_groups`, `src/helpers/themeStyles.ts:503-505` writes:
-
-```ts
-if (!properties['--link-foreground-color']) {
-  properties['--link-foreground-color'] = 'var(--accent-color)';
-}
-```
-
-Because `--accent-color` in `DEFAULT_COLOR_GROUPS` is a light/dark **surface color** (`#a5d8ff` light / `#1c3a57` dark) rather than a text accent color, injected themes without explicit `--link-foreground-color` override links to low-contrast surface colors (on white `#ffffff`, `#a5d8ff` is only **1.51:1**).
-
-### 1.5 Responsive Color Group background images switch on viewport width, not container width
+### 1.4 Responsive Color Group background images switch on viewport width, not container width
 
 `colorGroupResponsiveImageRules` (`src/helpers/themeStyles.ts:287-351`) uses `@media (max-width: 768px)` and `[data-theme='dark']` / `@media (prefers-color-scheme: dark)` at `:root`, rather than container queries — so mobile vs desktop background image switching inside narrow grid columns tracks the viewport, not column width.
 
-### 1.6 Duplicated link tokens
+### 1.5 Duplicated link tokens
 
 `_root.scss:314-317` defines both `--link-color` / `--link-color-hover` and `--color-link` / `--color-link-hover` for upstream compatibility (`--link-color` and `--color-link` read `--primary-accent-color`, while `--link-foreground-color` also exists on line 109).
 
@@ -156,10 +135,10 @@ Nothing below is an unintended bug; each requires a design or product owner deci
 | area | question | why it matters |
 |---|---|---|
 | Layout (§3.1) | Should `--narrow-container-width` differ from `--default-container-width`, and can `!important` be dropped? | Two of the four `blockWidth` options look identical today, and downstream sites cannot override container widths cleanly. |
-| Pattern vs Color Group Layer (§1.2) | Implement `--theme-pattern-{image,opacity}` or remove them and fix `default`/`alternative` `pattern-image: none` shadowing? | Removing `--block-theme-{default,alternative}-pattern-image: none` unlocks Color Group patterns/images on preset block themes immediately; keeping `--theme-pattern-*` is redundant unless block-theme-level patterns are planned. |
+| Pattern tokens (§1.2) | Implement `--theme-pattern-{image,opacity}` or remove them? | Keeping `--theme-pattern-*` is redundant unless block-theme-level patterns are planned. |
 | High Contrast (§1.3) | Should `[data-theme='high-contrast']` force `none` on all background images/patterns? | Ensures pure `#000`/`#fff` legibility even when a site uploads busy decorative images on Color Groups. |
 | Header & Legacy Passthrough (§4.1–4.2) | Expose `header_foreground`, `font_family_secondary`, and content-type color pickers in Color Groups / `ISCVLTThemeSchema`, or deprecate those CSS overrides? | Currently admins cannot edit secondary heading font, header foreground, or `event`/`file`/`image` tag colors in the control panel UI. |
-| Links (§1.4, §1.6) | Fix `themeStyleSheet` fallback for `--link-foreground-color` to `var(--primary-accent-color)` and consolidate `--link-color` / `--color-link`? | Without an explicit fix, custom themes lacking `--link-foreground-color` inherit surface `--accent-color` (`1.51:1` on a white ground). |
+| Links (§1.5) | Consolidate `--link-color` / `--color-link` with `--link-foreground-color`? | Three names for one colour; a project overriding one of them may miss the others. |
 | Typography (`system-ui` vs `Inter`) | Keep `_root.scss` at `system-ui` overridden on `body` by `_globals.scss` (`Inter`), or align `_root.scss` directly? | Unwrapped portals/modals outside `body` inheritance (if any) read `_root.scss`, while normal pages inherit `Inter` from `body`. |
 | Event locale & i18n (§5.3) | Internationalise `EventsTemplate` / `EventMetadata` / `heroContent`, and translate `es` and `de`? | All three components ignore Plone's active `intl.locale`, and `es`/`de` ship with `0 / 376` translations. |
 | Gallery Fixtures (§5.1) | Add sample payloads for the 16 unseeded themed blocks (especially owned/extended `customGrid`, `eventMetadata`, `banner`, `search`)? | Improves visual regression and Claude Design auditing across `Blocks/Gallery`. |

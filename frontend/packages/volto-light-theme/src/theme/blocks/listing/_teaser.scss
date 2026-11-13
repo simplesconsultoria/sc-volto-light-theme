@@ -36,11 +36,17 @@
       width: 100% !important;
       max-width: 100% !important;
       box-sizing: border-box;
-      border: solid var(--cardBorderColor, var(--theme-border-color));
       border-width: var(
         --cardBorderWidth,
         var(--theme-border-width, 0)
       ) !important;
+      // Longhands: an undefined colour variable would void a `border`
+      // shorthand, `solid` included (see `listing/_grid.scss`).
+      border-style: solid;
+      border-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, var(--primary-accent-color))
+      );
       margin: 0 !important;
       background-color: var(--theme-high-contrast-color, transparent);
       background-image: var(

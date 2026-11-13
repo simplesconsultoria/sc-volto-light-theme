@@ -72,15 +72,15 @@
             var(--accent-color) 10%,
             var(--primary-color, #fff)
           );
-          color: var(--accent-color);
+          color: var(--primary-accent-color);
 
           svg {
-            stroke: var(--accent-color);
+            stroke: var(--primary-accent-color);
           }
         }
 
         &:focus-visible {
-          outline: 2px solid var(--accent-color);
+          outline: 2px solid var(--primary-accent-color);
           outline-offset: 1px;
         }
 
@@ -132,11 +132,11 @@
             var(--accent-color) 8%,
             var(--primary-color, #fff)
           );
-          color: var(--accent-color);
+          color: var(--primary-accent-color);
         }
 
         &:focus-visible {
-          outline: 2px solid var(--accent-color);
+          outline: 2px solid var(--primary-accent-color);
           outline-offset: 1px;
         }
 
@@ -193,11 +193,11 @@
               var(--accent-color) 14%,
               var(--primary-color, #fff)
             );
-            color: var(--accent-color);
+            color: var(--primary-accent-color);
           }
 
           &:focus-visible {
-            outline: 2px solid var(--accent-color);
+            outline: 2px solid var(--primary-accent-color);
             outline-offset: 1px;
           }
 
@@ -380,7 +380,7 @@
           text-align: left;
 
           &:focus-visible {
-            outline: 2px solid var(--accent-color, currentColor);
+            outline: 2px solid var(--primary-accent-color, currentColor);
             outline-offset: 2px;
           }
         }
@@ -419,14 +419,14 @@
           .base-tag {
             padding: 2px 6px;
             border: 1px solid
-              color-mix(in srgb, var(--accent-color) 30%, transparent);
+              color-mix(in srgb, var(--primary-accent-color) 30%, transparent);
             border-radius: 4px;
             background: color-mix(
               in srgb,
-              var(--accent-color) 15%,
+              var(--primary-accent-color) 15%,
               transparent
             );
-            color: var(--accent-color);
+            color: var(--primary-accent-color);
             font-size: 0.75rem;
             font-weight: 600;
           }
@@ -436,10 +436,10 @@
             border-radius: 4px;
             background: color-mix(
               in srgb,
-              var(--accent-color) 18%,
+              var(--primary-accent-color) 18%,
               transparent
             );
-            color: var(--accent-color);
+            color: var(--primary-accent-color);
             font-size: 0.75rem;
             font-weight: 600;
           }
@@ -688,7 +688,7 @@
                   border-color: var(--accent-color);
                   background: color-mix(
                     in srgb,
-                    var(--accent-color) 12%,
+                    var(--primary-accent-color) 12%,
                     transparent
                   );
                 }
@@ -849,9 +849,13 @@
           .device-toggle-btn {
             padding: 3px 10px;
             border: 1px solid
-              color-mix(in srgb, var(--accent-color) 35%, transparent);
+              color-mix(in srgb, var(--primary-accent-color) 35%, transparent);
             border-radius: 12px;
-            background: color-mix(in srgb, var(--accent-color) 8%, transparent);
+            background: color-mix(
+              in srgb,
+              var(--primary-accent-color) 8%,
+              transparent
+            );
             color: var(--primary-foreground-color);
             cursor: pointer;
             font-size: 0.75rem;
@@ -919,6 +923,11 @@
         margin-bottom: 0.25rem;
         color: var(--primary-accent-color);
         font-size: 1.1rem;
+      }
+
+      // Semantic UI's `.ui.form p.help` is black, unreadable in dark mode.
+      p.help {
+        color: var(--primary-low-foreground-color);
       }
 
       .add-fields-grid {
@@ -1058,14 +1067,14 @@
             .base-tag {
               padding: 2px 8px;
               border: 1px solid
-                color-mix(in srgb, var(--accent-color) 30%, transparent);
+                color-mix(in srgb, var(--primary-accent-color) 30%, transparent);
               border-radius: 4px;
               background: color-mix(
                 in srgb,
-                var(--accent-color) 15%,
+                var(--primary-accent-color) 15%,
                 transparent
               );
-              color: var(--accent-color);
+              color: var(--primary-accent-color);
               font-size: 0.75rem;
               font-weight: 600;
             }
@@ -1153,30 +1162,30 @@
               box-shadow 150ms ease;
 
             &:hover {
-              border-color: var(--accent-color, #007bc1);
+              border-color: var(--primary-accent-color, #007bc1);
               background-color: color-mix(
                 in srgb,
                 var(--accent-color, #007bc1) 8%,
                 var(--primary-color, #fff)
               );
-              color: var(--accent-color, #007bc1);
+              color: var(--primary-accent-color, #007bc1);
             }
 
             &:focus-visible {
-              border-color: var(--accent-color, #007bc1);
-              outline: 2px solid var(--accent-color, #007bc1);
+              border-color: var(--primary-accent-color, #007bc1);
+              outline: 2px solid var(--primary-accent-color, #007bc1);
               outline-offset: 1px;
             }
 
             &.is-selected {
-              border-color: var(--accent-color, #007bc1);
+              border-color: var(--primary-accent-color, #007bc1);
               background-color: color-mix(
                 in srgb,
                 var(--accent-color, #007bc1) 12%,
                 var(--primary-color, #fff)
               );
               box-shadow: inset 0 0 0 1px var(--accent-color, #007bc1);
-              color: var(--accent-color, #007bc1);
+              color: var(--primary-accent-color, #007bc1);
               font-weight: 600;
 
               .chip-check {
@@ -1310,7 +1319,7 @@
               }
 
               .option-check {
-                color: var(--accent-color);
+                color: var(--primary-accent-color);
                 font-weight: bold;
               }
             }

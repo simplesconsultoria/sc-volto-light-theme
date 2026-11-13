@@ -42,7 +42,12 @@
     color: var(--theme-foreground-accent-color);
 
     .button-content {
-      border: var(--theme-border-color) var(--theme-border-width) solid;
+      // Separate longhands: `--theme-border-width` is a `border-width`
+      // shorthand (`4px 0 0` on the default theme), which made the `border`
+      // shorthand invalid and dropped the button's border.
+      border-width: var(--theme-border-width, 0);
+      border-style: solid;
+      border-color: var(--theme-border-color);
       background-color: var(--theme-color);
       color: var(--theme-foreground-accent-color);
       @include body-text-bold();

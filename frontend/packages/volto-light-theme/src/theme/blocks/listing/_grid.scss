@@ -20,17 +20,25 @@
 
     .card {
       height: 100%;
-      border: solid var(--cardBorderColor, var(--theme-border-color));
+      // One declaration for all four sides. `--cardBorderWidth` and the block
+      // theme's `--theme-border-width` are `border-width` shorthands
+      // (`6px 0 0 0`, the default theme's `4px 0 0`): read by
+      // `border-top-width` they are invalid, which drops the top border back
+      // to `medium` whatever the editor picked.
       border-width: var(
         --cardBorderWidth,
-        var(--theme-border-width, 0px)
+        var(--theme-border-width, 3px 0 0 0)
       ) !important;
-      border-color: var(--cardBorderColor, var(--theme-border-color));
-      border-top-width: var(
-        --cardBorderWidth,
-        var(--theme-border-width, 3px)
-      ) !important;
-      border-top-style: solid !important;
+      // Longhands, not `border: solid var(...)`: when the colour variables are
+      // undefined (no colour picked, a block theme without a border colour)
+      // the shorthand is invalid as a whole and takes `solid` with it, so only
+      // a side with its own style kept a border.
+      border-style: solid;
+      border-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, var(--primary-accent-color))
+      );
+      // The default top line takes the content type's colour.
       border-top-color: var(
         --cardBorderColor,
         var(
@@ -107,6 +115,15 @@
         );
       }
     }
+  }
+
+  // A border set in the Border widget is one border: the same colour on every
+  // side. (`ListingBody` puts the widget's values on this container.)
+  .listing-block-container[style*='--cardBorderWidth'] .listing-item .card {
+    border-top-color: var(
+      --cardBorderColor,
+      var(--theme-border-color, var(--primary-accent-color))
+    ) !important;
   }
 
   .listing-item.person-listing {

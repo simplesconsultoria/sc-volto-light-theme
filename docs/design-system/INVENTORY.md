@@ -244,10 +244,10 @@ What the enhancer adds:
    - High-ground background layer tokens (`--highground-bg-{image,size,repeat,position}` and `--colorgroup-front-bg-*`)
    - Ground background layer tokens (`--theme-bg-{image,size,repeat,position}`) plus inline `backgroundImage`, `backgroundSize`, `backgroundRepeat`, `backgroundPosition`
 
-### 4.2 `CSS_PATTERN_PRESETS` (8)
+### 4.2 `CSS_PATTERN_PRESETS` (5)
 
-Defined in `src/config/blockThemes.ts:94-164` for the 2nd Color Group layer alongside responsive desktop/mobile, light/dark images:
-`none`, `dots`, `grid`, `diagonal-stripes`, `waves-acreative`, `blueprint`, `zigzag`, `radial-mesh` (all SVG/CSS gradients using `color-mix(in srgb, currentColor ...)`).
+Defined in `src/config/blockThemes.ts` for the 2nd Color Group layer alongside responsive desktop/mobile, light/dark images:
+`none`, `dots`, `grid`, `diagonal-stripes`, `blueprint` (all CSS gradients using `color-mix(in srgb, currentColor ...)`). Picking one fills the light and the dark desktop image; `none` clears all four.
 
 ### 4.3 `--theme-*` & background-layer consumption `[V 2026-11-11]`
 
@@ -281,23 +281,28 @@ Background layer tokens consumed in `sc-vlt` SCSS: `--highground-bg-{image,size,
 - All **56** `.scss` files under `src/theme/`: **307** declaration sites, **181** unique custom properties; **0** `@property` declarations in `sc-vlt`.
 - Upstream `@kitconcept/volto-light-theme@8.1.4` registers **10** `@property` rules in `_variables.scss`: `--background`, `--text-color`, `--text-size`, `--primary-color`, `--primary-foreground-color`, `--secondary-color`, `--secondary-foreground-color`, `--accent-color`, `--accent-foreground-color`, `--image-aspect-ratio`.
 
-### 5.1 Base palette (`_root.scss:9-39`)
+### 5.1 Base palette (`_root.scss:9-50`)
 
 | group | token | value | notes |
 |---|---|---|---|
 | Pure | `--pure-white` / `--pure-black` | `#fff` / `#000` | used in primary bg / high-contrast mode |
 | Neutral light | `--gray-02` | `#f6f7f9` | neutral surface |
-| Neutral light | `--gray-cool-05` | `#eceff3` | secondary surface |
+| Neutral light | `--gray-cool-05` | `#eceff3` | light cool gray (no longer a default surface) |
+| Strong band | `--gray-strong` | `#343a40` | secondary surface (light and dark) |
+| Strong band | `--gray-strong-text` / `--gray-strong-low-text` | `#f8f9fa` / `#ced4da` | text / subtext on the strong band (light) |
+| Strong band | `--gray-strong-text-dark` / `--gray-strong-low-text-dark` | `#f1f3f5` / `#c3cad4` | text / subtext on the strong band (dark) |
 | Neutral light | `--gray-10` | `#dde2e8` | borders, dividers |
 | Neutral light | `--gray-50` | `#6b7280` | disabled / decorative only |
 | Neutral light | `--gray-70` | `#4a5260` | subtext on light surfaces |
 | Neutral light | `--gray-80` / `--gray-90` | `#333` / `#1d2129` | ink on light surfaces |
-| Neutral dark | `--gray-dark-bg` / `--gray-dark-surface` / `--gray-dark-raised` | `#14171c` / `#1c2027` / `#242932` | primary / secondary / neutral dark surfaces |
+| Neutral dark | `--gray-dark-bg` / `--gray-dark-surface` / `--gray-dark-raised` | `#14171c` / `#1c2027` / `#242932` | primary / (unused) / neutral dark surfaces |
 | Neutral dark | `--gray-dark-text` / `--gray-dark-low-text` / `--gray-dark-low-text-raised` | `#f1f3f5` / `#b4bcc8` / `#c3cad4` | dark text & subtext |
-| Brand ramp (light blue) | `--brand-color` / `--brand-color-light` | `#a5d8ff` / `#74c0fc` | accent surface (light) / accent text (dark) |
-| Brand ramp (light blue) | `--brand-color-dark` / `--brand-color-darker` / `--brand-color-deep` | `#1971c2` / `#1864ab` / `#1c3a57` | links & accents (light) / accent surface (dark) |
-| Brand ramp (light blue) | `--brand-ink` / `--brand-ink-low` | `#0b2239` / `#1f3f5c` | text / subtext on light-blue accent surface |
-| Brand ramp (light blue) | `--brand-pale` / `--brand-pale-low` | `#e7f5ff` / `#b8d7ef` | text / subtext on deep-blue accent surface |
+| Brand ramp (blue) | `--brand-color` / `--brand-color-light` | `#a5d8ff` / `#74c0fc` | accent text on dark surfaces |
+| Brand ramp (blue) | `--brand-color-dark` / `--brand-color-darker` / `--brand-color-deep` | `#1971c2` / `#1864ab` / `#1c3a57` | links & accents (light) |
+| Brand ramp (blue) | `--brand-strong` / `--brand-strong-dark` | `#0f4c81` / `#1b4d82` | accent surface (light / dark) |
+| Brand ramp (blue) | `--brand-strong-low-text` | `#d0ebff` | subtext on the dark blue surface (light) |
+| Brand ramp (blue) | `--brand-ink` / `--brand-ink-low` | `#0b2239` / `#1f3f5c` | text / subtext on a light-blue surface |
+| Brand ramp (blue) | `--brand-pale` / `--brand-pale-low` | `#e7f5ff` / `#b8d7ef` | text / subtext on the dark blue accent surface (dark) |
 
 ### 5.2 Semantic palette, `DEFAULT_COLOR_GROUPS` & WCAG 2.1 AA contrast
 
@@ -309,14 +314,14 @@ Four families × four roles via `light-dark(var(--x-light, FALLBACK), var(--x-da
 | `primary` | `foreground-color` (text) | `#1d2129` | `#f1f3f5` | 16.13 | 16.15 |
 | `primary` | `low-foreground-color` (subtext) | `#4a5260` | `#b4bcc8` | 7.87 | 9.38 |
 | `primary` | `accent-color` (accent) | `#1971c2` | `#74c0fc` | 5.02 | 9.14 |
-| `secondary` | `color` (bg) | `#eceff3` | `#1c2027` | — | — |
-| `secondary` | `foreground-color` (text) | `#1d2129` | `#f1f3f5` | 13.99 | 14.69 |
-| `secondary` | `low-foreground-color` (subtext) | `#4a5260` | `#b4bcc8` | 6.83 | 8.53 |
-| `secondary` | `accent-color` (accent) | `#1864ab` | `#74c0fc` | 5.28 | 8.32 |
-| `accent` | `color` (bg) | `#a5d8ff` | `#1c3a57` | — | — |
-| `accent` | `foreground-color` (text) | `#0b2239` | `#e7f5ff` | 10.65 | 10.55 |
-| `accent` | `low-foreground-color` (subtext) | `#1f3f5c` | `#b8d7ef` | 7.21 | 7.81 |
-| `accent` | `accent-color` (accent) | `#0b2239` | `#a5d8ff` | 10.65 | 7.74 |
+| `secondary` | `color` (bg) | `#343a40` | `#343a40` | — | — |
+| `secondary` | `foreground-color` (text) | `#f8f9fa` | `#f1f3f5` | 10.91 | 10.34 |
+| `secondary` | `low-foreground-color` (subtext) | `#ced4da` | `#c3cad4` | 7.70 | 6.97 |
+| `secondary` | `accent-color` (accent) | `#a5d8ff` | `#74c0fc` | 7.60 | 5.86 |
+| `accent` | `color` (bg) | `#0f4c81` | `#1b4d82` | — | — |
+| `accent` | `foreground-color` (text) | `#ffffff` | `#e7f5ff` | 8.86 | 7.78 |
+| `accent` | `low-foreground-color` (subtext) | `#d0ebff` | `#b8d7ef` | 7.17 | 5.76 |
+| `accent` | `accent-color` (accent) | `#a5d8ff` | `#a5d8ff` | 5.85 | 5.71 |
 | `neutral` | `color` (bg) | `#f6f7f9` | `#242932` | — | — |
 | `neutral` | `foreground-color` (text) | `#1d2129` | `#f1f3f5` | 15.05 | 13.13 |
 | `neutral` | `low-foreground-color` (subtext) | `#4a5260` | `#c3cad4` | 7.35 | 8.84 |

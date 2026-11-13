@@ -130,8 +130,8 @@ export const messages = defineMessages({
       'Add an image (link or file) or a CSS pattern. The image is rendered on top of the background colour set above, allowing transparency and responsive layering.',
   },
   presets: {
-    id: 'Ready-made CSS patterns (Acreative-style presets)',
-    defaultMessage: 'Ready-made CSS patterns (Acreative-style presets)',
+    id: 'Ready-made CSS patterns',
+    defaultMessage: 'Ready-made CSS patterns',
   },
   lightDesktopImage: {
     id: 'Desktop (file, link or CSS pattern)',

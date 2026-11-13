@@ -21,6 +21,7 @@
     "node_modules",
     "tests",
     "build",
+    "dist",
     "public",
     "coverage",
     "**/*.test.js",

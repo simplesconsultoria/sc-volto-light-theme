@@ -8,21 +8,23 @@
 <title>Block themes</title>
 <style>
   :root { --ink:#16181d; --ink-soft:#5b6270; --rule:#e4e7ec; --ground:#fff; }
-  * { box-sizing:border-box; }
+  /* Element selectors skip the captured blocks (`.stage`): their computed
+     styles are inlined, and a page rule would override what they inherit. */
+  *:not(.stage *) { box-sizing:border-box; }
   body {
     margin:0; padding:40px 32px 56px; background:var(--ground); color:var(--ink);
     font:400 14px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;
     -webkit-font-smoothing:antialiased;
   }
   .wrap { max-width:1180px; margin:0 auto; }
-  h1 { margin:0 0 6px; font-size:26px; font-weight:600; letter-spacing:-.02em; }
+  h1:not(.stage *) { margin:0 0 6px; font-size:26px; font-weight:600; letter-spacing:-.02em; }
   .lede { margin:0; max-width:72ch; color:var(--ink-soft); }
-  h2 {
+  h2:not(.stage *) {
     margin:44px 0 4px; font-size:12px; font-weight:600; letter-spacing:.08em;
     text-transform:uppercase; color:var(--ink-soft);
   }
-  h3 { margin:22px 0 6px; font-size:13px; font-weight:600; }
-  code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.92em; }
+  h3:not(.stage *) { margin:22px 0 6px; font-size:13px; font-weight:600; }
+  code:not(.stage *) { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.92em; }
   .story { margin-top:18px; border:1px solid var(--rule); border-radius:12px; overflow:hidden; }
   .story > .head {
     display:flex; align-items:baseline; gap:10px; padding:11px 16px;
@@ -47,9 +49,9 @@
   .chip .halves i { flex:1; }
   .chip div.meta { padding:7px 9px; }
   .chip code { display:block; color:var(--ink-soft); word-break:break-all; font-size:11px; }
-  table { border-collapse:collapse; width:100%; margin-top:12px; font-size:13px; }
-  th, td { text-align:left; padding:7px 10px; border-bottom:1px solid var(--rule); vertical-align:top; }
-  th { font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; }
+  table:not(.stage *) { border-collapse:collapse; width:100%; margin-top:12px; font-size:13px; }
+  :is(th, td):not(.stage *) { text-align:left; padding:7px 10px; border-bottom:1px solid var(--rule); vertical-align:top; }
+  th:not(.stage *) { font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; }
   .demo { padding:18px; border-radius:10px; margin-top:10px; }
   .demo p { margin:0 0 10px; font-weight:600; }
   .demo .card { padding:12px 14px; border-radius:8px; }
@@ -58,7 +60,7 @@
   .scale-row { display:flex; align-items:baseline; gap:14px; padding:6px 0; border-bottom:1px solid var(--rule); }
   .scale-row code { min-width:90px; }
   .scale-row span.sample { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  footer {
+  footer:not(.stage *) {
     margin-top:44px; padding-top:16px; border-top:1px solid var(--rule);
     color:var(--ink-soft); font-size:12.5px; line-height:1.6;
   }
@@ -93,7 +95,7 @@
     <div class="modes">
       <figure>
         <figcaption>Light</figcaption>
-        <div class="stage" style="background:#a5d8ff;color:#0b2239"><div class="demo" style="background:#a5d8ff;color:#0b2239"><p>Ground carries the block</p><div class="card" style="background:#ffffff;color:#1d2129"><b>High ground</b><span style="color:#4a5260">Cards and chips sit on the front group</span><span class="pill" style="background:#0b2239;color:#a5d8ff">Action</span></div></div></div>
+        <div class="stage" style="background:#0f4c81;color:#ffffff"><div class="demo" style="background:#0f4c81;color:#ffffff"><p>Ground carries the block</p><div class="card" style="background:#ffffff;color:#1d2129"><b>High ground</b><span style="color:#4a5260">Cards and chips sit on the front group</span><span class="pill" style="background:#a5d8ff;color:#0f4c81">Action</span></div></div></div>
       </figure>
     </div>
   </div>
@@ -102,19 +104,19 @@
     <div class="modes">
       <figure>
         <figcaption>Dark</figcaption>
-        <div class="stage" style="background:#1c3a57;color:#e7f5ff"><div class="demo" style="background:#1c3a57;color:#e7f5ff"><p>Ground carries the block</p><div class="card" style="background:#14171c;color:#f1f3f5"><b>High ground</b><span style="color:#b4bcc8">Cards and chips sit on the front group</span><span class="pill" style="background:#a5d8ff;color:#1c3a57">Action</span></div></div></div>
+        <div class="stage" style="background:#1b4d82;color:#e7f5ff"><div class="demo" style="background:#1b4d82;color:#e7f5ff"><p>Ground carries the block</p><div class="card" style="background:#14171c;color:#f1f3f5"><b>High ground</b><span style="color:#b4bcc8">Cards and chips sit on the front group</span><span class="pill" style="background:#a5d8ff;color:#1b4d82">Action</span></div></div></div>
       </figure>
     </div>
   </div>
   <h2>Custom ColorGroup combinations (custom-{back}-{front})</h2>
-<div class="chips"><div class="chip"><div class="halves"><i style="background:#ffffff"></i><i style="background:#ffffff"></i></div><div class="meta"><code>custom-primary-primary</code>back primary · front primary</div></div><div class="chip"><div class="halves"><i style="background:#ffffff"></i><i style="background:#eceff3"></i></div><div class="meta"><code>custom-primary-secondary</code>back primary · front secondary</div></div><div class="chip"><div class="halves"><i style="background:#ffffff"></i><i style="background:#a5d8ff"></i></div><div class="meta"><code>custom-primary-accent</code>back primary · front accent</div></div><div class="chip"><div class="halves"><i style="background:#ffffff"></i><i style="background:#f6f7f9"></i></div><div class="meta"><code>custom-primary-neutral</code>back primary · front neutral</div></div><div class="chip"><div class="halves"><i style="background:#eceff3"></i><i style="background:#ffffff"></i></div><div class="meta"><code>custom-secondary-primary</code>back secondary · front primary</div></div><div class="chip"><div class="halves"><i style="background:#eceff3"></i><i style="background:#eceff3"></i></div><div class="meta"><code>custom-secondary-secondary</code>back secondary · front secondary</div></div><div class="chip"><div class="halves"><i style="background:#eceff3"></i><i style="background:#a5d8ff"></i></div><div class="meta"><code>custom-secondary-accent</code>back secondary · front accent</div></div><div class="chip"><div class="halves"><i style="background:#eceff3"></i><i style="background:#f6f7f9"></i></div><div class="meta"><code>custom-secondary-neutral</code>back secondary · front neutral</div></div><div class="chip"><div class="halves"><i style="background:#a5d8ff"></i><i style="background:#ffffff"></i></div><div class="meta"><code>custom-accent-primary</code>back accent · front primary</div></div><div class="chip"><div class="halves"><i style="background:#a5d8ff"></i><i style="background:#eceff3"></i></div><div class="meta"><code>custom-accent-secondary</code>back accent · front secondary</div></div><div class="chip"><div class="halves"><i style="background:#a5d8ff"></i><i style="background:#a5d8ff"></i></div><div class="meta"><code>custom-accent-accent</code>back accent · front accent</div></div><div class="chip"><div class="halves"><i style="background:#a5d8ff"></i><i style="background:#f6f7f9"></i></div><div class="meta"><code>custom-accent-neutral</code>back accent · front neutral</div></div><div class="chip"><div class="halves"><i style="background:#f6f7f9"></i><i style="background:#ffffff"></i></div><div class="meta"><code>custom-neutral-primary</code>back neutral · front primary</div></div><div class="chip"><div class="halves"><i style="background:#f6f7f9"></i><i style="background:#eceff3"></i></div><div class="meta"><code>custom-neutral-secondary</code>back neutral · front secondary</div></div><div class="chip"><div class="halves"><i style="background:#f6f7f9"></i><i style="background:#a5d8ff"></i></div><div class="meta"><code>custom-neutral-accent</code>back neutral · front accent</div></div><div class="chip"><div class="halves"><i style="background:#f6f7f9"></i><i style="background:#f6f7f9"></i></div><div class="meta"><code>custom-neutral-neutral</code>back neutral · front neutral</div></div></div>
+<div class="chips"><div class="chip"><div class="halves"><i style="background:#ffffff"></i><i style="background:#ffffff"></i></div><div class="meta"><code>custom-primary-primary</code>back primary · front primary</div></div><div class="chip"><div class="halves"><i style="background:#ffffff"></i><i style="background:#343a40"></i></div><div class="meta"><code>custom-primary-secondary</code>back primary · front secondary</div></div><div class="chip"><div class="halves"><i style="background:#ffffff"></i><i style="background:#0f4c81"></i></div><div class="meta"><code>custom-primary-accent</code>back primary · front accent</div></div><div class="chip"><div class="halves"><i style="background:#ffffff"></i><i style="background:#f6f7f9"></i></div><div class="meta"><code>custom-primary-neutral</code>back primary · front neutral</div></div><div class="chip"><div class="halves"><i style="background:#343a40"></i><i style="background:#ffffff"></i></div><div class="meta"><code>custom-secondary-primary</code>back secondary · front primary</div></div><div class="chip"><div class="halves"><i style="background:#343a40"></i><i style="background:#343a40"></i></div><div class="meta"><code>custom-secondary-secondary</code>back secondary · front secondary</div></div><div class="chip"><div class="halves"><i style="background:#343a40"></i><i style="background:#0f4c81"></i></div><div class="meta"><code>custom-secondary-accent</code>back secondary · front accent</div></div><div class="chip"><div class="halves"><i style="background:#343a40"></i><i style="background:#f6f7f9"></i></div><div class="meta"><code>custom-secondary-neutral</code>back secondary · front neutral</div></div><div class="chip"><div class="halves"><i style="background:#0f4c81"></i><i style="background:#ffffff"></i></div><div class="meta"><code>custom-accent-primary</code>back accent · front primary</div></div><div class="chip"><div class="halves"><i style="background:#0f4c81"></i><i style="background:#343a40"></i></div><div class="meta"><code>custom-accent-secondary</code>back accent · front secondary</div></div><div class="chip"><div class="halves"><i style="background:#0f4c81"></i><i style="background:#0f4c81"></i></div><div class="meta"><code>custom-accent-accent</code>back accent · front accent</div></div><div class="chip"><div class="halves"><i style="background:#0f4c81"></i><i style="background:#f6f7f9"></i></div><div class="meta"><code>custom-accent-neutral</code>back accent · front neutral</div></div><div class="chip"><div class="halves"><i style="background:#f6f7f9"></i><i style="background:#ffffff"></i></div><div class="meta"><code>custom-neutral-primary</code>back neutral · front primary</div></div><div class="chip"><div class="halves"><i style="background:#f6f7f9"></i><i style="background:#343a40"></i></div><div class="meta"><code>custom-neutral-secondary</code>back neutral · front secondary</div></div><div class="chip"><div class="halves"><i style="background:#f6f7f9"></i><i style="background:#0f4c81"></i></div><div class="meta"><code>custom-neutral-accent</code>back neutral · front accent</div></div><div class="chip"><div class="halves"><i style="background:#f6f7f9"></i><i style="background:#f6f7f9"></i></div><div class="meta"><code>custom-neutral-neutral</code>back neutral · front neutral</div></div></div>
   <h3>Band over white cards</h3>
   <div class="story">
     <div class="head"><b>custom-secondary-primary</b><span>Back: secondary &middot; Front: primary</span></div>
     <div class="modes">
       <figure>
         <figcaption>Light</figcaption>
-        <div class="stage" style="background:#eceff3;color:#1d2129"><div class="demo" style="background:#eceff3;color:#1d2129"><p>custom-secondary-primary</p><div class="card" style="background:#ffffff;color:#1d2129"><b>High ground</b></div></div></div>
+        <div class="stage" style="background:#343a40;color:#f8f9fa"><div class="demo" style="background:#343a40;color:#f8f9fa"><p>custom-secondary-primary</p><div class="card" style="background:#ffffff;color:#1d2129"><b>High ground</b></div></div></div>
       </figure>
     </div>
   </div>
@@ -124,7 +126,7 @@
     <div class="modes">
       <figure>
         <figcaption>Dark</figcaption>
-        <div class="stage" style="background:#1c2027;color:#f1f3f5"><div class="demo" style="background:#1c2027;color:#f1f3f5"><p>custom-secondary-neutral</p><div class="card" style="background:#242932;color:#f1f3f5"><b>High ground</b></div></div></div>
+        <div class="stage" style="background:#343a40;color:#f1f3f5"><div class="demo" style="background:#343a40;color:#f1f3f5"><p>custom-secondary-neutral</p><div class="card" style="background:#242932;color:#f1f3f5"><b>High ground</b></div></div></div>
       </figure>
     </div>
   </div>

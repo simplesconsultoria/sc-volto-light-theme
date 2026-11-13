@@ -292,22 +292,6 @@ export function renderPatternPresetIcon(presetId: string): React.ReactNode {
           <line x1="12" y1="18" x2="18" y2="12" />
         </svg>
       );
-    case 'waves-acreative':
-      return (
-        <svg
-          width="13"
-          height="13"
-          viewBox="0 0 20 20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          aria-hidden="true"
-        >
-          <path d="M2 7 C5 4, 8 10, 11 7 C14 4, 17 10, 19 7" />
-          <path d="M2 13 C5 10, 8 16, 11 13 C14 10, 17 16, 19 13" />
-        </svg>
-      );
     case 'blueprint':
       return (
         <svg
@@ -326,38 +310,6 @@ export function renderPatternPresetIcon(presetId: string): React.ReactNode {
           <line x1="6" y1="2" x2="6" y2="18" opacity="0.5" />
           <line x1="10" y1="2" x2="10" y2="18" strokeWidth="1.2" />
           <line x1="14" y1="2" x2="14" y2="18" opacity="0.5" />
-        </svg>
-      );
-    case 'zigzag':
-      return (
-        <svg
-          width="13"
-          height="13"
-          viewBox="0 0 20 20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="2 8 6 4 10 8 14 4 18 8" />
-          <polyline points="2 16 6 12 10 16 14 12 18 16" />
-        </svg>
-      );
-    case 'radial-mesh':
-      return (
-        <svg
-          width="13"
-          height="13"
-          viewBox="0 0 20 20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.2"
-          aria-hidden="true"
-        >
-          <circle cx="10" cy="10" r="3" />
-          <circle cx="10" cy="10" r="7" strokeDasharray="2 2" />
         </svg>
       );
     default:

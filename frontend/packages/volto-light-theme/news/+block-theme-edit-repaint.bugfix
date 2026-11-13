@@ -1,0 +1,1 @@
+Picking another Block Theme in the sidebar repaints the block right away. Blocks such as Hero and Listing kept their old background while editing and only showed the new one after saving. @Humanaice

@@ -11,6 +11,11 @@ import type {
   SerializedTheme,
   ThemeSettings,
 } from '../types/theme';
+import {
+  LEGACY_THEME_ALIASES,
+  parseCustomTheme,
+  resolveThemeAlias,
+} from '../config/blockThemes';
 
 /**
  * The same shape the backend's `Color` field validates against.
@@ -239,6 +244,25 @@ export function blockThemeUtilityClasses(
     .join('\n');
 }
 
+/**
+ * Group wrapper selectors for legacy theme names whose back Color Group is
+ * `groupId`, each followed by a comma — empty when there are none.
+ *
+ * VLT names a group wrapper after the theme saved on its blocks, so a block
+ * still saved as `grey` sits in `.blocks-group-wrapper.grey`, which the
+ * `custom-<back>-` selector does not match: its band got the colour of
+ * `custom-secondary-primary` but never the Color Group's background layer.
+ * A project that defines its own theme under that name keeps it.
+ */
+function legacyAliasSelectors(groupId: string): string {
+  return Object.keys(LEGACY_THEME_ALIASES)
+    .filter(
+      (alias) => parseCustomTheme(resolveThemeAlias(alias))?.back === groupId,
+    )
+    .map((alias) => `.blocks-group-wrapper.${alias},\n`)
+    .join('');
+}
+
 export function colorGroupUtilityClasses(
   colorGroups?: Record<string, ColorGroup> | ColorGroup[],
 ): string {
@@ -252,7 +276,7 @@ export function colorGroupUtilityClasses(
       (cg) => `
 .has-back-colorgroup-${cg.id},
 .blocks-group-wrapper.has-back-colorgroup-${cg.id},
-.blocks-group-wrapper[class*="custom-${cg.id}-"] {
+${legacyAliasSelectors(cg.id)}.blocks-group-wrapper[class*="custom-${cg.id}-"] {
   --theme-color: var(--colorgroup-${cg.id}-bg);
   --theme-foreground-color: var(--colorgroup-${cg.id}-text);
   --theme-high-contrast-foreground-color: var(--colorgroup-${cg.id}-text);
@@ -279,6 +303,10 @@ export function colorGroupUtilityClasses(
   --theme-top-bg-size: var(--colorgroup-${cg.id}-bg-size, auto);
   --theme-top-bg-repeat: var(--colorgroup-${cg.id}-bg-repeat, repeat);
   --theme-top-bg-position: var(--colorgroup-${cg.id}-bg-position, center);
+  --colorgroup-front-bg-image: var(--colorgroup-${cg.id}-bg-image, none);
+  --colorgroup-front-bg-size: var(--colorgroup-${cg.id}-bg-size, auto);
+  --colorgroup-front-bg-repeat: var(--colorgroup-${cg.id}-bg-repeat, repeat);
+  --colorgroup-front-bg-position: var(--colorgroup-${cg.id}-bg-position, center);
 }`,
     )
     .join('\n');
@@ -501,7 +529,10 @@ export function themeStyleSheet(
       properties['--footer-foreground'] = 'var(--secondary-foreground-color)';
     }
     if (!properties['--link-foreground-color']) {
-      properties['--link-foreground-color'] = 'var(--accent-color)';
+      // The primary group's accent: a text colour chosen for the page ground
+      // in each colour mode. `--accent-color` is the accent group's *surface*
+      // (dark blue), which on the dark-mode page is unreadable.
+      properties['--link-foreground-color'] = 'var(--primary-accent-color)';
     }
   }
 

@@ -316,6 +316,57 @@ class TestColorGroupsAndBlockThemesControlpanel:
         response = self.api.patch(f"{PANEL}/festive", json={"color_groups": value})
         assert response.status_code == 400
 
+    def _add_dourado(self):
+        response = self.api.patch(
+            f"{PANEL}/festive",
+            json={"color_groups": {"dourado": {"name": "Dourado"}}},
+        )
+        assert response.status_code in (200, 204)
+        transaction.commit()
+
+    def test_patch_keeps_the_color_groups_left_out(self):
+        self._add_dourado()
+        response = self.api.patch(
+            f"{PANEL}/festive",
+            json={"color_groups": {"primary": {"background_color_light": "#fafafa"}}},
+        )
+        assert response.status_code in (200, 204)
+        transaction.commit()
+        groups = self.api.get(f"{PANEL}/festive").json()["color_groups"]
+        assert "dourado" in groups
+        assert groups["primary"]["background_color_light"] == "#fafafa"
+        # The fields not sent are kept.
+        assert groups["primary"]["name"] == "Primary"
+
+    def test_patch_with_null_deletes_a_color_group_everywhere(self):
+        self._add_dourado()
+        response = self.api.patch(
+            f"{PANEL}/festive", json={"color_groups": {"dourado": None}}
+        )
+        assert response.status_code in (200, 204)
+        transaction.commit()
+        for tid in ("festive", themes.DEFAULT_THEME_ID):
+            groups = self.api.get(f"{PANEL}/{tid}").json()["color_groups"]
+            assert "dourado" not in groups
+
+    def test_patch_with_null_on_a_base_color_group_is_rejected(self):
+        self._add_dourado()
+        response = self.api.patch(
+            f"{PANEL}/festive",
+            json={"color_groups": {"primary": None, "dourado": None}},
+        )
+        assert response.status_code == 400
+        transaction.commit()
+        groups = self.api.get(f"{PANEL}/festive").json()["color_groups"]
+        assert "primary" in groups
+        assert "dourado" in groups
+
+    def test_patch_with_null_on_a_base_block_theme_is_rejected(self):
+        response = self.api.patch(
+            f"{PANEL}/festive", json={"block_themes": {"default": None}}
+        )
+        assert response.status_code == 400
+
     def test_create_with_a_non_string_id_is_rejected(self):
         response = self.api.post(PANEL, json={"id": 42, "name": "Number"})
         assert response.status_code == 400

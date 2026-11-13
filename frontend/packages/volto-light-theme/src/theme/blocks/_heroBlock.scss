@@ -43,9 +43,15 @@ $hero-card-overlap: 60px;
 .hero-block-container {
   // Default fallback if no block-width is selected
   @include layout-container-width();
-  @include adjustMarginsToContainer($layout-container-width);
   margin-right: auto;
   margin-left: auto;
+
+  // The layout width's small-screen margins only for a container without a
+  // width of its own: they are `!important`, so below 1480px they also hit a
+  // narrow or default container and pinned it to the left instead of centred.
+  &:not([class*='has--block-width--']) {
+    @include adjustMarginsToContainer($layout-container-width);
+  }
 
   &.has--block-width--narrow,
   &.has--block-width--var\(--narrow-container-width\) {

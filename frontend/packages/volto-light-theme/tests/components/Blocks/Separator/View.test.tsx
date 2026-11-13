@@ -1,6 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import View from '@simplesconsultoria/volto-light-theme/components/Blocks/Separator/View';
+import View, {
+  borderThickness,
+} from '@simplesconsultoria/volto-light-theme/components/Blocks/Separator/View';
 
 describe('Separator View', () => {
   it('renders with default settings', () => {
@@ -59,5 +61,36 @@ describe('Separator View', () => {
       <View data={{ width: '50%', styles: { shortLine: true } }} />,
     );
     expect(container.querySelector('hr')).toHaveStyle({ width: '50%' });
+  });
+
+  it('draws a bottom-only --cardBorderWidth at its thickness', () => {
+    const { container } = render(
+      <View data={{ styles: { '--cardBorderWidth': '0px 0px 3px 0px' } }} />,
+    );
+    const hr = container.querySelector('hr') as HTMLElement;
+    expect(hr.style.borderTopWidth).toBe('3px');
+  });
+
+  it('keeps an explicit 0 --cardBorderWidth as no line', () => {
+    const { container } = render(
+      <View data={{ styles: { '--cardBorderWidth': '0' } }} />,
+    );
+    const hr = container.querySelector('hr') as HTMLElement;
+    expect(hr.style.borderTopWidth).toBe('0px');
+  });
+});
+
+describe('borderThickness', () => {
+  it.each([
+    ['2px', 2],
+    ['6px 0px 0px 0px', 6],
+    ['0px 0px 3px 0px', 3],
+    ['1px 4px', 4],
+    ['1.5px', 1.5],
+    ['0', 0],
+    ['', 0],
+    [undefined, 0],
+  ])('%j is %d', (value, expected) => {
+    expect(borderThickness(value)).toBe(expected);
   });
 });

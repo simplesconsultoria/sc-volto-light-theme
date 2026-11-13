@@ -7,7 +7,8 @@ import earSVG from '@simplesconsultoria/volto-light-theme/icons/ear.svg';
 import {
   isSpeechSupported,
   ensureVoicesLoaded,
-  configurePortugueseUtterance,
+  configureUtterance,
+  readerLanguage,
 } from '../../utils/speechSynthesis';
 
 import {
@@ -46,6 +47,8 @@ const HoverReaderControls: React.FC = () => {
   const [hoverReaderEnabled, setHoverReaderEnabled] = useState(false);
   const [rate, setRate] = useState(DEFAULT_RATE);
   const ratePercent = Math.round(rate * 100);
+  // The reader speaks the site language; switching it switches the voice.
+  const voiceLang = readerLanguage(intl.locale);
 
   const stopSpeaking = useCallback(() => {
     if (!isSpeechSupported()) return;
@@ -59,10 +62,10 @@ const HoverReaderControls: React.FC = () => {
       window.speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      configurePortugueseUtterance(utterance, rate);
+      configureUtterance(utterance, voiceLang, rate);
       window.speechSynthesis.speak(utterance);
     },
-    [rate],
+    [rate, voiceLang],
   );
 
   // Hover speech is debounced. The module-level timer is shared by every

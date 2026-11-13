@@ -1,0 +1,1 @@
+The hover reader reads in the site language: English on an English site, Brazilian Portuguese on a Portuguese one, and any other language with a voice the browser has for it. Projects can set the voices to prefer for a language with `config.settings.scvlt.speechVoices`. @Humanaice

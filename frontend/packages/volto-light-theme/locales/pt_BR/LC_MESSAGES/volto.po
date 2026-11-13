@@ -644,11 +644,6 @@ msgstr "Duplicar"
 msgid "Duplicate of {name}"
 msgstr "Cópia de {name}"
 
-#. Default: "Dynamic curved waves inspired by the Acreative project"
-#: config/blockThemes
-msgid "Dynamic curved waves inspired by the Acreative project"
-msgstr "Ondas curvas dinâmicas inspiradas no projeto Acreative"
-
 #. Default: "Edit"
 #: components/Controlpanels/Themes/messages
 msgid "Edit"
@@ -824,11 +819,6 @@ msgstr "Permite que o texto ocupe todo o bloco quando não há imagem a exibir."
 #: components/Blocks/HeroBlock/schema
 msgid "Full width image"
 msgstr "Imagem em largura total (encosta nas bordas)"
-
-#. Default: "Geometric zigzag pattern"
-#: config/blockThemes
-msgid "Geometric zigzag pattern"
-msgstr "Padrão geométrico em zigue-zague"
 
 #. Default: "Go to item {index}"
 #: components/Blocks/Listing/messages
@@ -1298,11 +1288,6 @@ msgstr "Parágrafo (P)"
 msgid "Participation"
 msgstr "Participação"
 
-#. Default: "Pattern of concentric circles and radial dots"
-#: config/blockThemes
-msgid "Pattern of concentric circles and radial dots"
-msgstr "Padrão de círculos concêntricos e pontos radiais"
-
 #. Default: "Pause carousel"
 #: components/Blocks/Listing/messages
 msgid "Pause carousel"
@@ -1364,15 +1349,10 @@ msgstr "Predefinições rápidas"
 msgid "Quote"
 msgstr "Citação"
 
-#. Default: "Radial mesh"
-#: config/blockThemes
-msgid "Radial mesh"
-msgstr "Malha radial"
-
-#. Default: "Ready-made CSS patterns (Acreative-style presets)"
+#. Default: "Ready-made CSS patterns"
 #: components/Widgets/ColorGroups/messages
-msgid "Ready-made CSS patterns (Acreative-style presets)"
-msgstr "Padrões CSS prontos (predefinições no estilo Acreative)"
+msgid "Ready-made CSS patterns"
+msgstr "Padrões CSS prontos"
 
 #. Default: "Register"
 #: components/Anontools/Anontools
@@ -1761,11 +1741,6 @@ msgstr "Vídeo"
 msgid "View all"
 msgstr "Ver todos"
 
-#. Default: "Waves (Acreative)"
-#: config/blockThemes
-msgid "Waves (Acreative)"
-msgstr "Ondas (Acreative)"
-
 #. Default: "When"
 #: components/Blocks/EventMetadata/helpers
 msgid "When"
@@ -1775,11 +1750,6 @@ msgstr "Quando"
 #: components/Blocks/EventMetadata/helpers
 msgid "Where"
 msgstr "Onde"
-
-#. Default: "Zigzag / Chevron"
-#: config/blockThemes
-msgid "Zigzag / Chevron"
-msgstr "Zigue-zague / Chevron"
 
 #. Default: "Decrease font size"
 #: components/AccessibilityControls/FontSizeControls

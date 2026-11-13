@@ -128,8 +128,8 @@ And... you're all set! Your Plone site is up and running locally! 🚀
 
 | Change | What to do |
 | --- | --- |
-| **New default palette.** Sites that never set their own colors change from black and orange to white and cool-gray surfaces with a light-blue accent (`#a5d8ff`), and the default font follows the primary Color Group. | Set your palette in your theme profile (see below) or in the *Themes* control panel. |
-| **Theme REST data.** `@controlpanels/themes/<theme-id>` serves `color_groups` and `block_themes` instead of the per-color keys (`primary_color_light`, …), as soon as the new code is deployed. | Read `color_groups.<group>.<role>_color_<mode>`. The old keys are still accepted when writing. |
+| **New default palette.** Sites that never set their own colors change from black and orange to white surfaces, a dark gray secondary (`#343a40`) and a dark blue accent (`#0f4c81`), both with light text, and the default font follows the primary Color Group. Links use the primary Color Group's accent color. | Set your palette in your theme profile (see below) or in the *Themes* control panel. |
+| **Theme REST data.** `@controlpanels/themes/<theme-id>` serves `color_groups` and `block_themes` instead of the per-color keys (`primary_color_light`, …), as soon as the new code is deployed. | Read `color_groups.<group>.<role>_color_<mode>`. The old keys are still accepted when writing. A `PATCH` merges `color_groups` and `block_themes` by id: entries left out are kept, and an entry sent as `null` is deleted on every theme. |
 | **Color Group ids** use lowercase letters, digits and underscores (`my_brand`). | Nothing, unless a client creates groups through the API. |
 | **No default social networks.** The footer shows the site's `social_links`, or nothing. | Set `config.settings.socialNetworks` in your project if it relied on a frontend list. |
 
@@ -236,6 +236,29 @@ Generate translation files for Plone and Volto with ease:
 ```shell
 make i18n
 ```
+
+### Hover reader languages
+
+The hover reader in the header bar reads text aloud in the site language: a
+site in English is read in English, one in Brazilian Portuguese in Portuguese.
+For each language, the browser uses its best installed voice. Brazilian
+Portuguese and English come with voice preferences; a project tunes another
+language by appending it to `config.settings.scvlt.speechVoices` in its own
+add-on:
+
+```js
+config.settings.scvlt.speechVoices = [
+  ...config.settings.scvlt.speechVoices,
+  {
+    lang: 'es-ES', // BCP-47 tag given to the browser's speech synthesis
+    preferredNames: ['Google', 'Microsoft'], // optional: voices to try first
+  },
+];
+```
+
+An entry matches the site language exactly or by language (`es-ES` serves a
+site in `es`). A language without an entry is still read, in that language,
+with whatever voice the browser picks.
 
 ## Credits and acknowledgements 🙏
 

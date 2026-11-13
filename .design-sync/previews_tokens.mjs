@@ -19,6 +19,10 @@ export async function resolve(specifier, context, next) {
   if (specifier === 'react-intl') {
     return { url: 'data:text/javascript,export function defineMessages(m) { return m; };', shortCircuit: true };
   }
+  // The sources import each other without an extension, as the bundler allows.
+  if (/^\\.\\.?\\//.test(specifier) && !/\\.[cm]?[jt]sx?$/.test(specifier)) {
+    return next(specifier + '.ts', context);
+  }
   return next(specifier, context);
 }
 `;

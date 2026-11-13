@@ -213,6 +213,111 @@ class TestThemeUtils:
                     "corporate", {"color_groups": groups}, registry=self.registry
                 )
 
+    class TestCollectionMerge:
+        """``color_groups`` and ``block_themes`` updates are merge patches."""
+
+        @pytest.fixture(autouse=True)
+        def _setup(self, integration):
+            self.registry = getUtility(IRegistry)
+            themes.create_theme("corporate", {"name": "Corporate"}, self.registry)
+            themes.create_color_group(
+                "corporate",
+                {"id": "golden", "name": "Golden", "background_color_light": "#ffd700"},
+                registry=self.registry,
+            )
+            themes.create_block_theme(
+                "corporate",
+                {
+                    "id": "shiny",
+                    "name": "Shiny",
+                    "back_color_group": "golden",
+                    "front_color_group": "neutral",
+                },
+                registry=self.registry,
+            )
+
+        def groups(self, theme_id="corporate"):
+            return themes.get_theme_color_groups(theme_id, self.registry)
+
+        def block_themes(self, theme_id="corporate"):
+            return themes.get_theme_block_themes(theme_id, self.registry)
+
+        def update(self, values):
+            return themes.update_theme("corporate", values, registry=self.registry)
+
+        def test_a_color_group_left_out_is_kept(self):
+            self.update({"color_groups": {"primary": {"name": "Main"}}})
+            assert "golden" in self.groups()
+            assert self.groups()["golden"]["background_color_light"] == "#ffd700"
+
+        def test_a_partial_color_group_is_merged_onto_the_stored_one(self):
+            self.update({"color_groups": {"golden": {"text_color_light": "#000000"}}})
+            golden = self.groups()["golden"]
+            assert golden["text_color_light"] == "#000000"
+            assert golden["background_color_light"] == "#ffd700"
+            assert golden["name"] == "Golden"
+
+        def test_a_new_color_group_is_added(self):
+            self.update({"color_groups": {"silver": {"name": "Silver"}}})
+            assert self.groups()["silver"] == {"id": "silver", "name": "Silver"}
+            assert "silver" in self.groups(themes.DEFAULT_THEME_ID)
+
+        def test_a_null_color_group_is_deleted_on_every_theme(self):
+            self.update({"color_groups": {"golden": None}})
+            for tid in ("corporate", themes.DEFAULT_THEME_ID):
+                assert "golden" not in self.groups(tid)
+
+        def test_deleting_a_color_group_reverts_the_block_themes_using_it(self):
+            self.update({"color_groups": {"golden": None}})
+            for tid in ("corporate", themes.DEFAULT_THEME_ID):
+                assert self.block_themes(tid)["shiny"]["back_color_group"] == "primary"
+
+        def test_a_null_for_an_unknown_color_group_is_ignored(self):
+            self.update({"color_groups": {"nothing_here": None}})
+            assert "nothing_here" not in self.groups()
+            assert "golden" in self.groups()
+
+        @pytest.mark.parametrize("gid", sorted(themes.BASE_COLOR_GROUPS))
+        def test_a_base_color_group_cannot_be_deleted(self, gid):
+            before = self.groups()
+            with pytest.raises(ValueError, match="cannot be deleted"):
+                self.update({"color_groups": {gid: None, "golden": None}})
+            # Rejected before anything is written.
+            assert self.groups() == before
+
+        def test_a_null_for_an_invalid_color_group_id_is_rejected(self):
+            with pytest.raises(ValueError, match="invalid id"):
+                self.update({"color_groups": {"my-brand": None}})
+
+        def test_a_block_theme_left_out_is_kept(self):
+            self.update({"block_themes": {"default": {"name": "Main"}}})
+            assert self.block_themes()["shiny"]["back_color_group"] == "golden"
+            assert self.block_themes()["default"]["name"] == "Main"
+            assert self.block_themes()["default"]["back_color_group"] == "primary"
+
+        def test_a_null_block_theme_is_deleted_on_every_theme(self):
+            self.update({"block_themes": {"shiny": None}})
+            for tid in ("corporate", themes.DEFAULT_THEME_ID):
+                assert "shiny" not in self.block_themes(tid)
+
+        @pytest.mark.parametrize("btid", sorted(themes.BASE_BLOCK_THEMES))
+        def test_a_base_block_theme_cannot_be_deleted(self, btid):
+            before = self.block_themes()
+            with pytest.raises(ValueError, match="cannot be deleted"):
+                self.update({"block_themes": {btid: None, "shiny": None}})
+            assert self.block_themes() == before
+
+        def test_a_rejected_collection_writes_nothing_else(self):
+            with pytest.raises(ValueError):
+                self.update({
+                    "description": "Changed",
+                    "color_groups": {"golden": None},
+                    "block_themes": {"default": None},
+                })
+            assert "golden" in self.groups()
+            values = themes.theme_values("corporate", self.registry)
+            assert values.get("description") != "Changed"
+
     class TestDelete:
         @pytest.fixture(autouse=True)
         def _setup(self, integration):

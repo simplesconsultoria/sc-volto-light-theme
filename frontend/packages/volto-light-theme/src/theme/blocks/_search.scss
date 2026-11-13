@@ -168,12 +168,13 @@
   // Cards inside Search Block
   .listing-item .card,
   .card {
-    border: solid
-      var(--cardBorderColor, var(--theme-border-color, currentColor));
     border-width: var(
       --cardBorderWidth,
       var(--theme-border-width, 0)
     ) !important;
+    // Longhand: an undefined colour variable would void a `border` shorthand,
+    // `solid` included (see `listing/_grid.scss`). The colour is set below.
+    border-style: solid;
     border-color: var(
       --cardBorderColor,
       var(--theme-border-color, currentColor)

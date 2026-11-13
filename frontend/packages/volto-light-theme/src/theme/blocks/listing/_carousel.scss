@@ -53,8 +53,14 @@
       max-width: 100%;
       box-sizing: border-box;
       flex-direction: column;
-      border: solid var(--cardBorderColor, var(--theme-border-color));
       border-width: var(--cardBorderWidth, var(--theme-border-width, 2px));
+      // Longhands: an undefined colour variable would void a `border`
+      // shorthand, `solid` included (see `listing/_grid.scss`).
+      border-style: solid;
+      border-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, var(--primary-accent-color))
+      );
     }
 
     &__track {
@@ -286,7 +292,12 @@
 
     &__arrow,
     &__toggle {
-      border: 2px solid var(--cardBorderColor, var(--theme-border-color));
+      border-width: 2px;
+      border-style: solid;
+      border-color: var(
+        --cardBorderColor,
+        var(--theme-border-color, var(--primary-accent-color))
+      );
       background: var(--theme-high-contrast-color);
       color: var(--theme-top-foreground-color);
 

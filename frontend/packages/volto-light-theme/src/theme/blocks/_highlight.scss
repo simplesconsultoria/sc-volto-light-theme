@@ -21,4 +21,43 @@
   .teaser-item {
     overflow: hidden;
   }
+
+  // Text in the panel follows the panel's own foreground. Otherwise
+  // `.q.container p` (`_globals.scss`) gives paragraphs the block ground's text
+  // colour: in dark mode that is light text on whichever light panel colour
+  // was picked.
+  .teaser-item .highlight-description {
+    :is(p, li, h2, h3, h4, h5, h6) {
+      color: inherit;
+    }
+  }
+}
+
+// Grey, the block's default description colour, is a fixed light panel
+// upstream (`#ECEBEB` with black text), the same in both colour modes. Here it
+// is the block theme's front Color Group, like every other card: it follows
+// the colour mode and carries the group's background layer. The other
+// description colours stay as the editor picked them.
+.block.highlight.has--descriptionColor--highlight-custom-color-1,
+.has--descriptionColor--highlight-custom-color-1 .block.highlight {
+  .teaser-item .highlight-description {
+    --descriptionColor: var(--theme-high-contrast-color, #ecebeb);
+    --descriptionColor-foreground: var(--theme-top-foreground-color, #000);
+    background-image: var(
+      --highground-bg-image,
+      var(--colorgroup-front-bg-image, none)
+    );
+    background-position: var(
+      --highground-bg-position,
+      var(--colorgroup-front-bg-position, center)
+    );
+    background-repeat: var(
+      --highground-bg-repeat,
+      var(--colorgroup-front-bg-repeat, repeat)
+    );
+    background-size: var(
+      --highground-bg-size,
+      var(--colorgroup-front-bg-size, auto)
+    );
+  }
 }

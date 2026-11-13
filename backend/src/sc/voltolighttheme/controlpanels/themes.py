@@ -159,10 +159,15 @@ class ThemesControlpanel(RegistryConfigletPanel):
     def update(self, names):
         """Partially update one theme from the request body.
 
+        ``color_groups`` and ``block_themes`` are merge patches keyed by id:
+        entries left out are kept, and an entry sent as ``null`` is deleted
+        on every theme.
+
         :param names: traversal path naming exactly one theme.
         :returns: the serialised theme.
         :raises NotFound: when the theme does not exist.
-        :raises BadRequest: when a color group or block theme is malformed.
+        :raises BadRequest: when a color group or block theme is malformed,
+            or a base one is deleted.
         """
         theme_id = self._single(names)
         if not themes.theme_exists(theme_id):

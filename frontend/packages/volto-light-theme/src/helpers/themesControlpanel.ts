@@ -226,6 +226,78 @@ export function cloneThemeFormData(theme: ThemeItem): Record<string, unknown> {
   };
 }
 
+/**
+ * Theme fields the backend merges by id rather than replaces.
+ *
+ * A `PATCH` keeps the entries it leaves out and deletes the ones sent as
+ * `null` (JSON Merge Patch), so a deletion has to be spelled out.
+ */
+export const MERGED_COLLECTIONS = ['color_groups', 'block_themes'] as const;
+
+type Collection = Record<string, unknown> | unknown[] | null | undefined;
+
+/** The ids in a stored collection, held as a mapping or as a list. */
+function collectionIds(value: Collection): string[] {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => (item as { id?: unknown } | null)?.id)
+      .filter((id): id is string => typeof id === 'string');
+  }
+  return value && typeof value === 'object' ? Object.keys(value) : [];
+}
+
+/**
+ * The merge patch that turns one collection into another.
+ *
+ * Every entry of `after` is sent as it is; every id of `before` missing from
+ * `after` is sent as `null`, which the backend reads as "delete".
+ *
+ * @param before the collection as the theme stores it.
+ * @param after the collection as the form submits it.
+ * @returns a mapping by id, ready for the request body.
+ */
+export function collectionPatch(
+  before: Collection,
+  after: Collection,
+): Record<string, unknown> {
+  const patch: Record<string, unknown> = {};
+  if (Array.isArray(after)) {
+    for (const item of after) {
+      const id = (item as { id?: unknown } | null)?.id;
+      if (typeof id === 'string') patch[id] = item;
+    }
+  } else if (after && typeof after === 'object') {
+    Object.assign(patch, after);
+  }
+  for (const id of collectionIds(before)) {
+    if (!(id in patch)) patch[id] = null;
+  }
+  return patch;
+}
+
+/**
+ * The body of a theme `PATCH`: the submitted values, with the merged
+ * collections rewritten so that entries removed in the form are deleted.
+ *
+ * @param theme the theme as stored, before the edit.
+ * @param values the submitted field values.
+ */
+export function themePatchValues(
+  theme: Partial<ThemeItem> | undefined,
+  values: Record<string, unknown>,
+): Record<string, unknown> {
+  const body = { ...values };
+  for (const field of MERGED_COLLECTIONS) {
+    if (field in body) {
+      body[field] = collectionPatch(
+        theme?.[field] as Collection,
+        body[field] as Collection,
+      );
+    }
+  }
+  return body;
+}
+
 /** Validation message for a proposed new id, or `null` when it is usable. */
 export function validateNewThemeId(
   themeId: string,

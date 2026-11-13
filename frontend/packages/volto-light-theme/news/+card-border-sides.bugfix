@@ -1,0 +1,1 @@
+Card borders set in the Border widget show on every side they are set on, in one color. Without a border color picked, and always on the Alternative block theme, only the top side was drawn (Listing Grid, Teaser, Search and Carousel cards). The Alternative theme now has a border color: the Accent group's accent. @Humanaice

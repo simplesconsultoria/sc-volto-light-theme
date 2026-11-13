@@ -85,8 +85,12 @@ export const ColorGroupsWidget: React.FC<ColorGroupsWidgetProps> = ({
       });
       return;
     }
+    // Both colour modes: the presets draw with `currentColor`, so the same
+    // pattern follows the light or dark text colour on its own. Setting only
+    // the light field left a dark image picked earlier in place.
     updateGroupMultiple(groupId, {
       bg_image_light_desktop: preset.css,
+      bg_image_dark_desktop: preset.css,
       bg_size: preset.defaultSize || 'auto',
       bg_repeat: preset.defaultRepeat || 'repeat',
       bg_position: preset.defaultPosition || 'center',

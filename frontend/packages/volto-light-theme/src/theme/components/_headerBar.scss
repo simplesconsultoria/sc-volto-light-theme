@@ -128,7 +128,7 @@ body header.header-wrapper {
 
       // Shared styles for selectors inside the bar
       :is(.language-selector, .tools, .tools .anontools) {
-        @include header-tool-cluster(var(--accent-foreground-color));
+        @include header-tool-cluster(var(--secondary-foreground-color));
       }
 
       &__user {

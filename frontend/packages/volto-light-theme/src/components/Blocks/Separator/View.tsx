@@ -5,6 +5,25 @@ import { normalizeBlockWidth } from '../../../helpers/blockWidth';
 /** Width of the upstream separator's short line (`styles.shortLine`). */
 export const SHORT_LINE_WIDTH = '165px';
 
+/**
+ * The line thickness, in pixels, a `--cardBorderWidth` value asks for.
+ *
+ * The value is a `border-width` shorthand (`2px`, or `0px 0px 3px 0px` for the
+ * bottom only), so it is the thickest of its sides: reading only the first
+ * number gave 0 for any border not set on top, and the line disappeared.
+ *
+ * @returns the thickness, or 0 when the value has no usable width.
+ */
+export function borderThickness(value: unknown): number {
+  if (typeof value !== 'string') return 0;
+  const sides = value
+    .trim()
+    .split(/\s+/)
+    .map((part) => parseFloat(part))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  return sides.length ? Math.max(...sides) : 0;
+}
+
 // Estilos de margem conforme o alinhamento selecionado
 const getMarginStyle = (alignment: string) => {
   switch (alignment) {
@@ -24,11 +43,9 @@ const SeparatorView = (props: any) => {
     data?.color ||
     data?.styles?.['--cardBorderColor'] ||
     'var(--theme-border-color, #ccc)';
+  const cardBorderWidth = data?.styles?.['--cardBorderWidth'];
   const thickness =
-    data?.thickness ||
-    (data?.styles?.['--cardBorderWidth']
-      ? parseInt(data?.styles?.['--cardBorderWidth'], 10)
-      : 1);
+    data?.thickness || (cardBorderWidth ? borderThickness(cardBorderWidth) : 1);
   // Separator width (100% by default). Blocks saved by the upstream
   // separator (@kitconcept/volto-separator-block) use `styles.shortLine`
   // for the short line, which measures 165px there.

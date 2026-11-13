@@ -18,6 +18,13 @@
   --gray-80: #333;
   --gray-90: #1d2129; // ink: body text on light surfaces
 
+  // Strong band (secondary group): dark gray in both colour modes
+  --gray-strong: #343a40;
+  --gray-strong-text: #f8f9fa;
+  --gray-strong-low-text: #ced4da;
+  --gray-strong-text-dark: #f1f3f5;
+  --gray-strong-low-text-dark: #c3cad4;
+
   // Neutral scale — dark mode surfaces and ink
   --gray-dark-bg: #14171c; // page / primary surface
   --gray-dark-surface: #1c2027; // secondary surface
@@ -36,6 +43,9 @@
   --brand-ink-low: #1f3f5c;
   --brand-pale: #e7f5ff; // text on the deep blue surface
   --brand-pale-low: #b8d7ef;
+  --brand-strong: #0f4c81; // dark blue surface (accent group)
+  --brand-strong-dark: #1b4d82; // dark blue surface in dark mode
+  --brand-strong-low-text: #d0ebff;
 
   // Semantic colors
   --primary-color: light-dark(
@@ -56,36 +66,36 @@
   );
 
   --secondary-color: light-dark(
-    var(--secondary-color-light, var(--gray-cool-05)),
-    var(--secondary-color-dark, var(--gray-dark-surface))
+    var(--secondary-color-light, var(--gray-strong)),
+    var(--secondary-color-dark, var(--gray-strong))
   );
   --secondary-foreground-color: light-dark(
-    var(--secondary-foreground-color-light, var(--gray-90)),
-    var(--secondary-foreground-color-dark, var(--gray-dark-text))
+    var(--secondary-foreground-color-light, var(--gray-strong-text)),
+    var(--secondary-foreground-color-dark, var(--gray-strong-text-dark))
   );
   --secondary-low-foreground-color: light-dark(
-    var(--secondary-low-foreground-color-light, var(--gray-70)),
-    var(--secondary-low-foreground-color-dark, var(--gray-dark-low-text))
+    var(--secondary-low-foreground-color-light, var(--gray-strong-low-text)),
+    var(--secondary-low-foreground-color-dark, var(--gray-strong-low-text-dark))
   );
   --secondary-accent-color: light-dark(
-    var(--secondary-accent-color-light, var(--brand-color-darker)),
+    var(--secondary-accent-color-light, var(--brand-color)),
     var(--secondary-accent-color-dark, var(--brand-color-light))
   );
 
   --accent-color: light-dark(
-    var(--accent-color-light, var(--brand-color)),
-    var(--accent-color-dark, var(--brand-color-deep))
+    var(--accent-color-light, var(--brand-strong)),
+    var(--accent-color-dark, var(--brand-strong-dark))
   );
   --accent-foreground-color: light-dark(
-    var(--accent-foreground-color-light, var(--brand-ink)),
+    var(--accent-foreground-color-light, var(--pure-white)),
     var(--accent-foreground-color-dark, var(--brand-pale))
   );
   --accent-low-foreground-color: light-dark(
-    var(--accent-low-foreground-color-light, var(--brand-ink-low)),
+    var(--accent-low-foreground-color-light, var(--brand-strong-low-text)),
     var(--accent-low-foreground-color-dark, var(--brand-pale-low))
   );
   --accent-accent-color: light-dark(
-    var(--accent-accent-color-light, var(--brand-ink)),
+    var(--accent-accent-color-light, var(--brand-color)),
     var(--accent-accent-color-dark, var(--brand-color))
   );
 
@@ -199,31 +209,36 @@
   // Border
   --block-theme-default-border: var(--accent-color);
   --block-theme-default-border-width: 4px 0 0;
-  // Pattern
-  --block-theme-default-pattern-image: none;
+  // Pattern. `initial` (not `none`) leaves the token declared but without a
+  // value, so `var(--block-theme-default-pattern-image, <fallback>)` falls
+  // through to the back Color Group's background layer (`--theme-bg-image` in
+  // `themeStyles.ts` and `resolveBlockTheme`). With `none`, a second background
+  // added to that Color Group never showed on blocks using this theme. A
+  // project can still set a pattern here.
+  --block-theme-default-pattern-image: initial;
   --block-theme-default-pattern-opacity: 0;
 
   // Block theme: Alternative (formerly Brand)
   // Ground
   --block-theme-alternative-bg: var(
     --colorgroup-accent-bg,
-    var(--accent-color, #a5d8ff)
+    var(--accent-color, #0f4c81)
   );
   --block-theme-alternative-text: var(
     --colorgroup-accent-text,
-    var(--accent-foreground-color, #0b2239)
+    var(--accent-foreground-color, #ffffff)
   );
   --block-theme-alternative-high-contrast: var(
     --colorgroup-accent-text,
-    var(--accent-foreground-color, #0b2239)
+    var(--accent-foreground-color, #ffffff)
   );
   --block-theme-alternative-low-contrast: var(
     --colorgroup-accent-subtext,
-    var(--accent-low-foreground-color, #1f3f5c)
+    var(--accent-low-foreground-color, #d0ebff)
   );
   --block-theme-alternative-accent-color: var(
     --colorgroup-accent-accent,
-    var(--accent-accent-color, #0b2239)
+    var(--accent-accent-color, #a5d8ff)
   );
   // High Ground
   --block-theme-alternative-high-bg: var(
@@ -247,10 +262,16 @@
     var(--primary-accent-color, #1971c2)
   );
   // Border
-  --block-theme-alternative-border: unset;
+  // A real colour, not `unset`: the theme's own style maps
+  // `--theme-border-color` to this token without a fallback, so with `unset`
+  // a border picked in the Border widget had no colour on this theme.
+  --block-theme-alternative-border: var(
+    --colorgroup-accent-accent,
+    var(--accent-accent-color)
+  );
   --block-theme-alternative-border-width: 0;
-  // Pattern
-  --block-theme-alternative-pattern-image: none;
+  // Pattern: `initial` for the reason given on the default theme above.
+  --block-theme-alternative-pattern-image: initial;
   --block-theme-alternative-pattern-opacity: 0;
 
   // Backward compatibility alias: Brand
@@ -385,6 +406,21 @@
   --theme-top-low-contrast-foreground-color: var(--colorgroup-neutral-subtext);
   --theme-top-accent-color: var(--colorgroup-neutral-accent);
   --colorgroup-front-font: var(--colorgroup-neutral-font-family, inherit);
+}
+
+// The front Color Group's background layer, read by the cards of a block
+// (`--colorgroup-front-bg-*` in `_globals.scss` and the block styles). A site
+// theme's utility classes (`themeStyles.ts`) declare the same, for every group.
+@each $group in (primary, secondary, accent, neutral) {
+  .has-front-colorgroup-#{$group} {
+    --colorgroup-front-bg-image: var(--colorgroup-#{$group}-bg-image, none);
+    --colorgroup-front-bg-size: var(--colorgroup-#{$group}-bg-size, auto);
+    --colorgroup-front-bg-repeat: var(--colorgroup-#{$group}-bg-repeat, repeat);
+    --colorgroup-front-bg-position: var(
+      --colorgroup-#{$group}-bg-position,
+      center
+    );
+  }
 }
 
 // Blocks group wrapper styling for dynamic custom themes

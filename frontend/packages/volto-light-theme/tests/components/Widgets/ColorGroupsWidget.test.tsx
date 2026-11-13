@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { fireEvent } from '@testing-library/react';
 import { renderWithIntl as render } from '../../support/intl';
 import ColorGroupsWidget from '@simplesconsultoria/volto-light-theme/components/Widgets/ColorGroupsWidget';
+import { CSS_PATTERN_PRESETS } from '@simplesconsultoria/volto-light-theme/config/blockThemes';
 
 describe('ColorGroupsWidget', () => {
   it('renders default color groups when no value is provided', () => {
@@ -172,12 +173,23 @@ describe('ColorGroupsWidget', () => {
       expect.objectContaining({
         primary: expect.objectContaining({
           bg_image_light_desktop: expect.stringContaining('radial-gradient'),
+          bg_image_dark_desktop: expect.stringContaining('radial-gradient'),
           bg_size: '24px 24px',
           bg_repeat: 'repeat',
           bg_position: '0 0',
         }),
       }),
     );
+  });
+
+  it('offers only the dots, grid, diagonal stripes and blueprint patterns', () => {
+    expect(CSS_PATTERN_PRESETS.map((p) => p.id)).toEqual([
+      'none',
+      'dots',
+      'grid',
+      'diagonal-stripes',
+      'blueprint',
+    ]);
   });
 
   it('updates background layer fields: repeat, size, position, and mode images', () => {

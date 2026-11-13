@@ -1,0 +1,1 @@
+Themes control panel: picking a ready-made pattern for a Color Group's second background fills both the light and the dark mode image. The ready-made patterns are now Dots, Grid, Diagonal stripes and Blueprint. @Humanaice

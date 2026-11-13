@@ -129,6 +129,30 @@ const PREVIEW_FALLBACK: Record<Mode, Record<ColorRole, string>> = {
   },
 };
 
+/** WCAG 2.1 relative luminance of a `#rgb` / `#rrggbb` colour, or `null`. */
+function luminance(hex: string): number | null {
+  const match = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(hex.trim());
+  if (!match) return null;
+  const digits =
+    match[1].length === 3 ? match[1].replace(/./g, (d) => d + d) : match[1];
+  const [r, g, b] = [0, 2, 4].map((i) => {
+    const c = parseInt(digits.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/**
+ * Black or white, whichever contrasts more with `background`. The accent
+ * sample used to be white on any accent, unreadable on a light one.
+ */
+export function readableTextOn(background: string): string {
+  const lum = luminance(background);
+  if (lum === null) return '#ffffff';
+  // Contrast with black is (L + 0.05) / 0.05, with white 1.05 / (L + 0.05).
+  return (lum + 0.05) / 0.05 >= 1.05 / (lum + 0.05) ? '#000000' : '#ffffff';
+}
+
 /** The group rendered as a sample card in one mode. */
 const PreviewCard: React.FC<{
   group: ColorGroup;
@@ -152,7 +176,12 @@ const PreviewCard: React.FC<{
         fontFamily: group.font_family || 'inherit',
       }}
     >
-      <span className={`preview-badge ${mode === 'dark' ? 'dark-tag' : ''}`}>
+      {/* The card's own subtext colour: the page's would vanish on a card in
+          the other colour mode. */}
+      <span
+        className={`preview-badge ${mode === 'dark' ? 'dark-tag' : ''}`}
+        style={{ color: color('subtext') }}
+      >
         {intl
           .formatMessage(
             mode === 'dark' ? messages.darkMode : messages.lightMode,
@@ -177,7 +206,7 @@ const PreviewCard: React.FC<{
         style={{
           display: 'inline-block',
           backgroundColor: color('accent'),
-          color: '#ffffff',
+          color: readableTextOn(color('accent')),
           padding: '4px 10px',
           borderRadius: '4px',
           fontSize: '0.8rem',

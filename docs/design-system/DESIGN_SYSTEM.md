@@ -80,7 +80,7 @@ Therefore, whenever rendering a color-mode switcher on a scoped wrapper (such as
 
 ### 4.3 Default contrast (WCAG 2.1 AA)
 
-`DEFAULT_COLOR_GROUPS` uses a cool slate neutral scale + light-blue brand ramp (`#a5d8ff` light / `#1c3a57` dark). Across all 4 Color Groups × 3 foreground roles × 2 color modes (24 foreground/background pairs), every shipped pair clears **WCAG 2.1 AA (≥ 4.5:1)**, checked by `tests/theme/contrast.test.ts`: ratios range from **4.68:1** (`neutral` light accent `#1971c2` on `#f6f7f9`) to **16.15:1** (`primary` dark text `#f1f3f5` on `#14171c`). Because site admins replace Color Group colors per project via the Themes control panel, per-site contrast validation remains necessary on deployment.
+`DEFAULT_COLOR_GROUPS` uses a cool slate neutral scale for `primary` / `neutral`, a dark gray `secondary` (`#343a40` in both modes) and a dark blue `accent` (`#0f4c81` light / `#1b4d82` dark), both with light text. Links follow the `primary` group's accent (`#1971c2` / `#74c0fc`), not the `accent` surface. Across all 4 Color Groups × 3 foreground roles × 2 color modes (24 foreground/background pairs), every shipped pair clears **WCAG 2.1 AA (≥ 4.5:1)**, checked by `tests/theme/contrast.test.ts`: ratios range from **4.68:1** (`neutral` light accent `#1971c2` on `#f6f7f9`) to **16.15:1** (`primary` dark text `#f1f3f5` on `#14171c`). Because site admins replace Color Group colors per project via the Themes control panel, per-site contrast validation remains necessary on deployment.
 
 ---
 
@@ -112,6 +112,7 @@ Projects tune the system from their own add-on, which loads after this one:
 | `config.blocks.widths` | `['narrow', 'default', 'layout', 'full']` | The Block Width choices offered on every block. |
 | `config.settings.borderExcludedBlocks` | `['separator']` | Block ids that get no border controls. |
 | `config.settings.socialNetworks` | `[]` | Footer social links used when the site has no `social_links`. |
+| `config.settings.scvlt.speechVoices` | `DEFAULT_SPEECH_VOICES` (`pt-BR`, `en-US`) | Voice preferences of the hover reader, which speaks the site language: `{ lang, preferredNames? }`. Append an entry to tune another language. |
 
 Color Group ids use lowercase letters, digits and underscores: they become part of `custom-<back>-<front>`, which is split on `-`.
 

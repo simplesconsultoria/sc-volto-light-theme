@@ -169,3 +169,20 @@ describe('socialNetworks default', () => {
     expect(installed(own)).toBe(own);
   });
 });
+
+describe('speechVoices default', () => {
+  const installed = (scvlt?: Record<string, unknown>) =>
+    install({
+      settings: { scvlt, apiExpanders: [] },
+      blocks: { blocksConfig: {} },
+    } as unknown as ConfigType).settings.scvlt?.speechVoices;
+
+  it('offers Brazilian Portuguese and English', () => {
+    expect(installed()?.map((voice) => voice.lang)).toEqual(['pt-BR', 'en-US']);
+  });
+
+  it('keeps a list set before the add-on loads', () => {
+    const own = [{ lang: 'es-ES' }];
+    expect(installed({ speechVoices: own })).toBe(own);
+  });
+});

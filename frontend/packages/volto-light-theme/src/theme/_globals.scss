@@ -242,6 +242,22 @@ body .block.search .search-wrapper {
   );
 }
 
+// Edit mode has no `.blocks-group-wrapper`, which is what paints a themed
+// block's ground in view mode. Blocks that keep their own `.block`
+// transparent (hero, listing, search) were therefore never painted while
+// editing, so picking another Block Theme in the sidebar changed nothing on
+// screen until the page was saved. The edit wrapper carries the theme's custom
+// properties (Volto's `buildStyleObjectFromData`) and its `has--theme--*`
+// class, so it paints the ground instead; the `has--theme--*` utility rules
+// from `themeStyles.ts` already give it the back Color Group's layer.
+#page-edit,
+#page-add {
+  [class*='block-editor-'][class*='has--theme--'] {
+    background-color: var(--theme-color);
+    color: var(--theme-foreground-color);
+  }
+}
+
 #page-document {
   &.ui.container,
   &.q.container,

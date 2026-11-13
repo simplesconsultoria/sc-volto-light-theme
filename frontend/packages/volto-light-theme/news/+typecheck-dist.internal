@@ -1,0 +1,1 @@
+The local typecheck no longer reads the gitignored `dist/` build, which made it fail on an old copy of the types. @Humanaice

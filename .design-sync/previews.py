@@ -190,10 +190,13 @@ MATERIALISE_JS = r"""
   const pwin = frame.contentWindow;
 
   const cache = new Map();
-  const initialFor = (tag, ns) => {
-    const key = (ns === SVG_NS ? 'svg:' : 'html:') + tag;
+  // `link`: the copy keeps an href (rewritten to `#`), which gives an `a` the
+  // UA link colour, so its defaults are measured with one too.
+  const initialFor = (tag, ns, link = false) => {
+    const key = (ns === SVG_NS ? 'svg:' : 'html:') + tag + (link ? ':link' : '');
     if (!cache.has(key)) {
       const el = ns === SVG_NS ? pdoc.createElementNS(SVG_NS, tag) : pdoc.createElement(tag);
+      if (link) el.setAttribute('href', '#');
       pdoc.body.appendChild(el);
       const cs = pwin.getComputedStyle(el);
       const out = {};
@@ -207,8 +210,10 @@ MATERIALISE_JS = r"""
     return cache.get(key);
   };
 
-  const declare = (cs, parentCS, tag, ns, extraDrop) => {
-    const init = initialFor(tag, ns);
+  const declare = (cs, parentCS, tag, ns, extraDrop, link = false) => {
+    const init = initialFor(tag, ns, link);
+    // What an element gets when its UA style leaves a property alone.
+    const plain = initialFor(ns === SVG_NS ? 'g' : 'span', ns);
     const replaced = REPLACED.has(tag) || tag === 'img';
     const parts = [];
     for (const p of Object.keys(init)) {
@@ -219,7 +224,11 @@ MATERIALISE_JS = r"""
       if (v === '') continue;
       const raw = v;
       if (INHERITED.has(p)) {
-        const ref = parentCS ? parentCS.getPropertyValue(p) : init[p];
+        // The copy inherits from its parent unless the UA styles the tag
+        // itself (a link's colour, a heading's weight), in which case it gets
+        // the UA value: only a value matching what it will get can be left out.
+        const uaStyled = init[p] !== plain[p];
+        const ref = uaStyled ? init[p] : parentCS ? parentCS.getPropertyValue(p) : init[p];
         if (ref === raw) continue;
       } else if (init[p] === raw) {
         continue;
@@ -278,7 +287,8 @@ MATERIALISE_JS = r"""
       }
       try { out.setAttributeNS(a.namespaceURI, n, v); } catch (e) { /* skip */ }
     }
-    const style = declare(cs, parentCS, tag, ns, []);
+    const link = tag === 'a' && src.hasAttribute('href');
+    const style = declare(cs, parentCS, tag, ns, [], link);
     if (style) out.setAttribute('style', style);
     const before = pseudo(src, cs, '::before');
     if (before) out.appendChild(before);
@@ -539,21 +549,23 @@ def resolve(expr: str, tokens: dict, mode: str) -> str:
 
 CHROME_CSS = """
   :root { --ink:#16181d; --ink-soft:#5b6270; --rule:#e4e7ec; --ground:#fff; }
-  * { box-sizing:border-box; }
+  /* Element selectors skip the captured blocks (`.stage`): their computed
+     styles are inlined, and a page rule would override what they inherit. */
+  *:not(.stage *) { box-sizing:border-box; }
   body {
     margin:0; padding:40px 32px 56px; background:var(--ground); color:var(--ink);
     font:400 14px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;
     -webkit-font-smoothing:antialiased;
   }
   .wrap { max-width:1180px; margin:0 auto; }
-  h1 { margin:0 0 6px; font-size:26px; font-weight:600; letter-spacing:-.02em; }
+  h1:not(.stage *) { margin:0 0 6px; font-size:26px; font-weight:600; letter-spacing:-.02em; }
   .lede { margin:0; max-width:72ch; color:var(--ink-soft); }
-  h2 {
+  h2:not(.stage *) {
     margin:44px 0 4px; font-size:12px; font-weight:600; letter-spacing:.08em;
     text-transform:uppercase; color:var(--ink-soft);
   }
-  h3 { margin:22px 0 6px; font-size:13px; font-weight:600; }
-  code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.92em; }
+  h3:not(.stage *) { margin:22px 0 6px; font-size:13px; font-weight:600; }
+  code:not(.stage *) { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.92em; }
   .story { margin-top:18px; border:1px solid var(--rule); border-radius:12px; overflow:hidden; }
   .story > .head {
     display:flex; align-items:baseline; gap:10px; padding:11px 16px;
@@ -578,9 +590,9 @@ CHROME_CSS = """
   .chip .halves i { flex:1; }
   .chip div.meta { padding:7px 9px; }
   .chip code { display:block; color:var(--ink-soft); word-break:break-all; font-size:11px; }
-  table { border-collapse:collapse; width:100%; margin-top:12px; font-size:13px; }
-  th, td { text-align:left; padding:7px 10px; border-bottom:1px solid var(--rule); vertical-align:top; }
-  th { font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; }
+  table:not(.stage *) { border-collapse:collapse; width:100%; margin-top:12px; font-size:13px; }
+  :is(th, td):not(.stage *) { text-align:left; padding:7px 10px; border-bottom:1px solid var(--rule); vertical-align:top; }
+  th:not(.stage *) { font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); font-weight:600; }
   .demo { padding:18px; border-radius:10px; margin-top:10px; }
   .demo p { margin:0 0 10px; font-weight:600; }
   .demo .card { padding:12px 14px; border-radius:8px; }
@@ -589,7 +601,7 @@ CHROME_CSS = """
   .scale-row { display:flex; align-items:baseline; gap:14px; padding:6px 0; border-bottom:1px solid var(--rule); }
   .scale-row code { min-width:90px; }
   .scale-row span.sample { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  footer {
+  footer:not(.stage *) {
     margin-top:44px; padding-top:16px; border-top:1px solid var(--rule);
     color:var(--ink-soft); font-size:12.5px; line-height:1.6;
   }

@@ -78,13 +78,14 @@ DEFAULT_COLOR_GROUPS = {
         "id": "secondary",
         "name": "Secondary",
         "font_family": "Inter, sans-serif",
-        "background_color_light": "#eceff3",
-        "background_color_dark": "#1c2027",
-        "text_color_light": "#1d2129",
+        # Dark gray: the strong band (footer, header bar, ``grey`` blocks).
+        "background_color_light": "#343a40",
+        "background_color_dark": "#343a40",
+        "text_color_light": "#f8f9fa",
         "text_color_dark": "#f1f3f5",
-        "subtext_color_light": "#4a5260",
-        "subtext_color_dark": "#b4bcc8",
-        "accent_color_light": "#1864ab",
+        "subtext_color_light": "#ced4da",
+        "subtext_color_dark": "#c3cad4",
+        "accent_color_light": "#a5d8ff",
         "accent_color_dark": "#74c0fc",
         "bg_image_light_desktop": "",
         "bg_image_light_mobile": "",
@@ -98,13 +99,14 @@ DEFAULT_COLOR_GROUPS = {
         "id": "accent",
         "name": "Accent",
         "font_family": "Inter, sans-serif",
-        "background_color_light": "#a5d8ff",
-        "background_color_dark": "#1c3a57",
-        "text_color_light": "#0b2239",
+        # Dark blue, with light text.
+        "background_color_light": "#0f4c81",
+        "background_color_dark": "#1b4d82",
+        "text_color_light": "#ffffff",
         "text_color_dark": "#e7f5ff",
-        "subtext_color_light": "#1f3f5c",
+        "subtext_color_light": "#d0ebff",
         "subtext_color_dark": "#b8d7ef",
-        "accent_color_light": "#0b2239",
+        "accent_color_light": "#a5d8ff",
         "accent_color_dark": "#a5d8ff",
         "bg_image_light_desktop": "",
         "bg_image_light_mobile": "",
@@ -834,17 +836,20 @@ def _as_mapping(value) -> dict:
     return {}
 
 
-def _validated_collection(name: str, value, is_valid_id) -> dict:
+def _validated_collection(name: str, value, is_valid_id, bases=frozenset()) -> dict:
     """Check a color group / block theme collection sent by a client.
 
-    A malformed collection must not be read as an empty one: custom entries
-    missing from an update are deleted on every theme.
+    The collection is a merge patch (see :func:`_merge_collection`): an entry
+    is an object, or ``None`` to delete it. Everything is checked here, before
+    anything is written, so a rejected update leaves no trace.
 
     :param name: the field name, for the error message.
     :param value: a mapping by id, or a list of objects carrying an ``id``.
     :param is_valid_id: predicate for the entry ids.
+    :param bases: ids that may not be deleted.
     :returns: the collection as a mapping by id.
-    :raises ValueError: when the value or one of its entries is malformed.
+    :raises ValueError: when the value or one of its entries is malformed, or
+        when it deletes a base entry.
     """
     if isinstance(value, list):
         if not all(isinstance(item, dict) and "id" in item for item in value):
@@ -853,29 +858,49 @@ def _validated_collection(name: str, value, is_valid_id) -> dict:
     if not isinstance(value, dict):
         raise ValueError(f"{name} must be an object keyed by id")
     for key, data in value.items():
+        if not is_valid_id(key):
+            raise ValueError(f"{name}: invalid id {key!r}")
+        if data is None:
+            if key in bases:
+                raise ValueError(f"{name}: base entry {key!r} cannot be deleted")
+            continue
         if not isinstance(data, dict):
-            raise ValueError(f"{name}.{key} must be an object")
-        if not is_valid_id(key) or data.get("id", key) != key:
+            raise ValueError(f"{name}.{key} must be an object or null")
+        if data.get("id", key) != key:
             raise ValueError(f"{name}: invalid id {key!r}")
     return dict(value)
 
 
 def _merge_collection(theme_id, value, bases, defaults, read, delete, registry):
-    """Prepare a color group / block theme collection for storage.
+    """Merge a color group / block theme collection into the stored one.
 
-    Base entries are restored if missing, and custom entries absent from
-    ``value`` are deleted (cascading across all themes).
+    The update is a JSON Merge Patch (RFC 7396) keyed by id:
+
+    - an entry left out is kept as it is;
+    - an entry sent is merged field by field onto the stored one, so a client
+      may send only the fields it changes;
+    - an entry sent as ``None`` is deleted, cascading across all themes the
+      way ``delete`` does.
+
+    Base entries are restored if missing.
+
+    :returns: the collection to store for ``theme_id``.
     """
     value = _as_mapping(value)
+    # Delete first, so the merge below starts from what the cascade left.
+    for key, data in value.items():
+        if data is None:
+            delete(theme_id, key, registry)
+    merged = {key: dict(data) for key, data in read(theme_id, registry).items()}
+    for key, data in value.items():
+        if data is None:
+            merged.pop(key, None)
+        else:
+            merged[key] = {**merged.get(key, {}), **data, "id": key}
     for base_id in bases:
-        if base_id not in value and base_id in defaults:
-            value[base_id] = dict(defaults[base_id])
-    removed = [
-        key for key in read(theme_id, registry) if key not in value and key not in bases
-    ]
-    for key in removed:
-        delete(theme_id, key, registry)
-    return value
+        if base_id not in merged and base_id in defaults:
+            merged[base_id] = dict(defaults[base_id])
+    return merged
 
 
 def _validated_values(values: dict) -> dict:
@@ -883,16 +908,16 @@ def _validated_values(values: dict) -> dict:
 
     :param values: field values sent by a client.
     :returns: a copy, with the collections normalized to mappings by id.
-    :raises ValueError: if a collection is malformed.
+    :raises ValueError: if a collection is malformed or deletes a base entry.
     """
     values = dict(values)
     checks = {
-        "color_groups": is_valid_color_group_id,
-        "block_themes": is_valid_theme_id,
+        "color_groups": (is_valid_color_group_id, BASE_COLOR_GROUPS),
+        "block_themes": (is_valid_theme_id, BASE_BLOCK_THEMES),
     }
-    for name, is_valid_id in checks.items():
+    for name, (is_valid_id, bases) in checks.items():
         if name in values:
-            values[name] = _validated_collection(name, values[name], is_valid_id)
+            values[name] = _validated_collection(name, values[name], is_valid_id, bases)
     return values
 
 
@@ -903,12 +928,18 @@ def update_theme(theme_id: str, values: dict, registry=None) -> dict:
     update. Unknown keys are ignored rather than raising, since they may come
     straight from a request body.
 
+    ``color_groups`` and ``block_themes`` are merged by id rather than
+    replaced: entries left out are kept, entries sent are merged onto the
+    stored ones, and an entry sent as ``None`` is deleted on every theme (see
+    :func:`_merge_collection`).
+
     :param theme_id: the theme id.
     :param values: field values to write.
     :param registry: registry to write, defaulting to the local one.
     :returns: the stored theme values.
     :raises KeyError: if the theme does not exist.
-    :raises ValueError: if ``color_groups`` or ``block_themes`` is malformed.
+    :raises ValueError: if ``color_groups`` or ``block_themes`` is malformed,
+        or deletes a base entry.
     """
     registry = _registry(registry)
     if not theme_exists(theme_id, registry):
